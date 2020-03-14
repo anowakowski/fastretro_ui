@@ -11,6 +11,7 @@ import { TeamRetroComponent } from './team-retro.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { RetroProcessComponent } from './components/retro-process/retro-process.
     CommonModule,
     TeamRetroRegisterRoutingModule,
     FlexLayoutModule,
-    MaterialModule
+    MaterialModule,
+    ChartsModule
   ],
   declarations: [TeamRetroComponent, NavComponent, SlidenavComponent, DashboardComponent, TeamsComponent, RetroProcessComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
