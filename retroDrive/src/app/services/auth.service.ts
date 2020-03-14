@@ -92,4 +92,10 @@ export class AuthService {
       this.router.navigate(['/']);
     });
   }
+
+/*
+  async signOut(): Promise<void> {
+    return this.afAuth.auth.signOut();
+  }
+  */
 }
