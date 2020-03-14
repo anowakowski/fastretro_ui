@@ -6,10 +6,10 @@
     [mode]="isScreenSmall() ? 'over' : 'side'">
     <div class="sidenav-element-flex-container">
       <div class="sidenav-element-flex-container">
-        <button class="sidenav-elemnt" color="{{dashboardColor}}" mat-raised-button (click)="setBtnColor(dashboardSection)">
+        <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
           <mat-icon>dashboard</mat-icon> dashboard
         </button>
-        <button class="sidenav-elemnt" color="{{teamsColor}}" mat-raised-button (click)="setBtnColor(teamsSection)">
+        <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
           <mat-icon>photo</mat-icon> teams
         </button>
   
