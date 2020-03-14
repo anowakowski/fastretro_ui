@@ -1,0 +1,29 @@
+<app-nav (toggleSidenav)="drawer.toggle()"></app-nav>
+<mat-drawer-container class="app-container" autosize>
+  <mat-drawer 
+    #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
+    [opened]="!isScreenSmall()"
+    [mode]="isScreenSmall() ? 'over' : 'side'">
+    <div class="sidenav-element-flex-container">
+      <div class="sidenav-element-flex-container">
+        <button class="sidenav-elemnt" color="{{dashboardColor}}" mat-raised-button (click)="setBtnColor(dashboardSection)">
+          <mat-icon>dashboard</mat-icon> dashboard
+        </button>
+        <button class="sidenav-elemnt" color="{{teamsColor}}" mat-raised-button (click)="setBtnColor(teamsSection)">
+          <mat-icon>photo</mat-icon> teams
+        </button>
+  
+        <button class="sidenav-elemnt" color="{{retroProcessColor}}" mat-raised-button  (click)="setBtnColor(retroProcessSection)">
+          <mat-icon>person</mat-icon> retrospective process
+        </button>
+      </div>
+    </div>
+   </mat-drawer>
+  <div class="app-sidenav-content">
+    <div class="wrapper">
+        <p>
+          contnet
+        </p>
+    </div>
+  </div>
+</mat-drawer-container>
