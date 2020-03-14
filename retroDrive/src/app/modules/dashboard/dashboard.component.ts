@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { MatDrawer } from '@angular/material/sidenav/drawer';
+import { Component, OnInit } from '@angular/core';
+
 
 
 
@@ -13,16 +12,12 @@ const SMALL_WIDTH_BREAKPOINT = 720;
 })
 export class DashboardComponent implements OnInit {
 
-  private mediaMatcher: MediaQueryList =
-    matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
+
 
   constructor() { }
-  @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
+  
   ngOnInit() {
   }
 
-  isScreenSmall(): boolean {
-    return this.mediaMatcher.matches;
-  }
 
 }

@@ -5,6 +5,7 @@ import { DashboardRegisterRoutingModule } from './dashboard-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
 import { NavComponent } from './components/nav/nav.component';
+import { SlidenavComponent } from './components/slidenav/slidenav.component';
 
 
 @NgModule({
@@ -14,7 +15,7 @@ import { NavComponent } from './components/nav/nav.component';
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [DashboardComponent, NavComponent],
+  declarations: [DashboardComponent, NavComponent, SlidenavComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardModule { }
