@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { LoginRegisterRoutingModule } from './login-register-routing.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
+import { LoginRegisterFormComponent } from './components/login-register-form/login-register-form.component';
 
 
 
@@ -20,7 +21,7 @@ import { MaterialModule } from 'src/app/shared/material-module';
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [LoginRegisterComponent, NavComponent],
+  declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginRegisterModule { }
