@@ -6,7 +6,8 @@ const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
 const BASIC_BTN_COLOR = 'primary';
 const DASHBOARD_SECTION = 'dashboard';
-const EDIT_USERPROFILE_SECCTION = 'editUserProfile';
+const EDIT_TEAMS_SECCTION = 'teams';
+const RETRO_PROCES_SECCTION = 'retroProcess';
 
 
 @Component({
@@ -26,14 +27,17 @@ export class SlidenavComponent implements OnInit {
   public currentColor = CURRENT_BTN_COLOR;
   public basicColor = BASIC_BTN_COLOR;
   public dashboardSection = DASHBOARD_SECTION;
-  public userprofileSection = EDIT_USERPROFILE_SECCTION;
+  public teamsSection = EDIT_TEAMS_SECCTION;
+  public retroProcessSection = RETRO_PROCES_SECCTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
-  public userProfileColor = BASIC_BTN_COLOR;
+  public teamsColor = BASIC_BTN_COLOR;
+  public retroProcessColor = BASIC_BTN_COLOR;
 
   constructor() { }
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
+    this.currentChosenSection = DASHBOARD_SECTION;
   }
 
   isScreenSmall(): boolean {
@@ -41,7 +45,7 @@ export class SlidenavComponent implements OnInit {
   }
 
   reciveEditUserProfileAsCurrent() {
-    this.setBtnColor(EDIT_USERPROFILE_SECCTION);
+    this.setBtnColor(EDIT_TEAMS_SECCTION);
   }
 
   reciveDashboardAsCurrent() {
@@ -61,22 +65,26 @@ export class SlidenavComponent implements OnInit {
   private setBasicColor() {
     if (this.currentChosenSection === DASHBOARD_SECTION) {
       this.dashboardColor = BASIC_BTN_COLOR;
-    } else if (this.currentChosenSection === EDIT_USERPROFILE_SECCTION) {
-      this.userProfileColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === EDIT_TEAMS_SECCTION) {
+      this.teamsColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === RETRO_PROCES_SECCTION) {
+      this.retroProcessColor = BASIC_BTN_COLOR;
     }
   }
 
   private setCurrentColor(sectionNameToCurrent: string) {
     if (sectionNameToCurrent === DASHBOARD_SECTION) {
       this.dashboardColor = CURRENT_BTN_COLOR;
-    } else if (sectionNameToCurrent === EDIT_USERPROFILE_SECCTION) {
-      this.userProfileColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === EDIT_TEAMS_SECCTION) {
+      this.teamsColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === RETRO_PROCES_SECCTION) {
+      this.retroProcessColor = CURRENT_BTN_COLOR;
     }
   }
 
   private setCurrentSectionByRoute() {
-    if (this.currentRouteSecction.search(EDIT_USERPROFILE_SECCTION) === 1) {
-      this.setBtnColor(EDIT_USERPROFILE_SECCTION);
+    if (this.currentRouteSecction.search(EDIT_TEAMS_SECCTION) === 1) {
+      this.setBtnColor(EDIT_TEAMS_SECCTION);
       return;
     }
     this.setBtnColor(DASHBOARD_SECTION);
