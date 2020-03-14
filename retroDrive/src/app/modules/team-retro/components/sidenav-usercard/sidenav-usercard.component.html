@@ -1,0 +1,21 @@
+<div class="sidnav-userprofile sidenav-elemnt">
+  <mat-card class="sidenav-userprofile-card">
+      <mat-card-header >
+        <div 
+          *ngIf="mainPhotoUrl"
+          [ngStyle]="{ 'background-image': 'url(' + mainPhotoUrl + ')' }" 
+          mat-card-avatar 
+          class="sidnav-userprofile-header-image" >
+        </div>
+        <mat-card-title class="sidenav-card-header">test user</mat-card-title>
+        <mat-card-subtitle>
+            @mail <br/>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="sidenav-card-userprofile-content">
+           Tribe Testowy
+        </p>
+      </mat-card-content>
+  </mat-card>       
+</div> 

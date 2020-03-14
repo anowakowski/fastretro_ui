@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
 import { ChartsModule } from 'ng2-charts';
+import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-usercard.component';
 
 
 @NgModule({
@@ -22,7 +23,14 @@ import { ChartsModule } from 'ng2-charts';
     MaterialModule,
     ChartsModule
   ],
-  declarations: [TeamRetroComponent, NavComponent, SlidenavComponent, DashboardComponent, TeamsComponent, RetroProcessComponent],
+  declarations: [
+    TeamRetroComponent,
+    NavComponent,
+    SlidenavComponent,
+    DashboardComponent,
+    TeamsComponent,
+    RetroProcessComponent,
+    SidenavUsercardComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TeamRetroModule { }
