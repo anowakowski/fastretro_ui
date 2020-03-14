@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MaterialModule } from 'src/app/shared/material-module';
 
 
 @NgModule({
@@ -20,9 +21,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     ReactiveFormsModule,
     LoginRegisterRoutingModule,
     FlexLayoutModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatCardModule
+    MaterialModule
   ],
   declarations: [LoginRegisterComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
