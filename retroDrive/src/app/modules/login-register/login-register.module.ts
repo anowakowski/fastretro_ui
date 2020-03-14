@@ -3,15 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LoginRegisterComponent } from './login-register.component';
+import { NavComponent } from './components/nav/nav.component';
 import { LoginRegisterRoutingModule } from './login-register-routing.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import { MaterialModule } from 'src/app/shared/material-module';
+
 
 
 @NgModule({
@@ -23,7 +20,7 @@ import { MaterialModule } from 'src/app/shared/material-module';
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [LoginRegisterComponent],
+  declarations: [LoginRegisterComponent, NavComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginRegisterModule { }
