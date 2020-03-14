@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { LoginRegisterComponent } from './login-register.component';
 
+
+
 const routes: Routes = [
-    {path: '', component: LoginRegisterComponent},
-    {path: '**', redirectTo: ''}
-  ];
+  {
+    path: '',
+    component: LoginRegisterComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class LoginRegisterRoutingModule { }
+export class LoginRegisterRoutingModule {}
