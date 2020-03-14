@@ -11,3 +11,24 @@
 .login-wrapper .mat-card{padding:40px 70px 50px;}
 .login-wrapper .mat-stroked-button{border:1px solid currentColor;line-height:54px;background:#FFF7FA;}
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix{padding:0.8375em 0;}
+
+
+.or-seperator {
+    margin-top: 20px;
+    text-align: center;
+    border-top: 1px solid 
+    #ccc;
+}
+
+.or-seperator i {
+    padding: 0 10px;
+    background: 
+    #6d84c000;
+    position: relative;
+    top: -11px;
+    z-index: 1;
+}
+
+.text-center {
+    text-align: center;
+}
