@@ -10,6 +10,7 @@ import { TeamRetroRegisterRoutingModule } from './team-retro-routing.module';
 import { TeamRetroComponent } from './team-retro.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TeamsComponent } from './components/teams/teams.component';
+import { RetroProcessComponent } from './components/retro-process/retro-process.component';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { TeamsComponent } from './components/teams/teams.component';
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [TeamRetroComponent, NavComponent, SlidenavComponent, DashboardComponent, TeamsComponent],
+  declarations: [TeamRetroComponent, NavComponent, SlidenavComponent, DashboardComponent, TeamsComponent, RetroProcessComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TeamRetroModule { }
