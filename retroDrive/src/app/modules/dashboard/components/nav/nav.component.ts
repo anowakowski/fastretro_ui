@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -11,11 +11,18 @@ export class NavComponent implements OnInit {
 
   constructor(public auth: AuthService, private router: Router) { }
 
+
+  @Output() toggleSidenav = new EventEmitter<void>();
+
   ngOnInit() {
   }
 
   signOut() {
     this.auth.signOut();
+  }
+
+  emitMenu() {
+    this.toggleSidenav.emit();
   }
 
 }

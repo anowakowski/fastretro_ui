@@ -1,0 +1,73 @@
+.app-container {
+    flex: 1;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sidenav-container-background-image {
+   
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .sidenav-container-background-image ::after {
+    opacity: 0.7;
+  }
+  
+  .app-sidenav-content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
+  
+  mat-drawer {
+    width: 400px;
+  }
+  
+  .wrapper {
+    margin: 50px;
+  }
+
+  .sidenav-content-elements {
+    
+    padding: 20px;
+  }
+
+  .sidenav-elemnt {
+    margin-bottom: 10px;
+  }
+
+  .sidenav-element-flex-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+ .sidnav-userprofile{
+  opacity: 0.6;
+ }
+
+
+ .example-card {
+  max-width: 400px;
+ }
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+  width: 120px;
+  height: 120px;
+}
+
+.sidenav-card-userprofile-content {
+  margin-left: 80px;
+  margin-bottom: -10px;
+}
+
+.sidenav-card-header {
+  margin-left: -6px
+}
+
+
