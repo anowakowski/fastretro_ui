@@ -5,7 +5,18 @@
     [opened]="!isScreenSmall()"
     [mode]="isScreenSmall() ? 'over' : 'side'">
     <div class="sidenav-element-flex-container">
-
+      <div class="sidenav-element-flex-container">
+        <button class="sidenav-elemnt" color="{{dashboardColor}}" mat-raised-button [routerLink]="['/']" (click)="setBtnColor(dashboardSection)">
+          <mat-icon>dashboard</mat-icon> dashboard
+        </button>
+        <button class="sidenav-elemnt" color="primary" mat-raised-button>
+          <mat-icon>photo</mat-icon> teams
+        </button>
+  
+        <button class="sidenav-elemnt" color="{{userProfileColor}}" mat-raised-button  (click)="setBtnColor(userprofileSection)">
+          <mat-icon>person</mat-icon> go retrospective 
+        </button>
+      </div>
     </div>
    </mat-drawer>
   <div class="app-sidenav-content">
