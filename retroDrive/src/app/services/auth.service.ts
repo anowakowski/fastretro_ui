@@ -10,7 +10,7 @@ import { switchMap, first } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
 
-import { User } from '../models/user';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'

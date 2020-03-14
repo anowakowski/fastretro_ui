@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRegisterRoutingModule } from './dashboard-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
+import { NavComponent } from './components/nav/nav.component';
+
 
 @NgModule({
   imports: [
@@ -12,6 +14,7 @@ import { MaterialModule } from 'src/app/shared/material-module';
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, NavComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardModule { }
