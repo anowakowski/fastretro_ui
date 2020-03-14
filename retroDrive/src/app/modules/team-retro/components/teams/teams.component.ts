@@ -9,6 +9,8 @@ export class TeamsComponent implements OnInit {
 
   constructor() { }
 
+  teams: string[] = ['#Tean1 Alpha', '#Team2 Beta', '#Team3 Gamma'];
+
   ngOnInit() {
   }
 
