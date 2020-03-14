@@ -5,15 +5,15 @@ import { LoginRegisterGuard } from './guards/login-register.guard';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'retro', pathMatch: 'full' },
   {
     path: 'login',
     loadChildren: () => import('./modules/login-register/login-register.module').then( m => m.LoginRegisterModule),
     canActivate: [LoginRegisterGuard]
   },
   {
-    path: 'dashboard',
-    loadChildren: () => import('./modules/dashboard/dashboard.module').then( m => m.DashboardModule),
+    path: 'retro',
+    loadChildren: () => import('./modules/team-retro/team-retro.module').then( m => m.TeamRetroModule),
     canActivate: [AuthGuard]
   }
 ];
