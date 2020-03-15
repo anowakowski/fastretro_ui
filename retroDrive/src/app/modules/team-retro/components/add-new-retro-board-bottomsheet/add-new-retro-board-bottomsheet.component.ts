@@ -12,31 +12,33 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
   retroName = new FormControl('');
+  sprintName = new FormControl('');
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
-  constructor(private _bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>, private formBuilder: FormBuilder) { }
+  constructor(private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.createAddNewRetroBoardForm();
   }
 
   openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 
   createAddNewRetroBoardForm() {
     this.addNewRetroBoardForm = this.formBuilder.group({
       retroName: this.retroName,
-      membersFormControl: this.membersFormControl
+      membersFormControl: this.membersFormControl,
+      sprintName: this.sprintName
     });
   }
 
   createNewRetroBoard() {
     const value = this.addNewRetroBoardForm.value;
 
-    this._bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 
