@@ -35,7 +35,7 @@ export class SlidenavComponent implements OnInit {
   public retroProcessColor = BASIC_BTN_COLOR;
 
   constructor(public auth: AuthService) { }
-  
+
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.currentChosenSection = DASHBOARD_SECTION;
