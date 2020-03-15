@@ -13,6 +13,8 @@ import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
 import { ChartsModule } from 'ng2-charts';
 import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-usercard.component';
+// tslint:disable-next-line:max-line-length
+import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 
 
 @NgModule({
@@ -30,7 +32,12 @@ import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-
     DashboardComponent,
     TeamsComponent,
     RetroProcessComponent,
-    SidenavUsercardComponent],
+    SidenavUsercardComponent,
+    AddNewRetroBoardBottomsheetComponent
+  ],
+  entryComponents: [
+    AddNewRetroBoardBottomsheetComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TeamRetroModule { }
