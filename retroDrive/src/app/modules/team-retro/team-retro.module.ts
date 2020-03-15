@@ -15,6 +15,7 @@ import { ChartsModule } from 'ng2-charts';
 import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-usercard.component';
 // tslint:disable-next-line:max-line-length
 import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -23,7 +24,10 @@ import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro
     TeamRetroRegisterRoutingModule,
     FlexLayoutModule,
     MaterialModule,
-    ChartsModule
+    ChartsModule,
+    FormsModule,
+    ReactiveFormsModule
+
   ],
   declarations: [
     TeamRetroComponent,
