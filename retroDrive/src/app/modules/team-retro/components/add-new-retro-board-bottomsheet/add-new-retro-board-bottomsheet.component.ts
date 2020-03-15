@@ -11,8 +11,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
+  teamsFormControl = new FormControl('');
   retroName = new FormControl('');
   sprintName = new FormControl('');
+  shouldDisableMembersControl = true;
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
@@ -31,7 +33,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     this.addNewRetroBoardForm = this.formBuilder.group({
       retroName: this.retroName,
       membersFormControl: this.membersFormControl,
-      sprintName: this.sprintName
+      sprintName: this.sprintName,
+      teamsFormControl: this.teamsFormControl
     });
   }
 
@@ -40,6 +43,12 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();
+  }
+
+  onChangeTeams(eventValue) {
+    if (eventValue !== null){
+      this.shouldDisableMembersControl = false;
+    }
   }
 
 }
