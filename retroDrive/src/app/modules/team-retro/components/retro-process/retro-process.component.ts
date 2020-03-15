@@ -9,13 +9,17 @@ import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bot
 })
 export class RetroProcessComponent implements OnInit {
 
-  constructor(private _bottomSheet: MatBottomSheet) { }
+  constructor(private bottomSheetRef: MatBottomSheet) { }
 
   ngOnInit() {
   }
 
   openBottomSheet(): void {
-    this._bottomSheet.open(AddNewRetroBoardBottomsheetComponent);
+    const bottomSheetRef = this.bottomSheetRef.open(AddNewRetroBoardBottomsheetComponent);
+
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      console.log('Bottom sheet has been dismissed.');
+    });
   }
 
 }

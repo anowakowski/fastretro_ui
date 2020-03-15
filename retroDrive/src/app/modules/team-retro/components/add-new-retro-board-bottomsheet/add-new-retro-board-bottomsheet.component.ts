@@ -35,6 +35,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   createNewRetroBoard() {
     const value = this.addNewRetroBoardForm.value;
+
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
   }
 
 }
