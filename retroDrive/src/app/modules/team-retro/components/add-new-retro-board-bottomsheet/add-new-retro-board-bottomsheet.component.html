@@ -7,9 +7,9 @@
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <mat-label>Toppings</mat-label>
-          <mat-select [formControl]="toppings" multiple>
-          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          <mat-label>Members</mat-label>
+          <mat-select [formControl]="membersFormControl" multiple>
+          <mat-option *ngFor="let member of membersList" [value]="member">{{member}}</mat-option>
           </mat-select>
         </mat-form-field>
 

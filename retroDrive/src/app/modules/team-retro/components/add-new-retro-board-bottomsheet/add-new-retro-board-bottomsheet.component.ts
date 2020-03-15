@@ -11,8 +11,10 @@ export class AddNewRetroBoardBottomsheetComponent {
 
   constructor(private _bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>) { }
 
-  toppings = new FormControl();
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+
+  membersFormControl = new FormControl();
+  membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   openLink(event: MouseEvent): void {
     this._bottomSheetRef.dismiss();
