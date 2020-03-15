@@ -1,0 +1,33 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+
+  .photo-user-commented-section{
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  .photo-user-commented-section-element {
+    margin-bottom: 10px;
+  }
+
+  .photo-user-commented-image {
+    border-radius: 50%; 
+    height: 60px; 
+    width: 60px; 
+    margin-bottom: -20px;
+  }
+
+  .photo-user-commented-username {
+    padding-left: 15px; font-size: 18px;
+  }
+
+  .photo-user-commented-usercomment {
+    padding-left: 68px;
+  }
