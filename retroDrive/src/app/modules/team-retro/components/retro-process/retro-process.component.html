@@ -1,23 +1,22 @@
 <div class="example-button-row">
   <button style="width: 170px; height: 170px;" mat-fab color="primary" (click)="openBottomSheet()">
-    <span style="font-size: 18px;">Create</span> <br/>
-    <span>New Retro Board</span> <br/>
+    <span style="font-size: 18px;">Create</span> <br />
+    <span>New Retro Board</span> <br />
     <mat-icon style="font-size: 50px; width: 50px; height: 50px;">add</mat-icon>
   </button>
 </div>
-
-<div style="margin-top: 20px;">
-  <mat-card  class="example-card">
+<div style="margin-top: 40px;">
+  <mat-card style="margin-bottom: 10px;">List of not started retro board</mat-card>
+  <mat-card class="example-card">
     <mat-card-header>
-      
       <mat-card-title>#team Alpha Board</mat-card-title>
-      <mat-card-subtitle>20 march 2020</mat-card-subtitle>
+      <mat-card-subtitle>
+        <span style="font-size: 17px;">Retro for Sprint 21</span> <br/>
+        <i>Retro Board Created <span> march 2020</span></i>
+      </mat-card-subtitle>
     </mat-card-header>
-    
     <mat-card-actions>
-      <button mat-raised-button color="warn">Start Retro Process</button>
-      
-      
+      <button style="width: 100%;" mat-raised-button color="warn">Start Retro Process</button>
     </mat-card-actions>
   </mat-card>
 </div>
