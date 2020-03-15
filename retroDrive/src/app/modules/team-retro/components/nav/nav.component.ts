@@ -19,6 +19,7 @@ export class NavComponent implements OnInit {
 
   signOut() {
     this.auth.signOut();
+
   }
 
   emitMenu() {
