@@ -35,15 +35,13 @@ export class AuthService {
         })
       );
 
-      this.user$ = afAuth.authState.pipe(
-        switchMap(user => {
-          if (user) {
-            return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-          } else {
-            return of(null);
-          }
-        })
-      );
+      afs.collection('/users').valueChanges().subscribe(usr => {
+        let test = usr;
+      });
+
+      afs.collection('/courses').valueChanges().subscribe(usr => {
+        let test = usr;
+      });
 
       afAuth.authState.subscribe((authState) => {
         this.authState = authState;
