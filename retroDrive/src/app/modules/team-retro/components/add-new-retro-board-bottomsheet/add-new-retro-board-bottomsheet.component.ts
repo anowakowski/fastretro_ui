@@ -29,7 +29,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   ngOnInit() {
     this.createAddNewRetroBoardForm();
-    this.getTeams();
+    this.prepareTeams();
   }
 
   openLink(event: MouseEvent): void {
@@ -46,29 +46,31 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     });
   }
 
-  createNewRetroBoard() {
-    const value = this.addNewRetroBoardForm.value;
-
-    const retroBoard = {
-      sprintName: value.sprintName,
-      retroName: value.retroName,
-      team: value.teamsFormControl,
-      members: value.membersFormControl
-    };
-
-    this.frbs.addNewRetroBoard(retroBoard);
-  
-    this.bottomSheetRef.dismiss();
-    event.preventDefault();
-  }
-
   onChangeTeams(eventValue) {
     if (eventValue !== null) {
       this.shouldDisableMembersControl = false;
     }
   }
 
-  private getTeams() {
+  createNewRetroBoard() {
+    this.prepareRetroBoardToSave();
+
+    this.bottomSheetRef.dismiss();
+    event.preventDefault();
+  }
+
+  private prepareRetroBoardToSave() {
+    const value = this.addNewRetroBoardForm.value;
+    const retroBoard = {
+      sprintName: value.sprintName,
+      retroName: value.retroName,
+      team: value.teamsFormControl,
+      members: value.membersFormControl
+    };
+    this.frbs.addNewRetroBoard(retroBoard);
+  }
+
+  private prepareTeams() {
     this.teams = new Array<Teams>();
     this.frbs.getTeams().then(snapshotTeams => {
       snapshotTeams.docs.forEach(doc => {

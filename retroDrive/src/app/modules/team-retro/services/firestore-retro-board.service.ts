@@ -2,24 +2,18 @@ import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { Teams } from 'src/app/models/teams';
 
+const RETRO_BOARD_COLLECTION = '/retroBoards';
+
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreRetroBoardService {
 
-  private colName = '/retroBoards';
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
-
-    const retroBoardToSave = {
-      sprintName: newRetroBoard.sprintName,
-      retroName: newRetroBoard.retroName,
-      team: this.prepareTeam(newRetroBoard.team),
-      members: newRetroBoard.members
-    };
-
-    this.firestoreBase.addNewItem(this.colName, retroBoardToSave);
+    const retroBoardToSave = this.prepareRetroBoard(newRetroBoard);
+    this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
   prepareTeam(team: Teams) {
@@ -28,5 +22,14 @@ export class FirestoreRetroBoardService {
 
   getTeams() {
     return this.firestoreBase.getAll('/teams');
+  }
+
+  private prepareRetroBoard(newRetroBoard: any) {
+    return {
+      sprintName: newRetroBoard.sprintName,
+      retroName: newRetroBoard.retroName,
+      team: this.prepareTeam(newRetroBoard.team),
+      members: newRetroBoard.members
+    };
   }
 }
