@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-retro-process',
@@ -9,7 +10,7 @@ import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bot
 })
 export class RetroProcessComponent implements OnInit {
 
-  constructor(private bottomSheetRef: MatBottomSheet) { }
+  constructor(private bottomSheetRef: MatBottomSheet, frbs: FirestoreRetroBoardService) { }
 
   ngOnInit() {
   }

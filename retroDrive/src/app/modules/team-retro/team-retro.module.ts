@@ -16,6 +16,8 @@ import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-
 // tslint:disable-next-line:max-line-length
 import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
+import { FirestoreRetroBoardService } from './services/firestore-retro-board.service';
 
 
 @NgModule({
@@ -42,6 +44,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    FirestoreBaseService,
+    FirestoreRetroBoardService
+  ]
 })
 export class TeamRetroModule { }
