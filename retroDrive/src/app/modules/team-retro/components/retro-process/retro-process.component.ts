@@ -32,7 +32,9 @@ export class RetroProcessComponent implements OnInit {
     //this.getDocWithFilter();
     //this.updateCourses();
 
-    this.addedUserWithReferences()
+    //this.addedUserWithReferences();
+
+    this.getDocWithRef();
   }
 
   getDocWithFilter(){
@@ -55,6 +57,24 @@ export class RetroProcessComponent implements OnInit {
         snapshot.docs.forEach(doc => {
           console.log(doc.id);
           console.log(doc.data());
+        });
+      });
+  }
+
+  getDocWithRef(){
+    this.afs.collection('/courses')
+      .ref.where('name', '==', 'Konrad')
+      .get()
+      .then(snapshot => {
+        snapshot.docs.forEach(doc => {
+          console.log(doc.id);
+          console.log(doc.data());
+
+          let usr = doc.data().user.get();
+
+          usr.then(u => {
+            let uread = u.data();
+          });
         });
       });
   }
