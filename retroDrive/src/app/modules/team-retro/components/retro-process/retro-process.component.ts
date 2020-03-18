@@ -10,9 +10,14 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 })
 export class RetroProcessComponent implements OnInit {
 
-  constructor(private bottomSheetRef: MatBottomSheet, frbs: FirestoreRetroBoardService) { }
+  retroBoard: any[];
+  retroBoardSubscriptions: any;
+
+  constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService) { }
 
   ngOnInit() {
+    this.retroBoardSubscriptions = this.frbs.retroBoardSnapshotChanges();
+    this.prepareRetroBoard();
   }
 
   openBottomSheet(): void {
@@ -20,6 +25,16 @@ export class RetroProcessComponent implements OnInit {
 
     bottomSheetRef.afterDismissed().subscribe(() => {
       console.log('Bottom sheet has been dismissed.');
+    });
+  }
+
+  private prepareRetroBoard() {
+    this.retroBoardSubscriptions.subscribe(snapshot => {
+      this.retroBoard = [];
+      snapshot.forEach(doc => {
+        const retrob = doc.payload.doc.data();
+        this.retroBoard.push(retrob);
+      });
     });
   }
 

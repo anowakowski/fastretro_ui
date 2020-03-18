@@ -27,6 +27,10 @@ export class FirestoreBaseService {
   }
 
   addAsRef(collectionName: string, docId: string): DocumentReference {
-    return this.afs.doc('teams/' + docId).ref;
+    return this.afs.doc(collectionName + docId).ref;
+  }
+
+  snapshotChanges(collectionName: string) {
+    return this.afs.collection(collectionName).snapshotChanges();
   }
 }

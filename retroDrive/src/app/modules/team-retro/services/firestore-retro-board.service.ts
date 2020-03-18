@@ -16,12 +16,16 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
-  prepareTeam(team: Teams) {
-    return this.firestoreBase.addAsRef('/teams', team.id);
+  private prepareTeam(team: Teams) {
+    return this.firestoreBase.addAsRef('/teams/', team.id);
   }
 
   getTeams() {
-    return this.firestoreBase.getAll('/teams');
+    return this.firestoreBase.getAll('/teams/');
+  }
+
+  retroBoardSnapshotChanges() {
+    return this.firestoreBase.snapshotChanges(RETRO_BOARD_COLLECTION);
   }
 
   private prepareRetroBoard(newRetroBoard: any) {

@@ -53,8 +53,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   }
 
   createNewRetroBoard() {
-    this.prepareRetroBoardToSave();
-
+    const retroBoard = this.prepareRetroBoardToSave();
+    this.frbs.addNewRetroBoard(retroBoard);
+    
     this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
@@ -67,7 +68,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       team: value.teamsFormControl,
       members: value.membersFormControl
     };
-    this.frbs.addNewRetroBoard(retroBoard);
+
+    return retroBoard;
   }
 
   private prepareTeams() {
