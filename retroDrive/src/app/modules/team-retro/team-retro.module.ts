@@ -46,7 +46,6 @@ import { FirestoreRetroBoardService } from './services/firestore-retro-board.ser
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    FirestoreBaseService,
     FirestoreRetroBoardService
   ]
 })

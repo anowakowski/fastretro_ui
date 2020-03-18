@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -18,7 +19,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
-  constructor(private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>, private formBuilder: FormBuilder) { }
+  constructor(
+    private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
+    private formBuilder: FormBuilder,
+    private frbs: FirestoreRetroBoardService) { }
 
   ngOnInit() {
     this.createAddNewRetroBoardForm();
@@ -40,6 +44,16 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   createNewRetroBoard() {
     const value = this.addNewRetroBoardForm.value;
+
+    const retroBoard = {
+      sprintName: value.sprintName,
+      retroName: value.retroName,
+      team: value.teamsFormControl,
+      members: value.membersFormControl
+    };
+
+    this.frbs.addNewRetroBoard(retroBoard);
+    
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();

@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginRegisterGuard } from './guards/login-register.guard';
+import { FirestoreBaseService } from './services/firestore-base.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { LoginRegisterGuard } from './guards/login-register.guard';
   ],
   providers: [
     AuthService,
+    FirestoreBaseService,
     AuthGuard,
     LoginRegisterGuard
   ],

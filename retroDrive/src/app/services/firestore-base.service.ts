@@ -6,7 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class FirestoreBaseService {
 
-  constructor(private afs: AngularFirestore, collectionName) { }
+  constructor(private afs: AngularFirestore) { }
 
   getAll(collectionName: string): Promise<any> {
     return this.afs.collection(collectionName)

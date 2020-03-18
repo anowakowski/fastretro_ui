@@ -6,12 +6,10 @@ import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 })
 export class FirestoreRetroBoardService {
 
+  private colName = '/retroBoards';
   constructor(private firestoreBase: FirestoreBaseService) { }
 
-  addNewRetroBoard() {
-    
+  addNewRetroBoard(newRetroBoard) {
+    this.firestoreBase.addNewItem(this.colName, newRetroBoard);
   }
-
-  
-
 }
