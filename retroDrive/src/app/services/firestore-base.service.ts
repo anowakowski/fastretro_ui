@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ export class FirestoreBaseService {
 
   constructor(private afs: AngularFirestore) { }
 
-  getAll(collectionName: string): Promise<any> {
+  getAll(collectionName: string) {
     return this.afs.collection(collectionName)
       .get()
       .toPromise();
@@ -24,5 +24,9 @@ export class FirestoreBaseService {
 
   deleteItem(collectionName: string, docId: any) {
     this.afs.collection(collectionName).doc(docId).delete();
+  }
+
+  addAsRef(collectionName: string, docId: string): DocumentReference {
+    return this.afs.doc('teams/' + docId).ref;
   }
 }

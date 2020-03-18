@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { Teams } from 'src/app/models/teams';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -17,6 +18,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   sprintName = new FormControl('');
   shouldDisableMembersControl = true;
 
+  teams: Teams[];
+
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   constructor(
@@ -26,6 +29,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   ngOnInit() {
     this.createAddNewRetroBoardForm();
+    this.getTeams();
   }
 
   openLink(event: MouseEvent): void {
@@ -53,16 +57,28 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     };
 
     this.frbs.addNewRetroBoard(retroBoard);
-    
-
+  
     this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 
   onChangeTeams(eventValue) {
-    if (eventValue !== null){
+    if (eventValue !== null) {
       this.shouldDisableMembersControl = false;
     }
+  }
+
+  private getTeams() {
+    this.teams = new Array<Teams>();
+    this.frbs.getTeams().then(snapshotTeams => {
+      snapshotTeams.docs.forEach(doc => {
+        const team: Teams = {
+          id: doc.id,
+          name: doc.data().name
+        };
+        this.teams.push(team);
+      });
+    });
   }
 
 }
