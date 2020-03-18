@@ -16,7 +16,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   membersFormControl = new FormControl('');
   teamsFormControl = new FormControl('');
   retroName = new FormControl('');
-  sprintName = new FormControl('');
+  sprintNumber = new FormControl('');
   shouldDisableMembersControl = true;
 
   teams: Teams[];
@@ -42,7 +42,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     this.addNewRetroBoardForm = this.formBuilder.group({
       retroName: this.retroName,
       membersFormControl: this.membersFormControl,
-      sprintName: this.sprintName,
+      sprintNumber: this.sprintNumber,
       teamsFormControl: this.teamsFormControl
     });
   }
@@ -66,7 +66,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
 
     const retroBoard = {
-      sprintName: value.sprintName,
+      sprintNumber: value.sprintNumber,
       retroName: value.retroName,
       team: value.teamsFormControl,
       members: value.membersFormControl,

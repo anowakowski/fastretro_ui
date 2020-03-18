@@ -30,10 +30,11 @@ export class FirestoreRetroBoardService {
 
   private prepareRetroBoard(newRetroBoard: any) {
     return {
-      sprintName: newRetroBoard.sprintName,
+      sprintNumber: newRetroBoard.sprintNumber,
       retroName: newRetroBoard.retroName,
       team: this.prepareTeam(newRetroBoard.team),
-      members: newRetroBoard.members
+      members: newRetroBoard.members,
+      creationDate: newRetroBoard.creationDate
     };
   }
 }

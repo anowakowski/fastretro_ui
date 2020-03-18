@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { RetroBoard } from 'src/app/models/retroBoard';
 
 @Component({
   selector: 'app-retro-process',
@@ -10,7 +11,7 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 })
 export class RetroProcessComponent implements OnInit {
 
-  retroBoard: any[];
+  retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
   constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService) { }
@@ -30,10 +31,12 @@ export class RetroProcessComponent implements OnInit {
 
   private prepareRetroBoard() {
     this.retroBoardSubscriptions.subscribe(snapshot => {
-      this.retroBoard = [];
+      this.retroBoards = [];
       snapshot.forEach(doc => {
-        const retrob = doc.payload.doc.data();
-        this.retroBoard.push(retrob);
+        const retroBoard = doc.payload.doc.data() as RetroBoard;
+        retroBoard.id = doc.payload.doc.id;
+
+        this.retroBoards.push(retroBoard);
       });
     });
   }

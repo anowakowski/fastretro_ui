@@ -7,18 +7,19 @@
 </div>
 <div style="margin-top: 40px;">
   <mat-card style="margin-bottom: 10px;">List of not started retro board</mat-card>
-  <mat-card class="example-card">
-    <mat-card-header>
-      <mat-card-title>#team Alpha Board</mat-card-title>
-      <mat-card-subtitle>
-        <span style="font-size: 17px;">Retro for Sprint 21</span> <br/>
-        <i>Retro Board Created <span> march 2020</span></i>
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-actions>
-      <button style="width: 100%;" mat-raised-button color="warn">Start Retro Process</button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+  <div *ngFor="let retroBoard of retroBoards">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title>#team {{retroBoard.retroName}} Board</mat-card-title>
+        <mat-card-subtitle>
+          <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br/>
+          <i>Retro Board Created <span> march 2020</span></i>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button style="width: 100%;" mat-raised-button color="warn">Start Retro Process</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
-<p *ngFor="let rb of retroBoard">{{rb.retroName}}</p>
+</div>
