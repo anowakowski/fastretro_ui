@@ -1,6 +1,6 @@
 export interface RetroBoard {
     id: string;
-    sprintName: string;
+    sprintNumber: string;
     retroName: string;
     team: any;
     members: any[];
