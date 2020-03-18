@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {formatDate} from '@angular/common';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
@@ -55,18 +56,21 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   createNewRetroBoard() {
     const retroBoard = this.prepareRetroBoardToSave();
     this.frbs.addNewRetroBoard(retroBoard);
-    
+
     this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 
   private prepareRetroBoardToSave() {
     const value = this.addNewRetroBoardForm.value;
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+
     const retroBoard = {
       sprintName: value.sprintName,
       retroName: value.retroName,
       team: value.teamsFormControl,
-      members: value.membersFormControl
+      members: value.membersFormControl,
+      creationDate: currentDate
     };
 
     return retroBoard;
