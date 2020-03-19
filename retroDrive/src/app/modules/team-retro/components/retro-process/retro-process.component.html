@@ -8,7 +8,7 @@
 <div style="margin-top: 40px;">
   <mat-card style="margin-bottom: 10px;">List of not started retro board</mat-card>
   <div *ngFor="let retroBoard of retroBoards">
-    <mat-card class="example-card">
+    <mat-card style="margin-top: 10px;" class="example-card">
       <mat-card-header>
         <div fxFlex></div>
         <button style="height: 40px; margin-right: -7px;" mat-raised-button color="warn" (click)="deleteRetroBoard(retroBoard)">
@@ -18,7 +18,6 @@
           <div>
             <span>#team {{retroBoard.team.name}} Board</span>
           </div>
-
         </mat-card-title>
         <mat-card-subtitle>
           <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br/>
@@ -30,7 +29,6 @@
       </mat-card-actions>
     </mat-card>
   </div>
-
 </div>
 
 
