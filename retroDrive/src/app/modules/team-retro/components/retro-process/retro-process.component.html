@@ -10,11 +10,15 @@
   <div *ngFor="let retroBoard of retroBoards">
     <mat-card class="example-card">
       <mat-card-header>
+        <div fxFlex></div>
+        <button style="height: 40px; margin-right: -7px;" mat-raised-button color="warn">
+         Remove <mat-icon>remove</mat-icon>
+        </button>
         <mat-card-title>
-            #team {{retroBoard.team.name}} Board
-            <button mat-raised-button color="warn" (click)="deleteRetroBoard(retroBoard)">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </button>
+          <div>
+            <span>#team {{retroBoard.team.name}} Board</span>
+          </div>
+
         </mat-card-title>
         <mat-card-subtitle>
           <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br/>
@@ -22,9 +26,11 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions>
-        <button style="width: 100%;" mat-raised-button color="warn">Start Retro Process</button>
+        <button style="width: 100%;" mat-raised-button color="accent">Start Retro Process</button>
       </mat-card-actions>
     </mat-card>
   </div>
 
 </div>
+
+
