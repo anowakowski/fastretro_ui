@@ -29,6 +29,10 @@ export class RetroProcessComponent implements OnInit {
     });
   }
 
+  deleteRetroBoard(retroBoard: RetroBoard) {
+    this.frbs.deleteRetroBoard(retroBoard);
+  }
+
   private prepareRetroBoard() {
     this.retroBoardSubscriptions = this.frbs.retroBoardFilteredSnapshotChanges().subscribe(snapshot => {
       this.retroBoards = [];

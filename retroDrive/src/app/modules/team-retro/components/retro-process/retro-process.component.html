@@ -10,7 +10,12 @@
   <div *ngFor="let retroBoard of retroBoards">
     <mat-card class="example-card">
       <mat-card-header>
-        <mat-card-title>#team {{retroBoard.team.name}} Board</mat-card-title>
+        <mat-card-title>
+            #team {{retroBoard.team.name}} Board
+            <button mat-raised-button color="warn" (click)="deleteRetroBoard(retroBoard)">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+        </mat-card-title>
         <mat-card-subtitle>
           <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br/>
           <i>Retro Board Created at<span> {{retroBoard.creationDate}}</span></i>
