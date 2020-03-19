@@ -18,6 +18,7 @@ import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { FirestoreRetroBoardService } from './services/firestore-retro-board.service';
+import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/retro-board-snackbar.component';
 
 
 @NgModule({
@@ -39,10 +40,12 @@ import { FirestoreRetroBoardService } from './services/firestore-retro-board.ser
     TeamsComponent,
     RetroProcessComponent,
     SidenavUsercardComponent,
-    AddNewRetroBoardBottomsheetComponent
+    AddNewRetroBoardBottomsheetComponent,
+    RetroBoardSnackbarComponent
   ],
   entryComponents: [
-    AddNewRetroBoardBottomsheetComponent
+    AddNewRetroBoardBottomsheetComponent,
+    RetroBoardSnackbarComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

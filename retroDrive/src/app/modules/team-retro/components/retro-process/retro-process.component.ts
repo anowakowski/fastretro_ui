@@ -4,6 +4,8 @@ import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bot
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { Teams } from 'src/app/models/teams';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 
 @Component({
   selector: 'app-retro-process',
@@ -15,7 +17,7 @@ export class RetroProcessComponent implements OnInit {
   retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
-  constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService) { }
+  constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.prepareRetroBoard();
@@ -31,6 +33,14 @@ export class RetroProcessComponent implements OnInit {
 
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.frbs.deleteRetroBoard(retroBoard);
+    this.openSnackBar();
+  }
+
+  openSnackBar() {
+    const durationInSeconds = 3;
+    this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+    });
   }
 
   private prepareRetroBoard() {
