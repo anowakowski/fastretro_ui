@@ -15,6 +15,12 @@ const routes: Routes = [
     path: 'retro',
     loadChildren: () => import('./modules/team-retro/team-retro.module').then( m => m.TeamRetroModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'retro-in-progress',
+    loadChildren: () => import('./modules/team-retro-process-in-progress/team-retro-process-in-progress-routing.module')
+      .then( m => m.TeamRetroProcessInProgressRoutingModule),
+    canActivate: [AuthGuard]
   }
 ];
 
