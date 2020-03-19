@@ -33,19 +33,23 @@ export class RetroProcessComponent implements OnInit {
   private prepareRetroBoard() {
     this.retroBoardSubscriptions.subscribe(snapshot => {
       this.retroBoards = [];
-      snapshot.forEach(retroBoardSnapshot => {
-        const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
-        retroBoard.id = retroBoardSnapshot.payload.doc.id;
-        const team = retroBoardSnapshot.payload.doc.data().team.get();
-        this.prepareTeams(team, retroBoard);
-      });
+      this.CreateBaseRetroBoardData(snapshot);
+    });
+  }
+
+  private CreateBaseRetroBoardData(snapshot: any) {
+    snapshot.forEach(retroBoardSnapshot => {
+      const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
+      retroBoard.id = retroBoardSnapshot.payload.doc.id;
+      const team = retroBoardSnapshot.payload.doc.data().team.get();
+      this.prepareTeams(team, retroBoard);
     });
   }
 
   private prepareTeams(team: any, retroBoard: RetroBoard) {
     team.then(teamSnap => {
-      const teamtoreturn = teamSnap.data() as Teams;
-      retroBoard.team = teamtoreturn;
+      const teamToAdd = teamSnap.data() as Teams;
+      retroBoard.team = teamToAdd;
       this.addToRetroBoards(retroBoard);
     });
   }
