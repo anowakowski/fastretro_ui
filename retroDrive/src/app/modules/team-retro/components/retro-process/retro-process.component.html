@@ -5,7 +5,7 @@
     <mat-icon style="font-size: 50px; width: 50px; height: 50px;">add</mat-icon>
   </button>
 </div>
-<div style="margin-top: 40px;">
+<div *ngIf="shouldShowRetroBoardElements()" style="margin-top: 40px;">
   <mat-card style="margin-bottom: 10px;">List of not started retro board</mat-card>
   <div *ngFor="let retroBoard of retroBoards">
     <mat-card style="margin-top: 10px;" class="example-card">

@@ -31,6 +31,17 @@ export class RetroProcessComponent implements OnInit {
     });
   }
 
+  shouldShowRetroBoardElements() {
+    if (this.retroBoards !== undefined) {
+      if (this.retroBoards.length > 0) {
+        return true;
+
+      }
+    }
+
+    return false;
+  }
+
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.frbs.deleteRetroBoard(retroBoard);
     this.openSnackBarForDelete(retroBoard.retroName);
