@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'retro-in-progress',
+    path: 'retro-in-progress/:id',
     loadChildren: () => import('./modules/team-retro-process-in-progress/team-retro-process-in-progress-routing.module')
       .then( m => m.TeamRetroProcessInProgressRoutingModule),
     canActivate: [AuthGuard]
