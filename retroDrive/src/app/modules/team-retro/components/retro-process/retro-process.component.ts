@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
@@ -12,12 +12,16 @@ import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board
   templateUrl: './retro-process.component.html',
   styleUrls: ['./retro-process.component.css']
 })
-export class RetroProcessComponent implements OnInit {
+export class RetroProcessComponent implements OnInit, OnDestroy {
 
   retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
   constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService, private snackBar: MatSnackBar) { }
+
+  ngOnDestroy(): void {
+    this.retroBoardSubscriptions.unsubscribe();
+  }
 
   ngOnInit() {
     this.prepareRetroBoard();
