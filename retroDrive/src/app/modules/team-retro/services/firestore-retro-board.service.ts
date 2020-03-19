@@ -33,7 +33,7 @@ export class FirestoreRetroBoardService {
     const condition: ConditionQueryData = {
       fieldName: 'isStarted',
       conditionOperator: '==',
-      value: 'false'
+      value: false
     };
     return this.firestoreBase.getFilteredSnapshotChanges(RETRO_BOARD_COLLECTION, condition);
   }
