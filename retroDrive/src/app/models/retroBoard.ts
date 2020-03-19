@@ -7,4 +7,6 @@ export interface RetroBoard {
     team: Teams;
     members: any[];
     creationDate: Date;
+    isStarted: boolean;
+    startDate: Date;
 }

@@ -13,11 +13,11 @@ export class FirestoreRetroBoardService {
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
-    const retroBoardToSave = this.prepareRetroBoard(newRetroBoard);
+    const retroBoardToSave = this.prepareRetroBoardToSave(newRetroBoard);
     this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
-  private prepareTeam(team: Teams) {
+  prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
 
@@ -38,13 +38,14 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges(RETRO_BOARD_COLLECTION, condition);
   }
 
-  private prepareRetroBoard(newRetroBoard: any) {
+  private prepareRetroBoardToSave(newRetroBoard: any) {
     return {
       sprintNumber: newRetroBoard.sprintNumber,
       retroName: newRetroBoard.retroName,
       team: this.prepareTeam(newRetroBoard.team),
       members: newRetroBoard.members,
-      creationDate: newRetroBoard.creationDate
+      creationDate: newRetroBoard.creationDate,
+      isStarted: false
     };
   }
 }
