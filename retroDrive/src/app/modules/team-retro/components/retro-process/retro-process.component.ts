@@ -18,7 +18,6 @@ export class RetroProcessComponent implements OnInit {
   constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService) { }
 
   ngOnInit() {
-    this.retroBoardSubscriptions = this.frbs.retroBoardSnapshotChanges();
     this.prepareRetroBoard();
   }
 
@@ -31,7 +30,7 @@ export class RetroProcessComponent implements OnInit {
   }
 
   private prepareRetroBoard() {
-    this.retroBoardSubscriptions.subscribe(snapshot => {
+    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredSnapshotChanges().subscribe(snapshot => {
       this.retroBoards = [];
       this.CreateBaseRetroBoardData(snapshot);
     });

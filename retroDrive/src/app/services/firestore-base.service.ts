@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference, FieldPath } from '@angular/fire/firestore';
+import { ConditionQueryData } from '../helpers/conditionQueryData';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,15 @@ export class FirestoreBaseService {
     return this.afs.doc(collectionName + docId).ref;
   }
 
+  getFilteredSnapshotChanges(collectionName: string, condition: ConditionQueryData) {
+    return this.afs.collection(
+        collectionName,
+        ref => ref.where(condition.fieldName, condition.conditionOperator, condition.value))
+      .snapshotChanges();
+  }
+
   snapshotChanges(collectionName: string) {
     return this.afs.collection(collectionName).snapshotChanges();
   }
 }
+
