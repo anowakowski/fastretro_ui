@@ -35,10 +35,8 @@ export class RetroProcessComponent implements OnInit {
     if (this.retroBoards !== undefined) {
       if (this.retroBoards.length > 0) {
         return true;
-
       }
     }
-
     return false;
   }
 
