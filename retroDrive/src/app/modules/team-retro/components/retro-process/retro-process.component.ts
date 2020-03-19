@@ -3,6 +3,7 @@ import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet'
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { Teams } from 'src/app/models/teams';
 
 @Component({
   selector: 'app-retro-process',
@@ -32,13 +33,24 @@ export class RetroProcessComponent implements OnInit {
   private prepareRetroBoard() {
     this.retroBoardSubscriptions.subscribe(snapshot => {
       this.retroBoards = [];
-      snapshot.forEach(doc => {
-        const retroBoard = doc.payload.doc.data() as RetroBoard;
-        retroBoard.id = doc.payload.doc.id;
-
-        this.retroBoards.push(retroBoard);
+      snapshot.forEach(retroBoardSnapshot => {
+        const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
+        retroBoard.id = retroBoardSnapshot.payload.doc.id;
+        const team = retroBoardSnapshot.payload.doc.data().team.get();
+        this.prepareTeams(team, retroBoard);
       });
     });
   }
 
+  private prepareTeams(team: any, retroBoard: RetroBoard) {
+    team.then(teamSnap => {
+      const teamtoreturn = teamSnap.data() as Teams;
+      retroBoard.team = teamtoreturn;
+      this.addToRetroBoards(retroBoard);
+    });
+  }
+
+  private addToRetroBoards(retroBoard: RetroBoard) {
+    this.retroBoards.push(retroBoard);
+  }
 }
