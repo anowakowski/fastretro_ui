@@ -33,13 +33,16 @@ export class RetroProcessComponent implements OnInit {
 
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.frbs.deleteRetroBoard(retroBoard);
-    this.openSnackBar();
+    this.openSnackBarForDelete(retroBoard.retroName);
   }
 
-  openSnackBar() {
+  openSnackBarForDelete(retroBoardName) {
     const durationInSeconds = 3;
     this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
       duration: durationInSeconds * 1000,
+      data: {
+        displayText: 'deleted Retro Board: ' + retroBoardName
+      }
     });
   }
 
