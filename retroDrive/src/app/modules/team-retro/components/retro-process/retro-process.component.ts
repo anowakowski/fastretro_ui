@@ -6,6 +6,8 @@ import { RetroBoard } from 'src/app/models/retroBoard';
 import { Teams } from 'src/app/models/teams';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
+import { DataPassingService } from 'src/app/services/data-passing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-retro-process',
@@ -17,7 +19,12 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
-  constructor(private bottomSheetRef: MatBottomSheet, private frbs: FirestoreRetroBoardService, private snackBar: MatSnackBar) { }
+  constructor(
+    private bottomSheetRef: MatBottomSheet,
+    private frbs: FirestoreRetroBoardService,
+    private dataPassingService: DataPassingService,
+    private snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -59,8 +66,9 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  onStartRetroProcess() {
-
+  onStartRetroProcess(retroBoard) {
+    this.dataPassingService.setData(1, retroBoard);
+    this.router.navigateByUrl('/retro-in-progress/1');
   }
 
   private prepareRetroBoard() {

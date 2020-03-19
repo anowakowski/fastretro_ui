@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-team-retro-process-in-progress',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TeamRetroProcessInProgressComponent implements OnInit {
 
-  constructor() { }
+  data: any;
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
+    if (this.route.snapshot.data['retroBoardData']) {
+      this.data = this.route.snapshot.data['retroBoardData'];
+      console.log(this.data);
+    }
   }
 
 }

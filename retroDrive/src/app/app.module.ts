@@ -13,6 +13,7 @@ import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginRegisterGuard } from './guards/login-register.guard';
 import { FirestoreBaseService } from './services/firestore-base.service';
+import { DataPassingService } from './services/data-passing.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FirestoreBaseService } from './services/firestore-base.service';
   providers: [
     AuthService,
     FirestoreBaseService,
+    DataPassingService,
     AuthGuard,
     LoginRegisterGuard
   ],
