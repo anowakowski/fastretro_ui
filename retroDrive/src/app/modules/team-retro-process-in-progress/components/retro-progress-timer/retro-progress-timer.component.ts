@@ -11,13 +11,14 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   private timerSubscription: any;
   private counter: Observable<number>;
-  current = 5;
+  current = 0;
   max = 10;
 
   constructor() { }
 
   ngOnInit() {
     this.setCounter();
+    this.subscribeCounterForTimer();
   }
 
   ngOnDestroy() {
@@ -34,7 +35,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.timerSubscription.unsubscribe();
   }
 
-  subscribeTimer() {
+  subscribeCounterForTimer() {
     this.timerSubscription = this.counter.subscribe(sec => {
       this.current++;
     });
