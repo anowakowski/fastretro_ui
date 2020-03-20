@@ -1,10 +1,10 @@
 <div class="progress-wrapper">
   <div 
     class="current"
-    [ngClass]="{'current-timer-position-below-tenmin': currentInMin < 9, 'current-timer-position-up-to-tenmin': currentInMin > 9}"
+    [ngClass]="{'current-timer-position-below-tenmin': currentInMinCountDown < 9, 'current-timer-position-up-to-tenmin': currentInMinCountDown > 9}"
 
 >
-    {{currentInMin}} : {{currentInSec}}
+    {{currentInMinCountDown}} : {{currentInSecCountDown}}
   </div>
   <round-progress
   [current]="currentInMin"

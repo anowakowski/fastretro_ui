@@ -17,17 +17,18 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   currentInMin = 0;
   currentInSec = 0;
+  currentInMinCountDown = 0;
+  currentInSecCountDown = 0;
 
   maxInMin = 15;
   minInterval = 60000;
   secInterval = 1000;
 
-  currentMin = 0;
-  currentSec = 0;
-
   constructor() { }
 
   ngOnInit() {
+    this.currentInMinCountDown = this.maxInMin - 1;
+    this.currentInSecCountDown = 59;
     this.setCounter();
     this.subscribeCounterForTimer();
   }
@@ -44,17 +45,23 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   unsubscribeTimer() {
     this.timerMinSubscription.unsubscribe();
+    this.timerSecSubscription.unsubscribe();
   }
 
   subscribeCounterForTimer() {
     this.timerMinSubscription = this.counterInMin.subscribe(min => {
       this.currentInMin++;
+
+      this.currentInMinCountDown = this.currentInMinCountDown - this.currentInMin;
     });
-    this.timerMinSubscription = this.counterInSec.subscribe(sec => {
+    this.timerSecSubscription = this.counterInSec.subscribe(sec => {
       this.currentInSec++;
+
       if (this.currentInSec === 60) {
         this.currentInSec = 0;
       }
+
+      this.currentInSecCountDown = 59 - this.currentInSec;
     });
   }
 
