@@ -9,10 +9,21 @@ import { Observable, interval } from 'rxjs';
 })
 export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
-  private timerSubscription: any;
-  private counter: Observable<number>;
-  current = 0;
-  max = 10;
+  private timerMinSubscription: any;
+  private timerSecSubscription: any;
+
+  private counterInMin: Observable<number>;
+  private counterInSec: Observable<number>;
+
+  currentInMin = 0;
+  currentInSec = 0;
+
+  maxInMin = 2;
+  minInterval = 60000;
+  secInterval = 1000;
+
+  currentMin = 0;
+  currentSec = 0;
 
   constructor() { }
 
@@ -26,23 +37,26 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
-    if (progressBarValue === this.max) {
+    if (progressBarValue === this.maxInMin) {
       this.unsubscribeTimer();
     }
   }
 
   unsubscribeTimer() {
-    this.timerSubscription.unsubscribe();
+    this.timerMinSubscription.unsubscribe();
   }
 
   subscribeCounterForTimer() {
-    this.timerSubscription = this.counter.subscribe(sec => {
-      this.current++;
+    this.timerMinSubscription = this.counterInMin.subscribe(min => {
+      this.currentInMin++;
+    });
+    this.timerMinSubscription = this.counterInSec.subscribe(sec => {
+      this.currentInSec++;
     });
   }
 
   setCounter() {
-    const me = this;
-    me.counter = interval(1000);
+    this.counterInMin = interval(this.minInterval);
+    this.counterInSec = interval(this.secInterval);
   }
 }
