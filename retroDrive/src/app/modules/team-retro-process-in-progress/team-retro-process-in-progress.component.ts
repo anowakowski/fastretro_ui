@@ -30,8 +30,6 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   unsubscribeTimer () {
     this.timerSubscription.unsubscribe();
   }
@@ -42,7 +40,7 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     });
   }
 
-  setCounter(){
+  setCounter() {
     const me = this;
     me.counter = interval(1000);
   }
