@@ -1,5 +1,11 @@
 <div class="progress-wrapper">
-  <div class="current">{{currentInMin}} : {{currentInSec}}</div>
+  <div 
+    class="current"
+    [ngClass]="{'current-timer-position-below-tenmin': currentInMin < 9, 'current-timer-position-up-to-tenmin': currentInMin > 9}"
+
+>
+    {{currentInMin}} : {{currentInSec}}
+  </div>
   <round-progress
   [current]="currentInMin"
   [max]="maxInMin"

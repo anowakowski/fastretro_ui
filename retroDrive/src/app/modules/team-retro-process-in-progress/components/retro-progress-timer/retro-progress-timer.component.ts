@@ -18,7 +18,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   currentInMin = 0;
   currentInSec = 0;
 
-  maxInMin = 2;
+  maxInMin = 15;
   minInterval = 60000;
   secInterval = 1000;
 
