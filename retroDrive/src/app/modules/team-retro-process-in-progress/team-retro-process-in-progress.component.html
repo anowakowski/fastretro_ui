@@ -1,22 +1,4 @@
 <app-nav></app-nav>
-<p>
-  team-retro-process-in-progress works!
-</p>
-
-<round-progress
-    [current]="current"
-    [max]="max"
-    [color]="'#ff6666'"
-    [background]="'#99ff99'"
-    [radius]="100"
-    [stroke]="8"
-    [semicircle]="false"
-    [rounded]="true"
-    [clockwise]="false"
-    [responsive]="false"
-    [duration]="800"
-    [animation]="'easeInOutQuart'"
-    [animationDelay]="0"
-    (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+<app-retro-progress-timer></app-retro-progress-timer>
 
 

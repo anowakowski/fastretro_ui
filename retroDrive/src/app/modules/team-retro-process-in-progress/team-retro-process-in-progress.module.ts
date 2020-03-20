@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TeamRetroProcessInProgressComponent } from './team-retro-process-in-progress.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -14,10 +14,9 @@ import { RetroProgressTimerComponent } from './components/retro-progress-timer/r
     FlexLayoutModule,
     MaterialModule,
     TeamRetroProcessInProgressRoutingModule,
-    RoundProgressModule,
-    RetroProgressTimerComponent
+    RoundProgressModule
   ],
-  declarations: [TeamRetroProcessInProgressComponent, NavComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  declarations: [TeamRetroProcessInProgressComponent, NavComponent, RetroProgressTimerComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
 export class TeamRetroProcessInProgressModule { }
