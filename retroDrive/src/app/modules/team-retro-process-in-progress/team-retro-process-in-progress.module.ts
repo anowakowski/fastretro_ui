@@ -4,9 +4,12 @@ import { TeamRetroProcessInProgressComponent } from './team-retro-process-in-pro
 import { NavComponent } from './components/nav/nav.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TeamRetroProcessInProgressRoutingModule } from './team-retro-process-in-progress-routing.module';
 import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
+
+
 
 @NgModule({
   imports: [
@@ -14,7 +17,8 @@ import { RetroProgressTimerComponent } from './components/retro-progress-timer/r
     FlexLayoutModule,
     MaterialModule,
     TeamRetroProcessInProgressRoutingModule,
-    RoundProgressModule
+    RoundProgressModule,
+    DragDropModule
   ],
   declarations: [TeamRetroProcessInProgressComponent, NavComponent, RetroProgressTimerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
