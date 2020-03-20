@@ -8,6 +8,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TeamRetroProcessInProgressRoutingModule } from './team-retro-process-in-progress-routing.module';
 import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
+import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
 
 
 
@@ -20,7 +21,7 @@ import { RetroProgressTimerComponent } from './components/retro-progress-timer/r
     RoundProgressModule,
     DragDropModule
   ],
-  declarations: [TeamRetroProcessInProgressComponent, NavComponent, RetroProgressTimerComponent],
+  declarations: [TeamRetroProcessInProgressComponent, NavComponent, RetroProgressTimerComponent, ContentDropDragComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
 export class TeamRetroProcessInProgressModule { }
