@@ -5,13 +5,15 @@ import { NavComponent } from './components/nav/nav.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
 import { TeamRetroProcessInProgressRoutingModule } from './team-retro-process-in-progress-routing.module';
+import {RoundProgressModule} from 'angular-svg-round-progressbar';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
     MaterialModule,
-    TeamRetroProcessInProgressRoutingModule
+    TeamRetroProcessInProgressRoutingModule,
+    RoundProgressModule
   ],
   declarations: [TeamRetroProcessInProgressComponent, NavComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
