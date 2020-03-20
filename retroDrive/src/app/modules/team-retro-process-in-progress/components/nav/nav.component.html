@@ -3,8 +3,11 @@
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
     <span>Retro Drive</span>
     <span class="example-spacer"></span>
-    <span>Retro in progress</span>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">arrow_right_alt</mat-icon>
-    <app-retro-progress-timer></app-retro-progress-timer>
+    <button mat-raised-button color="warn" ><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>
+    <span style="margin-left: 12px;">
+      <span>Retro in progress...</span>
+      <span *ngIf="false">Retro is finished</span>
+    </span>
+    <span style="margin-left: 12px;"><app-retro-progress-timer></app-retro-progress-timer></span>
   </mat-toolbar-row>
 </mat-toolbar>
