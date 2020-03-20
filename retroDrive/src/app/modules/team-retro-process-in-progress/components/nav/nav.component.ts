@@ -13,7 +13,7 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
   }
-  
+
   stopTimer() {
     this.shouldStopTimer = true;
   }
