@@ -3,10 +3,14 @@ import { CommonModule } from '@angular/common';
 import { TeamRetroProcessInProgressComponent } from './team-retro-process-in-progress.component';
 import { TestCompComponent } from './test-comp/test-comp.component';
 import { NavComponent } from './components/nav/nav.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MaterialModule } from 'src/app/shared/material-module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FlexLayoutModule,
+    MaterialModule
   ],
   declarations: [TeamRetroProcessInProgressComponent, TestCompComponent, NavComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
