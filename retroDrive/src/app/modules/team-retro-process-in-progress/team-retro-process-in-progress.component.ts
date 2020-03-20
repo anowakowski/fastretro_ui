@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TeamRetroProcessInProgressComponent implements OnInit {
 
+  current = 5;
+  max = 10;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  doSomethingWithCurrentValue(progressBarValue){
+    const me = this;
+    if (progressBarValue === me.max) {
+      //me.ngOnDestroy();
+    }
+  }
+
 
 }

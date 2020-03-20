@@ -3,4 +3,20 @@
   team-retro-process-in-progress works!
 </p>
 
+<round-progress
+    [current]="current"
+    [max]="max"
+    [color]="'#45ccce'"
+    [background]="'#eaeaea'"
+    [radius]="125"
+    [stroke]="20"
+    [semicircle]="true"
+    [rounded]="true"
+    [clockwise]="false"
+    [responsive]="false"
+    [duration]="800"
+    [animation]="'easeInOutQuart'"
+    [animationDelay]="0"
+    (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+
 
