@@ -52,6 +52,9 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     });
     this.timerMinSubscription = this.counterInSec.subscribe(sec => {
       this.currentInSec++;
+      if (this.currentInSec === 60) {
+        this.currentInSec = 0;
+      }
     });
   }
 

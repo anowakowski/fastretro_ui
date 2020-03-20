@@ -1,8 +1,8 @@
 .progress-wrapper {
     position: relative;
     margin: 22px auto;
-    font-size: 9px;
     width: 65px;
+    font-size: 9px;
   }
 
   .current {
@@ -13,4 +13,12 @@
     margin-left:  7.8px;
     font-family: Comic Sans MS, sans-serif;   
     font-style: bold;
-  } 
+  }
+  
+  .current-timer-position-below-tenmin {
+    margin-left:  12.3px;
+  }
+
+  .current-timer-position-up-to-tenmin {
+    margin-left:  7.8px;
+  }
