@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
 import { TeamRetroProcessInProgressRoutingModule } from './team-retro-process-in-progress-routing.module';
 import {RoundProgressModule} from 'angular-svg-round-progressbar';
+import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import {RoundProgressModule} from 'angular-svg-round-progressbar';
     FlexLayoutModule,
     MaterialModule,
     TeamRetroProcessInProgressRoutingModule,
-    RoundProgressModule
+    RoundProgressModule,
+    RetroProgressTimerComponent
   ],
   declarations: [TeamRetroProcessInProgressComponent, NavComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
