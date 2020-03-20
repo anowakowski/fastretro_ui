@@ -14,23 +14,14 @@ export class TestBoardComponent implements OnInit {
   constructor() { }
 
   board: Board = new Board('Test Board', [
-    new Column('Ideas', [
-      'Some random idea',
-      'This is another random idea',
-      'build an awesome application'
-    ]),
-    new Column('Research', [
-      'Lorem ipsum',
-      'foo',
-      'This was in the \'Research\' column'
-    ]),
-    new Column('Todo', [
+
+    new Column('Went Well', [
       'Get to work',
       'Pick up groceries',
       'Go home',
       'Fall asleep'
     ]),
-    new Column('Done', [
+    new Column('To Improve', [
       'Get up',
       'Brush teeth',
       'Take a shower',
