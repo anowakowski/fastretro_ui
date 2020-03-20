@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
+  public shouldStopTimer = false;
+
   constructor() { }
 
   ngOnInit() {
+  }
+  
+  stopTimer() {
+    this.shouldStopTimer = true;
   }
 
 }

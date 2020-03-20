@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Observable, interval } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { Observable, interval } from 'rxjs';
   styleUrls: ['./retro-progress-timer.component.css']
 })
 export class RetroProgressTimerComponent implements OnInit, OnDestroy {
+  @Input() shouldStopTimer = false;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -60,6 +61,10 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   private currentCounterSecProgress() {
+    if (this.shouldStopTimer) {
+      this.unsubscribeTimer();
+    }
+
     this.currentInSec++;
     if (this.currentInSec === 60) {
       this.currentInSec = 0;
