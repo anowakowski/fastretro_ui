@@ -18,6 +18,10 @@
         </button>
 
         <app-sidenav-usercard></app-sidenav-usercard>
+
+        <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
+          <i class="fa fa-sign-out"></i>&nbsp; SignOut
+        </button>
       </div>
     </div>
    </mat-drawer>
@@ -31,6 +35,7 @@
           </ol>
         </nav>
         <router-outlet></router-outlet>
+        <!--<app-my-test-comp></app-my-test-comp>-->
       </div>
     </div>
    </div>

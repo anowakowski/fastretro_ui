@@ -13,6 +13,13 @@ import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
 import { ChartsModule } from 'ng2-charts';
 import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-usercard.component';
+// tslint:disable-next-line:max-line-length
+import { AddNewRetroBoardBottomsheetComponent } from './components/add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
+import { FirestoreRetroBoardService } from './services/firestore-retro-board.service';
+import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/retro-board-snackbar.component';
+import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.component';
 
 
 @NgModule({
@@ -21,7 +28,10 @@ import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-
     TeamRetroRegisterRoutingModule,
     FlexLayoutModule,
     MaterialModule,
-    ChartsModule
+    ChartsModule,
+    FormsModule,
+    ReactiveFormsModule
+
   ],
   declarations: [
     TeamRetroComponent,
@@ -30,7 +40,18 @@ import { SidenavUsercardComponent } from './components/sidenav-usercard/sidenav-
     DashboardComponent,
     TeamsComponent,
     RetroProcessComponent,
-    SidenavUsercardComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    SidenavUsercardComponent,
+    AddNewRetroBoardBottomsheetComponent,
+    RetroBoardSnackbarComponent,
+    MyTestCompComponent
+  ],
+  entryComponents: [
+    AddNewRetroBoardBottomsheetComponent,
+    RetroBoardSnackbarComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    FirestoreRetroBoardService
+  ]
 })
 export class TeamRetroModule { }
