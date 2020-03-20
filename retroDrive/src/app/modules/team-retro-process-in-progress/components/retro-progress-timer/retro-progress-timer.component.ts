@@ -30,7 +30,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     }
   }
 
-  unsubscribeTimer () {
+  unsubscribeTimer() {
     this.timerSubscription.unsubscribe();
   }
 

@@ -1,0 +1,16 @@
+.progress-wrapper {
+    position: relative;
+    margin: 22px auto;
+    font-size: 9px;
+    width: 65px;
+  }
+
+  .current {
+    position: absolute;
+    color: #bbb;
+    font-weight: 100;
+    line-height: 5.4;
+    margin-left:  7.8px;
+    font-family: Comic Sans MS, sans-serif;   
+    font-style: bold;
+  } 

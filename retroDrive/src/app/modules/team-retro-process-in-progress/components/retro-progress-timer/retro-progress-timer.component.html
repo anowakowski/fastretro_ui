@@ -1,15 +1,18 @@
-<round-progress
-    [current]="current"
-    [max]="max"
-    [color]="'#ff6666'"
-    [background]="'#99ff99'"
-    [radius]="25"
-    [stroke]="4"
-    [semicircle]="false"
-    [rounded]="true"
-    [clockwise]="false"
-    [responsive]="false"
-    [duration]="800"
-    [animation]="'easeInOutQuart'"
-    [animationDelay]="0"
-    (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+<div class="progress-wrapper">
+  <div class="current">22 / 33</div>
+  <round-progress
+  [current]="current"
+  [max]="max"
+  [color]="'#ff6666'"
+  [background]="'#99ff99'"
+  [radius]="25"
+  [stroke]="4"
+  [semicircle]="false"
+  [rounded]="true"
+  [clockwise]="false"
+  [responsive]="false"
+  [duration]="800"
+  [animation]="'easeInOutQuart'"
+  [animationDelay]="0"
+  (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+</div>
