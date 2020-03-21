@@ -10,6 +10,7 @@ import { Column } from 'src/app/models/column';
 })
 export class ContentDropDragComponent implements OnInit {
 
+  public shouldStopTimer = false;
   board: Board = new Board('Test Board', [
 
     new Column('Went Well', [
@@ -28,6 +29,10 @@ export class ContentDropDragComponent implements OnInit {
   ]);
 
   ngOnInit() {
+  }
+
+  stopTimer() {
+    this.shouldStopTimer = true;
   }
 
   drop(event: CdkDragDrop<string[]>) {
