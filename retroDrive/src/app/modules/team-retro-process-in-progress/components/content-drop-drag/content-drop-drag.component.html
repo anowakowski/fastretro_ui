@@ -1,28 +1,43 @@
-<div class="example-container">
-  <h2>Well went</h2>
-  
-  <div
-    cdkDropList
-    #todoList="cdkDropList"
-    [cdkDropListData]="todo"
-    [cdkDropListConnectedTo]="[doneList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+<div class="root">
+  <!-- <div class="navbar has-background-dark">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <h1 class="app-name has-gradient-text">kanban</h1>
+      </div>
+    </div>
+  </div> -->
+
+  <app-nav></app-nav>
+
+  <div class="board">
+
+    <div class="board-bar">
+      <p class="board-name">{{ board.name }}</p>
+    </div>
+
+    <div class="board-wrapper">
+
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let column of board.columns">
+
+          <div class="column-title">
+            {{ column.name }}
+          </div>
+
+          <div class="tasks-container"
+          cdkDropList
+          [cdkDropListData]="column.tasks"
+          (cdkDropListDropped)="drop($event)">
+            <div class="task" *ngFor="let item of column.tasks" cdkDrag>
+              {{ item }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>
-
-<div class="example-container">
-  <h2>To improve</h2>
-
-  <div
-    cdkDropList
-    #doneList="cdkDropList"
-    [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="[todoList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
-  </div>
-</div>
-
