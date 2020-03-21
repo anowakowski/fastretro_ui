@@ -1,4 +1,4 @@
-<div class="progress-wrapper">
+<div *ngIf="!shouldHideSmallTimer" class="progress-wrapper">
   <div 
     class="current"
     [ngClass]="{'current-timer-position-below-tenmin': currentInMinCountDown < 9, 'current-timer-position-up-to-tenmin': currentInMinCountDown > 9}"
@@ -13,6 +13,32 @@
   [background]="'#48b14b'"
   [radius]="25"
   [stroke]="4"
+  [semicircle]="false"
+  [rounded]="true"
+  [clockwise]="false"
+  [responsive]="false"
+  [duration]="800"
+  [animation]="'easeInOutQuart'"
+  [animationDelay]="0"
+  (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+</div>
+
+
+<div *ngIf="!shouldHideBigTimer" class="progress-wrapper">
+  <div 
+    class="current"
+    [ngClass]="{'current-timer-position-below-tenmin': currentInMinCountDown < 9, 'current-timer-position-up-to-tenmin': currentInMinCountDown > 9}"
+
+>
+    {{currentInMinCountDown}} : {{currentInSecCountDown}}
+  </div>
+  <round-progress
+  [current]="currentInMin"
+  [max]="maxInMin"
+  [color]="'#f44336'"
+  [background]="'#48b14b'"
+  [radius]="120"
+  [stroke]="8"
   [semicircle]="false"
   [rounded]="true"
   [clockwise]="false"

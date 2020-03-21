@@ -9,6 +9,8 @@ import { Observable, interval } from 'rxjs';
 })
 export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   @Input() shouldStopTimer = false;
+  @Input() shouldHideSmallTimer = false;
+  @Input() shouldHideBigTimer = false;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;

@@ -8,6 +8,10 @@
       <span *ngIf="!shouldStopTimer">Retro in progress...</span>
       <span *ngIf="shouldStopTimer">Retro is finished</span>
     </span>
-    <span style="margin-left: 12px;"><app-retro-progress-timer [shouldStopTimer]="shouldStopTimer"></app-retro-progress-timer></span>
+    <span style="margin-left: 12px;">
+      <app-retro-progress-timer 
+        [shouldStopTimer]="shouldStopTimer"
+        [shouldHideBigTimer]="true"></app-retro-progress-timer>
+    </span>
   </mat-toolbar-row>
 </mat-toolbar>
