@@ -39,7 +39,14 @@
           [cdkDropListData]="column.tasks"
           (cdkDropListDropped)="drop($event)">
             <div class="task" 
-              [ngClass]="{'task-went-well': column.name === 'Went Well','task-to-improve': column.name === 'To Improve', 'task-new-item': item.isNew === true}" 
+              [ngClass]="
+                {'task-went-well': column.name === 'Went Well',
+                'task-to-improve': column.name === 'To Improve',
+                'task-new-item': item.isNew === true,
+                'task-new-item-went-well': item.isNew === true && column.name === 'Went Well',
+                'task-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
+
+              }" 
               *ngFor="let item of column.tasks" cdkDrag>
               <span *ngIf="!item.isNew">{{ item.name }}</span>
               <span *ngIf="item.isNew">
