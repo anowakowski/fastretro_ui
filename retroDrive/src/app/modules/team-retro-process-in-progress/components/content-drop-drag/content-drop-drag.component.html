@@ -31,15 +31,17 @@
           <div class="column-title">
             <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
             <div fxFlex></div>
-            <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
+            <button mat-raised-button color="accent" style="margin-left: 10px;" (click)="addToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
           </div>
 
           <div class="tasks-container"
           cdkDropList
           [cdkDropListData]="column.tasks"
           (cdkDropListDropped)="drop($event)">
-            <div class="task" [ngClass]="{'task-went-well': column.name === 'Went Well','task-to-improve': column.name === 'To Improve'}" *ngFor="let item of column.tasks" cdkDrag>
-              {{ item }}
+            <div class="task" 
+              [ngClass]="{'task-went-well': column.name === 'Went Well','task-to-improve': column.name === 'To Improve', 'task-new-item': item.isNew === true}" 
+              *ngFor="let item of column.tasks" cdkDrag>
+              {{ item.name }}
             </div>
           </div>
         </div>

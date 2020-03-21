@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
+import { Task } from 'src/app/models/task';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -14,17 +15,15 @@ const TO_IMPROVE = 'To Improve';
 export class ContentDropDragComponent implements OnInit {
 
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
-    'Get to work',
-    'Pick up groceries',
-    'Go home',
-    'Fall asleep'
+    new Task('Get to work', false),
+    new Task('Get to work', false),
+    new Task('Get to work', false),
+    new Task('Get to work', false),
   ]);
   private toImproveRetroBoardCol = new Column(TO_IMPROVE, [
-    'Get up',
-    'Brush teeth',
-    'Take a shower',
-    'Check e-mail',
-    'Walk dog'
+    new Task('Get to work', false),
+    new Task('Get to work', false),
+    new Task('Get to work', false),
   ]);
 
   public shouldStopTimer = false;
@@ -35,6 +34,14 @@ export class ContentDropDragComponent implements OnInit {
   ]);
 
   ngOnInit() {
+  }
+
+  addToColumn(colName: string) {
+    if (colName === WENT_WELL) {
+      this.wnetWellRetroBoardCol.tasks.push(new Task('', true));
+    } else if (colName === TO_IMPROVE) {
+      this.toImproveRetroBoardCol.tasks.push(new Task('', true));
+    }
   }
 
   stopTimer() {
