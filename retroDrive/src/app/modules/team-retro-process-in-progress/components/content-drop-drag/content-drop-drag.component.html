@@ -13,11 +13,14 @@
 
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
+      <div fxFlex></div>
+      <button mat-raised-button color="primary" ><mat-icon>settings</mat-icon> Config elements</button>
     </div>
 
     <div class="board-wrapper">
 
       <div class="board-columns" cdkDropListGroup>
+        
         <div class="board-column" *ngFor="let column of board.columns">
 
           <div class="column-title">
