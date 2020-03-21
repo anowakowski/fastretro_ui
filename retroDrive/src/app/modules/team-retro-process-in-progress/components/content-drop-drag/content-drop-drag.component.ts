@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Pipe} from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
@@ -14,16 +14,18 @@ const TO_IMPROVE = 'To Improve';
 })
 export class ContentDropDragComponent implements OnInit {
 
+  constructor() {}
+  
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
-    new Task('Get to work', false),
-    new Task('Get to work', false),
-    new Task('Get to work', false),
-    new Task('Get to work', false),
+    new Task('Get to work', false, 1),
+    new Task('Get to work', false, 2),
+    new Task('Get to work', false, 3),
+    new Task('Get to work', false, 4),
   ]);
   private toImproveRetroBoardCol = new Column(TO_IMPROVE, [
-    new Task('Get to work', false),
-    new Task('Get to work', false),
-    new Task('Get to work', false),
+    new Task('Get to work', false, 1),
+    new Task('Get to work', false, 2),
+    new Task('Get to work', false, 3),
   ]);
 
   public shouldStopTimer = false;
@@ -33,14 +35,16 @@ export class ContentDropDragComponent implements OnInit {
     this.toImproveRetroBoardCol
   ]);
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   addToColumn(colName: string) {
     if (colName === WENT_WELL) {
-      this.wnetWellRetroBoardCol.tasks.push(new Task('', true));
+      this.wnetWellRetroBoardCol.tasks.push(new Task('', true, 5));
+      this.wnetWellRetroBoardCol.tasks.sort((a, b ) => b.index - a.index);
+
     } else if (colName === TO_IMPROVE) {
-      this.toImproveRetroBoardCol.tasks.push(new Task('', true));
+      this.toImproveRetroBoardCol.tasks.push(new Task('', true, 5));
+      this.toImproveRetroBoardCol.tasks.sort((a, b ) => b.index - a.index);
     }
   }
 
