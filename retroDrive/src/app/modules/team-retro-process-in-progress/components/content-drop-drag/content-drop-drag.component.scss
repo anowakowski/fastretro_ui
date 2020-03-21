@@ -85,6 +85,7 @@
 .task {
   display: flex;
   padding: 15px 12px;
+  color: white;
   
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
@@ -96,11 +97,11 @@
 }
 
 .task-went-well {
-  background: #64b96a;
+  background: #3ab73dbf;
 }
 
 .task-to-improve {
-  background: #ea6a49;
+  background: #f44235d5;
 }
 
 
