@@ -52,6 +52,25 @@ export class ContentDropDragComponent implements OnInit {
     this.shouldStopTimer = true;
   }
 
+  editCard(card: Task, colName: string) {
+    if (colName === WENT_WELL) {
+      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
+      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
+
+      if (findedTask.isNew) {
+        findedTask.isNew = false;
+      } else {
+        findedTask.isNew = true;
+      }
+
+      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
+
+
+
+
+    }
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

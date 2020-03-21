@@ -45,9 +45,9 @@
                 'task-new-item': item.isNew === true,
                 'task-new-item-went-well': item.isNew === true && column.name === 'Went Well',
                 'task-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
-
               }" 
-              *ngFor="let item of column.tasks" cdkDrag>
+              *ngFor="let item of column.tasks" cdkDrag
+              (click)="editCard(item, column.name)">
               <span *ngIf="!item.isNew">{{ item.name }}</span>
               <span *ngIf="item.isNew">
                 <mat-form-field style="width: 100%;">
