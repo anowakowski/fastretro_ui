@@ -9,7 +9,6 @@ import { TeamRetroProcessInProgressRoutingModule } from './team-retro-process-in
 import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
 import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
-import { TestBoardComponent } from './components/test-board/test-board.component';
 
 
 
@@ -26,8 +25,7 @@ import { TestBoardComponent } from './components/test-board/test-board.component
     TeamRetroProcessInProgressComponent,
     NavComponent,
     RetroProgressTimerComponent,
-    ContentDropDragComponent,
-    TestBoardComponent],
+    ContentDropDragComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
 export class TeamRetroProcessInProgressModule { }
