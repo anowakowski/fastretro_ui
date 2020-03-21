@@ -84,7 +84,7 @@
 .task {
   display: flex;
   padding: 15px 12px;
-  background: white;
+  
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
 
@@ -93,6 +93,16 @@
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05),
   0 3px 14px 2px rgba(0, 0, 0, 0.05);
 }
+
+.task-went-well {
+  background: #64b96a;
+}
+
+.task-to-improve {
+  background: #ea6a49;
+}
+
+
 
 .cdk-drag-preview {
   box-sizing: border-box;

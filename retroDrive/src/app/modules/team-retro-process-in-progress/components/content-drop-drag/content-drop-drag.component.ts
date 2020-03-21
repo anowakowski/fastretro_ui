@@ -3,6 +3,9 @@ import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/dr
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
 
+const WENT_WELL = 'Went Well';
+const TO_IMPROVE = 'To Improve';
+
 @Component({
   selector: 'app-content-drop-drag',
   templateUrl: './content-drop-drag.component.html',
@@ -12,14 +15,13 @@ export class ContentDropDragComponent implements OnInit {
 
   public shouldStopTimer = false;
   board: Board = new Board('Test Board', [
-
-    new Column('Went Well', [
+    new Column(WENT_WELL, [
       'Get to work',
       'Pick up groceries',
       'Go home',
       'Fall asleep'
     ]),
-    new Column('To Improve', [
+    new Column(TO_IMPROVE, [
       'Get up',
       'Brush teeth',
       'Take a shower',
