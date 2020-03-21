@@ -13,21 +13,25 @@ const TO_IMPROVE = 'To Improve';
 })
 export class ContentDropDragComponent implements OnInit {
 
+  private wnetWellRetroBoardCol = new Column(WENT_WELL, [
+    'Get to work',
+    'Pick up groceries',
+    'Go home',
+    'Fall asleep'
+  ]);
+  private toImproveRetroBoardCol = new Column(TO_IMPROVE, [
+    'Get up',
+    'Brush teeth',
+    'Take a shower',
+    'Check e-mail',
+    'Walk dog'
+  ]);
+
   public shouldStopTimer = false;
+
   board: Board = new Board('Test Board', [
-    new Column(WENT_WELL, [
-      'Get to work',
-      'Pick up groceries',
-      'Go home',
-      'Fall asleep'
-    ]),
-    new Column(TO_IMPROVE, [
-      'Get up',
-      'Brush teeth',
-      'Take a shower',
-      'Check e-mail',
-      'Walk dog'
-    ])
+    this.wnetWellRetroBoardCol,
+    this.toImproveRetroBoardCol
   ]);
 
   ngOnInit() {
