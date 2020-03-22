@@ -1,5 +1,5 @@
 
-export class Task {
+export class RetroBoardCard {
     
     constructor(public name: string, public isNew: boolean, public index: number) {}
 

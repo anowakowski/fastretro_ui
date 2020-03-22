@@ -2,7 +2,7 @@ import { Component, OnInit, Pipe} from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
-import { Task } from 'src/app/models/task';
+import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 const WENT_WELL = 'Went Well';
@@ -20,15 +20,15 @@ export class ContentDropDragComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {}
 
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
-    new Task('Get to work', false, 1),
-    new Task('Get to work', false, 2),
-    new Task('Get to work', false, 3),
-    new Task('Get to work', false, 4),
+    new RetroBoardCard('Get to work', false, 1),
+    new RetroBoardCard('Get to work', false, 2),
+    new RetroBoardCard('Get to work', false, 3),
+    new RetroBoardCard('Get to work', false, 4),
   ]);
   private toImproveRetroBoardCol = new Column(TO_IMPROVE, [
-    new Task('Get to work', false, 1),
-    new Task('Get to work', false, 2),
-    new Task('Get to work', false, 3),
+    new RetroBoardCard('Get to work', false, 1),
+    new RetroBoardCard('Get to work', false, 2),
+    new RetroBoardCard('Get to work', false, 3),
   ]);
 
   public shouldStopTimer = false;
@@ -54,41 +54,41 @@ export class ContentDropDragComponent implements OnInit {
 
   addToColumn(colName: string) {
     if (colName === WENT_WELL) {
-      this.wnetWellRetroBoardCol.tasks.push(new Task('', true, 5));
-      this.wnetWellRetroBoardCol.tasks.sort((a, b ) => b.index - a.index);
+      this.wnetWellRetroBoardCol.retroBoardCards.push(new RetroBoardCard('', true, 5));
+      this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
     } else if (colName === TO_IMPROVE) {
-      this.toImproveRetroBoardCol.tasks.push(new Task('', true, 5));
-      this.toImproveRetroBoardCol.tasks.sort((a, b ) => b.index - a.index);
+      this.toImproveRetroBoardCol.retroBoardCards.push(new RetroBoardCard('', true, 5));
+      this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     }
   }
 
-  addNewTask(card: Task, colName: string) {
+  saveRetroBoardCard(card: RetroBoardCard, colName: string) {
     if (this.addNewRetroBoardCardForm.valid) {
       const formValue = this.addNewRetroBoardCardForm.value;
     }
   }
 
-  editCard(card: Task, colName: string) {
+  editCard(card: RetroBoardCard, colName: string) {
     if (card.isClickedFromCloseEdit) {
-      const findedTask = this.getTask(card, this.wnetWellRetroBoardCol.tasks);
-      const index = this.getArrayIndex(findedTask, this.wnetWellRetroBoardCol.tasks);
-      findedTask.isClickedFromCloseEdit = false;
-      this.updateTask(index, findedTask, this.wnetWellRetroBoardCol.tasks);
+      const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      findedRetroBoardCard.isClickedFromCloseEdit = false;
+      this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
       return;
     }
     if (colName === WENT_WELL) {
-      this.processEditTask(card, this.wnetWellRetroBoardCol.tasks);
+      this.processRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
-      this.processEditTask(card, this.toImproveRetroBoardCol.tasks);
+      this.processRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
     }
   }
 
-  closeEditCard(card: Task, colName: string) {
+  closeEditCard(card: RetroBoardCard, colName: string) {
     if (colName === WENT_WELL) {
-      this.closeEditTaskProcess(card, this.wnetWellRetroBoardCol.tasks);
+      this.closeEditRetroBoardCardProcess(card, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
-      this.closeEditTaskProcess(card, this.toImproveRetroBoardCol.tasks);
+      this.closeEditRetroBoardCardProcess(card, this.toImproveRetroBoardCol.retroBoardCards);
     }
   }
 
@@ -103,37 +103,37 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
-  setNewCardContentFormControl(card: Task) {
+  setNewCardContentFormControl(card: RetroBoardCard) {
     this.newCardContentFormControl.setValue(card.name);
   }
 
-  private processEditTask(card: Task, tasks: Array<Task>) {
-    const findedTask = this.getTask(card, tasks);
-    const index = this.getArrayIndex(findedTask, tasks);
-    findedTask.isNew = true;
-    this.updateTask(index, findedTask, tasks);
+  private processRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
+    const findedRetroBoardCard = this.getRetroBoardCard(card, retroBoardCards);
+    const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
+    findedRetroBoardCard.isNew = true;
+    this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
     this.setNewCardContentFormControl(card);
   }
 
 
-  private closeEditTaskProcess(card: Task, tasks: Array<Task>) {
-    const findedTask = this.getTask(card, tasks);
-    const index = this.getArrayIndex(findedTask, tasks);
-    findedTask.isNew = false;
-    findedTask.isClickedFromCloseEdit = true;
-    this.updateTask(index, findedTask, tasks);
+  private closeEditRetroBoardCardProcess(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
+    const findedRetroBoardCard = this.getRetroBoardCard(card, retroBoardCards);
+    const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
+    findedRetroBoardCard.isNew = false;
+    findedRetroBoardCard.isClickedFromCloseEdit = true;
+    this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
   }
 
-  private updateTask(index: number, findedTask: Task, tasks: Array<Task>) {
-    tasks[index] = findedTask;
+  private updaRetroBoardCard(index: number, findedRetroBoardCard: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
+    retroBoardCards[index] = findedRetroBoardCard;
   }
 
-  private getTask(card: Task, tasks: Array<Task>) {
-    return tasks.find(x => x.index === card.index);
+  private getRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
+    return retroBoardCards.find(x => x.index === card.index);
   }
 
 
-  private getArrayIndex(findedTask: Task, array: any[]) {
-    return array.indexOf(findedTask);
+  private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
+    return array.indexOf(findedRetroBoardCard);
   }
 }

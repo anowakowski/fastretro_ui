@@ -1,17 +1,6 @@
 <div class="root">
-  <!-- <div class="navbar has-background-dark">
-    <div class="navbar-brand">
-      <div class="navbar-item">
-        <h1 class="app-name has-gradient-text">kanban</h1>
-      </div>
-    </div>
-  </div> -->
-
   <app-nav></app-nav>
-
-
   <div class="board">
-
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
       <div fxFlex></div>
@@ -34,22 +23,22 @@
             <button mat-raised-button color="accent" style="margin-left: 10px;" (click)="addToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
           </div>
 
-          <div class="tasks-container"
+          <div class="retro-board-card-container"
           cdkDropList
-          [cdkDropListData]="column.tasks"
+          [cdkDropListData]="column.retroBoardCards"
           (cdkDropListDropped)="drop($event)">
-            <div class="task" 
+            <div class="retro-board-card" 
               [ngClass]="
-                {'task-went-well': column.name === 'Went Well',
-                'task-to-improve': column.name === 'To Improve',
-                'task-new-item': item.isNew === true,
-                'task-new-item-went-well': item.isNew === true && column.name === 'Went Well',
-                'task-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
+                {'retro-board-card-went-well': column.name === 'Went Well',
+                'retro-board-card-to-improve': column.name === 'To Improve',
+                'retro-board-card-new-item': item.isNew === true,
+                'retro-board-card-new-item-went-well': item.isNew === true && column.name === 'Went Well',
+                'retro-board-card-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
               }" 
-              *ngFor="let item of column.tasks"
+              *ngFor="let item of column.retroBoardCards"
               cdkDrag
               (click)="editCard(item, column.name)">
-              <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="addNewTask(item, column.name)">
+              <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <span *ngIf="!item.isNew">{{ item.name }}</span>
               <span class="test" *ngIf="item.isNew">
 

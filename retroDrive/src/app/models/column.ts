@@ -1,5 +1,5 @@
-import { Task } from './task';
+import { RetroBoardCard } from './retroBoardCard';
 
 export class Column {
-    constructor(public name: string, public tasks: Task[]) {}
+    constructor(public name: string, public retroBoardCards: RetroBoardCard[]) {}
 }
