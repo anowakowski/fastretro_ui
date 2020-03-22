@@ -53,37 +53,41 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   editCard(card: Task, colName: string) {
-    if (card.isClickedFromCloseEdit){
-      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
-      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
-//      findedTask.isNew = true;
-
+    if (card.isClickedFromCloseEdit) {
+      const findedTask = this.getTask(card, this.wnetWellRetroBoardCol.tasks);
+      const index = this.getArrayIndex(findedTask, this.wnetWellRetroBoardCol.tasks);
       findedTask.isClickedFromCloseEdit = false;
-
-      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
-
+      this.updateTask(index, findedTask, this.wnetWellRetroBoardCol.tasks);
       return;
     }
     if (colName === WENT_WELL) {
-      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
-      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
-//      findedTask.isNew = true;
-
-      findedTask.isNew = true;
-
-      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
-
+      this.processEditTask(card, this.wnetWellRetroBoardCol.tasks);
+    } else if (colName === TO_IMPROVE) {
+      this.processEditTask(card, this.toImproveRetroBoardCol.tasks);
     }
+  }
+
+  private processEditTask(card: Task, tasks: Array<Task>) {
+    const findedTask = this.getTask(card, tasks);
+    const index = this.getArrayIndex(findedTask, tasks);
+    findedTask.isNew = true;
+    this.updateTask(index, findedTask, tasks);
   }
 
   closeEditCard(card: Task, colName: string) {
     if (colName === WENT_WELL) {
-      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
-      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
-      findedTask.isNew = false;
-      findedTask.isClickedFromCloseEdit = true;
-      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
+      this.closeEditTaskProcess(card, this.wnetWellRetroBoardCol.tasks);
+    } else if (colName === TO_IMPROVE) {
+      this.closeEditTaskProcess(card, this.toImproveRetroBoardCol.tasks);
     }
+  }
+
+  private closeEditTaskProcess(card: Task, tasks: Array<Task>) {
+    const findedTask = this.getTask(card, tasks);
+    const index = this.getArrayIndex(findedTask, tasks);
+    findedTask.isNew = false;
+    findedTask.isClickedFromCloseEdit = true;
+    this.updateTask(index, findedTask, tasks);
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -97,4 +101,16 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
+  private updateTask(index: number, findedTask: Task, tasks: Array<Task>) {
+    tasks[index] = findedTask;
+  }
+
+  private getTask(card: Task, tasks: Array<Task>) {
+    return tasks.find(x => x.index === card.index);
+  }
+
+
+  private getArrayIndex(findedTask: Task, array: any[]) {
+    return array.indexOf(findedTask);
+  }
 }
