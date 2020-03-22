@@ -73,12 +73,18 @@ export class ContentDropDragComponent implements OnInit {
       card.name = newCardContentFormControlValue;
       card.isNewItem = false;
       card.isEdit = false;
-      this.updaRetroBoardCard(card.index, card, this.wnetWellRetroBoardCol.retroBoardCards);
+      const blankValueToSetFormControl = ' ';
+      const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
+      this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
+      this.setNewCardContentFormControl(blankValueToSetFormControl);
     }
   }
 
   editCard(card: RetroBoardCard, colName: string) {
     if (!card.isNewItem) {
+      if (card.isEdit){
+        return;
+      }
       if (card.isClickedFromCloseEdit) {
         const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
         const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
@@ -113,8 +119,8 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
-  setNewCardContentFormControl(card: RetroBoardCard) {
-    this.newCardContentFormControl.setValue(card.name);
+  setNewCardContentFormControl(value: string) {
+    this.newCardContentFormControl.setValue(value);
   }
 
   private processRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
@@ -122,7 +128,7 @@ export class ContentDropDragComponent implements OnInit {
     const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
     findedRetroBoardCard.isEdit = true;
     this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
-    this.setNewCardContentFormControl(card);
+    this.setNewCardContentFormControl(card.name);
   }
 
 
