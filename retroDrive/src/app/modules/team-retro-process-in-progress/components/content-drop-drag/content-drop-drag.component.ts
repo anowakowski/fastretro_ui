@@ -54,7 +54,11 @@ export class ContentDropDragComponent implements OnInit {
 
   addNewCardToColumn(colName: string) {
     if (colName === WENT_WELL) {
-      this.wnetWellRetroBoardCol.retroBoardCards.push(new RetroBoardCard('', true, 5));
+      const maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
+      const incrementIndex = maxIndexOfElementInArray + 1;
+      const newItem = new RetroBoardCard('', true, incrementIndex);
+      newItem.isNewItem = true;
+      this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
     } else if (colName === TO_IMPROVE) {
@@ -65,22 +69,28 @@ export class ContentDropDragComponent implements OnInit {
 
   saveRetroBoardCard(card: RetroBoardCard, colName: string) {
     if (this.addNewRetroBoardCardForm.valid) {
-      const formValue = this.addNewRetroBoardCardForm.value;
+      const newCardContentFormControlValue = this.addNewRetroBoardCardForm.value.newCardContentFormControl;
+      card.name = newCardContentFormControlValue;
+      card.isNewItem = false;
+      card.isEdit = false;
+      this.updaRetroBoardCard(card.index, card, this.wnetWellRetroBoardCol.retroBoardCards);
     }
   }
 
   editCard(card: RetroBoardCard, colName: string) {
-    if (card.isClickedFromCloseEdit) {
-      const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
-      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      findedRetroBoardCard.isClickedFromCloseEdit = false;
-      this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      return;
-    }
-    if (colName === WENT_WELL) {
-      this.processRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
-    } else if (colName === TO_IMPROVE) {
-      this.processRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+    if (!card.isNewItem) {
+      if (card.isClickedFromCloseEdit) {
+        const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+        const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+        findedRetroBoardCard.isClickedFromCloseEdit = false;
+        this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+        return;
+      }
+      if (colName === WENT_WELL) {
+        this.processRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+      } else if (colName === TO_IMPROVE) {
+        this.processRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+      }
     }
   }
 
@@ -124,8 +134,8 @@ export class ContentDropDragComponent implements OnInit {
     this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
   }
 
-  private updaRetroBoardCard(index: number, findedRetroBoardCard: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
-    retroBoardCards[index] = findedRetroBoardCard;
+  private updaRetroBoardCard(index: number, retroBoardCardToUpdate: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
+    retroBoardCards[index] = retroBoardCardToUpdate;
   }
 
   private getRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
