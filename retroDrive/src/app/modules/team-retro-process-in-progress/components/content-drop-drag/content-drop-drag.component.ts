@@ -3,10 +3,10 @@ import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/dr
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
 import { Task } from 'src/app/models/task';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
-
 @Component({
   selector: 'app-content-drop-drag',
   templateUrl: './content-drop-drag.component.html',
@@ -14,8 +14,11 @@ const TO_IMPROVE = 'To Improve';
 })
 export class ContentDropDragComponent implements OnInit {
 
-  constructor() {}
-  
+  addNewRetroBoardCardForm: FormGroup;
+  newCardContentFormControl = new FormControl('', Validators.required);
+
+  constructor(private formBuilder: FormBuilder) {}
+
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
     new Task('Get to work', false, 1),
     new Task('Get to work', false, 2),
@@ -35,7 +38,19 @@ export class ContentDropDragComponent implements OnInit {
     this.toImproveRetroBoardCol
   ]);
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.createAddNewRetroBoardCardForm();
+  }
+
+  createAddNewRetroBoardCardForm() {
+    this.addNewRetroBoardCardForm = this.formBuilder.group({
+      newCardContentFormControl: this.newCardContentFormControl
+    });
+  }
+
+  stopTimer() {
+    this.shouldStopTimer = true;
+  }
 
   addToColumn(colName: string) {
     if (colName === WENT_WELL) {
@@ -48,8 +63,8 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
-  stopTimer() {
-    this.shouldStopTimer = true;
+  addNewTask(card: Task, colName: string) {
+    const formValue = this.addNewRetroBoardCardForm.value;
   }
 
   editCard(card: Task, colName: string) {
@@ -67,27 +82,12 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
-  private processEditTask(card: Task, tasks: Array<Task>) {
-    const findedTask = this.getTask(card, tasks);
-    const index = this.getArrayIndex(findedTask, tasks);
-    findedTask.isNew = true;
-    this.updateTask(index, findedTask, tasks);
-  }
-
   closeEditCard(card: Task, colName: string) {
     if (colName === WENT_WELL) {
       this.closeEditTaskProcess(card, this.wnetWellRetroBoardCol.tasks);
     } else if (colName === TO_IMPROVE) {
       this.closeEditTaskProcess(card, this.toImproveRetroBoardCol.tasks);
     }
-  }
-
-  private closeEditTaskProcess(card: Task, tasks: Array<Task>) {
-    const findedTask = this.getTask(card, tasks);
-    const index = this.getArrayIndex(findedTask, tasks);
-    findedTask.isNew = false;
-    findedTask.isClickedFromCloseEdit = true;
-    this.updateTask(index, findedTask, tasks);
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -99,6 +99,21 @@ export class ContentDropDragComponent implements OnInit {
         event.previousIndex,
         event.currentIndex);
     }
+  }
+
+  private processEditTask(card: Task, tasks: Array<Task>) {
+    const findedTask = this.getTask(card, tasks);
+    const index = this.getArrayIndex(findedTask, tasks);
+    findedTask.isNew = true;
+    this.updateTask(index, findedTask, tasks);
+  }
+
+  private closeEditTaskProcess(card: Task, tasks: Array<Task>) {
+    const findedTask = this.getTask(card, tasks);
+    const index = this.getArrayIndex(findedTask, tasks);
+    findedTask.isNew = false;
+    findedTask.isClickedFromCloseEdit = true;
+    this.updateTask(index, findedTask, tasks);
   }
 
   private updateTask(index: number, findedTask: Task, tasks: Array<Task>) {

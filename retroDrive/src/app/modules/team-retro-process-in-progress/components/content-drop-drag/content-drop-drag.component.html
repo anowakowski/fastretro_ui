@@ -48,16 +48,26 @@
               }" 
               *ngFor="let item of column.tasks" cdkDrag
               (click)="editCard(item, column.name)">
+              <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="addNewTask(item, column.name)">
               <span *ngIf="!item.isNew">{{ item.name }}</span>
               <span class="test" *ngIf="item.isNew">
 
                 <mat-form-field style="width: 100%;">
                   <mat-label>Leave a comment</mat-label>
-                  <input style="color: black;" matInput placeholder="Ex. It makes me feel..."/>
+                  <input
+                    style="color: black;"
+                    matInput placeholder="Ex. It makes me feel..."
+                    [formControl]="newCardContentFormControl"
+                    [ngClass]="{'is-invalid':addNewRetroBoardCardForm.get('newCardContentFormControl').touched && addNewRetroBoardCardForm.get('newCardContentFormControl').invalid}"
+                    required/>
+                    <div class="invalid-feedback">
+                      <div>your content in new card is required</div>
+                    </div>
                 </mat-form-field>
-                <button mat-raised-button color="primary"><mat-icon>add</mat-icon></button>
+                <button type="submit" mat-raised-button color="primary"><mat-icon>add</mat-icon></button>
                 <button mat-raised-button color="warn" style="margin-left: 5px;" (click)="closeEditCard(item, column.name)"><mat-icon>remove</mat-icon></button>
               </span>
+            </form>
             </div>
           </div>
         </div>
