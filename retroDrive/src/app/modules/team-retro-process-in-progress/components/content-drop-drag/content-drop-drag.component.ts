@@ -52,7 +52,7 @@ export class ContentDropDragComponent implements OnInit {
     this.shouldStopTimer = true;
   }
 
-  addToColumn(colName: string) {
+  addNewCardToColumn(colName: string) {
     if (colName === WENT_WELL) {
       this.wnetWellRetroBoardCol.retroBoardCards.push(new RetroBoardCard('', true, 5));
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
@@ -110,7 +110,7 @@ export class ContentDropDragComponent implements OnInit {
   private processRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
     const findedRetroBoardCard = this.getRetroBoardCard(card, retroBoardCards);
     const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
-    findedRetroBoardCard.isNew = true;
+    findedRetroBoardCard.isEdit = true;
     this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
     this.setNewCardContentFormControl(card);
   }
@@ -119,7 +119,7 @@ export class ContentDropDragComponent implements OnInit {
   private closeEditRetroBoardCardProcess(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
     const findedRetroBoardCard = this.getRetroBoardCard(card, retroBoardCards);
     const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
-    findedRetroBoardCard.isNew = false;
+    findedRetroBoardCard.isEdit = false;
     findedRetroBoardCard.isClickedFromCloseEdit = true;
     this.updaRetroBoardCard(index, findedRetroBoardCard, retroBoardCards);
   }

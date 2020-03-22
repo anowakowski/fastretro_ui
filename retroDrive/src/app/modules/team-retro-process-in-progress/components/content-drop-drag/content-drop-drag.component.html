@@ -20,7 +20,7 @@
           <div class="column-title">
             <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
             <div fxFlex></div>
-            <button mat-raised-button color="accent" style="margin-left: 10px;" (click)="addToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
+            <button mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
           </div>
 
           <div class="retro-board-card-container"
@@ -31,19 +31,19 @@
               [ngClass]="
                 {'retro-board-card-went-well': column.name === 'Went Well',
                 'retro-board-card-to-improve': column.name === 'To Improve',
-                'retro-board-card-new-item': item.isNew === true,
-                'retro-board-card-new-item-went-well': item.isNew === true && column.name === 'Went Well',
-                'retro-board-card-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
+                'retro-board-card-new-item': item.isEdit === true,
+                'retro-board-card-new-item-went-well': item.isEdit === true && column.name === 'Went Well',
+                'retro-board-card-new-item-to-improve': item.isEdit === true && column.name === 'To Improve'
               }" 
               *ngFor="let item of column.retroBoardCards"
               cdkDrag
               (click)="editCard(item, column.name)">
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
-              <span *ngIf="!item.isNew">{{ item.name }}</span>
-              <span class="test" *ngIf="item.isNew">
+              <span *ngIf="!item.isEdit">{{ item.name }}</span>
+              <span class="test" *ngIf="item.isEdit">
 
                 <mat-form-field style="width: 100%;">
-                  <mat-label>Leave a comment</mat-label>
+                  <mat-label>Leave your comment</mat-label>
                   <input
                     style="color: black;"
                     matInput placeholder="Ex. It makes me feel..."
