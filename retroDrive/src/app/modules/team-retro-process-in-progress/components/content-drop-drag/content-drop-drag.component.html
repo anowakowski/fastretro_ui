@@ -46,7 +46,8 @@
                 'task-new-item-went-well': item.isNew === true && column.name === 'Went Well',
                 'task-new-item-to-improve': item.isNew === true && column.name === 'To Improve'
               }" 
-              *ngFor="let item of column.tasks" cdkDrag
+              *ngFor="let item of column.tasks"
+              cdkDrag
               (click)="editCard(item, column.name)">
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="addNewTask(item, column.name)">
               <span *ngIf="!item.isNew">{{ item.name }}</span>
@@ -57,6 +58,7 @@
                   <input
                     style="color: black;"
                     matInput placeholder="Ex. It makes me feel..."
+                    value="item.name"
                     [formControl]="newCardContentFormControl"
                     [ngClass]="{'is-invalid':addNewRetroBoardCardForm.get('newCardContentFormControl').touched && addNewRetroBoardCardForm.get('newCardContentFormControl').invalid}"
                     required/>

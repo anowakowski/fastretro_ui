@@ -64,7 +64,9 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   addNewTask(card: Task, colName: string) {
-    const formValue = this.addNewRetroBoardCardForm.value;
+    if (this.addNewRetroBoardCardForm.valid) {
+      const formValue = this.addNewRetroBoardCardForm.value;
+    }
   }
 
   editCard(card: Task, colName: string) {
@@ -101,12 +103,18 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
+  setNewCardContentFormControl(card: Task) {
+    this.newCardContentFormControl.setValue(card.name);
+  }
+
   private processEditTask(card: Task, tasks: Array<Task>) {
     const findedTask = this.getTask(card, tasks);
     const index = this.getArrayIndex(findedTask, tasks);
     findedTask.isNew = true;
     this.updateTask(index, findedTask, tasks);
+    this.setNewCardContentFormControl(card);
   }
+
 
   private closeEditTaskProcess(card: Task, tasks: Array<Task>) {
     const findedTask = this.getTask(card, tasks);
