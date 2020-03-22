@@ -53,21 +53,36 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   editCard(card: Task, colName: string) {
-    if (colName === WENT_WELL) {
+    if (card.isClickedFromCloseEdit){
       const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
       const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
+//      findedTask.isNew = true;
 
-      if (findedTask.isNew) {
-        findedTask.isNew = false;
-      } else {
-        findedTask.isNew = true;
-      }
+      findedTask.isClickedFromCloseEdit = false;
 
       this.wnetWellRetroBoardCol.tasks[index] = findedTask;
 
+      return;
+    }
+    if (colName === WENT_WELL) {
+      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
+      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
+//      findedTask.isNew = true;
 
+      findedTask.isNew = true;
 
+      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
 
+    }
+  }
+
+  closeEditCard(card: Task, colName: string) {
+    if (colName === WENT_WELL) {
+      const findedTask = this.wnetWellRetroBoardCol.tasks.find(x => x.index === card.index);
+      const index = this.wnetWellRetroBoardCol.tasks.indexOf(findedTask);
+      findedTask.isNew = false;
+      findedTask.isClickedFromCloseEdit = true;
+      this.wnetWellRetroBoardCol.tasks[index] = findedTask;
     }
   }
 
