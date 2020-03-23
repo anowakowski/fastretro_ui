@@ -73,16 +73,17 @@ export class ContentDropDragComponent implements OnInit {
       card.name = newCardContentFormControlValue;
       card.isNewItem = false;
       card.isEdit = false;
-      const blankValueToSetFormControl = ' ';
+      //const blankValueToSetFormControl = '';
+      this.addNewRetroBoardCardForm.reset();
       const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
       this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
-      this.setNewCardContentFormControl(blankValueToSetFormControl);
+      //this.setNewCardContentFormControl(blankValueToSetFormControl);
     }
   }
 
   editCard(card: RetroBoardCard, colName: string) {
     if (!card.isNewItem) {
-      if (card.isEdit){
+      if (card.isEdit) {
         return;
       }
       if (card.isClickedFromCloseEdit) {
@@ -105,6 +106,20 @@ export class ContentDropDragComponent implements OnInit {
       this.closeEditRetroBoardCardProcess(card, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
       this.closeEditRetroBoardCardProcess(card, this.toImproveRetroBoardCol.retroBoardCards);
+    }
+
+    this.addNewRetroBoardCardForm.reset();
+  }
+
+  removeCard(card: RetroBoardCard, colName: string) {
+    if (colName === WENT_WELL) {
+      const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      this.wnetWellRetroBoardCol.retroBoardCards.splice(index, 1);
+    } else if (colName === TO_IMPROVE) {
+      const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+      this.wnetWellRetroBoardCol.retroBoardCards.splice(index, 1);
     }
   }
 
