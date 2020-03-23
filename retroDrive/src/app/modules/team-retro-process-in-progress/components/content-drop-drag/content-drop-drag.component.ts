@@ -87,7 +87,7 @@ export class ContentDropDragComponent implements OnInit {
 
   editCard(card: RetroBoardCard, colName: string) {
     if (!card.isNewItem) {
-      if (card.isEdit) {
+      if (this.chcekIfAnyCardIsInEditMode(colName) || card.isEdit) {
         return;
       }
       if (card.isClickedFromCloseEdit) {
@@ -154,6 +154,16 @@ export class ContentDropDragComponent implements OnInit {
 
   setNewCardContentFormControl(value: string) {
     this.newCardContentFormControl.setValue(value);
+  }
+
+  private chcekIfAnyCardIsInEditMode(colName: string): boolean {
+    if (colName === WENT_WELL) {
+      const findedCard = this.wnetWellRetroBoardCol.retroBoardCards.find(col => col.isEdit);
+      return findedCard !== null;
+    } else if (colName === TO_IMPROVE) {
+      const findedCard = this.toImproveRetroBoardCol.retroBoardCards.find(col => col.isEdit);
+      return findedCard !== undefined;
+    }
   }
 
   private processRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
