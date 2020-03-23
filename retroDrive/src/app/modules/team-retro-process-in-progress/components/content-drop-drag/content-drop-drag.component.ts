@@ -73,11 +73,15 @@ export class ContentDropDragComponent implements OnInit {
       card.name = newCardContentFormControlValue;
       card.isNewItem = false;
       card.isEdit = false;
-      //const blankValueToSetFormControl = '';
       this.addNewRetroBoardCardForm.reset();
-      const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
-      this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
-      //this.setNewCardContentFormControl(blankValueToSetFormControl);
+
+      if (colName === WENT_WELL) {
+        const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
+        this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
+      } else if (colName === TO_IMPROVE) {
+        const index = this.getArrayIndex(card, this.toImproveRetroBoardCol.retroBoardCards);
+        this.updaRetroBoardCard(index, card, this.toImproveRetroBoardCol.retroBoardCards);
+      }
     }
   }
 
@@ -131,8 +135,10 @@ export class ContentDropDragComponent implements OnInit {
     } else if (colName === TO_IMPROVE) {
       const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
       const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-      this.wnetWellRetroBoardCol.retroBoardCards.splice(index, 1);
+      this.toImproveRetroBoardCol.retroBoardCards.splice(index, 1);
     }
+
+    this.addNewRetroBoardCardForm.reset();
   }
 
   drop(event: CdkDragDrop<string[]>) {
