@@ -53,16 +53,26 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   addNewCardToColumn(colName: string) {
+    if (this.chcekIfAnyCardIsInEditMode(colName)) {
+      return;
+    }
+
     if (colName === WENT_WELL) {
       const maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
       const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem = new RetroBoardCard('', true, incrementIndex);
       newItem.isNewItem = true;
+
       this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
     } else if (colName === TO_IMPROVE) {
-      this.toImproveRetroBoardCol.retroBoardCards.push(new RetroBoardCard('', true, 5));
+      const maxIndexOfElementInArray = Math.max.apply(Math, this.toImproveRetroBoardCol.retroBoardCards.map(x => x.index));
+      const incrementIndex = maxIndexOfElementInArray + 1;
+      const newItem = new RetroBoardCard('', true, incrementIndex);
+      newItem.isNewItem = true;
+
+      this.toImproveRetroBoardCol.retroBoardCards.push(newItem);
       this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     }
   }
