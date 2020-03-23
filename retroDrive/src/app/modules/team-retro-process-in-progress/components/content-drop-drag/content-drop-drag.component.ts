@@ -4,6 +4,8 @@ import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TeamRetroInProgressSnackbarComponent } from '../team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -17,7 +19,7 @@ export class ContentDropDragComponent implements OnInit {
   addNewRetroBoardCardForm: FormGroup;
   newCardContentFormControl = new FormControl('', Validators.required);
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) {}
 
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
     new RetroBoardCard('Get to work', false, 1),
@@ -52,8 +54,19 @@ export class ContentDropDragComponent implements OnInit {
     this.shouldStopTimer = true;
   }
 
+  openSnackBarForDelete(displayText: string) {
+    const durationInSeconds = 3;
+    this.snackBar.openFromComponent(TeamRetroInProgressSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        displayText: '' + displayText
+      }
+    });
+  }
+
   addNewCardToColumn(colName: string) {
     if (this.chcekIfAnyCardIsInEditMode(colName)) {
+      this.openSnackBarForDelete('you cant add new item when one of card is currently in edit mode.');
       return;
     }
 
