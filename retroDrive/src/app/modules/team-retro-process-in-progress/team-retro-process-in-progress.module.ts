@@ -10,6 +10,7 @@ import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
 import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TeamRetroInProgressSnackbarComponent } from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 
 
 @NgModule({
@@ -27,7 +28,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TeamRetroProcessInProgressComponent,
     NavComponent,
     RetroProgressTimerComponent,
-    ContentDropDragComponent],
+    ContentDropDragComponent,
+    TeamRetroInProgressSnackbarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  entryComponents: [
+    TeamRetroInProgressSnackbarComponent
+  ]
 })
 export class TeamRetroProcessInProgressModule { }
