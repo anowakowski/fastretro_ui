@@ -102,10 +102,15 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   closeEditCard(card: RetroBoardCard, colName: string) {
+    const newCardContentFormControlValue = this.addNewRetroBoardCardForm.value.newCardContentFormControl;
     if (colName === WENT_WELL) {
       this.closeEditRetroBoardCardProcess(card, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
       this.closeEditRetroBoardCardProcess(card, this.toImproveRetroBoardCol.retroBoardCards);
+    }
+
+    if (newCardContentFormControlValue === '' || newCardContentFormControlValue === null) {
+      this.removeCard(card, colName);
     }
 
     this.addNewRetroBoardCardForm.reset();
