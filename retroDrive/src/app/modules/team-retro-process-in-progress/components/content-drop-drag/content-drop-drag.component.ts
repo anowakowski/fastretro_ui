@@ -87,10 +87,17 @@ export class ContentDropDragComponent implements OnInit {
         return;
       }
       if (card.isClickedFromCloseEdit) {
-        const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
-        const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-        findedRetroBoardCard.isClickedFromCloseEdit = false;
-        this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+        if (colName === WENT_WELL) {
+          const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+          const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+          findedRetroBoardCard.isClickedFromCloseEdit = false;
+          this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+        } else if (colName === TO_IMPROVE) {
+          const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+          const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+          findedRetroBoardCard.isClickedFromCloseEdit = false;
+          this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+        }
         return;
       }
       if (colName === WENT_WELL) {
