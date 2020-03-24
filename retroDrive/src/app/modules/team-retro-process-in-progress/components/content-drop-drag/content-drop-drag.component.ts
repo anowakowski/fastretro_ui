@@ -54,8 +54,8 @@ export class ContentDropDragComponent implements OnInit {
     this.shouldStopTimer = true;
   }
 
-  openSnackBarForDelete(displayText: string) {
-    const durationInSeconds = 3;
+  openSnackBar(displayText: string) {
+    const durationInSeconds = 5;
     this.snackBar.openFromComponent(TeamRetroInProgressSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
@@ -65,8 +65,8 @@ export class ContentDropDragComponent implements OnInit {
   }
 
   addNewCardToColumn(colName: string) {
-    if (this.chcekIfAnyCardIsInEditMode(colName)) {
-      this.openSnackBarForDelete('you cant add new item when one of card is currently in edit mode.');
+    if (this.chcekIfAnyCardIsInEditMode()) {
+      this.openSnackBar('you cant add new item when one of card is in edit mode.');
       return;
     }
 
@@ -108,19 +108,23 @@ export class ContentDropDragComponent implements OnInit {
     }
   }
 
-  editCard(card: RetroBoardCard, colName: string) {
-    if (!card.isNewItem) {
-      if (this.chcekIfAnyCardIsInEditMode(colName) || card.isEdit) {
+  editCard(currentCard: RetroBoardCard, colName: string) {
+    if (currentCard.isEdit) {
+      return;
+    }
+    if (!currentCard.isNewItem) {
+      if (this.chcekIfAnyCardIsInEditMode()) {
+        this.openSnackBar('you cant edit this card when one of the card is in edit mode.');
         return;
       }
-      if (card.isClickedFromCloseEdit) {
+      if (currentCard.isClickedFromCloseEdit) {
         if (colName === WENT_WELL) {
-          const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
           const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
           findedRetroBoardCard.isClickedFromCloseEdit = false;
           this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
         } else if (colName === TO_IMPROVE) {
-          const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
           const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
           findedRetroBoardCard.isClickedFromCloseEdit = false;
           this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
@@ -128,9 +132,9 @@ export class ContentDropDragComponent implements OnInit {
         return;
       }
       if (colName === WENT_WELL) {
-        this.processRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+        this.processRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
       } else if (colName === TO_IMPROVE) {
-        this.processRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+        this.processRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
       }
     }
   }
@@ -179,14 +183,10 @@ export class ContentDropDragComponent implements OnInit {
     this.newCardContentFormControl.setValue(value);
   }
 
-  private chcekIfAnyCardIsInEditMode(colName: string): boolean {
-    if (colName === WENT_WELL) {
-      const findedCard = this.wnetWellRetroBoardCol.retroBoardCards.find(col => col.isEdit);
-      return findedCard !== null;
-    } else if (colName === TO_IMPROVE) {
-      const findedCard = this.toImproveRetroBoardCol.retroBoardCards.find(col => col.isEdit);
-      return findedCard !== undefined;
-    }
+  private chcekIfAnyCardIsInEditMode(): boolean {
+    const findedCardForWentWell = this.wnetWellRetroBoardCol.retroBoardCards.find(col => col.isEdit);
+    const findedCardToImprove = this.toImproveRetroBoardCol.retroBoardCards.find(col => col.isEdit);
+    return findedCardForWentWell !== undefined || findedCardToImprove !== undefined;
   }
 
   private processRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
