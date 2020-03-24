@@ -23,11 +23,13 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   currentInMinCountDown = 0;
   currentInSecCountDown = 0;
 
-  maxInMin = 15;
+  maxInMin = 2;
   minInterval = 60000;
   secInterval = 1000;
 
   currentMaxSec = 59;
+
+  shouldHideCounterAfterStopTimer = false;
 
   constructor() { }
 
@@ -44,6 +46,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   doSomethingWithCurrentValue(progressBarValue) {
     if (progressBarValue === this.maxInMin) {
+      this.shouldHideCounterAfterStopTimer = true;
       this.unsubscribeTimer();
     }
   }
@@ -72,6 +75,8 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
       this.currentInSec = 0;
     }
     this.currentInSecCountDown = this.currentMaxSec - this.currentInSec;
+
+
   }
 
   private currentCounterMinProgress() {

@@ -4,7 +4,8 @@
     [ngClass]="{'current-timer-position-below-tenmin': currentInMinCountDown < 9, 'current-timer-position-up-to-tenmin': currentInMinCountDown > 9}"
 
 >
-    {{currentInMinCountDown}} : {{currentInSecCountDown}}
+    <span *ngIf="!shouldHideCounterAfterStopTimer">{{currentInMinCountDown}} : {{currentInSecCountDown}}</span>
+    <span *ngIf="shouldHideCounterAfterStopTimer"><mat-icon style="margin-top: 12px;">free_breakfast</mat-icon></span>
   </div>
   <round-progress
   [current]="currentInMin"
