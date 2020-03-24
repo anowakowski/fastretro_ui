@@ -46,6 +46,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   doSomethingWithCurrentValue(progressBarValue) {
     if (progressBarValue === this.maxInMin) {
+      console.log(progressBarValue);
       this.shouldHideCounterAfterStopTimer = true;
       this.unsubscribeTimer();
     }
@@ -75,13 +76,11 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
       this.currentInSec = 0;
     }
     this.currentInSecCountDown = this.currentMaxSec - this.currentInSec;
-
-
   }
 
   private currentCounterMinProgress() {
     this.currentInMin++;
-    this.currentInMinCountDown = this.currentInMinCountDown - this.currentInMin;
+    this.currentInMinCountDown = this.maxInMin - this.currentInMin;
   }
 
   private setCounter() {
