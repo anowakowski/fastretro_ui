@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Observable, interval } from 'rxjs';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -11,6 +12,8 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   @Input() shouldStopTimer = false;
   @Input() shouldHideSmallTimer = false;
   @Input() shouldHideBigTimer = false;
+
+  public stopRetroInProgressProcessSubscriptions: any;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -31,17 +34,19 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   shouldHideCounterAfterStopTimer = false;
 
-  constructor() { }
+  constructor(private eventsServices: EventsService) { }
 
   ngOnInit() {
     this.currentInMinCountDown = this.maxInMin - 1;
     this.currentInSecCountDown = 59;
     this.setCounter();
     this.subscribeCounterForTimer();
+    this.subscribeEvents();
   }
 
   ngOnDestroy() {
     this.unsubscribeTimer();
+    this.stopRetroInProgressProcessSubscriptions.unsubscribe();
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
@@ -86,5 +91,12 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   private setCounter() {
     this.counterInMin = interval(this.minInterval);
     this.counterInSec = interval(this.secInterval);
+  }
+
+  private subscribeEvents() {
+    this.stopRetroInProgressProcessSubscriptions =
+      this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
+      console.log(shouldStopRetroProcess);
+    });
   }
 }
