@@ -14,6 +14,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { LoginRegisterGuard } from './guards/login-register.guard';
 import { FirestoreBaseService } from './services/firestore-base.service';
 import { DataPassingService } from './services/data-passing.service';
+import { EventsService } from './services/events.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { DataPassingService } from './services/data-passing.service';
     AuthService,
     FirestoreBaseService,
     DataPassingService,
+    EventsService,
     AuthGuard,
     LoginRegisterGuard
   ],

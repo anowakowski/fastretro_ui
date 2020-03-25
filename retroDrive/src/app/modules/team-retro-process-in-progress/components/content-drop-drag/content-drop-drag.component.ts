@@ -6,6 +6,7 @@ import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeamRetroInProgressSnackbarComponent } from '../team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
+import { EventsService } from 'src/app/services/events.service';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -19,7 +20,7 @@ export class ContentDropDragComponent implements OnInit {
   addNewRetroBoardCardForm: FormGroup;
   newCardContentFormControl = new FormControl('', Validators.required);
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) {}
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private eventsService: EventsService) {}
 
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
     new RetroBoardCard('Get to work', false, 1),
@@ -52,6 +53,10 @@ export class ContentDropDragComponent implements OnInit {
 
   stopTimer() {
     this.shouldStopTimer = true;
+  }
+
+  stopRetroProcess() {
+    this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
   openSnackBar(displayText: string) {
