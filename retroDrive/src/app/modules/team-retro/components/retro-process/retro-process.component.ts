@@ -70,8 +70,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   onStartRetroProcess(retroBoard) {
     const guid = Guid.create();
-    this.dataPassingService.setData(guid.value, retroBoard);
-    this.router.navigateByUrl('/retro-in-progress/'+ guid.value);
+    this.dataPassingService.setData(guid.toString(), retroBoard);
+    this.router.navigateByUrl('/retro-in-progress/' + guid.toString());
   }
 
   private prepareRetroBoard() {

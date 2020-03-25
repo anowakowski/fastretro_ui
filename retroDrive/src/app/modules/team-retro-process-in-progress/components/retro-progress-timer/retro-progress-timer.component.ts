@@ -34,6 +34,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   shouldHideCounterAfterStopTimer = false;
   shouldMonitortheLastCountDounInSec = false;
+  timerIsStopped = false;
 
   constructor(private eventsServices: EventsService) { }
 
@@ -80,13 +81,16 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     if (this.shouldMonitortheLastCountDounInSec) {
       if (this.currentInSec === this.currentMaxSec) {
         this.stopRetroTimer();
+
+        this.eventsServices.emitStopRetroInProgressProcessEmiter(true);
       }
     }
   }
 
   private currentCounterMinProgress() {
     this.currentInMin++;
-    this.currentInMinCountDown = this.maxInMin - this.currentInMin;
+    const localMaxInMin = this.maxInMin - 1;
+    this.currentInMinCountDown = localMaxInMin - this.currentInMin;
   }
 
   private setCounter() {
@@ -96,6 +100,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   private stopRetroTimer() {
     this.shouldHideCounterAfterStopTimer = true;
+    this.timerIsStopped = true;
     this.currentInMin = this.maxInMin;
     this.unsubscribeTimer();
   }
@@ -103,7 +108,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   private subscribeEvents() {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
-      if (shouldStopRetroProcess) {
+      if (shouldStopRetroProcess && !this.timerIsStopped) {
         this.stopRetroTimer();
       }
     });
