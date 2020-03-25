@@ -93,10 +93,18 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.counterInSec = interval(this.secInterval);
   }
 
+  private stopRetroTimer() {
+    this.shouldHideCounterAfterStopTimer = true;
+    this.currentInMin = this.maxInMin;
+    this.unsubscribeTimer();
+  }
+
   private subscribeEvents() {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
-      console.log(shouldStopRetroProcess);
+      if (shouldStopRetroProcess) {
+        this.stopRetroTimer();
+      }
     });
   }
 }
