@@ -5,13 +5,11 @@
     <span class="example-spacer"></span>
     <!--<button mat-raised-button color="warn" (click)="stopTimer()"><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>-->
     <span style="margin-left: 12px;">
-      <span *ngIf="!shouldStopTimer">Retro in progress...</span>
-      <span *ngIf="shouldStopTimer">Retro is finished</span>
+      <span *ngIf="!shouldChangeRetroDisplayText">Retro in progress...</span>
+      <span *ngIf="shouldChangeRetroDisplayText">Retro is finished</span>
     </span>
     <span style="margin-left: 12px;">
-      <app-retro-progress-timer 
-        [shouldStopTimer]="shouldStopTimer"
-        [shouldHideBigTimer]="true"></app-retro-progress-timer>
+      <app-retro-progress-timer [shouldHideBigTimer]="true"></app-retro-progress-timer>
     </span>
   </mat-toolbar-row>
 </mat-toolbar>
