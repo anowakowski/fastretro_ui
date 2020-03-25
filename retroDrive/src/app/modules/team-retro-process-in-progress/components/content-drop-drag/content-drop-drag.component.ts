@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe} from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
@@ -15,7 +15,7 @@ const TO_IMPROVE = 'To Improve';
   templateUrl: './content-drop-drag.component.html',
   styleUrls: ['./content-drop-drag.component.scss']
 })
-export class ContentDropDragComponent implements OnInit {
+export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardCardForm: FormGroup;
   newCardContentFormControl = new FormControl('', Validators.required);
@@ -35,6 +35,8 @@ export class ContentDropDragComponent implements OnInit {
   ]);
 
   public shouldStopTimer = false;
+  public retroProcessIsStoped = false;
+  public stopRetroInProgressProcessSubscriptions: any;
 
   board: Board = new Board('Test Board', [
     this.wnetWellRetroBoardCol,
@@ -43,6 +45,11 @@ export class ContentDropDragComponent implements OnInit {
 
   ngOnInit() {
     this.createAddNewRetroBoardCardForm();
+    this.subscribeEvents();
+  }
+
+  ngOnDestroy(): void {
+    this.stopRetroInProgressProcessSubscriptions.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {
@@ -222,5 +229,10 @@ export class ContentDropDragComponent implements OnInit {
 
   private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
     return array.indexOf(findedRetroBoardCard);
+  }
+
+  private subscribeEvents() {
+    this.stopRetroInProgressProcessSubscriptions =
+      this.eventsService.getStopRetroInProgressProcessEmiter().subscribe(retoIsStoped => this.retroProcessIsStoped = retoIsStoped);
   }
 }
