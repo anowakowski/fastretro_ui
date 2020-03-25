@@ -11,6 +11,7 @@ import { RetroProgressTimerComponent } from './components/retro-progress-timer/r
 import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeamRetroInProgressSnackbarComponent } from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
+import { TeamRetroInProgressSetTimeDialogComponent } from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 
 
 @NgModule({
@@ -29,10 +30,13 @@ import { TeamRetroInProgressSnackbarComponent } from './components/team-retro-in
     NavComponent,
     RetroProgressTimerComponent,
     ContentDropDragComponent,
-    TeamRetroInProgressSnackbarComponent],
+    TeamRetroInProgressSnackbarComponent,
+    TeamRetroInProgressSetTimeDialogComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
-    TeamRetroInProgressSnackbarComponent
+    TeamRetroInProgressSnackbarComponent,
+    TeamRetroInProgressSetTimeDialogComponent
   ]
 })
 export class TeamRetroProcessInProgressModule { }
