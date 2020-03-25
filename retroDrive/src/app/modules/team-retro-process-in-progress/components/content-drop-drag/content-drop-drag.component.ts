@@ -7,6 +7,8 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeamRetroInProgressSnackbarComponent } from '../team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 import { EventsService } from 'src/app/services/events.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -20,7 +22,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   addNewRetroBoardCardForm: FormGroup;
   newCardContentFormControl = new FormControl('', Validators.required);
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private eventsService: EventsService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private eventsService: EventsService,
+    public dialog: MatDialog) {}
 
   private wnetWellRetroBoardCol = new Column(WENT_WELL, [
     new RetroBoardCard('Get to work', false, 1),
@@ -73,6 +79,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       data: {
         displayText: '' + displayText
       }
+    });
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(TeamRetroInProgressSetTimeDialogComponent, {
+      width: '250px',
+      data: {value : ''}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
     });
   }
 

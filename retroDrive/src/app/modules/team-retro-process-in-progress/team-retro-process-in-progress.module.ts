@@ -10,8 +10,10 @@ import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
 import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TeamRetroInProgressSnackbarComponent } from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
-import { TeamRetroInProgressSetTimeDialogComponent } from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
+import { TeamRetroInProgressSnackbarComponent }
+  from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
+import { TeamRetroInProgressSetTimeDialogComponent }
+  from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 
 
 @NgModule({
