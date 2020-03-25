@@ -11,17 +11,7 @@ export class TeamRetroInProgressSetTimeDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressSetTimeDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: TimerOption) { }
-
-  foods: TimerOption[] = [
-    { value: '1', viewValue: '3 min' },
-    { value: '2', viewValue: '5 min' },
-    { value: '3', viewValue: '7 min' },
-    { value: '4', viewValue: '10 min' },
-    { value: '5', viewValue: '13 min' },
-    { value: '6', viewValue: '15 min' },
-    { value: '7', viewValue: '20 min' },
-  ];
+    @Inject(MAT_DIALOG_DATA) public dataTimerOptions: TimerOption[]) { }
 
   ngOnInit() {
   }
@@ -29,9 +19,4 @@ export class TeamRetroInProgressSetTimeDialogComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  getValueToPass() {
-    return this.data.value;
-  }
-
 }

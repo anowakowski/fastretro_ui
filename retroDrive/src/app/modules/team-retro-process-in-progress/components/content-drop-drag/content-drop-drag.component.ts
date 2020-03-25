@@ -9,6 +9,7 @@ import { TeamRetroInProgressSnackbarComponent } from '../team-retro-in-progress-
 import { EventsService } from 'src/app/services/events.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
+import { TimerOption } from 'src/app/models/timerOption';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -39,6 +40,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     new RetroBoardCard('Get to work', false, 2),
     new RetroBoardCard('Get to work', false, 3),
   ]);
+
+  timerOptions: TimerOption[] = [
+    { value: '1', viewValue: '3 min' },
+    { value: '5', viewValue: '5 min' },
+    { value: '7', viewValue: '7 min' },
+    { value: '10', viewValue: '10 min' },
+    { value: '13', viewValue: '13 min' },
+    { value: '15', viewValue: '15 min' },
+    { value: '20', viewValue: '20 min' },
+  ];
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
@@ -85,7 +96,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   openDialog(): void {
     const dialogRef = this.dialog.open(TeamRetroInProgressSetTimeDialogComponent, {
       width: '400px',
-      data: {value : ''}
+      data: this.timerOptions
     });
 
     dialogRef.afterClosed().subscribe(result => {
