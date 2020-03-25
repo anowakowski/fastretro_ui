@@ -100,7 +100,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      this.eventsService.emitTimerOptions(result);
     });
   }
 

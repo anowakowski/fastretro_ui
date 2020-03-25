@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Observable, interval } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
+import { TimerOption } from 'src/app/models/timerOption';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -14,6 +15,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   @Input() shouldHideBigTimer = false;
 
   public stopRetroInProgressProcessSubscriptions: any;
+  public timerOptionsSubscriptions: any;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -105,12 +107,27 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.unsubscribeTimer();
   }
 
+  private setNewTimer(timerOption: TimerOption) {
+    console.log(timerOption);
+
+    this.shouldHideCounterAfterStopTimer = false;
+    this.timerIsStopped = false;
+
+    this.maxInMin = timerOption.value as number;
+    this.currentInMin = 0;
+
+    this.subscribeCounterForTimer();
+  }
+
   private subscribeEvents() {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
       if (shouldStopRetroProcess && !this.timerIsStopped) {
         this.stopRetroTimer();
       }
+    });
+    this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
+      this.setNewTimer(timerOptions);
     });
   }
 }
