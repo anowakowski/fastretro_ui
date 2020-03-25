@@ -84,7 +84,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TeamRetroInProgressSetTimeDialogComponent, {
-      width: '250px',
+      width: '400px',
       data: {value : ''}
     });
 
