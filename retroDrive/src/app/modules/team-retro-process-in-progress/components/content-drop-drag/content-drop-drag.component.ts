@@ -151,8 +151,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
+  onClickLike(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromLikeBtn = true;
+  }
+
   editCard(currentCard: RetroBoardCard, colName: string) {
-    if (currentCard.isEdit) {
+    if (currentCard.isEdit || currentCard.isClickedFromLikeBtn) {
+      currentCard.isClickedFromLikeBtn = false;
       return;
     }
     if (!currentCard.isNewItem) {
