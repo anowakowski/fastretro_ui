@@ -14,6 +14,7 @@ import { TeamRetroInProgressSnackbarComponent }
   from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 import { TeamRetroInProgressSetTimeDialogComponent }
   from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
+import { TeamRetroInProgressAddCardActionDialogComponent } from './components/team-retro-in-progress-add-card-action-dialog/team-retro-in-progress-add-card-action-dialog.component';
 
 
 @NgModule({
@@ -33,12 +34,14 @@ import { TeamRetroInProgressSetTimeDialogComponent }
     RetroProgressTimerComponent,
     ContentDropDragComponent,
     TeamRetroInProgressSnackbarComponent,
-    TeamRetroInProgressSetTimeDialogComponent
+    TeamRetroInProgressSetTimeDialogComponent,
+    TeamRetroInProgressAddCardActionDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
     TeamRetroInProgressSnackbarComponent,
-    TeamRetroInProgressSetTimeDialogComponent
+    TeamRetroInProgressSetTimeDialogComponent,
+    TeamRetroInProgressAddCardActionDialogComponent
   ]
 })
 export class TeamRetroProcessInProgressModule { }
