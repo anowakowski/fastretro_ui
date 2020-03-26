@@ -157,7 +157,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   enableVoteBtns() {
-    this.shouldEnableVoteBtns = true;
+    if (this.shouldEnableVoteBtns) {
+      this.shouldEnableVoteBtns = false;
+    } else {
+      this.shouldEnableVoteBtns = true;
+    }
   }
 
   editCard(currentCard: RetroBoardCard, colName: string) {

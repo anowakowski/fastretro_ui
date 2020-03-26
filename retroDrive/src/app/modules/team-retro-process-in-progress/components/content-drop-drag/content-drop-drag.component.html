@@ -7,25 +7,24 @@
 
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="retroProcessIsStoped" (click)="openDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
-      <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()"><mat-icon>favorite</mat-icon>&nbsp; Enable Vote Buttons</button>
+      <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()">
+        <mat-icon>favorite</mat-icon>&nbsp;  
+        <span *ngIf="!shouldEnableVoteBtns">Enable Vote Buttons</span>
+        <span *ngIf="shouldEnableVoteBtns">Disable Vote Buttons</span>
+      </button>
       <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
       <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->
     </div>
 
     <app-retro-progress-timer [shouldHideSmallTimer]="true" [shouldHideBigTimer]="true"></app-retro-progress-timer>
-
     <div class="board-wrapper">
-
       <div class="board-columns" cdkDropListGroup>
-        
         <div class="board-column" *ngFor="let column of board.columns">
-
           <div class="column-title">
             <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
             <div fxFlex></div>
             <button [disabled]="retroProcessIsStoped" mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
           </div>
-
           <div class="retro-board-card-container"
           cdkDropList
           [cdkDropListData]="column.retroBoardCards"
