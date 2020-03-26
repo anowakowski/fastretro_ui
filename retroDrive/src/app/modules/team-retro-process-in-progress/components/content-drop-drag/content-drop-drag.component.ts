@@ -201,7 +201,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           findedFromMergedCart.mergedContent = new Array<string>();
           findedFromMergedCart.mergedContent.push(findedFromMergedCart.name);
         }
-        findedFromMergedCart.mergedContent.push(currentCard.name);
+        if (findedCurrentRetroBoardCard.isMerged) {
+          findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
+        } else {
+          findedFromMergedCart.mergedContent.push(currentCard.name);
+        }
+
         findedFromMergedCart.isInMerge = false;
         findedFromMergedCart.isMerged = true;
         const indexOfFindedFromMergedCart = this.getArrayIndex(findedFromMergedCart, retroBoardCards);
