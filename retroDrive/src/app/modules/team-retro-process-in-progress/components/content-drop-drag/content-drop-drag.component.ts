@@ -22,6 +22,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardCardForm: FormGroup;
   newCardContentFormControl = new FormControl('', Validators.required);
+  isInMerge = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -156,6 +157,31 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard.isClickedFromVoteBtn = true;
   }
 
+  onClickMergeCard(currentCard: RetroBoardCard, colName: string) {
+    if (colName === WENT_WELL) {
+      currentCard.isClickedFromMergeBtn = true;
+      const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      if (findedRetroBoardCard.isInMerge) {
+        findedRetroBoardCard.isInMerge = false;
+      } else {
+        findedRetroBoardCard.isInMerge = true;
+      }
+      this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+    } else if (colName === TO_IMPROVE) {
+      currentCard.isClickedFromMergeBtn = true;
+      const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+      if (findedRetroBoardCard.isInMerge) {
+        findedRetroBoardCard.isInMerge = false;
+      } else {
+        findedRetroBoardCard.isInMerge = true;
+      }
+      this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+    }
+    }
+
+
   enableVoteBtns() {
     if (this.shouldEnableVoteBtns) {
       this.shouldEnableVoteBtns = false;
@@ -165,8 +191,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   editCard(currentCard: RetroBoardCard, colName: string) {
-    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn) {
+    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn || currentCard.isClickedFromMergeBtn) {
       currentCard.isClickedFromVoteBtn = false;
+      currentCard.isClickedFromMergeBtn = false;
       return;
     }
     if (!currentCard.isNewItem) {

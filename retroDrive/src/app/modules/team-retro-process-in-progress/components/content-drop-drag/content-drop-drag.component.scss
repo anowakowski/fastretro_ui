@@ -96,11 +96,11 @@
 }
 
 .retro-board-card-went-well {
-  background: #3ab73dbf;
+  background: #45bf48bf;
 }
 
 .retro-board-card-to-improve {
-  background: #e02d20c2;
+  background: #f16d56c2;
 }
 
 .retro-board-card-new-item {
@@ -116,6 +116,11 @@
 
 .retro-board-card-new-item-to-improve {
   border-color: #f44235d5;
+}
+
+.retro-board-card-chosen-for-merge {
+  border: solid 4px;
+  border-color: #3f50b5;
 }
 
 .example-full-width {
