@@ -159,29 +159,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onClickMergeCard(currentCard: RetroBoardCard, colName: string) {
     if (colName === WENT_WELL) {
-      const findedFromMergedCart = this.wnetWellRetroBoardCol.retroBoardCards.find(card => card.isInMerge);
-      const findedCurrentRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      const indexOfFindedCurrentRetroBoardCard =
-        this.getArrayIndex(findedCurrentRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      this.setCurrentCardAsMerge(currentCard, findedCurrentRetroBoardCard);
-
-      if (findedFromMergedCart !== undefined) {
-        this.mergeCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards, colName);
-      } else {
-        this.updaRetroBoardCard(
-          indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      }
-
+      this.mergeProcess(currentCard, colName, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
-      currentCard.isClickedFromMergeBtn = true;
-      const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
-      const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-      if (findedRetroBoardCard.isInMerge) {
-        findedRetroBoardCard.isInMerge = false;
-      } else {
-        findedRetroBoardCard.isInMerge = true;
-      }
-      this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+      this.mergeProcess(currentCard, colName, this.toImproveRetroBoardCol.retroBoardCards);
+    }
+  }
+
+  private mergeProcess(currentCard: RetroBoardCard, colName: string, retroBoardCards: RetroBoardCard[]) {
+    const findedFromMergedCart = retroBoardCards.find(card => card.isInMerge);
+    const findedCurrentRetroBoardCard = this.getRetroBoardCard(currentCard, retroBoardCards);
+    const indexOfFindedCurrentRetroBoardCard = this.getArrayIndex(findedCurrentRetroBoardCard, retroBoardCards);
+    this.setCurrentCardAsMerge(currentCard, findedCurrentRetroBoardCard);
+    if (findedFromMergedCart !== undefined) {
+      this.mergeCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard, retroBoardCards, colName);
+    } else {
+      this.updaRetroBoardCard(indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, retroBoardCards);
     }
   }
 
