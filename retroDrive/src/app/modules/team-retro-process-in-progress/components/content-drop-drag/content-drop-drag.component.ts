@@ -159,15 +159,37 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onClickMergeCard(currentCard: RetroBoardCard, colName: string) {
     if (colName === WENT_WELL) {
-      currentCard.isClickedFromMergeBtn = true;
-      const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      if (findedRetroBoardCard.isInMerge) {
-        findedRetroBoardCard.isInMerge = false;
-      } else {
-        findedRetroBoardCard.isInMerge = true;
+
+      const findedFromMergedCart = this.wnetWellRetroBoardCol.retroBoardCards.find(card => card.isInMerge);
+
+      const findedCurrentRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      const indexOfFindedCurrentRetroBoardCard =
+        this.getArrayIndex(findedCurrentRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+
+      if (findedFromMergedCart !== undefined) {
+        findedFromMergedCart.mergedContent = new Array<string>();
+        findedFromMergedCart.mergedContent.push(findedFromMergedCart.name);
+        findedFromMergedCart.mergedContent.push(currentCard.name);
+
+        findedFromMergedCart.isInMerge = false;
+        findedFromMergedCart.isMerged = true;
+
+        const indexOfFindedFromMergedCart = this.getArrayIndex(findedFromMergedCart, this.wnetWellRetroBoardCol.retroBoardCards);
+        this.updaRetroBoardCard(indexOfFindedFromMergedCart, findedFromMergedCart, this.wnetWellRetroBoardCol.retroBoardCards);
+
+        this.removeCard(findedCurrentRetroBoardCard, colName);
+
+        return;
       }
-      this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+
+      currentCard.isClickedFromMergeBtn = true;
+
+      if (findedCurrentRetroBoardCard.isInMerge) {
+        findedCurrentRetroBoardCard.isInMerge = false;
+      } else {
+        findedCurrentRetroBoardCard.isInMerge = true;
+      }
+      this.updaRetroBoardCard(indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
     } else if (colName === TO_IMPROVE) {
       currentCard.isClickedFromMergeBtn = true;
       const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
@@ -179,7 +201,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       }
       this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
     }
-    }
+  }
 
 
   enableVoteBtns() {

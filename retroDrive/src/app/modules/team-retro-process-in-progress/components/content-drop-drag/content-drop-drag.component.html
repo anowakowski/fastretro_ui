@@ -43,7 +43,18 @@
               (click)="editCard(item, column.name)">
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <div *ngIf="!item.isEdit">
-               <div>{{ item.name }}</div>
+               <div *ngIf="!item.isMerged">{{ item.name }}</div>
+              
+               <div *ngIf="item.isMerged" >
+                 <div *ngFor="let content of item.mergedContent">
+
+                  <p style="margin-bottom: -3px;">{{content}}</p>
+                  <p style="margin-bottom: -2px;">--------------</p>
+                 </div>
+                
+
+               </div>
+
                <div style="margin-top: 20px; margin-bottom: -8px;">
                 <!--Merge btns-->
                 <button 
@@ -53,8 +64,9 @@
                   matTooltipPosition="after"
                   mat-icon-button 
                   color="primary"
+                  [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
                   (click)="onClickMergeCard(item, column.name)">
-                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
+                  <mat-icon style=" font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
                 </button>  
                 <button 
                   *ngIf="item.isInMerge"
@@ -62,7 +74,7 @@
                   matTooltip="click other card to merge or click the same btn to stop merge"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="accent"
+                  [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
                   (click)="onClickMergeCard(item, column.name)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
                 </button>  
