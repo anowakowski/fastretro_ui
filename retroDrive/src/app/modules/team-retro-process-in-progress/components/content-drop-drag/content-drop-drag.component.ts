@@ -53,6 +53,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
+  public shouldEnableVoteBtns = false;
   public stopRetroInProgressProcessSubscriptions: any;
 
   board: Board = new Board('Test Board', [
@@ -151,13 +152,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickLike(currentCard: RetroBoardCard) {
-    currentCard.isClickedFromLikeBtn = true;
+  onClickVoteOnCart(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromVoteBtn = true;
+  }
+
+  enableVoteBtns() {
+    this.shouldEnableVoteBtns = true;
   }
 
   editCard(currentCard: RetroBoardCard, colName: string) {
-    if (currentCard.isEdit || currentCard.isClickedFromLikeBtn) {
-      currentCard.isClickedFromLikeBtn = false;
+    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn) {
+      currentCard.isClickedFromVoteBtn = false;
       return;
     }
     if (!currentCard.isNewItem) {
