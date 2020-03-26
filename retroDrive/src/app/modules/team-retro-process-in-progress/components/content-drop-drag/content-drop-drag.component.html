@@ -45,10 +45,19 @@
                <div>{{ item.name }}</div>
                <div style="margin-top: 20px; margin-bottom: -8px;">
                 <button
+                  *ngIf="shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
                   matBadge="0" matBadgeColor="accent" 
                   mat-icon-button 
                   color="primary" 
+                  (click)="onClickVoteOnCart(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
+                </button>                
+                <button
+                  *ngIf="!shouldEnableVoteBtns"
+                  [disabled]="!shouldEnableVoteBtns" 
+                  mat-icon-button
+                  color="primary"
                   (click)="onClickVoteOnCart(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>
