@@ -44,10 +44,20 @@
               <div *ngIf="!item.isEdit">
                <div>{{ item.name }}</div>
                <div style="margin-top: 20px; margin-bottom: -8px;">
-                <button [disabled]="!shouldEnableVoteBtns" matBadge="0" matBadgeColor="accent" mat-icon-button color="primary" aria-label="Example icon-button with a heart icon" (click)="onClickVoteOnCart(item)">
+                <button
+                  [disabled]="!shouldEnableVoteBtns" 
+                  matBadge="0" matBadgeColor="accent" 
+                  mat-icon-button 
+                  color="primary" 
+                  (click)="onClickVoteOnCart(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>
-                <button [disabled]="!shouldEnableVoteBtns" style="margin-left: 15px;"  mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
+                <button
+                  [disabled]="!shouldEnableVoteBtns"
+                  style="margin-left: 15px;"
+                  matTooltip="click to add action to this card"
+                  matTooltipPosition="after"
+                  mat-icon-button color="primary">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
                 </button>
                </div>   
