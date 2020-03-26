@@ -100,7 +100,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.eventsService.emitTimerOptions(result);
+      if (result !== undefined) {
+        this.eventsService.emitTimerOptions(result);
+        this.retroProcessIsStoped = false;
+      }
     });
   }
 

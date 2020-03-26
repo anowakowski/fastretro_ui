@@ -116,6 +116,9 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.maxInMin = timerOption.value as number;
     this.currentInMin = 0;
 
+    this.currentInMinCountDown = this.maxInMin - 1;
+    this.currentInSecCountDown = 59;
+
     this.subscribeCounterForTimer();
   }
 
