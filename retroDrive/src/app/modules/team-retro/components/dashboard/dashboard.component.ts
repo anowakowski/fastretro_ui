@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  thrFormGroup: FormGroup;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -46,6 +47,9 @@ export class DashboardComponent implements OnInit {
     });
     this.secondFormGroup = this.formBuilder.group({
       secondCtrl: ['', Validators.required]
+    });
+    this.thrFormGroup = this.formBuilder.group({
+      thrCtrl: ['', Validators.required]
     });
   }
 }

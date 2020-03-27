@@ -64,6 +64,22 @@
         </div>
       </form>
     </mat-step>
+    <mat-step [stepControl]="thrFormGroup">
+      <form [formGroup]="thrFormGroup">
+        <ng-template matStepLabel>Choose your avatar</ng-template>
+        <section class="example-section">
+          <mat-checkbox class="example-margin" >use mail</mat-checkbox>
+        </section>
+        <mat-form-field>
+          <mat-label>Choose your display name</mat-label>
+          <input matInput placeholder="Put Project Name" formControlName="secondCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
       <p>You are now done.</p>
