@@ -78,6 +78,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private prepareRetroBoard() {
     this.retroBoardSubscriptions = this.frbs.retroBoardFilteredSnapshotChanges().subscribe(snapshot => {
+      this.dataIsLoading = true;
       this.retroBoards = [];
       this.CreateBaseRetroBoardData(snapshot);
     });
