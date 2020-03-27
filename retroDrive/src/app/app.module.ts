@@ -18,6 +18,7 @@ import { EventsService } from './services/events.service';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LocalStorageService } from './services/local-storage.service';
+import { SpinnerTickService } from './services/spinner-tick.service';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { LocalStorageService } from './services/local-storage.service';
     DataPassingService,
     EventsService,
     LocalStorageService,
+    SpinnerTickService,
     AuthGuard,
     LoginRegisterGuard
   ],
