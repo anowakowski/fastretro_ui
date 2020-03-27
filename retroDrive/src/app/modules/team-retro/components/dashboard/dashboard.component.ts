@@ -3,6 +3,7 @@ import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { User } from 'firebase';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,8 @@ export class DashboardComponent implements OnInit {
     monkeyPatchChartJsLegend();
   }
 
+  currentUser: User;
+
   public pieChartOptions: ChartOptions = {
     responsive: true,
   };
@@ -28,6 +31,6 @@ export class DashboardComponent implements OnInit {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
-    const currentUser = this.localStorageService.getItem('currentUser');
+    this.currentUser = this.localStorageService.getItem('currentUser');
   }
 }

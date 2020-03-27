@@ -3,7 +3,7 @@
 <mat-drawer-container class="app-container" autosize>
   <mat-drawer 
     #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
-    [opened]="!isScreenSmall()"
+    [opened]="!isScreenSmall() && !currentUser.isNewUser"
     [mode]="isScreenSmall() ? 'over' : 'side'">
     <div class="sidenav-element-flex-container">
       <div class="sidenav-element-flex-container">
