@@ -18,6 +18,13 @@ export class DashboardComponent implements OnInit {
   secondFormGroup: FormGroup;
   thrFormGroup: FormGroup;
 
+
+  avatar1MainPhotoUrl = 'https://robohash.org/PC1.png?set=set2';
+  avatar2MainPhotoUrl = 'https://robohash.org/PC2.png?set=set2';
+  avatar3MainPhotoUrl = 'https://robohash.org/PC3.png?set=set2';
+  avatar4MainPhotoUrl = 'https://robohash.org/PC4.png?set=set2';
+  avatar5MainPhotoUrl = 'https://robohash.org/PC5.png?set=set2';
+
   constructor(
     private spinner: NgxSpinnerService,
     private localStorageService: LocalStorageService,

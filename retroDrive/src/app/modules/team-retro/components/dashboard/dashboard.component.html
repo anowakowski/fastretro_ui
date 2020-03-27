@@ -72,8 +72,78 @@
         </section>
         <mat-form-field>
           <mat-label>Choose your display name</mat-label>
-          <input matInput placeholder="Put Project Name" formControlName="secondCtrl" required>
+          <input matInput placeholder="Put Project Name" formControlName="thrCtrl" required>
         </mat-form-field>
+        <div class="container">
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="avatar1MainPhotoUrl"
+                [ngStyle]="{ 'background-image': 'url(' + avatar1MainPhotoUrl + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card>  
+  
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="avatar2MainPhotoUrl"
+                [ngStyle]="{ 'background-image': 'url(' + avatar2MainPhotoUrl + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card> 
+
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="avatar3MainPhotoUrl"
+                [ngStyle]="{ 'background-image': 'url(' + avatar3MainPhotoUrl + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card> 
+
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="avatar4MainPhotoUrl"
+                [ngStyle]="{ 'background-image': 'url(' + avatar4MainPhotoUrl + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card> 
+
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="avatar5MainPhotoUrl"
+                [ngStyle]="{ 'background-image': 'url(' + avatar5MainPhotoUrl + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card>
+
+          <mat-card class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+            <mat-card-header >
+              <div 
+                *ngIf="currentUser.photoURL"
+                [ngStyle]="{ 'background-image': 'url(' + currentUser.photoURL + ')' }" 
+                mat-card-avatar 
+                class="sidnav-userprofile-header-image" >
+              </div>
+            </mat-card-header>
+          </mat-card> 
+
+        </div>
+
+
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
