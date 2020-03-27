@@ -21,6 +21,7 @@ import { FirestoreRetroBoardService } from './services/firestore-retro-board.ser
 import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/retro-board-snackbar.component';
 import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.component';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
     MaterialModule,
     ChartsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
 
   ],
   declarations: [
