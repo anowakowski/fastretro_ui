@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
 
   <mat-toolbar-row>
-    <button mat-button class="sidenav-toggle" (click)="emitMenu()">
+    <button *ngIf="!currentUser.isNewUser" mat-button class="sidenav-toggle" (click)="emitMenu()">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in

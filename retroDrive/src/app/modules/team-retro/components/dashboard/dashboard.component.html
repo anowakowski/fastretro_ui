@@ -1,35 +1,69 @@
-<mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
-<mat-card class="example-card" style="opacity: 0.97;">
-  <mat-card-header>
-    <mat-card-title>#team Alpha Board</mat-card-title>
-    <mat-card-subtitle>
-      <span style="font-size: 17px;">Retro for Sprint 21</span> <br/>
-      <i>Retro Board Created <span> march 2020</span></i>
-    </mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div class="chart-wrapper">
-      <canvas baseChart height="40"
-      [data]="pieChartData" 
-      [labels]="pieChartLabels" 
-      [chartType]="pieChartType"
-      [options]="pieChartOptions"
-      [plugins]="pieChartPlugins"
-      [legend]="pieChartLegend">
-    </canvas>
-    </div>
-  </mat-card-content>
-</mat-card>
+<div *ngIf="!currentUser.isNewUser">
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
+  <mat-card class="example-card" style="opacity: 0.97;">
+    <mat-card-header>
+      <mat-card-title>#team Alpha Board</mat-card-title>
+      <mat-card-subtitle>
+        <span style="font-size: 17px;">Retro for Sprint 21</span> <br />
+        <i>Retro Board Created <span> march 2020</span></i>
+      </mat-card-subtitle>
+    </mat-card-header>
 
-<mat-card class="example-card" style="margin-top: 5px;">
-  <mat-card-actions style="margin-top: -14px;">
-    <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
-  </mat-card-actions>
-</mat-card>
+    <mat-card-content>
+      <div class="chart-wrapper">
+        <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+          [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+        </canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-<mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+  <mat-card class="example-card" style="margin-top: 5px;">
+    <mat-card-actions style="margin-top: -14px;">
+      <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
+    </mat-card-actions>
+  </mat-card>
 
-
-
-
+  <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+</div>
+<div *ngIf="currentUser.isNewUser">
+  <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+    {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+  </button>
+  <mat-horizontal-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Fill out your name</ng-template>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Fill out your address</ng-template>
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                 required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
