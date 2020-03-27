@@ -70,16 +70,14 @@
   margin-left: -6px
 }
 
-
 .teams-retro-background-img  {
-  background: url("../../../../../assets/brown-wall-cladding-main.jpg"); 
+  background: url("../../../../../assets/idea1.jpg"); 
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;  
   margin-bottom: -65px;
 }
-
 
 .card-title {
   background-color: #8ea045;
@@ -91,4 +89,3 @@
   width: 360px;
   height: 40px;
 }
-
