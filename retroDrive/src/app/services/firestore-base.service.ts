@@ -31,6 +31,14 @@ export class FirestoreBaseService {
     return this.afs.doc(collectionName + docId).ref;
   }
 
+  getFiltered(collectionName: string, condition: ConditionQueryData) {
+    return this.afs.collection(
+      collectionName,
+      ref => ref.where(condition.fieldName, condition.conditionOperator, condition.value))
+    .get()
+    .toPromise();
+  }
+
   getFilteredSnapshotChanges(collectionName: string, condition: ConditionQueryData) {
     return this.afs.collection(
         collectionName,

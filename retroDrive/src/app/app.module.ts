@@ -19,6 +19,7 @@ import { EventsService } from './services/events.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LocalStorageService } from './services/local-storage.service';
 import { SpinnerTickService } from './services/spinner-tick.service';
+import { FirestoreLoginRegisterService } from './services/firestore-login-register.service';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { SpinnerTickService } from './services/spinner-tick.service';
   ],
   providers: [
     AuthService,
+    FirestoreLoginRegisterService,
     FirestoreBaseService,
     DataPassingService,
     EventsService,

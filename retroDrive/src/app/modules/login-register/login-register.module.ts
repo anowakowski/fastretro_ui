@@ -9,7 +9,6 @@ import { LoginRegisterRoutingModule } from './login-register-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
 import { LoginRegisterFormComponent } from './components/login-register-form/login-register-form.component';
-import { FirestoreLoginRegisterService } from './services/firestore-login-register.service';
 
 
 
@@ -23,7 +22,6 @@ import { FirestoreLoginRegisterService } from './services/firestore-login-regist
     MaterialModule
   ],
   declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent],
-  providers: [FirestoreLoginRegisterService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginRegisterModule { }

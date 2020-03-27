@@ -68,8 +68,7 @@ export class AuthService {
       uid: user.uid,
       email: user.email,
       splayName: user.displayName,
-      photoURL: user.photoURL,
-      isNewUser: true
+      photoURL: user.photoURL
     };
 
     return userRef.set(data, {merge: true});
