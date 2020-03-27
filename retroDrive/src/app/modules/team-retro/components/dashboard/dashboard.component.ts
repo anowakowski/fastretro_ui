@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +10,7 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() {
+  constructor(private spinner: NgxSpinnerService) {
        monkeyPatchChartJsTooltip();
        monkeyPatchChartJsLegend();
    }
@@ -24,6 +25,14 @@ export class DashboardComponent implements OnInit {
   public pieChartPlugins = [];
 
   ngOnInit() {
+
+            /** spinner starts on init */
+            this.spinner.show();
+ 
+            setTimeout(() => {
+              /** spinner ends after 5 seconds */
+              this.spinner.hide();
+            }, 5000);
   }
 
 
