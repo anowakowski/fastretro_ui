@@ -21,6 +21,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
+  dataIsLoading = true;
+
   constructor(
     private bottomSheetRef: MatBottomSheet,
     private frbs: FirestoreRetroBoardService,
@@ -100,5 +102,6 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private addToRetroBoards(retroBoard: RetroBoard) {
     this.retroBoards.push(retroBoard);
+    this.dataIsLoading = false;
   }
 }

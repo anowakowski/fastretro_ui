@@ -22,6 +22,7 @@ import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/r
 import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     SidenavUsercardComponent,
     AddNewRetroBoardBottomsheetComponent,
     RetroBoardSnackbarComponent,
-    MyTestCompComponent
+    MyTestCompComponent,
+    LoaddingSingleElementsSpinnerComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,

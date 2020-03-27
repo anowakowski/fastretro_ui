@@ -11,9 +11,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class DashboardComponent implements OnInit {
 
   constructor(private spinner: NgxSpinnerService) {
-       monkeyPatchChartJsTooltip();
-       monkeyPatchChartJsLegend();
-   }
+    monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
+  }
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -24,15 +24,22 @@ export class DashboardComponent implements OnInit {
   public pieChartLegend = false;
   public pieChartPlugins = [];
 
+  public firstTimeLoadElementForSpinner = true;
+
   ngOnInit() {
 
-            /** spinner starts on init */
-            this.spinner.show();
- 
-            setTimeout(() => {
-              /** spinner ends after 5 seconds */
-              this.spinner.hide();
-            }, 5000);
+    /** spinner starts on init */
+    if (this.firstTimeLoadElementForSpinner) {
+      this.spinner.show();
+
+      setTimeout(() => {
+        /** spinner ends after 5 seconds */
+        this.spinner.hide();
+
+        this.firstTimeLoadElementForSpinner = false;
+      }, 5000);
+    }
+
   }
 
 
