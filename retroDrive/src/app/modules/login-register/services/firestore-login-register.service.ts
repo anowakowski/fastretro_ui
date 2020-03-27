@@ -18,4 +18,8 @@ export class FirestoreLoginRegisterService {
     return this.firestoreBaseService.getFiltered('/users', condition);
   }
 
+  updateUsr(user: firebase.User) {
+    this.firestoreBaseService.updateUserData(user);
+  }
+
 }

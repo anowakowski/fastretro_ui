@@ -57,8 +57,8 @@ export class AuthService {
 
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
-    const credential = await this.afAuth.auth.signInWithPopup(provider);
-    return this.updateUserData(credential.user);
+    return await this.afAuth.auth.signInWithPopup(provider);
+    //return this.updateUserData(credential.user);
   }
 
   updateUserData(user: firebase.User) {
@@ -68,10 +68,12 @@ export class AuthService {
       uid: user.uid,
       email: user.email,
       splayName: user.displayName,
-      photoURL: user.photoURL
+      photoURL: user.photoURL,
+      isNewUser: true
     };
 
-    return userRef.set(data, {merge: true});
+    userRef.set(data, {merge: true});
+    //return userRef.get().toPromise();
   }
 
   isLoggedIn() {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference, FieldPath } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference, FieldPath, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { ConditionQueryData } from '../helpers/conditionQueryData';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,21 @@ export class FirestoreBaseService {
 
   snapshotChanges(collectionName: string) {
     return this.afs.collection(collectionName).snapshotChanges();
+  }
+
+  updateUserData(user: firebase.User) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+
+    const data = {
+      uid: user.uid,
+      email: user.email,
+      splayName: user.displayName,
+      photoURL: user.photoURL,
+      isNewUser: true
+    };
+
+    userRef.set(data, {merge: true});
+    //return userRef.get().toPromise();
   }
 }
 
