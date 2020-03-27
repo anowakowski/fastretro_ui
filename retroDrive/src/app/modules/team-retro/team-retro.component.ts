@@ -10,8 +10,11 @@ export class TeamRetroComponent implements OnInit {
   constructor(private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    this.spinner.show();
+    this.spinnerTick();
+  }
 
+  private spinnerTick() {
+    this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
     }, 5000);

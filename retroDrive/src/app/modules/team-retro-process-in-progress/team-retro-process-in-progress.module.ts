@@ -16,6 +16,8 @@ import { TeamRetroInProgressSetTimeDialogComponent }
   from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TeamRetroInProgressAddCardActionDialogComponent } from './components/team-retro-in-progress-add-card-action-dialog/team-retro-in-progress-add-card-action-dialog.component';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ import { TeamRetroInProgressAddCardActionDialogComponent } from './components/te
     RoundProgressModule,
     DragDropModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
   ],
   declarations: [
     TeamRetroProcessInProgressComponent,
