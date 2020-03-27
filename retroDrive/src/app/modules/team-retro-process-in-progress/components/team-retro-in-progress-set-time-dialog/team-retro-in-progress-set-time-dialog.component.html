@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Set new timer value</h1>
+<div mat-dialog-content>
+  <mat-form-field style="width: 100%;" class="example-full-width">
+    <mat-label>Choose New Timer time</mat-label>
+    <mat-select #selectTimer>
+    <mat-option *ngFor="let dataTimerOption of dataTimerOptions" [value]="dataTimerOption">{{dataTimerOption.viewValue}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <div fxFlex></div>
+  <button mat-button [mat-dialog-close]="selectTimer.value" cdkFocusInitial>Start New Timer</button>
+</div>

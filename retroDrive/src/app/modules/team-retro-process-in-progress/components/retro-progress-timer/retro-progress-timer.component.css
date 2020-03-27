@@ -1,0 +1,23 @@
+.progress-wrapper {
+  position: relative;
+  margin: 22px auto;
+  width: 65px;
+  font-size: 9px;
+}
+
+.current {
+  position: absolute;
+  color: #bbb;
+  font-weight: 100;
+  line-height: 5.4;
+  font-family: Comic Sans MS, sans-serif;
+  font-style: bold;
+}
+
+.current-timer-position-below-tenmin {
+  margin-left: 12.9px;
+}
+
+.current-timer-position-up-to-tenmin {
+  margin-left: 10px;
+}

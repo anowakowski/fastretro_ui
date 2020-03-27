@@ -9,6 +9,8 @@ import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 
+import { Guid } from "guid-typescript";
+
 @Component({
   selector: 'app-retro-process',
   templateUrl: './retro-process.component.html',
@@ -67,8 +69,9 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   onStartRetroProcess(retroBoard) {
-    this.dataPassingService.setData(1, retroBoard);
-    //this.router.navigateByUrl('/retro-in-progress/1');
+    const guid = Guid.create();
+    this.dataPassingService.setData(guid.toString(), retroBoard);
+    this.router.navigateByUrl('/retro-in-progress/' + guid.toString());
   }
 
   private prepareRetroBoard() {

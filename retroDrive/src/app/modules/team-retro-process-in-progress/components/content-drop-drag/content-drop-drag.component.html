@@ -1,0 +1,135 @@
+<div class="root">
+  <app-nav></app-nav>
+  <div class="board">
+    <div class="board-bar">
+      <p class="board-name">{{ board.name }}</p>
+      <div fxFlex></div>
+
+      <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="retroProcessIsStoped" (click)="openDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
+      <button mat-raised-button color="warn" (click)="stopRetroProcess()"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
+      <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()">
+        <mat-icon>favorite</mat-icon>&nbsp;  
+        <span *ngIf="!shouldEnableVoteBtns">Enable Vote Buttons</span>
+        <span *ngIf="shouldEnableVoteBtns">Disable Vote Buttons</span>
+      </button>
+      <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
+      <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->
+    </div>
+
+    <app-retro-progress-timer [shouldHideSmallTimer]="true" [shouldHideBigTimer]="true"></app-retro-progress-timer>
+    <div class="board-wrapper">
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let column of board.columns">
+          <div class="column-title">
+            <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
+            <div fxFlex></div>
+            <button [disabled]="retroProcessIsStoped" mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
+          </div>
+          <div class="retro-board-card-container"
+          cdkDropList
+          [cdkDropListData]="column.retroBoardCards"
+          (cdkDropListDropped)="drop($event)">
+            <div class="retro-board-card retro-board-card-chosen-for-merge" 
+              [ngClass]="
+                {'retro-board-card-went-well': column.name === 'Went Well',
+                'retro-board-card-to-improve': column.name === 'To Improve',
+                'retro-board-card-new-item': item.isEdit === true,
+                'retro-board-card-new-item-went-well': item.isEdit === true && column.name === 'Went Well',
+                'retro-board-card-new-item-to-improve': item.isEdit === true && column.name === 'To Improve',
+                'retro-board-card-chosen-for-merge': item.isInMerge === true
+              }" 
+              *ngFor="let item of column.retroBoardCards"
+              cdkDrag
+              (click)="editCard(item, column.name)">
+              <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
+              <div *ngIf="!item.isEdit">
+               <div *ngIf="!item.isMerged">{{ item.name }}</div>
+              
+               <div *ngIf="item.isMerged" >
+                 <div *ngFor="let content of item.mergedContent">
+
+                  <p style="margin-bottom: -3px;">{{content}}</p>
+                  <p style="margin-bottom: -2px;">--------------</p>
+                 </div>
+                
+
+               </div>
+
+               <div style="margin-top: 20px; margin-bottom: -8px;">
+                <!--Merge btns-->
+                <button 
+                  *ngIf="!item.isInMerge"
+                  style="margin-right: 15px;"
+                  matTooltip="click and merge with oder card"
+                  matTooltipPosition="after"
+                  mat-icon-button 
+                  color="primary"
+                  [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
+                  (click)="onClickMergeCard(item, column.name)">
+                  <mat-icon style=" font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
+                </button>  
+                <button 
+                  *ngIf="item.isInMerge"
+                  style="margin-right: 15px;"
+                  matTooltip="click other card to merge or click the same btn to stop merge"
+                  matTooltipPosition="after"
+                  mat-icon-button 
+                  [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
+                  (click)="onClickMergeCard(item, column.name)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
+                </button>  
+                <!--Vote btns-->
+                <button
+                  *ngIf="shouldEnableVoteBtns"
+                  [disabled]="!shouldEnableVoteBtns" 
+                  matBadge="0" matBadgeColor="accent" 
+                  mat-icon-button 
+                  color="primary" 
+                  (click)="onClickVoteOnCart(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
+                </button>                
+                <button
+                  *ngIf="!shouldEnableVoteBtns"
+                  [disabled]="!shouldEnableVoteBtns" 
+                  mat-icon-button
+                  color="primary"
+                  (click)="onClickVoteOnCart(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
+                </button>
+                <button
+                  [disabled]="!shouldEnableVoteBtns"
+                  style="margin-left: 15px;"
+                  matTooltip="click to add action to this card"
+                  matTooltipPosition="after"
+                  mat-icon-button color="primary">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
+                </button>
+               </div>   
+              </div>
+              <div *ngIf="item.isEdit">
+
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Leave your comment</mat-label>
+                  <input
+                    style="color: black;"
+                    matInput placeholder="Ex. It makes me feel..."
+                    value="item.name"
+                    [formControl]="newCardContentFormControl"
+                    [ngClass]="{'is-invalid':addNewRetroBoardCardForm.get('newCardContentFormControl').touched && addNewRetroBoardCardForm.get('newCardContentFormControl').invalid}"
+                    required/>
+                    <div class="invalid-feedback">
+                      <div>your content in new card is required</div>
+                    </div>
+                </mat-form-field>
+                <button type="submit" mat-raised-button color="primary"><mat-icon>add</mat-icon></button>
+                <button mat-raised-button color="warn" style="margin-left: 5px;" (click)="closeEditCard(item, column.name)"><mat-icon>remove</mat-icon></button>
+                <button mat-raised-button color="warn" style="margin-left: 20px;" (click)="removeCard(item, column.name)"><mat-icon>delete_forever</mat-icon></button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

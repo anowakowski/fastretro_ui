@@ -1,0 +1,18 @@
+/*
+.flex-container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+  */
+
+  .background-retro-process {
+    background-image: url('../../../assets/geometric1.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+}
