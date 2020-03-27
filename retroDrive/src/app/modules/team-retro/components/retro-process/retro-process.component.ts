@@ -102,6 +102,6 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private addToRetroBoards(retroBoard: RetroBoard) {
     this.retroBoards.push(retroBoard);
-    this.dataIsLoading = false;
+    //this.dataIsLoading = false;
   }
 }
