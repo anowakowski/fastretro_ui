@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
-
+  checked = false;
   currentUser: User;
 
   public pieChartOptions: ChartOptions = {
