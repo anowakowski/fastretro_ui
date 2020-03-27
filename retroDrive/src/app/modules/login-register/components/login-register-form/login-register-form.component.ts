@@ -18,7 +18,6 @@ export class LoginRegisterFormComponent implements OnInit {
 
   login() {
     this.auth.googleSignin().then((userCredentials) => {
-
       const logedUser = userCredentials.user;
       this.fls.findUsers(logedUser.email)
         .then(snapshotFindedUsr => {
