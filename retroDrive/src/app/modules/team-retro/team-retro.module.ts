@@ -21,6 +21,8 @@ import { FirestoreRetroBoardService } from './services/firestore-retro-board.ser
 import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/retro-board-snackbar.component';
 import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.component';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,8 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
     MaterialModule,
     ChartsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
 
   ],
   declarations: [
@@ -43,7 +46,8 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
     SidenavUsercardComponent,
     AddNewRetroBoardBottomsheetComponent,
     RetroBoardSnackbarComponent,
-    MyTestCompComponent
+    MyTestCompComponent,
+    LoaddingSingleElementsSpinnerComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,

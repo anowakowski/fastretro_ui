@@ -16,6 +16,10 @@ import { FirestoreBaseService } from './services/firestore-base.service';
 import { DataPassingService } from './services/data-passing.service';
 import { EventsService } from './services/events.service';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LocalStorageService } from './services/local-storage.service';
+import { SpinnerTickService } from './services/spinner-tick.service';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -26,13 +30,16 @@ import { EventsService } from './services/events.service';
     AngularFireAuthModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgxSpinnerModule
   ],
   providers: [
     AuthService,
     FirestoreBaseService,
     DataPassingService,
     EventsService,
+    LocalStorageService,
+    SpinnerTickService,
     AuthGuard,
     LoginRegisterGuard
   ],
