@@ -29,10 +29,13 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private spinnerTick() {
     this.spinner.show();
-    this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(5000).subscribe(() => {
-      this.spinner.hide();
-      this.shouldShowContent = true;
-      this.unsubscribeTickService();
+    this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
+      if (interval === 1) {
+        this.shouldShowContent = true;
+      } else if (interval === 4) {
+        this.spinner.hide();
+        this.unsubscribeTickService();
+      }
     });
   }
 }

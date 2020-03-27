@@ -1,3 +1,9 @@
+
+
+<div *ngIf="shouldShowContent" class="teams-retro-background-img ">
+    <app-slidenav></app-slidenav>
+</div>
+
 <ngx-spinner
 bdOpacity = 0.9
 bdColor = "#ffffff"
@@ -7,7 +13,3 @@ type = "line-scale-pulse-out"
 [fullScreen] = "true"
 >
 </ngx-spinner>
-
-<div *ngIf="shouldShowContent" class="teams-retro-background-img ">
-    <app-slidenav></app-slidenav>
-</div>
