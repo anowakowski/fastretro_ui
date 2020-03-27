@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { interval } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-team-retro',
@@ -9,18 +11,28 @@ import { interval } from 'rxjs';
   styleUrls: ['./team-retro.component.css']
 })
 export class TeamRetroComponent implements OnInit, OnDestroy {
-  constructor(private spinner: NgxSpinnerService, private spinnerTickService: SpinnerTickService) { }
-
+  constructor(
+    private spinner: NgxSpinnerService,
+    private spinnerTickService: SpinnerTickService,
+    private authService: AuthService,
+    private localStorageService: LocalStorageService) { }
 
   shouldShowContent = false;
   private spinnerTickSubscription: any;
 
   ngOnInit() {
     this.spinnerTick();
+    this.setupCurrentUser();
   }
 
   ngOnDestroy(): void {
     this.unsubscribeTickService();
+  }
+
+  private setupCurrentUser() {
+    this.authService.user$.subscribe(currentUser => {
+      this.localStorageService.setItem('currentUser', currentUser);
+    });
   }
 
   private unsubscribeTickService() {

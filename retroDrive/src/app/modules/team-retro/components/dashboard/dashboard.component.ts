@@ -9,14 +9,12 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit {
 
-  constructor(private spinner: NgxSpinnerService, localStorageService: LocalStorageService) {
+  constructor(private spinner: NgxSpinnerService, private localStorageService: LocalStorageService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
-
-
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -30,23 +28,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
-
-
-
-
+    const currentUser = this.localStorageService.getItem('currentUser');
   }
-
-
-
-
-  ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
-  }
-
-  ngOnDestroy(): void {
-    console.log('ngOnDestroy');
-  }
-
-
-
 }
