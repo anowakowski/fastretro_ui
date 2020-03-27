@@ -7,9 +7,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./team-retro.component.css']
 })
 export class TeamRetroComponent implements OnInit {
-  constructor() {}
+  constructor(private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinner.show();
 
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 5000);
   }
 }

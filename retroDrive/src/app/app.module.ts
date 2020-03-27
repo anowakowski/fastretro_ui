@@ -17,6 +17,7 @@ import { DataPassingService } from './services/data-passing.service';
 import { EventsService } from './services/events.service';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { LocalStorageService } from './services/local-storage.service';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FirestoreBaseService,
     DataPassingService,
     EventsService,
+    LocalStorageService,
     AuthGuard,
     LoginRegisterGuard
   ],
