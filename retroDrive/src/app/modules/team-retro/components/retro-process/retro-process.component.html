@@ -7,9 +7,9 @@
 </div>
 <div *ngIf="!dataIsLoading">
   <div *ngIf="shouldShowRetroBoardElements()" style="margin-top: 40px;">
-    <mat-card style="margin-bottom: 10px;">List of not started retro board</mat-card>
+    <mat-card style="margin-bottom: 40px; opacity: 0.9;">List of not started retro board</mat-card>
     <div *ngFor="let retroBoard of retroBoards">
-      <mat-card style="margin-top: 10px;" class="example-card">
+      <mat-card style="margin-top: 20px; opacity: 0.97;" class="example-card">
         <mat-card-header>
           <div fxFlex></div>
           <button style="height: 40px; margin-right: -7px;" mat-raised-button color="warn" (click)="deleteRetroBoard(retroBoard)">
@@ -25,7 +25,9 @@
             <i>Retro Board Created at<span> {{retroBoard.creationDate}}</span></i>
           </mat-card-subtitle>
         </mat-card-header>
-        <mat-card-actions>
+      </mat-card>
+      <mat-card style="margin-top: 5px;">
+        <mat-card-actions style="margin-top: -14px;">
           <button style="width: 100%;" mat-raised-button color="accent" (click)="onStartRetroProcess(retroBoard)">Start Retro Process</button>
         </mat-card-actions>
       </mat-card>
