@@ -1,0 +1,61 @@
+<button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+</button>
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Fill workspace name</ng-template>
+      <section style="margin-top: 25px;" class="example-section">
+        <mat-checkbox>is existing workspace</mat-checkbox>
+        <button mat-icon-button>
+          <mat-icon 
+          style="margin-top: -8px;"
+          matTooltip="Put the correct name and join to existing workspace. If workspace needs acctept you need to wait for it"
+          matTooltipPosition="after">info</mat-icon>
+        </button>
+      </section>
+      <mat-form-field style = "margin-bottom: 70px; margin-top: -8px;">
+        <mat-label>Name of your workspace</mat-label>
+        <input matInput placeholder="Put the Workspace Name" formControlName="firstCtrl" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="thrFormGroup">
+    <form [formGroup]="thrFormGroup">
+      <ng-template matStepLabel>Choose your avatar</ng-template>
+      <mat-form-field>
+        <mat-label>Choose your display name</mat-label>
+        <input matInput placeholder="Put Project Name" formControlName="thrCtrl" required>
+      </mat-form-field>
+      <div class="container" >
+        <mat-card *ngFor="let avatar of avatars" class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+          <mat-card-header >
+            <div 
+              *ngIf="avatar"
+              [ngStyle]="{ 'background-image': 'url(' + avatar + ')' }" 
+              mat-card-avatar 
+              class="sidnav-userprofile-header-image" >
+            </div>
+          </mat-card-header>
+        </mat-card>  
+      </div>
+
+
+      <div style="margin-top: 1px;">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

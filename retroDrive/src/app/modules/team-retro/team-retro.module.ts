@@ -23,6 +23,7 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
+import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wizard.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-si
     AddNewRetroBoardBottomsheetComponent,
     RetroBoardSnackbarComponent,
     MyTestCompComponent,
-    LoaddingSingleElementsSpinnerComponent
+    LoaddingSingleElementsSpinnerComponent,
+    NewUserWizardComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,

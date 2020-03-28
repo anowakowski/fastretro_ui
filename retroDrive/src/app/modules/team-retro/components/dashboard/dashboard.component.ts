@@ -13,26 +13,13 @@ import { User } from 'src/app/models/user';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  isLinear = false;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thrFormGroup: FormGroup;
-
-
-  avatar1MainPhotoUrl = 'https://robohash.org/PC1.png?set=set2';
-  avatar2MainPhotoUrl = 'https://robohash.org/PC2.png?set=set2';
-  avatar3MainPhotoUrl = 'https://robohash.org/PC3.png?set=set2';
-  avatar4MainPhotoUrl = 'https://robohash.org/PC4.png?set=set2';
-  avatar5MainPhotoUrl = 'https://robohash.org/PC5.png?set=set2';
-
   constructor(
     private spinner: NgxSpinnerService,
-    private localStorageService: LocalStorageService,
-    private formBuilder: FormBuilder) {
+    private localStorageService: LocalStorageService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
-  checked = false;
+
   currentUser: User;
 
   public pieChartOptions: ChartOptions = {
@@ -48,15 +35,5 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
-    this.thrFormGroup = this.formBuilder.group({
-      thrCtrl: ['', Validators.required]
-    });
   }
 }
