@@ -3,6 +3,7 @@ export interface User {
     email: string;
     photoURL?: string;
     displayName?: string;
+    splayName?: string;
     myCustomData?: string;
     isNewUser: boolean;
   }

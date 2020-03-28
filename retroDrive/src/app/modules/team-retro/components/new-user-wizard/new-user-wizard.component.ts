@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
@@ -11,9 +11,11 @@ import { Avatar } from 'src/app/models/avatar';
 })
 export class NewUserWizardComponent implements OnInit {
   isLinear = false;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thrFormGroup: FormGroup;
+
+  workspaceFormGroup: FormGroup;
+  workspaceNameFormControl = new FormControl('', Validators.required);
+  avatarsFormGroup: FormGroup;
+  avatarsNameFormControl = new FormControl('', Validators.required);
 
   avatars: Array<Avatar>;
 
@@ -42,15 +44,9 @@ export class NewUserWizardComponent implements OnInit {
       {avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6}
     ];
 
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
-    this.thrFormGroup = this.formBuilder.group({
-      thrCtrl: ['', Validators.required]
-    });
+    this.createFormsBuild();
+
+    this.avatarsNameFormControl.setValue(this.currentUser.splayName);
   }
 
   onSelectAvatar(currentAvatar: Avatar) {
@@ -80,5 +76,14 @@ export class NewUserWizardComponent implements OnInit {
 
   private updaAvatar(index: number, avatarToUpdate: Avatar) {
     this.avatars[index] = avatarToUpdate;
+  }
+
+  private createFormsBuild() {
+    this.workspaceFormGroup = this.formBuilder.group({
+      workspaceNameFormControl: this.workspaceNameFormControl
+    });
+    this.avatarsFormGroup = this.formBuilder.group({
+      avatarsNameFormControl: this.avatarsNameFormControl
+    });
   }
 }
