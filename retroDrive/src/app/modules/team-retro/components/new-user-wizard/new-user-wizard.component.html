@@ -31,7 +31,13 @@
         <input matInput placeholder="Put Project Name" formControlName="thrCtrl" required>
       </mat-form-field>
       <div class="container" >
-        <mat-card *ngFor="let avatar of avatars" class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
+        <mat-card
+          style="margin-right: 20px;"
+          class="sidenav-userprofile-card"
+          [ngClass]="{'avatar-card-view': avatar.isChosen === false,
+                      'avatar-card-view-chosen': avatar.isChosen === true}"
+
+          *ngFor="let avatar of avatars">
           <mat-card-header >
             <div 
               *ngIf="avatar.avatarUrl"
@@ -43,7 +49,7 @@
           </mat-card-header>
         </mat-card>  
       </div>
-      <div style="margin-top: 2px;">
+      <div style="margin-top: 10px;">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext>Next</button>
       </div>

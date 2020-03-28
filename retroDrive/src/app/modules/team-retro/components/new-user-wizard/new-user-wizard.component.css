@@ -46,13 +46,13 @@
 
   .avatar-card-view {
     border-radius: 70px 70px 70px 70px;
-    border: solid 1.3px;
+    border: solid 1.5px;
     border-color: #2567b3;
   }
 
   .avatar-card-view-chosen {
     border-radius: 70px 70px 70px 70px;
-    border: solid 2px;
+    border: solid 1.5px;
     border-color: #5a9b1e;
   }
  

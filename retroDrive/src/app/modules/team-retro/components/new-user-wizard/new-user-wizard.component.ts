@@ -34,12 +34,12 @@ export class NewUserWizardComponent implements OnInit {
     this.currentUser = this.localStorageService.getItem('currentUser');
 
     this.avatars = [
-      {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false},
-      {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false},
-      {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false},
-      {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false},
-      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false},
-      {avatarUrl: this.currentUser.photoURL, isChosen: false}
+      {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false, id: 1},
+      {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false, id: 2},
+      {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false, id: 3},
+      {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false, id: 4},
+      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false, id: 5},
+      {avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6}
     ];
 
     this.firstFormGroup = this.formBuilder.group({
@@ -53,9 +53,24 @@ export class NewUserWizardComponent implements OnInit {
     });
   }
 
-  onSelectAvatar(avatar: Avatar) {
-    avatar.isChosen = true;
+  onSelectAvatar(currentAvatar: Avatar) {
+    const findedChosenAvatar = this.avatars.find(avat => avat.isChosen);
 
+    if (findedChosenAvatar !== undefined) {
+      if (currentAvatar.id === findedChosenAvatar.id) {
+        currentAvatar.isChosen = false;
+      } else {
+        findedChosenAvatar.isChosen = false;
+        currentAvatar.isChosen = true;
+        this.updateAvatarWhenSelected(findedChosenAvatar);
+      }
+    } else {
+      currentAvatar.isChosen = true;
+    }
+    this.updateAvatarWhenSelected(currentAvatar);
+  }
+
+  private updateAvatarWhenSelected(avatar: Avatar) {
     const index = this.getArrayIndex(avatar);
     this.updaAvatar(index, avatar);
   }
