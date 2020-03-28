@@ -68,9 +68,26 @@
     </form>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
-    <div>
+    <ng-template matStepLabel>Summary</ng-template>
+    <h3 style="margin-top: 25px;">Great! Everything is almost done. Check the your choices bellow</h3>
+    <div class="container">
+
+      <mat-card
+      style="margin-right: 20px;"
+      class="sidenav-userprofile-card avatar-card-view">
+      <mat-card-header >
+        <div 
+          *ngIf="chosenAvatarUrl"
+          mat-card-avatar
+          [ngStyle]="{ 'background-image': 'url(' + chosenAvatarUrl + ')' }" 
+          class="sidnav-userprofile-header-image">
+        </div>
+      </mat-card-header>
+
+    </mat-card>
+    </div>
+
+    <div style="margin-top: 53px;">
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button (click)="stepper.reset()">Reset</button>
     </div>
