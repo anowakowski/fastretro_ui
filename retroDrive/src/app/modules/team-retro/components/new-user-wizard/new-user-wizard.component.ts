@@ -14,6 +14,7 @@ export class NewUserWizardComponent implements OnInit {
 
   workspaceFormGroup: FormGroup;
   workspaceNameFormControl = new FormControl('', Validators.required);
+
   avatarsFormGroup: FormGroup;
   avatarsNameFormControl = new FormControl('', Validators.required);
 
@@ -27,6 +28,9 @@ export class NewUserWizardComponent implements OnInit {
 
   checked = false;
   currentUser: User;
+
+  isExistingWorkspace = false;
+  isWorkspaceWithRequiredAccess = false;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -47,6 +51,14 @@ export class NewUserWizardComponent implements OnInit {
     this.createFormsBuild();
 
     this.avatarsNameFormControl.setValue(this.currentUser.splayName);
+  }
+
+  onChangeIsExistingWorkspaceCheckbox(event){
+    this.isExistingWorkspace = event.checked;
+  }
+
+  onChangeIsWorkspaceWithRequiredAccess(event){
+    this.isWorkspaceWithRequiredAccess = event.checked;
   }
 
   onSelectAvatar(currentAvatar: Avatar) {

@@ -6,15 +6,29 @@
     <form [formGroup]="workspaceFormGroup">
       <ng-template matStepLabel>Fill workspace name</ng-template>
       <section style="margin-top: 25px;" class="example-section">
-        <mat-checkbox>is existing workspace</mat-checkbox>
-        <button mat-icon-button>
-          <mat-icon 
+        <mat-checkbox [checked]="isExistingWorkspace" (change)="onChangeIsExistingWorkspaceCheckbox($event)">is existing workspace</mat-checkbox>
+        <mat-icon 
           style="margin-top: -8px;"
-          matTooltip="Put the correct name and join to existing workspace. If workspace needs acctept you need to wait for it"
-          matTooltipPosition="after">info</mat-icon>
-        </button>
+          matTooltip="Put the correct name on input bellow and join to existing workspace"
+          matTooltipPosition="above">info
+        </mat-icon>
+
+        <mat-checkbox
+          style="margin-left: 30px;"
+          *ngIf="!isExistingWorkspace"
+          [checked]="isWorkspaceWithRequiredAccess"
+          (change)="onChangeIsWorkspaceWithRequiredAccess($event)">
+            is with requried access (for new workspaces)
+          </mat-checkbox>
+        <mat-icon 
+          *ngIf="!isExistingWorkspace" 
+          style="margin-top: -8px;"
+          matTooltip="if you check this checkbox, access to this workspace will require your approval"
+          matTooltipPosition="after">info
+        </mat-icon>
       </section>
-      <mat-form-field style = "margin-bottom: 70px; margin-top: -8px;">
+      <mat-divider></mat-divider>
+      <mat-form-field style = "margin-bottom: 53px;">
         <mat-label>Name of your workspace</mat-label>
         <input matInput placeholder="Put the Workspace Name" [formControl]="workspaceNameFormControl" required>
       </mat-form-field>
