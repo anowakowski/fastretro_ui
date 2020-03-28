@@ -34,17 +34,16 @@
         <mat-card *ngFor="let avatar of avatars" class="sidenav-userprofile-card avatar-card-view" style="margin-right: 20px;">
           <mat-card-header >
             <div 
-              *ngIf="avatar"
-              [ngStyle]="{ 'background-image': 'url(' + avatar + ')' }" 
+              *ngIf="avatar.avatarUrl"
+              [ngStyle]="{ 'background-image': 'url(' + avatar.avatarUrl + ')' }" 
               mat-card-avatar 
-              class="sidnav-userprofile-header-image" >
+              class="sidnav-userprofile-header-image" 
+              (click)="onSelectAvatar(avatar)">
             </div>
           </mat-card-header>
         </mat-card>  
       </div>
-
-
-      <div style="margin-top: 1px;">
+      <div style="margin-top: 2px;">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext>Next</button>
       </div>

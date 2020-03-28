@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -14,7 +15,7 @@ export class NewUserWizardComponent implements OnInit {
   secondFormGroup: FormGroup;
   thrFormGroup: FormGroup;
 
-  avatars: Array<string>;
+  avatars: Array<Avatar>;
 
   avatar1MainPhotoUrl = 'https://robohash.org/PC1.png?set=set2';
   avatar2MainPhotoUrl = 'https://robohash.org/PC2.png?set=set2';
@@ -32,14 +33,14 @@ export class NewUserWizardComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
 
-    this.avatars = new Array<string>();
-
-    this.avatars.push('https://robohash.org/PC1.png?set=set2');
-    this.avatars.push('https://robohash.org/PC2.png?set=set2');
-    this.avatars.push('https://robohash.org/PC3.png?set=set2');
-    this.avatars.push('https://robohash.org/PC4.png?set=set2');
-    this.avatars.push('https://robohash.org/PC5.png?set=set2');
-    this.avatars.push(this.currentUser.photoURL);
+    this.avatars = [
+      {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false},
+      {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false},
+      {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false},
+      {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false},
+      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false},
+      {avatarUrl: this.currentUser.photoURL, isChosen: false}
+    ];
 
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: ['', Validators.required]
@@ -52,8 +53,20 @@ export class NewUserWizardComponent implements OnInit {
     });
   }
 
-  getUrl(avatar) {
-    return avatar;
+  onSelectAvatar(avatar: Avatar) {
+    avatar.isChosen = true;
+
+    const index = this.getArrayIndex(avatar);
+    this.updaAvatar(index, avatar);
   }
+
+  private getArrayIndex(findedAvatar: Avatar) {
+    return this.avatars.indexOf(findedAvatar);
+  }
+
+  private updaAvatar(index: number, avatarToUpdate: Avatar) {
+    this.avatars[index] = avatarToUpdate;
+  }
+
 
 }
