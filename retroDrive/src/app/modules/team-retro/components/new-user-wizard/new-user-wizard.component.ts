@@ -10,7 +10,7 @@ import { Avatar } from 'src/app/models/avatar';
   styleUrls: ['./new-user-wizard.component.css']
 })
 export class NewUserWizardComponent implements OnInit {
-  isLinear = false;
+  isLinear = true;
 
   workspaceFormGroup: FormGroup;
   workspaceNameFormControl = new FormControl('', Validators.required);
