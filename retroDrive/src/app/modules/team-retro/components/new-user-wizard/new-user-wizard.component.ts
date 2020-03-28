@@ -55,7 +55,6 @@ export class NewUserWizardComponent implements OnInit {
 
   onSelectAvatar(currentAvatar: Avatar) {
     const findedChosenAvatar = this.avatars.find(avat => avat.isChosen);
-
     if (findedChosenAvatar !== undefined) {
       if (currentAvatar.id === findedChosenAvatar.id) {
         currentAvatar.isChosen = false;
@@ -82,6 +81,4 @@ export class NewUserWizardComponent implements OnInit {
   private updaAvatar(index: number, avatarToUpdate: Avatar) {
     this.avatars[index] = avatarToUpdate;
   }
-
-
 }

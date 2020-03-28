@@ -55,4 +55,9 @@
     border: solid 1.5px;
     border-color: #5a9b1e;
   }
+
+  .userprofile-card-chosen {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
  
