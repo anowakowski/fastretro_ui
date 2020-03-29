@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -10,6 +11,8 @@ import { Avatar } from 'src/app/models/avatar';
   styleUrls: ['./new-user-wizard.component.css']
 })
 export class NewUserWizardComponent implements OnInit {
+  @ViewChild('stepper') stepper: MatStepper;
+
   isLinear = true;
 
   workspaceFormGroup: FormGroup;
@@ -26,7 +29,8 @@ export class NewUserWizardComponent implements OnInit {
   isExistingWorkspace = false;
   isWorkspaceWithRequiredAccess = false;
 
-  chosenAvatarUrl = 'https://robohash.org/PC1.png?set=set2';
+  chosenAvatarUrl: string;
+  isAvatarFromRandomChosen: boolean;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -47,13 +51,21 @@ export class NewUserWizardComponent implements OnInit {
     this.createFormsBuild();
 
     this.avatarsNameFormControl.setValue(this.currentUser.splayName);
+    this.setRandomAvatar();
   }
 
-  onChangeIsExistingWorkspaceCheckbox(event){
+  private setRandomAvatar() {
+    const randomNumber = Math.floor(Math.random() * (6 - 1)) + 1;
+    const randomAvatar = this.avatars.find(avatar => avatar.id === randomNumber);
+    this.chosenAvatarUrl = randomAvatar.avatarUrl;
+    this.isAvatarFromRandomChosen = true;
+  }
+
+  onChangeIsExistingWorkspaceCheckbox(event) {
     this.isExistingWorkspace = event.checked;
   }
 
-  onChangeIsWorkspaceWithRequiredAccess(event){
+  onChangeIsWorkspaceWithRequiredAccess(event) {
     this.isWorkspaceWithRequiredAccess = event.checked;
   }
 
@@ -62,15 +74,25 @@ export class NewUserWizardComponent implements OnInit {
     if (findedChosenAvatar !== undefined) {
       if (currentAvatar.id === findedChosenAvatar.id) {
         currentAvatar.isChosen = false;
+        this.setRandomAvatar();
       } else {
         findedChosenAvatar.isChosen = false;
         currentAvatar.isChosen = true;
         this.updateAvatarWhenSelected(findedChosenAvatar);
+        this.isAvatarFromRandomChosen = false;
       }
     } else {
       currentAvatar.isChosen = true;
+      this.isAvatarFromRandomChosen = false;
     }
     this.updateAvatarWhenSelected(currentAvatar);
+    this.setChosenAvatar();
+  }
+
+  setChosenAvatar() {
+    if (!this.isAvatarFromRandomChosen) {
+      this.chosenAvatarUrl = this.avatars.find(avatar => avatar.isChosen).avatarUrl;
+    }
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {
