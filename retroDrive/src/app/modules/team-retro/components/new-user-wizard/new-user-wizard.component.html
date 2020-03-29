@@ -56,9 +56,9 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Summary</ng-template>
-    <h3>Great! Everything is almost done. Check the your choices bellow</h3>
-
-    <div class="container-flex-summary-step">
+    <p style="font-size: 20px;">Great! Everything is almost done. Check the your choices bellow</p>
+    <mat-divider></mat-divider>
+    <div style="margin-top: 10px;" class="container-flex-summary-step">
       <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
         <mat-card-header>
           <div *ngIf="chosenAvatarUrl" mat-card-avatar
@@ -66,9 +66,9 @@
           </div>
         </mat-card-header>
       </mat-card>
-      <div style="flex-direction: column;">
-        <span><i class="fa fa-exclamation-triangle"></i></span>
-        <span *ngIf="isAvatarFromRandomChosen" style="font-style: italic; font-size: 11px;">
+      <div style="flex-direction: column;" [ngClass]="{'margin-summary-step-info-random-avatar': isAvatarFromRandomChosen}">
+        <span *ngIf="isAvatarFromRandomChosen" style="font-style: italic; font-size: 11px; color: #3f83b5;">
+          <span><i class="fa fa-exclamation-triangle"></i></span>
            You didn't choose your avatar, that's why your avatar was generated
           automatically. <br />
           You can change your choise on prvious step
@@ -76,10 +76,11 @@
         <p [ngClass]="{
           'margin-text-elements-summary': !isAvatarFromRandomChosen,
           'margin-text-elements-summary-info-random-avatar': isAvatarFromRandomChosen}">
-          your workspace: workspaceName;
+          your workspace: <span style="color: #3f50b5;"> <b>workspace</b></span>; 
+          <span style="font-style: italic; font-size: 11px; margin-left: 3px; color: #3f83b5;"><span><i class="fa fa-exclamation-triangle"></i></span>Your selection requires approval by the owner of this workspace</span>
         </p>
         <p style="margin-top: -10px;">
-          your display name: displayName;
+          your display name: <span style="color: #3f50b5;"> <b>displayName</b></span>
         </p>
       </div>
 
