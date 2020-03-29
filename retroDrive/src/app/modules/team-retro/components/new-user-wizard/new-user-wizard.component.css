@@ -1,7 +1,25 @@
 .container {
     display: flex; /* or inline-flex */
     justify-content: center;
-  }
+}
+
+.container-flex-summary-step {
+  display: flex; /* or inline-flex */
+  justify-content: start;
+}
+
+.margin-text-elements-summary {
+  margin-top: 30px;
+}
+
+.margin-text-elements-summary-info-random-avatar {
+  margin-top: 5px;
+}
+
+.container-summary-step {
+  display: flex; /* or inline-flex */
+  flex-direction: column; 
+}
 
 .mat-stepper-horizontal {
     margin-top: 8px;
