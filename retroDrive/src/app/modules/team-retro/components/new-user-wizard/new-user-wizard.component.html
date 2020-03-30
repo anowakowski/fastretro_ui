@@ -58,8 +58,8 @@
     <div style="margin-top: 10px;" class="container-flex-summary-step">
       <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
         <mat-card-header>
-          <div *ngIf="chosenAvatarUrl" mat-card-avatar
-            [ngStyle]="{ 'background-image': 'url(' + chosenAvatarUrl + ')' }" class="sidnav-userprofile-header-image">
+          <div *ngIf="chosenAvatar.avatarUrl" mat-card-avatar
+            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.avatarUrl + ')' }" class="sidnav-userprofile-header-image">
           </div>
         </mat-card-header>
       </mat-card>
@@ -88,7 +88,8 @@
 
     <div style="margin-top: 20px;">
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button mat-button matStepperPrevious (click)="saveNewConfiguration()">Save Your Configuration</button>
+      <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
     </div>
   </mat-step>
 </mat-horizontal-stepper>

@@ -30,7 +30,7 @@ export class NewUserWizardComponent implements OnInit {
   isNewWorkspace = false;
   isWorkspaceWithRequiredAccess = false;
 
-  chosenAvatarUrl: string;
+  chosenAvatar: Avatar;
   isAvatarFromRandomChosen: boolean;
 
   chosenDisplayName: string;
@@ -61,7 +61,7 @@ export class NewUserWizardComponent implements OnInit {
   private setRandomAvatar() {
     const randomNumber = Math.floor(Math.random() * (6 - 1)) + 1;
     const randomAvatar = this.avatars.find(avatar => avatar.id === randomNumber);
-    this.chosenAvatarUrl = randomAvatar.avatarUrl;
+    this.chosenAvatar = randomAvatar;
     this.isAvatarFromRandomChosen = true;
   }
 
@@ -95,7 +95,7 @@ export class NewUserWizardComponent implements OnInit {
 
   setChosenAvatar() {
     if (!this.isAvatarFromRandomChosen) {
-      this.chosenAvatarUrl = this.avatars.find(avatar => avatar.isChosen).avatarUrl;
+      this.chosenAvatar = this.avatars.find(avatar => avatar.isChosen);
     }
   }
 
@@ -129,6 +129,15 @@ export class NewUserWizardComponent implements OnInit {
     } else {
       return 'The Name of The Workspaces You Will Join: ';
     }
+  }
+
+  saveNewConfiguration() {
+    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
+    const isNewWorkspace = this.isNewWorkspace;
+    const isWorkspaceWithRequiredAccess = this.isWorkspaceWithRequiredAccess;
+
+    const displayName = this.avatarsFormGroup.value.avatarsNameFormControl;
+    const chosenAvatar = this.chosenAvatar;
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {
