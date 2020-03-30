@@ -152,24 +152,31 @@ export class NewUserWizardComponent implements OnInit {
 
   private createNewWorkspace(findedUsr: User) {
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
-    const workspace: Workspace = {
+    const workspace: Workspace = this.prepareWorkspaceModel(workspaceName);
+
+    this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
+      snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
+        const workspaceId = newWorkspaceSnapshot.id;
+        this.createUserWorkspaces(findedUsr, workspaceId);
+      });
+    });
+  }
+
+  private prepareWorkspaceModel(workspaceName: any): Workspace {
+    return {
       name: workspaceName,
       isNewWorkspace: this.isNewWorkspace,
       isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
       creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
     };
+  }
 
-    this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
-      snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
-        const workspaceId = newWorkspaceSnapshot.id;
-        const userWorkspace: UserWorkspaceToSave = {
-          user: this.firestoreRbService.addUserAsRef(findedUsr),
-          workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
-        };
-
-        this.firestoreRbService.addNewUserWorkspace(userWorkspace);
-      });
-    });
+  private createUserWorkspaces(findedUsr: User, workspaceId: string) {
+    const userWorkspace: UserWorkspaceToSave = {
+      user: this.firestoreRbService.addUserAsRef(findedUsr),
+      workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
+    };
+    this.firestoreRbService.addNewUserWorkspace(userWorkspace);
   }
 
   private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
