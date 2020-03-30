@@ -3,6 +3,7 @@ import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { User } from 'src/app/models/user';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -41,6 +42,19 @@ export class FirestoreRetroBoardService {
 
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
+  }
+
+  findUsersByEmail(mail: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'email',
+      conditionOperator: '==',
+      value: mail
+    };
+    return this.firestoreBase.getFiltered('/users', condition);
+  }
+
+  updateUsr(user: User) {
+    this.firestoreBase.updateUserData(user);
   }
 
   private prepareRetroBoardToSave(newRetroBoard: any) {

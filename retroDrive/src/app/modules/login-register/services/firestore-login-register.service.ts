@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class FirestoreLoginRegisterService {
     return this.firestoreBaseService.getFiltered('/users', condition);
   }
 
-  updateUsr(user: firebase.User) {
+  updateUsr(user: User) {
     this.firestoreBaseService.updateUserData(user);
   }
 

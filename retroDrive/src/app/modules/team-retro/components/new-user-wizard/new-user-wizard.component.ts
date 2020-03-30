@@ -4,7 +4,8 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
 import { MatStepper } from '@angular/material/stepper';
-import { retryWhen } from 'rxjs/operators';
+import { retryWhen, find } from 'rxjs/operators';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -38,7 +39,8 @@ export class NewUserWizardComponent implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private firestoreRbService: FirestoreRetroBoardService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -132,12 +134,23 @@ export class NewUserWizardComponent implements OnInit {
   }
 
   saveNewConfiguration() {
+
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
     const isNewWorkspace = this.isNewWorkspace;
     const isWorkspaceWithRequiredAccess = this.isWorkspaceWithRequiredAccess;
 
     const displayName = this.avatarsFormGroup.value.avatarsNameFormControl;
     const chosenAvatar = this.chosenAvatar;
+
+    this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
+      if (snapshotFindedUsr.docs.length === 0) {
+        const findedUsr = snapshotFindedUsr.docs[0].data() as User;
+        findedUsr.chosenAvatarUrl = chosenAvatar.avatarUrl;
+        findedUsr.displayName = displayName;
+        this.firestoreRbService.updateUsr(findedUsr);
+      }
+    });
+
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {

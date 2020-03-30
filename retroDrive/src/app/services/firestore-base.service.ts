@@ -51,18 +51,9 @@ export class FirestoreBaseService {
     return this.afs.collection(collectionName).snapshotChanges();
   }
 
-  updateUserData(user: firebase.User) {
+  updateUserData(user: User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
-    const data = {
-      uid: user.uid,
-      email: user.email,
-      splayName: user.displayName,
-      photoURL: user.photoURL,
-      isNewUser: true
-    };
-
-    userRef.set(data, {merge: true});
+    userRef.set(user, {merge: true});
     //return userRef.get().toPromise();
   }
 }

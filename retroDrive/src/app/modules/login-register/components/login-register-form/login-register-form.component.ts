@@ -22,7 +22,17 @@ export class LoginRegisterFormComponent implements OnInit {
       this.fls.findUsers(logedUser.email)
         .then(snapshotFindedUsr => {
           if (snapshotFindedUsr.docs.length === 0) {
-            this.fls.updateUsr(logedUser);
+            
+            const logedUserModel: User = {
+              uid: logedUser.uid,
+              email: logedUser.email,
+              splayName: logedUser.displayName,
+              photoURL: logedUser.photoURL,
+              isNewUser: true,
+              chosenAvatarUrl: ''
+            };
+
+            this.fls.updateUsr(logedUserModel);
           }
         }).finally(() => {
           this.router.navigate(['/']);
