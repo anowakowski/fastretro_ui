@@ -7,6 +7,10 @@
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in
     </mat-icon>
     <span>Retro Drive</span>
+
+    <img [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px;" alt="logo">
+    <span style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
+
     <span class="example-spacer"></span>
     <span>ProjectName</span>
     <mat-icon style="margin-left: -10px;" class="example-icon" aria-hidden="false" aria-label="Example user verified icon">ballot</mat-icon>
