@@ -4,8 +4,10 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user';
+import { MatDialog } from '@angular/material/dialog';
+import { WelcomeInfoNewUsersDashboardDialogComponent }
+  from '../welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +16,8 @@ import { User } from 'src/app/models/user';
 })
 export class DashboardComponent implements OnInit {
   constructor(
-    private spinner: NgxSpinnerService,
-    private localStorageService: LocalStorageService) {
+    private localStorageService: LocalStorageService,
+    public dialog: MatDialog) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -35,5 +37,16 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
+    this.openDialog();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(WelcomeInfoNewUsersDashboardDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('dialog was close');
+    });
   }
 }
