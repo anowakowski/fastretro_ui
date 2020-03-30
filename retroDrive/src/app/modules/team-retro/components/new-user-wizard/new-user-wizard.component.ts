@@ -27,7 +27,7 @@ export class NewUserWizardComponent implements OnInit {
   checked = false;
   currentUser: User;
 
-  isExistingWorkspace = false;
+  isNewWorkspace = false;
   isWorkspaceWithRequiredAccess = false;
 
   chosenAvatarUrl: string;
@@ -66,7 +66,7 @@ export class NewUserWizardComponent implements OnInit {
   }
 
   onChangeIsExistingWorkspaceCheckbox(event) {
-    this.isExistingWorkspace = event.checked;
+    this.isNewWorkspace = event.checked;
   }
 
   onChangeIsWorkspaceWithRequiredAccess(event) {
@@ -105,6 +105,22 @@ export class NewUserWizardComponent implements OnInit {
 
   getChosenName() {
     return this.avatarsFormGroup.value.avatarsNameFormControl;
+  }
+
+  getPlaceholderForWorkspaceName() {
+    if (this.isNewWorkspace) {
+      return 'Put the New Worksapce name';
+    } else {
+      return 'Put the Existing Worksapce name';
+    }
+  }
+
+  getValueForWorkspaceLabelInSummaryStep() {
+    if (this.isNewWorkspace) {
+      return 'Your New Wrokspace Name: ';
+    } else {
+      return 'The Name of the Workspaces you will join: ';
+    }
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {
