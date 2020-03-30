@@ -18,7 +18,7 @@
       </section>
       <mat-divider></mat-divider>
       <mat-form-field style="margin-bottom: 53px; width: 250px;">
-        <mat-label>Name of your workspace</mat-label>
+        <mat-label>{{getLabelNameForWorkspaceName()}}</mat-label>
         <input matInput [placeholder]="getPlaceholderForWorkspaceName()" [formControl]="workspaceNameFormControl" required>
       </mat-form-field>
       <div>

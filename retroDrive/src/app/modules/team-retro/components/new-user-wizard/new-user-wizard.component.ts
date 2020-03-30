@@ -109,9 +109,17 @@ export class NewUserWizardComponent implements OnInit {
 
   getPlaceholderForWorkspaceName() {
     if (this.isNewWorkspace) {
-      return 'Put the New Worksapce name';
+      return 'Put The New Worksapce Name';
     } else {
-      return 'Put the Existing Worksapce name';
+      return 'Put The Existing Worksapce Name';
+    }
+  }
+
+  getLabelNameForWorkspaceName() {
+    if (this.isNewWorkspace) {
+      return 'Name of Your New Workspace';
+    } else {
+      return 'Name of Existing Workspace';
     }
   }
 
@@ -119,7 +127,7 @@ export class NewUserWizardComponent implements OnInit {
     if (this.isNewWorkspace) {
       return 'Your New Wrokspace Name: ';
     } else {
-      return 'The Name of the Workspaces you will join: ';
+      return 'The Name of The Workspaces You Will Join: ';
     }
   }
 
