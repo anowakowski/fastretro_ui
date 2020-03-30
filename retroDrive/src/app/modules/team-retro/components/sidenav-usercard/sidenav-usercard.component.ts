@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-sidenav-usercard',
@@ -8,10 +10,12 @@ import { Component, OnInit } from '@angular/core';
 export class SidenavUsercardComponent implements OnInit {
 
   mainPhotoUrl = 'https://robohash.org/PC4.png?set=set2';
+  currentUser: User;
 
-  constructor() { }
+  constructor(private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
   }
 
 }
