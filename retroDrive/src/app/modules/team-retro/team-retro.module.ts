@@ -24,6 +24,7 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
 import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wizard.component';
+import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 
 @NgModule({
   imports: [
@@ -49,11 +50,13 @@ import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wi
     RetroBoardSnackbarComponent,
     MyTestCompComponent,
     LoaddingSingleElementsSpinnerComponent,
-    NewUserWizardComponent
+    NewUserWizardComponent,
+    WelcomeInfoNewUsersDashboardDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
-    RetroBoardSnackbarComponent
+    RetroBoardSnackbarComponent,
+    WelcomeInfoNewUsersDashboardDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
