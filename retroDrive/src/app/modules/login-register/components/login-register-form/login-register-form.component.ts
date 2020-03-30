@@ -22,16 +22,7 @@ export class LoginRegisterFormComponent implements OnInit {
       this.fls.findUsers(logedUser.email)
         .then(snapshotFindedUsr => {
           if (snapshotFindedUsr.docs.length === 0) {
-            
-            const logedUserModel: User = {
-              uid: logedUser.uid,
-              email: logedUser.email,
-              splayName: logedUser.displayName,
-              photoURL: logedUser.photoURL,
-              isNewUser: true,
-              chosenAvatarUrl: ''
-            };
-
+            const logedUserModel: User = this.prepareUserMOdel(logedUser);
             this.fls.updateUsr(logedUserModel);
           }
         }).finally(() => {
@@ -40,4 +31,14 @@ export class LoginRegisterFormComponent implements OnInit {
     });
   }
 
+  private prepareUserMOdel(logedUser): User {
+    return {
+      uid: logedUser.uid,
+      email: logedUser.email,
+      splayName: logedUser.displayName,
+      photoURL: logedUser.photoURL,
+      isNewUser: true,
+      chosenAvatarUrl: ''
+    };
+  }
 }
