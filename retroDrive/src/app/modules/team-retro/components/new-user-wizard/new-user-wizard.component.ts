@@ -10,6 +10,8 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { Workspace } from 'src/app/models/workspace';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { MatDialog } from '@angular/material/dialog';
+import { NewUserWiazrdInfoDialogComponent } from '../new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -41,10 +43,13 @@ export class NewUserWizardComponent implements OnInit {
   chosenDisplayName: string;
   chosenWorkspace: string;
 
+  configurationSaveProcessError: Array<string>;
+
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
-    private firestoreRbService: FirestoreRetroBoardService) { }
+    private firestoreRbService: FirestoreRetroBoardService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -141,11 +146,52 @@ export class NewUserWizardComponent implements OnInit {
     const displayName = this.avatarsFormGroup.value.avatarsNameFormControl;
     const chosenAvatar = this.chosenAvatar;
 
+    this.configurationSaveProcessError = new Array<string>();
+
     this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
       if (snapshotFindedUsr.docs.length > 0) {
         const findedUsr = snapshotFindedUsr.docs[0].data() as User;
         this.updateFindedUser(findedUsr, chosenAvatar, displayName);
-        this.createNewWorkspace(findedUsr);
+        this.createWorkspaceProcess(findedUsr);
+
+        if (this.configurationSaveProcessError.length > 0) {
+          this.openInfoDialog();
+        }
+      }
+    });
+  }
+
+  openInfoDialog() {
+    const dialogRef = this.dialog.open(NewUserWiazrdInfoDialogComponent, {
+      width: '400px',
+      data: this.configurationSaveProcessError
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+
+      }
+    });
+  }
+
+  private createWorkspaceProcess(findedUsr: User) {
+    if (this.isNewWorkspace) {
+      this.createNewWorkspace(findedUsr);
+    } else {
+      this.addUserToExistingWorkspaces(findedUsr);
+    }
+  }
+
+  private addUserToExistingWorkspaces(findedUsr: User) {
+    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
+    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
+      if (workspaceSnapshot.docs.length > 0) {
+        workspaceSnapshot.docs.forEach(workspaceDoc => {
+          const workspacesId = workspaceDoc.id;
+          this.createUserWorkspaces(findedUsr, workspacesId);
+        });
+      } else {
+        this.configurationSaveProcessError.push('cant find workspace with given name');
       }
     });
   }

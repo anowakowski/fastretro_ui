@@ -30,6 +30,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getAll('/teams/');
   }
 
+  findWorkspacesByName(name: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'name',
+      conditionOperator: '==',
+      value: name
+    };
+
+    return this.firestoreBase.getFiltered('/workspaces/', condition);
+  }
+
   retroBoardSnapshotChanges() {
     return this.firestoreBase.snapshotChanges(RETRO_BOARD_COLLECTION);
   }
