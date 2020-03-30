@@ -13,6 +13,7 @@ import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { MatDialog } from '@angular/material/dialog';
 import { NewUserWiazrdInfoDialogComponent } from '../new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 import { WorkspaceInfoDialogOptions } from 'src/app/models/workspaceInfoDialogOptions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -50,7 +51,8 @@ export class NewUserWizardComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
     private firestoreRbService: FirestoreRetroBoardService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    public router: Router) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -161,6 +163,7 @@ export class NewUserWizardComponent implements OnInit {
             const findedUsr = snapshotFindedUsr.docs[0].data() as User;
             this.updateFindedUser(findedUsr, chosenAvatar, displayName);
             this.createWorkspaceProcess(findedUsr);
+
           }
         });
       }
@@ -194,9 +197,7 @@ export class NewUserWizardComponent implements OnInit {
           const workspacesId = workspaceDoc.id;
           this.createUserWorkspaces(findedUsr, workspacesId);
         });
-      } else {
-        this.configurationSaveProcessError.push('cant find workspace with given name');
-      }
+      } else {}
     });
   }
 
@@ -227,6 +228,7 @@ export class NewUserWizardComponent implements OnInit {
       workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
     };
     this.firestoreRbService.addNewUserWorkspace(userWorkspace);
+    location.reload();
   }
 
   private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
