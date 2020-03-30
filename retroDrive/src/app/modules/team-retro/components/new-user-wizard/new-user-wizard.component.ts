@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {formatDate} from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
@@ -6,6 +7,8 @@ import { Avatar } from 'src/app/models/avatar';
 import { MatStepper } from '@angular/material/stepper';
 import { retryWhen, find } from 'rxjs/operators';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { Workspace } from 'src/app/models/workspace';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -134,23 +137,45 @@ export class NewUserWizardComponent implements OnInit {
   }
 
   saveNewConfiguration() {
-
-    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
-    const isNewWorkspace = this.isNewWorkspace;
-    const isWorkspaceWithRequiredAccess = this.isWorkspaceWithRequiredAccess;
-
     const displayName = this.avatarsFormGroup.value.avatarsNameFormControl;
     const chosenAvatar = this.chosenAvatar;
 
     this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
-      if (snapshotFindedUsr.docs.length === 0) {
+      if (snapshotFindedUsr.docs.length > 0) {
         const findedUsr = snapshotFindedUsr.docs[0].data() as User;
-        findedUsr.chosenAvatarUrl = chosenAvatar.avatarUrl;
-        findedUsr.displayName = displayName;
-        this.firestoreRbService.updateUsr(findedUsr);
+        this.updateFindedUser(findedUsr, chosenAvatar, displayName);
+        this.createNewWorkspace(findedUsr);
       }
     });
+  }
 
+  private createNewWorkspace(findedUsr: User) {
+    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
+    const workspace: Workspace = {
+      name: workspaceName,
+      isNewWorkspace: this.isNewWorkspace,
+      isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
+      creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
+    };
+
+    this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
+      snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
+        const workspaceId = newWorkspaceSnapshot.id;
+        const userWorkspace = {
+          user: this.firestoreRbService.addUserAsRef(findedUsr),
+          workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
+        };
+
+        this.firestoreRbService.addNewUserWorkspace(userWorkspace);
+      });
+    });
+  }
+
+  private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
+    findedUsr.chosenAvatarUrl = chosenAvatar.avatarUrl;
+    findedUsr.displayName = displayName;
+    findedUsr.isNewUser = false;
+    this.firestoreRbService.updateUsr(findedUsr);
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {

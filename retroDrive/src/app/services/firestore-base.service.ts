@@ -17,7 +17,7 @@ export class FirestoreBaseService {
   }
 
   addNewItem(collectionName: string, newItem: any) {
-    this.afs.collection(collectionName).add(newItem);
+    return this.afs.collection(collectionName).add(newItem);
   }
 
   updateItem(collectionName: string, docId: any, itemToUpdate: any) {

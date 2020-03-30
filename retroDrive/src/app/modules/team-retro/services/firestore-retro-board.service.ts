@@ -4,6 +4,8 @@ import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { User } from 'src/app/models/user';
+import { Workspace } from 'src/app/models/workspace';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -55,6 +57,22 @@ export class FirestoreRetroBoardService {
 
   updateUsr(user: User) {
     this.firestoreBase.updateUserData(user);
+  }
+
+  addNewWorkspace(workspace: Workspace) {
+    return this.firestoreBase.addNewItem('/workspaces', workspace);
+  }
+
+  addNewUserWorkspace(userWorkspace: any) {
+    this.firestoreBase.addNewItem('/userworkspaces', userWorkspace);
+  }
+
+  addUserAsRef(user: User) {
+    return this.firestoreBase.addAsRef('/users/', user.uid);
+  }
+
+  addWorkspaceAsRef(workspaceId: string) {
+    return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
   }
 
   private prepareRetroBoardToSave(newRetroBoard: any) {
