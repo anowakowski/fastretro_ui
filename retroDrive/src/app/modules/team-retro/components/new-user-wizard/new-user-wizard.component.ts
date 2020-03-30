@@ -4,6 +4,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
 import { MatStepper } from '@angular/material/stepper';
+import { retryWhen } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -31,6 +32,9 @@ export class NewUserWizardComponent implements OnInit {
 
   chosenAvatarUrl: string;
   isAvatarFromRandomChosen: boolean;
+
+  chosenDisplayName: string;
+  chosenWorkspace: string;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -93,6 +97,14 @@ export class NewUserWizardComponent implements OnInit {
     if (!this.isAvatarFromRandomChosen) {
       this.chosenAvatarUrl = this.avatars.find(avatar => avatar.isChosen).avatarUrl;
     }
+  }
+
+  getChosenWorskpace() {
+    return this.workspaceFormGroup.value.workspaceNameFormControl;
+  }
+
+  getChosenName() {
+    return this.avatarsFormGroup.value.avatarsNameFormControl;
   }
 
   private updateAvatarWhenSelected(avatar: Avatar) {
