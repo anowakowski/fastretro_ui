@@ -1,6 +1,13 @@
 <h3 mat-dialog-title>Wrong workspace name</h3>
 <div mat-dialog-content>
-  <p>{{displayText}}</p>
+  <p *ngIf="workspaceInfoOptions.isCurrentlyInUse">
+    this workspace is currently in use. <i class="fa fa-meh-o"></i> <br/> 
+    Change workspace name or join to existing
+  </p>
+  <p *ngIf="workspaceInfoOptions.isWrongNameOfExistingWorkspace">
+    cant find your workspace, <i class="fa fa-meh-o"></i> <br/> 
+    pleace check your workspace name
+  </p>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Ok</button>

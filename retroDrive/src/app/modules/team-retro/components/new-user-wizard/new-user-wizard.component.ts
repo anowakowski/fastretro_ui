@@ -12,6 +12,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { MatDialog } from '@angular/material/dialog';
 import { NewUserWiazrdInfoDialogComponent } from '../new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
+import { WorkspaceInfoDialogOptions } from 'src/app/models/workspaceInfoDialogOptions';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -149,9 +150,11 @@ export class NewUserWizardComponent implements OnInit {
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
     this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
       if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
-        this.openInfoDialog('this workspace is currently in use');
+        const workspaceInfoOptions: WorkspaceInfoDialogOptions = {isCurrentlyInUse: true, isWrongNameOfExistingWorkspace: false};
+        this.openInfoDialog(workspaceInfoOptions);
       } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
-        this.openInfoDialog('cant find your workspace, pleace check workspace name');
+        const workspaceInfoOptions: WorkspaceInfoDialogOptions = {isCurrentlyInUse: false, isWrongNameOfExistingWorkspace: true};
+        this.openInfoDialog(workspaceInfoOptions);
       } else {
         this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
           if (snapshotFindedUsr.docs.length > 0) {
@@ -164,10 +167,10 @@ export class NewUserWizardComponent implements OnInit {
     });
   }
 
-  private openInfoDialog(displayText: string) {
+  private openInfoDialog(workspaceInfoOptions: WorkspaceInfoDialogOptions) {
     const dialogRef = this.dialog.open(NewUserWiazrdInfoDialogComponent, {
       width: '400px',
-      data: displayText
+      data: workspaceInfoOptions
     });
 
     dialogRef.afterClosed().subscribe(() => {
