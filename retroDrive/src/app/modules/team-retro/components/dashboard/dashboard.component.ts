@@ -37,7 +37,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.openDialog();
+    if (this.currentUser.isNewUser) {
+      this.openDialog();
+    }
   }
 
   openDialog() {
