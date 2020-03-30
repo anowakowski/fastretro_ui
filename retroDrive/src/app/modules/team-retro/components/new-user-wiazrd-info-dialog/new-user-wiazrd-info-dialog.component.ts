@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class NewUserWiazrdInfoDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<NewUserWiazrdInfoDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public displayInfo: string[]) { }
+              @Inject(MAT_DIALOG_DATA) public displayText: string) { }
 
   ngOnInit() {
   }

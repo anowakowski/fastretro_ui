@@ -146,31 +146,32 @@ export class NewUserWizardComponent implements OnInit {
     const displayName = this.avatarsFormGroup.value.avatarsNameFormControl;
     const chosenAvatar = this.chosenAvatar;
 
-    this.configurationSaveProcessError = new Array<string>();
-
-    this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
-      if (snapshotFindedUsr.docs.length > 0) {
-        const findedUsr = snapshotFindedUsr.docs[0].data() as User;
-        this.updateFindedUser(findedUsr, chosenAvatar, displayName);
-        this.createWorkspaceProcess(findedUsr);
-
-        if (this.configurationSaveProcessError.length > 0) {
-          this.openInfoDialog();
-        }
+    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
+    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
+      if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
+        this.openInfoDialog('this workspace is currently in use');
+      } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
+        this.openInfoDialog('cant find your workspace, pleace check workspace name');
+      } else {
+        this.firestoreRbService.findUsersByEmail(this.currentUser.email).then(snapshotFindedUsr => {
+          if (snapshotFindedUsr.docs.length > 0) {
+            const findedUsr = snapshotFindedUsr.docs[0].data() as User;
+            this.updateFindedUser(findedUsr, chosenAvatar, displayName);
+            this.createWorkspaceProcess(findedUsr);
+          }
+        });
       }
     });
   }
 
-  openInfoDialog() {
+  private openInfoDialog(displayText: string) {
     const dialogRef = this.dialog.open(NewUserWiazrdInfoDialogComponent, {
       width: '400px',
-      data: this.configurationSaveProcessError
+      data: displayText
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.stepper.selectedIndex = 0;
     });
   }
 
