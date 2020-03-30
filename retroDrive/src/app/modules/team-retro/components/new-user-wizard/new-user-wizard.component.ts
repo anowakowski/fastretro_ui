@@ -9,6 +9,7 @@ import { retryWhen, find } from 'rxjs/operators';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { Workspace } from 'src/app/models/workspace';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -161,7 +162,7 @@ export class NewUserWizardComponent implements OnInit {
     this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
       snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
         const workspaceId = newWorkspaceSnapshot.id;
-        const userWorkspace = {
+        const userWorkspace: UserWorkspaceToSave = {
           user: this.firestoreRbService.addUserAsRef(findedUsr),
           workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
         };

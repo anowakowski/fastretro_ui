@@ -6,6 +6,7 @@ import { RetroBoard } from 'src/app/models/retroBoard';
 import { User } from 'src/app/models/user';
 import { Workspace } from 'src/app/models/workspace';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -63,7 +64,7 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.addNewItem('/workspaces', workspace);
   }
 
-  addNewUserWorkspace(userWorkspace: any) {
+  addNewUserWorkspace(userWorkspace: UserWorkspaceToSave) {
     this.firestoreBase.addNewItem('/userworkspaces', userWorkspace);
   }
 
