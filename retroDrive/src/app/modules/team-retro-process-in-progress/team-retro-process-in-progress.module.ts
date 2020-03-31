@@ -17,6 +17,7 @@ import { TeamRetroInProgressSetTimeDialogComponent }
 import { TeamRetroInProgressAddCardActionDialogComponent } from './components/team-retro-in-progress-add-card-action-dialog/team-retro-in-progress-add-card-action-dialog.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NewUserWizardWarningBottomsheetComponent } from '../team-retro/components/new-user-wizard-warning-bottomsheet/new-user-wizard-warning-bottomsheet.component';
 
 
 @NgModule({
@@ -38,13 +39,15 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ContentDropDragComponent,
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
-    TeamRetroInProgressAddCardActionDialogComponent
+    TeamRetroInProgressAddCardActionDialogComponent,
+    NewUserWizardWarningBottomsheetComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
-    TeamRetroInProgressAddCardActionDialogComponent
+    TeamRetroInProgressAddCardActionDialogComponent,
+    NewUserWizardWarningBottomsheetComponent
   ]
 })
 export class TeamRetroProcessInProgressModule { }
