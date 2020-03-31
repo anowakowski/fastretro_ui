@@ -26,14 +26,10 @@
           [valueDataValidator]="existingTags"
           [shouldRunValidation]="validateFromClick"
           required>
-
- 
         <mat-error *ngIf="workspaceNameFormControl.hasError('duplicateTags') && validateFromClick">
           duplicate tags
         </mat-error>
       </mat-form-field>
-
-      test: {{workspaceNameFormControl.hasError('duplicateTags') }}
       <div>
         <!--matStepperNext -->
         <button mat-button (click)="nextStep($event)">Next</button>

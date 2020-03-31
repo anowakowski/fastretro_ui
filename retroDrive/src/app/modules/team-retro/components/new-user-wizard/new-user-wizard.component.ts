@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
 export class NewUserWizardComponent implements OnInit {
   @ViewChild('stepper') stepper: MatStepper;
 
-  isLinear = true;
+  isLinear = false;
 
   workspaceFormGroup: FormGroup;
   workspaceNameFormControl = new FormControl('', Validators.required);
@@ -180,15 +180,18 @@ export class NewUserWizardComponent implements OnInit {
     this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot =>{
       if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
         this.localStorageService.setItem('shouldValidateWorkspace', true);
+        this.workspaceNameFormControl.updateValueAndValidity();
       } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
-        // this.localStorageService.setItem('shouldValidateWorkspace', true);
+        this.localStorageService.setItem('shouldValidateWorkspace', true);
+        this.workspaceNameFormControl.updateValueAndValidity();
       } else {
         this.stepper.next();
       }
-      this.workspaceNameFormControl.updateValueAndValidity();
     });
 
     //this.stepper.previous();
+
+    //this.stepper.next();
   }
 
   private openInfoDialog(workspaceInfoOptions: WorkspaceInfoDialogOptions) {
