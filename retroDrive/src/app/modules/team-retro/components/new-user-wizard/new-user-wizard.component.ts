@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import {formatDate} from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   templateUrl: './new-user-wizard.component.html',
   styleUrls: ['./new-user-wizard.component.css']
 })
-export class NewUserWizardComponent implements OnInit {
+export class NewUserWizardComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') stepper: MatStepper;
 
   isLinear = false;
@@ -58,6 +58,7 @@ export class NewUserWizardComponent implements OnInit {
     public dialog: MatDialog,
     public router: Router) { }
 
+
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -74,6 +75,12 @@ export class NewUserWizardComponent implements OnInit {
 
     this.avatarsNameFormControl.setValue(this.currentUser.splayName);
     this.setRandomAvatar();
+
+    this.clearLocalStorage();
+  }
+
+  ngOnDestroy(): void {
+    this.clearLocalStorage();
   }
 
   private setRandomAvatar() {
@@ -181,25 +188,30 @@ export class NewUserWizardComponent implements OnInit {
 
     this.dataIsLoading = true;
 
-    //this.workspaceNameFormControl.updateValueAndValidity();
-
     this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot =>{
       if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
+        this.clearLocalStorage();
         this.dataIsLoading = false;
         this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
         this.workspaceNameFormControl.updateValueAndValidity();
 
       } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
+        this.clearLocalStorage();
         this.dataIsLoading = false;
         this.localStorageService.setItem('shouldShowCantFindWorkspace', true);
         this.workspaceNameFormControl.updateValueAndValidity();
 
       } else {
         this.dataIsLoading = false;
-        this.localStorageService.removeItem('shouldShowWithWorkspaceExists');
+        this.clearLocalStorage();
         this.stepper.next();
       }
     });
+  }
+
+  private clearLocalStorage() {
+    this.localStorageService.removeItem('shouldShowWithWorkspaceExists');
+    this.localStorageService.removeItem('shouldShowCantFindWorkspace');
   }
 
   private openInfoDialog(workspaceInfoOptions: WorkspaceInfoDialogOptions) {

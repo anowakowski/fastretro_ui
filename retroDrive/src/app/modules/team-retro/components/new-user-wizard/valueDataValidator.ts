@@ -21,9 +21,12 @@ export class ValueDataValidator implements Validator {
   validate(control: FormControl) {
 
     const shouldShowErrorWithWorkspaceExists = this.localStorageService.getItem('shouldShowWithWorkspaceExists');
+    const shouldShowCantFindWorkspaceExisits = this.localStorageService.getItem('shouldShowCantFindWorkspace');
 
     if (shouldShowErrorWithWorkspaceExists) {
       return { workspaceIsExisting: true };
+    } else if (shouldShowCantFindWorkspaceExisits) {
+      return { workspaceNotExist: true };
     }
     return null;
   }
