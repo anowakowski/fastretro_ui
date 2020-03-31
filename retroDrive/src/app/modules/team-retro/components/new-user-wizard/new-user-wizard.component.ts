@@ -47,7 +47,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   configurationSaveProcessError: Array<string>;
 
-  validateFromClick;
+  shouldValidateWorkspaceName;
 
   dataIsLoading = false;
 
@@ -92,6 +92,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   onChangeIsExistingWorkspaceCheckbox(event) {
     this.isNewWorkspace = event.checked;
+    // const workspaceName = this.workspaceNameFormControl.value;
+
+    // if (workspaceName !== undefined) {
+    //   this.shouldValidateWorkspaceName = true;
+    //   this.workspaceNameValidationProcess(workspaceName, false);
+    // }
   }
 
   onChangeIsWorkspaceWithRequiredAccess(event) {
@@ -183,30 +189,41 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   nextStep(event) {
     console.log(event);
-    this.validateFromClick = true;
+    this.shouldValidateWorkspaceName = true;
     const workspaceName = this.workspaceNameFormControl.value;
 
     this.dataIsLoading = true;
+    const shouldGoToNextStep = true;
 
-    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot =>{
+    this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+  }
+
+  private workspaceNameValidationProcess(workspaceName: any, shouldGoToNextStep: boolean) {
+    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
       if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
-        this.clearLocalStorage();
-        this.dataIsLoading = false;
-        this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
-        this.workspaceNameFormControl.updateValueAndValidity();
-
+        this.processingValidationWhenWorkspaceExists();
       } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
-        this.clearLocalStorage();
-        this.dataIsLoading = false;
-        this.localStorageService.setItem('shouldShowCantFindWorkspace', true);
-        this.workspaceNameFormControl.updateValueAndValidity();
-
-      } else {
+        this.processingValidationWhenWorkspaceNotExists();
+      } else if (shouldGoToNextStep) {
         this.dataIsLoading = false;
         this.clearLocalStorage();
         this.stepper.next();
       }
     });
+  }
+
+  private processingValidationWhenWorkspaceNotExists() {
+    this.clearLocalStorage();
+    this.dataIsLoading = false;
+    this.localStorageService.setItem('shouldShowCantFindWorkspace', true);
+    this.workspaceNameFormControl.updateValueAndValidity();
+  }
+
+  private processingValidationWhenWorkspaceExists() {
+    this.clearLocalStorage();
+    this.dataIsLoading = false;
+    this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
+    this.workspaceNameFormControl.updateValueAndValidity();
   }
 
   private clearLocalStorage() {
