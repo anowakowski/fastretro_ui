@@ -315,9 +315,6 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  public tag = 'hello';
-  public existingTags = ['hello', 'world'];
-
   public getValidError() {
     return this.workspaceFormGroup.valid;
   }

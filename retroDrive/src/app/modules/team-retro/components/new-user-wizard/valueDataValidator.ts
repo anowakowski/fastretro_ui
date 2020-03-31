@@ -12,7 +12,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
   }]
 })
 export class ValueDataValidator implements Validator {
-  @Input('valueDataValidator') tags: string[];
+  @Input('valueDataValidator') shouldRunValidatior: boolean;
 
   constructor(private localStorageService: LocalStorageService) {}
 

@@ -27,7 +27,7 @@
           matInput
           [placeholder]="getPlaceholderForWorkspaceName()"
           [formControl]="workspaceNameFormControl"
-          [valueDataValidator]="existingTags"
+          [valueDataValidator]="true"
           required>
         <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting') && shouldValidateWorkspaceName">
           This workspace name is currently in use
