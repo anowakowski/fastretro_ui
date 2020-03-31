@@ -49,6 +49,8 @@ export class NewUserWizardComponent implements OnInit {
 
   validateFromClick;
 
+  dataIsLoading = false;
+
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
@@ -177,21 +179,27 @@ export class NewUserWizardComponent implements OnInit {
     this.validateFromClick = true;
     const workspaceName = this.workspaceNameFormControl.value;
 
+    this.dataIsLoading = true;
+
+    //this.workspaceNameFormControl.updateValueAndValidity();
+
     this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot =>{
       if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
-        this.localStorageService.setItem('shouldValidateWorkspace', true);
+        this.dataIsLoading = false;
+        this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
         this.workspaceNameFormControl.updateValueAndValidity();
+
       } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
-        this.localStorageService.setItem('shouldValidateWorkspace', true);
+        this.dataIsLoading = false;
+        this.localStorageService.setItem('shouldShowCantFindWorkspace', true);
         this.workspaceNameFormControl.updateValueAndValidity();
+
       } else {
+        this.dataIsLoading = false;
+        this.localStorageService.removeItem('shouldShowWithWorkspaceExists');
         this.stepper.next();
       }
     });
-
-    //this.stepper.previous();
-
-    //this.stepper.next();
   }
 
   private openInfoDialog(workspaceInfoOptions: WorkspaceInfoDialogOptions) {

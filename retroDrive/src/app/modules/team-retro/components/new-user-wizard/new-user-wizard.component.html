@@ -2,7 +2,11 @@
   <mat-step [stepControl]="workspaceFormGroup">
     <form [formGroup]="workspaceFormGroup">
       <ng-template matStepLabel>Fill workspace name</ng-template>
-      <section style="margin-top: 25px;" class="example-section">
+      <div *ngIf="dataIsLoading" style="margin-left: 20px; margin-top: 40px; margin-bottom: 80px;">
+        <app-loadding-single-elements-spinner></app-loadding-single-elements-spinner>
+      </div>
+      
+      <section *ngIf="!dataIsLoading" style="margin-top: 25px;" class="example-section">
         <mat-checkbox [checked]="isNewWorkspace" (change)="onChangeIsExistingWorkspaceCheckbox($event)">
           Is New Workspace
         </mat-checkbox>
@@ -16,8 +20,8 @@
           matTooltipPosition="after">info
         </mat-icon>
       </section>
-      <mat-divider></mat-divider>
-      <mat-form-field style="margin-bottom: 53px; width: 250px;">
+      <mat-divider *ngIf="!dataIsLoading"></mat-divider>
+      <mat-form-field *ngIf="!dataIsLoading" style="margin-bottom: 53px; width: 250px;">
         <mat-label>{{getLabelNameForWorkspaceName()}}</mat-label>
         <input
           matInput
@@ -26,11 +30,11 @@
           [valueDataValidator]="existingTags"
           [shouldRunValidation]="validateFromClick"
           required>
-        <mat-error *ngIf="workspaceNameFormControl.hasError('duplicateTags') && validateFromClick">
-          duplicate tags
+        <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting') && validateFromClick">
+          this workspace name is currently in use
         </mat-error>
       </mat-form-field>
-      <div>
+      <div *ngIf="!dataIsLoading">
         <!--matStepperNext -->
         <button mat-button (click)="nextStep($event)">Next</button>
       </div>

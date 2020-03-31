@@ -20,11 +20,10 @@ export class ValueDataValidator implements Validator {
 
   validate(control: FormControl) {
 
-    const shouldValidateWorkspace = this.localStorageService.getItem('shouldValidateWorkspace');
+    const shouldShowErrorWithWorkspaceExists = this.localStorageService.getItem('shouldShowWithWorkspaceExists');
 
-    if (shouldValidateWorkspace) {
-      this.localStorageService.removeItem('shouldValidateWorkspace');
-      return { duplicateTags: true }
+    if (shouldShowErrorWithWorkspaceExists) {
+      return { workspaceIsExisting: true };
     }
     return null;
   }
