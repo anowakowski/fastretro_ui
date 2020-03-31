@@ -38,7 +38,7 @@
       </mat-form-field>
       <div *ngIf="!dataIsLoading">
         <!--matStepperNext -->
-        <button mat-button (click)="nextStep($event)">Next</button>
+        <button mat-button (click)="nextStepFromWorkspaceNameToAvatar()">Next</button>
       </div>
     </form>
   </mat-step>
@@ -92,7 +92,7 @@
           <span> {{getValueForWorkspaceLabelInSummaryStep()}} </span><span style="color: #3f50b5;"> <b>{{getChosenWorskpace()}}</b></span>
           <span 
             style="font-style: italic; font-size: 11px; margin-left: 3px; color: #3f83b5;"
-            *ngIf="!isNewWorkspace">
+            *ngIf="!isNewWorkspace && shouldShowInfoAboutRequireAccessForChosenWorkspaceName">
             <span><i class="fa fa-exclamation-triangle"></i></span>Your selection requires approval by the owner of this workspace
           </span>
         </p>

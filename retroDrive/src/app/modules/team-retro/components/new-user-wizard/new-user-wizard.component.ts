@@ -53,6 +53,8 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   dataIsLoading = false;
 
+  shouldShowInfoAboutRequireAccessForChosenWorkspaceName: boolean;
+
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
@@ -183,8 +185,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  nextStep(event) {
-    console.log(event);
+  nextStepFromWorkspaceNameToAvatar() {
     this.shouldValidateWorkspaceName = true;
     const workspaceName = this.workspaceNameFormControl.value;
 
@@ -192,6 +193,15 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     const shouldGoToNextStep = true;
 
     this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+  }
+
+  nextStepFromAvatarToSummary() {
+    this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
+      workspaceSnapshot.docs.forEach(workspaceDoc => {
+        const findedWorkspace = workspaceDoc.data() as Workspace;
+        this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
+      });
+    });
   }
 
   private workspaceNameValidationProcess(workspaceName: any, shouldGoToNextStep: boolean) {
