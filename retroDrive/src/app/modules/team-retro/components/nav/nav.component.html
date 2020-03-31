@@ -8,12 +8,12 @@
     </mat-icon>
     <span>Retro Drive</span>
 
-    <img [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px;" alt="logo">
-    <span style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
+    <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px;" alt="logo">
+    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
 
     <span class="example-spacer"></span>
-    <span>ProjectName</span>
-    <mat-icon style="margin-left: -10px;" class="example-icon" aria-hidden="false" aria-label="Example user verified icon">ballot</mat-icon>
+    <span *ngIf="!currentUser.isNewUser">ProjectName</span>
+    <mat-icon *ngIf="!currentUser.isNewUser" style="margin-left: -10px;" class="example-icon" aria-hidden="false" aria-label="Example user verified icon">ballot</mat-icon>
     
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>
   </mat-toolbar-row>
