@@ -47,6 +47,8 @@ export class NewUserWizardComponent implements OnInit {
 
   configurationSaveProcessError: Array<string>;
 
+  validateFromClick;
+
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
@@ -170,6 +172,18 @@ export class NewUserWizardComponent implements OnInit {
     });
   }
 
+  nextStep(event) {
+    console.log(event);
+    this.validateFromClick = true;
+    this.localStorageService.setItem('shouldValidateWorkspace', true);
+
+
+    this.workspaceNameFormControl.updateValueAndValidity();
+
+
+    //this.stepper.previous();
+  }
+
   private openInfoDialog(workspaceInfoOptions: WorkspaceInfoDialogOptions) {
     const dialogRef = this.dialog.open(NewUserWiazrdInfoDialogComponent, {
       width: '400px',
@@ -254,9 +268,23 @@ export class NewUserWizardComponent implements OnInit {
   private createFormsBuild() {
     this.workspaceFormGroup = this.formBuilder.group({
       workspaceNameFormControl: this.workspaceNameFormControl
-    });
+    }, {validators: [this.workspaceValidation]}),
     this.avatarsFormGroup = this.formBuilder.group({
       avatarsNameFormControl: this.avatarsNameFormControl
     });
+  }
+
+  public tag = 'hello';
+  public existingTags = ['hello', 'world'];
+
+  public getValidError() {
+    return this.workspaceFormGroup.valid;
+  }
+
+
+  private workspaceValidation(form: FormGroup) {
+    let tt = form;
+
+    return { notValidData: true };
   }
 }

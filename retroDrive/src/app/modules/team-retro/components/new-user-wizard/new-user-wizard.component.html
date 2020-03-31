@@ -19,16 +19,30 @@
       <mat-divider></mat-divider>
       <mat-form-field style="margin-bottom: 53px; width: 250px;">
         <mat-label>{{getLabelNameForWorkspaceName()}}</mat-label>
-        <input matInput [placeholder]="getPlaceholderForWorkspaceName()" [formControl]="workspaceNameFormControl" required>
+        <input
+          matInput
+          [placeholder]="getPlaceholderForWorkspaceName()"
+          [formControl]="workspaceNameFormControl"
+          [valueDataValidator]="existingTags"
+          [shouldRunValidation]="validateFromClick"
+          required>
+
+ 
+        <mat-error *ngIf="workspaceNameFormControl.hasError('duplicateTags') && validateFromClick">
+          duplicate tags
+        </mat-error>
       </mat-form-field>
+
+      test: {{workspaceNameFormControl.hasError('duplicateTags') }}
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <!--matStepperNext -->
+        <button mat-button (click)="nextStep($event)">Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="avatarsFormGroup">
     <form [formGroup]="avatarsFormGroup">
-      <ng-template matStepLabel>Choose your avatar</ng-template>
+        <ng-template matStepLabel>Choose your avatar</ng-template>
       <mat-form-field>
         <mat-label>Choose your display name</mat-label>
         <input matInput placeholder="Put Project Name" [formControl]="avatarsNameFormControl" required>

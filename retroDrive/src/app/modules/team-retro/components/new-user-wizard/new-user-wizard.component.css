@@ -83,4 +83,8 @@
     transform: scale(1.10);
     opacity:0.7;
   }
+
+  ::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+  }
  

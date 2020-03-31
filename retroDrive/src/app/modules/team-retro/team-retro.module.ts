@@ -26,6 +26,7 @@ import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-si
 import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wizard.component';
 import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
+import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-i
     LoaddingSingleElementsSpinnerComponent,
     NewUserWizardComponent,
     WelcomeInfoNewUsersDashboardDialogComponent,
-    NewUserWiazrdInfoDialogComponent
+    NewUserWiazrdInfoDialogComponent,
+    ValueDataValidator
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
