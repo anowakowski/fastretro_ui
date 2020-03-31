@@ -177,7 +177,6 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
             const findedUsr = snapshotFindedUsr.docs[0].data() as User;
             this.updateFindedUser(findedUsr, chosenAvatar, displayName);
             this.createWorkspaceProcess(findedUsr);
-
           }
         });
       }
