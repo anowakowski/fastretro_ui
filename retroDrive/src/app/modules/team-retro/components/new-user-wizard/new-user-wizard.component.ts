@@ -14,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewUserWiazrdInfoDialogComponent } from '../new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 import { WorkspaceInfoDialogOptions } from 'src/app/models/workspaceInfoDialogOptions';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -56,6 +58,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private firestoreRbService: FirestoreRetroBoardService,
     public dialog: MatDialog,
+    private snackBar: MatSnackBar,
     public router: Router) { }
 
 
@@ -206,10 +209,21 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
+  openRetroBoardSnackbar(textToDisplay) {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        displayText: '' + textToDisplay
+      }
+    });
+  }
+
   private processingValidationWhenWorkspaceNotExists() {
     this.clearLocalStorage();
     this.dataIsLoading = false;
     this.localStorageService.setItem('shouldShowCantFindWorkspace', true);
+    this.openRetroBoardSnackbar('This workspace name is not exists. Please check your workspace name');
     this.workspaceNameFormControl.updateValueAndValidity();
   }
 
@@ -217,6 +231,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     this.clearLocalStorage();
     this.dataIsLoading = false;
     this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
+    this.openRetroBoardSnackbar('This workspace name is currently in use. Please change your workspace name or joint to existing');
     this.workspaceNameFormControl.updateValueAndValidity();
   }
 
