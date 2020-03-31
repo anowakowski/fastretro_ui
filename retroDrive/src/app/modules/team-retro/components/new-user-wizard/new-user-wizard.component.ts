@@ -175,11 +175,18 @@ export class NewUserWizardComponent implements OnInit {
   nextStep(event) {
     console.log(event);
     this.validateFromClick = true;
-    this.localStorageService.setItem('shouldValidateWorkspace', true);
+    const workspaceName = this.workspaceNameFormControl.value;
 
-
-    this.workspaceNameFormControl.updateValueAndValidity();
-
+    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot =>{
+      if (workspaceSnapshot.docs.length > 0 && this.isNewWorkspace) {
+        this.localStorageService.setItem('shouldValidateWorkspace', true);
+      } else if (workspaceSnapshot.docs.length === 0 && !this.isNewWorkspace) {
+        // this.localStorageService.setItem('shouldValidateWorkspace', true);
+      } else {
+        this.stepper.next();
+      }
+      this.workspaceNameFormControl.updateValueAndValidity();
+    });
 
     //this.stepper.previous();
   }

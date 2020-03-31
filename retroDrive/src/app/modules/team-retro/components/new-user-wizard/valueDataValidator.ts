@@ -15,7 +15,7 @@ export class ValueDataValidator implements Validator {
   @Input('valueDataValidator') tags: string[];
   // tslint:disable-next-line:no-input-rename
   @Input('shouldRunValidation') shouldRun: boolean;
-  
+
   constructor(private localStorageService: LocalStorageService) {}
 
   validate(control: FormControl) {
@@ -23,18 +23,9 @@ export class ValueDataValidator implements Validator {
     const shouldValidateWorkspace = this.localStorageService.getItem('shouldValidateWorkspace');
 
     if (shouldValidateWorkspace) {
-      const hasTag = this.tags.indexOf(control.value) > -1;
-
       this.localStorageService.removeItem('shouldValidateWorkspace');
-
-      return hasTag
-        ? { duplicateTags: true }
-        : null;
+      return { duplicateTags: true }
     }
-
-
-
-
     return null;
   }
 }
