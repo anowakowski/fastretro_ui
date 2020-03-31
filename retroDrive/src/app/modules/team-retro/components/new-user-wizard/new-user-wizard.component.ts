@@ -92,12 +92,6 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   onChangeIsExistingWorkspaceCheckbox(event) {
     this.isNewWorkspace = event.checked;
-    // const workspaceName = this.workspaceNameFormControl.value;
-
-    // if (workspaceName !== undefined) {
-    //   this.shouldValidateWorkspaceName = true;
-    //   this.workspaceNameValidationProcess(workspaceName, false);
-    // }
   }
 
   onChangeIsWorkspaceWithRequiredAccess(event) {

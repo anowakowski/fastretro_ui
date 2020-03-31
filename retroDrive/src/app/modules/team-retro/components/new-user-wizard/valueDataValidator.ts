@@ -13,8 +13,6 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class ValueDataValidator implements Validator {
   @Input('valueDataValidator') tags: string[];
-  // tslint:disable-next-line:no-input-rename
-  @Input('shouldRunValidation') shouldRun: boolean;
 
   constructor(private localStorageService: LocalStorageService) {}
 
