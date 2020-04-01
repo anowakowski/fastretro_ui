@@ -86,6 +86,17 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
   }
 
+
+  getUserWorkspace(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFiltered('/userworkspaces/', condition);
+  }
+
   private prepareRetroBoardToSave(newRetroBoard: any) {
     return {
       sprintNumber: newRetroBoard.sprintNumber,

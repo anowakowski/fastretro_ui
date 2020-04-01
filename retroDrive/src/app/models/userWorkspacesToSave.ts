@@ -1,4 +1,4 @@
 export interface UserWorkspaceToSave {
-    user: any;
+    userId: string;
     workspaces: any[];
 }

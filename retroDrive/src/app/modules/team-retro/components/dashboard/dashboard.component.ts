@@ -8,6 +8,10 @@ import { User } from 'src/app/models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { WelcomeInfoNewUsersDashboardDialogComponent }
   from '../welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,12 +21,14 @@ import { WelcomeInfoNewUsersDashboardDialogComponent }
 export class DashboardComponent implements OnInit {
   constructor(
     private localStorageService: LocalStorageService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private firestoreRBServices: FirestoreRetroBoardService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
 
   currentUser: User;
+  userWorkspace: UserWorkspace;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -36,10 +42,40 @@ export class DashboardComponent implements OnInit {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.prepareUserInLocalStorage();
+    this.prepareUserWorkspace();
+    
     if (this.currentUser.isNewUser) {
       this.openDialog();
     }
+  }
+
+  private prepareUserInLocalStorage() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
+  }
+
+  private prepareUserWorkspace() {
+    this.firestoreRBServices.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
+      if (userWorksapcesSnapshot.docs.length > 0) {
+        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
+          this.initUserWorkspace();
+          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
+            worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              this.userWorkspace.workspaces.push(userWorkspacesData);
+            });
+          });
+        });
+      }
+    });
+  }
+
+  private initUserWorkspace() {
+    this.userWorkspace = {
+      user: this.currentUser,
+      workspaces: new Array<Workspace>()
+    };
   }
 
   openDialog() {

@@ -303,7 +303,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   private createUserWorkspaces(findedUsr: User, workspaceId: string) {
     const userWorkspace: UserWorkspaceToSave = {
-      user: this.firestoreRbService.addUserAsRef(findedUsr),
+      userId: findedUsr.uid,
       workspaces: [this.firestoreRbService.addWorkspaceAsRef(workspaceId)]
     };
     this.firestoreRbService.addNewUserWorkspace(userWorkspace);
