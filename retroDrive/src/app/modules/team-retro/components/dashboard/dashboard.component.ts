@@ -43,8 +43,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.prepareUserInLocalStorage();
-    this.prepareUserWorkspace();
-    
     if (this.currentUser.isNewUser) {
       this.openDialog();
     }
@@ -52,30 +50,7 @@ export class DashboardComponent implements OnInit {
 
   private prepareUserInLocalStorage() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-  }
-
-  private prepareUserWorkspace() {
-    this.firestoreRBServices.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
-      if (userWorksapcesSnapshot.docs.length > 0) {
-        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
-          this.initUserWorkspace();
-          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
-          findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
-            worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
-              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
-              this.userWorkspace.workspaces.push(userWorkspacesData);
-            });
-          });
-        });
-      }
-    });
-  }
-
-  private initUserWorkspace() {
-    this.userWorkspace = {
-      user: this.currentUser,
-      workspaces: new Array<Workspace>()
-    };
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
   }
 
   openDialog() {
