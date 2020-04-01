@@ -23,6 +23,10 @@ import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.comp
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
+import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wizard.component';
+import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
+import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
+import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 
 @NgModule({
   imports: [
@@ -47,11 +51,17 @@ import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-si
     AddNewRetroBoardBottomsheetComponent,
     RetroBoardSnackbarComponent,
     MyTestCompComponent,
-    LoaddingSingleElementsSpinnerComponent
+    LoaddingSingleElementsSpinnerComponent,
+    NewUserWizardComponent,
+    WelcomeInfoNewUsersDashboardDialogComponent,
+    NewUserWiazrdInfoDialogComponent,
+    ValueDataValidator
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
-    RetroBoardSnackbarComponent
+    RetroBoardSnackbarComponent,
+    WelcomeInfoNewUsersDashboardDialogComponent,
+    NewUserWiazrdInfoDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

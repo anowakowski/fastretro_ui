@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference, FieldPath } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference, FieldPath, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { ConditionQueryData } from '../helpers/conditionQueryData';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class FirestoreBaseService {
   }
 
   addNewItem(collectionName: string, newItem: any) {
-    this.afs.collection(collectionName).add(newItem);
+    return this.afs.collection(collectionName).add(newItem);
   }
 
   updateItem(collectionName: string, docId: any, itemToUpdate: any) {
@@ -31,6 +32,14 @@ export class FirestoreBaseService {
     return this.afs.doc(collectionName + docId).ref;
   }
 
+  getFiltered(collectionName: string, condition: ConditionQueryData) {
+    return this.afs.collection(
+      collectionName,
+      ref => ref.where(condition.fieldName, condition.conditionOperator, condition.value))
+    .get()
+    .toPromise();
+  }
+
   getFilteredSnapshotChanges(collectionName: string, condition: ConditionQueryData) {
     return this.afs.collection(
         collectionName,
@@ -40,6 +49,12 @@ export class FirestoreBaseService {
 
   snapshotChanges(collectionName: string) {
     return this.afs.collection(collectionName).snapshotChanges();
+  }
+
+  updateUserData(user: User) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+    userRef.set(user, {merge: true});
+    //return userRef.get().toPromise();
   }
 }
 

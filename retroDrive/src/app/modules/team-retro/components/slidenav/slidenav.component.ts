@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatDrawer } from '@angular/material/sidenav/drawer';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
@@ -20,6 +23,8 @@ export class SlidenavComponent implements OnInit {
   private mediaMatcher: MediaQueryList =
     matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
 
+  public currentUser: User;
+  public userWorkspace: UserWorkspace;
 
   public currentRouteSecction: string;
   public currentChosenSection: string;
@@ -34,11 +39,13 @@ export class SlidenavComponent implements OnInit {
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
 
-  constructor(public auth: AuthService) { }
+  constructor(public auth: AuthService, private localStorageService: LocalStorageService) { }
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.currentChosenSection = DASHBOARD_SECTION;
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
   }
 
   isScreenSmall(): boolean {

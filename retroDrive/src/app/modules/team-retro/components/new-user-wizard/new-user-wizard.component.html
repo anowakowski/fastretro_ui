@@ -1,0 +1,113 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="workspaceFormGroup">
+    <form [formGroup]="workspaceFormGroup">
+      <ng-template matStepLabel>Fill workspace name</ng-template>
+      <div *ngIf="dataIsLoading" style="margin-left: 20px; margin-top: 40px; margin-bottom: 80px;">
+        <app-loadding-single-elements-spinner></app-loadding-single-elements-spinner>
+      </div>
+      
+      <section *ngIf="!dataIsLoading" style="margin-top: 25px;" class="example-section">
+        <mat-checkbox [checked]="isNewWorkspace" (change)="onChangeIsExistingWorkspaceCheckbox($event)">
+          Is New Workspace
+        </mat-checkbox>
+
+        <mat-checkbox style="margin-left: 30px;" *ngIf="isNewWorkspace" [checked]="isWorkspaceWithRequiredAccess"
+          (change)="onChangeIsWorkspaceWithRequiredAccess($event)">
+          is with requried access
+        </mat-checkbox>
+        <mat-icon *ngIf="isNewWorkspace" style="margin-top: -8px;"
+          matTooltip="if you check this checkbox, access to this workspace will require your approval"
+          matTooltipPosition="after">info
+        </mat-icon>
+      </section>
+      <mat-divider *ngIf="!dataIsLoading"></mat-divider>
+      <mat-form-field *ngIf="!dataIsLoading" style="margin-bottom: 53px; width: 250px;">
+        <mat-label>{{getLabelNameForWorkspaceName()}}</mat-label>
+        <input
+          matInput
+          [placeholder]="getPlaceholderForWorkspaceName()"
+          [formControl]="workspaceNameFormControl"
+          [valueDataValidator]="true"
+          required>
+        <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting') && shouldValidateWorkspaceName">
+          This workspace name is currently in use
+        </mat-error>
+        <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceNotExist') && shouldValidateWorkspaceName">
+          This workspace name is not exists
+        </mat-error>
+      </mat-form-field>
+      <div *ngIf="!dataIsLoading">
+        <!--matStepperNext -->
+        <button mat-button (click)="nextStepFromWorkspaceNameToAvatar()">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="avatarsFormGroup">
+    <form [formGroup]="avatarsFormGroup">
+        <ng-template matStepLabel>Choose your avatar</ng-template>
+      <mat-form-field>
+        <mat-label>Choose your display name</mat-label>
+        <input matInput placeholder="Put Project Name" [formControl]="avatarsNameFormControl" required>
+      </mat-form-field>
+      <div class="container">
+        <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
+                      'avatar-card-view-chosen': avatar.isChosen === true}" *ngFor="let avatar of avatars">
+          <mat-card-header>
+            <div *ngIf="avatar.avatarUrl" mat-card-avatar
+              [ngStyle]="{ 'background-image': 'url(' + avatar.avatarUrl + ')' }"
+              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image"
+              (click)="onSelectAvatar(avatar)">
+            </div>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div style="margin-top: 1px;">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Summary</ng-template>
+    <p style="font-size: 20px; margin-top: 11px;">Great! Everything is almost done. Check the your choices bellow</p>
+    <mat-divider></mat-divider>
+    <div style="margin-top: 10px;" class="container-flex-summary-step">
+      <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
+        <mat-card-header>
+          <div *ngIf="chosenAvatar.avatarUrl" mat-card-avatar
+            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.avatarUrl + ')' }" class="sidnav-userprofile-header-image">
+          </div>
+        </mat-card-header>
+      </mat-card>
+      <div style="flex-direction: column;" [ngClass]="{'margin-summary-step-info-random-avatar': isAvatarFromRandomChosen}">
+        <span *ngIf="isAvatarFromRandomChosen" style="font-style: italic; font-size: 11px; color: #3f83b5;">
+          <span><i class="fa fa-exclamation-triangle"></i></span>
+           You didn't choose your avatar, that's why your avatar was generated
+          automatically. <br />
+          You can change your choise on prvious step
+        </span>
+        <p [ngClass]="{
+          'margin-text-elements-summary': !isAvatarFromRandomChosen,
+          'margin-text-elements-summary-info-random-avatar': isAvatarFromRandomChosen}">
+          <span> {{getValueForWorkspaceLabelInSummaryStep()}} </span><span style="color: #3f50b5;"> <b>{{getChosenWorskpace()}}</b></span>
+          <span 
+            style="font-style: italic; font-size: 11px; margin-left: 3px; color: #3f83b5;"
+            *ngIf="!isNewWorkspace && shouldShowInfoAboutRequireAccessForChosenWorkspaceName">
+            <span><i class="fa fa-exclamation-triangle"></i></span>Your selection requires approval by the owner of this workspace
+          </span>
+        </p>
+        <p style="margin-top: -10px;">
+          your display name: <span style="color: #3f50b5;"> <b>{{getChosenName()}}</b></span>
+        </p>
+      </div>
+
+    </div>
+
+
+    <div style="margin-top: 20px;">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="saveNewConfiguration()">Save Your Configuration</button>
+      <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -4,19 +4,31 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
+import { User } from 'src/app/models/user';
+import { MatDialog } from '@angular/material/dialog';
+import { WelcomeInfoNewUsersDashboardDialogComponent }
+  from '../welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { Workspace } from 'src/app/models/workspace';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  constructor(private spinner: NgxSpinnerService, localStorageService: LocalStorageService) {
+export class DashboardComponent implements OnInit {
+  constructor(
+    private localStorageService: LocalStorageService,
+    public dialog: MatDialog,
+    private firestoreRBServices: FirestoreRetroBoardService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
 
-
+  currentUser: User;
+  userWorkspace: UserWorkspace;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -30,23 +42,24 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
-
-
-
-
+    this.prepareUserInLocalStorage();
+    if (this.currentUser.isNewUser) {
+      this.openDialog();
+    }
   }
 
-
-
-
-  ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
+  private prepareUserInLocalStorage() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
   }
 
-  ngOnDestroy(): void {
-    console.log('ngOnDestroy');
+  openDialog() {
+    const dialogRef = this.dialog.open(WelcomeInfoNewUsersDashboardDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('dialog was close');
+    });
   }
-
-
-
 }

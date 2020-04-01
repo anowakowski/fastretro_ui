@@ -3,7 +3,7 @@
 <mat-drawer-container class="app-container" autosize>
   <mat-drawer 
     #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
-    [opened]="!isScreenSmall()"
+    [opened]="!isScreenSmall() && !currentUser.isNewUser"
     [mode]="isScreenSmall() ? 'over' : 'side'">
     <div class="sidenav-element-flex-container">
       <div class="sidenav-element-flex-container">
@@ -32,7 +32,8 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
+            <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
+            <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>
           </ol>
         </nav>
         <router-outlet></router-outlet>

@@ -3,6 +3,10 @@ import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { User } from 'src/app/models/user';
+import { Workspace } from 'src/app/models/workspace';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -26,6 +30,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getAll('/teams/');
   }
 
+  findWorkspacesByName(name: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'name',
+      conditionOperator: '==',
+      value: name
+    };
+
+    return this.firestoreBase.getFiltered('/workspaces/', condition);
+  }
+
   retroBoardSnapshotChanges() {
     return this.firestoreBase.snapshotChanges(RETRO_BOARD_COLLECTION);
   }
@@ -41,6 +55,46 @@ export class FirestoreRetroBoardService {
 
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
+  }
+
+  findUsersByEmail(mail: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'email',
+      conditionOperator: '==',
+      value: mail
+    };
+    return this.firestoreBase.getFiltered('/users', condition);
+  }
+
+  updateUsr(user: User) {
+    this.firestoreBase.updateUserData(user);
+  }
+
+  addNewWorkspace(workspace: Workspace) {
+    return this.firestoreBase.addNewItem('/workspaces', workspace);
+  }
+
+  addNewUserWorkspace(userWorkspace: UserWorkspaceToSave) {
+    this.firestoreBase.addNewItem('/userworkspaces', userWorkspace);
+  }
+
+  addUserAsRef(user: User) {
+    return this.firestoreBase.addAsRef('/users/', user.uid);
+  }
+
+  addWorkspaceAsRef(workspaceId: string) {
+    return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
+  }
+
+
+  getUserWorkspace(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFiltered('/userworkspaces/', condition);
   }
 
   private prepareRetroBoardToSave(newRetroBoard: any) {

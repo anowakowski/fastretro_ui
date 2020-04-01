@@ -1,35 +1,31 @@
-<mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
-<mat-card class="example-card" style="opacity: 0.97;">
-  <mat-card-header>
-    <mat-card-title>#team Alpha Board</mat-card-title>
-    <mat-card-subtitle>
-      <span style="font-size: 17px;">Retro for Sprint 21</span> <br/>
-      <i>Retro Board Created <span> march 2020</span></i>
-    </mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div class="chart-wrapper">
-      <canvas baseChart height="40"
-      [data]="pieChartData" 
-      [labels]="pieChartLabels" 
-      [chartType]="pieChartType"
-      [options]="pieChartOptions"
-      [plugins]="pieChartPlugins"
-      [legend]="pieChartLegend">
-    </canvas>
-    </div>
-  </mat-card-content>
-</mat-card>
+<div *ngIf="!currentUser.isNewUser">
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
+  <mat-card class="example-card" style="opacity: 0.97;">
+    <mat-card-header>
+      <mat-card-title>#team Alpha Board</mat-card-title>
+      <mat-card-subtitle>
+        <span style="font-size: 17px;">Retro for Sprint 21</span> <br />
+        <i>Retro Board Created <span> march 2020</span></i>
+      </mat-card-subtitle>
+    </mat-card-header>
 
-<mat-card class="example-card" style="margin-top: 5px;">
-  <mat-card-actions style="margin-top: -14px;">
-    <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
-  </mat-card-actions>
-</mat-card>
+    <mat-card-content>
+      <div class="chart-wrapper">
+        <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+          [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+        </canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-<mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+  <mat-card class="example-card" style="margin-top: 5px;">
+    <mat-card-actions style="margin-top: -14px;">
+      <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
+    </mat-card-actions>
+  </mat-card>
 
-
-
-
+  <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+</div>
+<div *ngIf="currentUser.isNewUser">
+  <app-new-user-wizard></app-new-user-wizard>
+</div>
