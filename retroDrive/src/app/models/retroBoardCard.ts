@@ -1,4 +1,5 @@
 export class RetroBoardCard {
+    public id: string;
     public name: string;
     public isEdit: boolean;
     public index: number;
@@ -11,4 +12,5 @@ export class RetroBoardCard {
     public mergedContent: Array<string>;
     public isWentWellRetroBoradCol: boolean;
     public retroBoard: any;
+    public user: any;
 }

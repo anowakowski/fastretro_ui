@@ -10,7 +10,7 @@ export class FiresrtoreRetroProcessInProgressService {
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
-    this.firestoreBase.addNewItem('/retroBoardCards/', newRetroBoardCard);
+    return this.firestoreBase.addNewItem('/retroBoardCards/', newRetroBoardCard);
   }
 
   findRetroBoardByUrlParamId(urlParamId: string) {
@@ -25,6 +25,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addRetroBoardAsRef(retroBoardId: string) {
     return this.firestoreBase.addAsRef('/retroBoards/', retroBoardId);
+  }
+
+  addUserAsRef(uid: string) {
+    return this.firestoreBase.addAsRef('/users/', uid);
   }
 
   retroBoardCardsFilteredSnapshotChanges() {

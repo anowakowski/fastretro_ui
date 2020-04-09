@@ -13,6 +13,9 @@ import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { ActivatedRoute } from '@angular/router';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { AuthService } from 'src/app/services/auth.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { User } from 'src/app/models/user';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -35,6 +38,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private eventsService: EventsService,
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
+    private authServices: AuthService,
+    private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
     public dialog: MatDialog) {}
 
@@ -44,6 +49,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public board: Board;
   private retroBoardToProcess: RetroBoard;
   public isRetroBoardIsReady = false;
+
+  currentUser: User;
+  retroBoardCardsPotentialyToAdd: Array<RetroBoardCard>;
 
   timerOptions: TimerOption[] = [
     { value: '1', viewValue: '3 min' },
@@ -62,49 +70,69 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public retroBoardCardsSubscriptions: any;
 
   ngOnInit() {
-    if (this.route.snapshot.data['retroBoardData']) {
-      this.retroBoardData = this.route.snapshot.data['retroBoardData'];
-      this.retroBoardToProcess = this.retroBoardData;
-      this.isRetroBoardIsReady = true;
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.prepareBaseRetroBoardData();
+  }
 
-      this.setRetroBoardColumnCards();
-      this.createAddNewRetroBoardCardForm();
-      this.subscribeEvents();
+  private prepareBaseRetroBoardData() {
+    if (this.route.snapshot.data['retroBoardData']) {
+      this.getingDataAfterClickStartRetroProcess();
+    } else {
+      this.getingDataFromUrl();
+    }
+  }
+
+  private getingDataFromUrl() {
+    this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
+      const retroBoardParamId: string = params['id'];
+      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
+        if (retroBoardsSnapshot.docs.length > 0) {
+          const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
+          this.retroBoardToProcess = findedRetroBoard;
+          this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
+          this.isRetroBoardIsReady = true;
+          this.retroBoardCardsPotentialyToAdd = new Array<RetroBoardCard>();
+          this.retroBoardCardsSubscriptions =
+            this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
+              retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+                const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+                const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
+                retroBoardCard.id = retroBoardCardDocId;
+                this.retroBoardCardsPotentialyToAdd.push(retroBoardCard);
+                //this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+              });
+            });
+          this.setRetroBoardColumnCards();
+          this.createAddNewRetroBoardCardForm();
+          this.subscribeEvents();
+        } else {
+          // not finded any retro board
+        }
+      });
+    });
+  }
+
+  private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
+    if (retroBoardCard.isWentWellRetroBoradCol) {
+
+      const findedTheSameRetroBoardCard = this.wnetWellRetroBoardCol.retroBoardCards.find(x => x.id === retroBoardCard.id);
+
+      if (findedTheSameRetroBoardCard === undefined) {
+        this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
+      }
 
     } else {
-      this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
-        const retroBoardParamId: string = params['id'];
-
-        this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
-          if (retroBoardsSnapshot.docs.length > 0) {
-            const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
-            this.retroBoardToProcess = findedRetroBoard;
-            this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
-            this.isRetroBoardIsReady = true;
-
-            this.retroBoardCardsSubscriptions =
-              this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
-                retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
-                  const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
-
-                  if (retroBoardCard.isWentWellRetroBoradCol) {
-                    this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
-                  } else {
-                    this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
-                  }
-
-                });
-            });
-
-            this.setRetroBoardColumnCards();
-            this.createAddNewRetroBoardCardForm();
-            this.subscribeEvents();
-          } else {
-            // not finded any retro board
-          }
-        });
-     });
+      this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
     }
+  }
+
+  private getingDataAfterClickStartRetroProcess() {
+    this.retroBoardData = this.route.snapshot.data['retroBoardData'];
+    this.retroBoardToProcess = this.retroBoardData;
+    this.isRetroBoardIsReady = true;
+    this.setRetroBoardColumnCards();
+    this.createAddNewRetroBoardCardForm();
+    this.subscribeEvents();
   }
 
   ngOnDestroy(): void {
@@ -157,27 +185,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
 
     if (colName === WENT_WELL) {
-      let maxIndexOfElementInArray: number = 0;
+      let maxIndexOfElementInArray = 0;
 
       if (this.wnetWellRetroBoardCol.retroBoardCards.length > 0) {
         maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
       }
 
       const incrementIndex = maxIndexOfElementInArray + 1;
-      const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, true);
+      const newItem: RetroBoardCard = this.prepareNewRetroBoardCardToSave(incrementIndex, true);
 
       this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
     } else if (colName === TO_IMPROVE) {
-      let maxIndexOfElementInArray: number = 0;
+      let maxIndexOfElementInArray = 0;
 
       if (this.toImproveRetroBoardCol.retroBoardCards.length > 0) {
         maxIndexOfElementInArray = Math.max.apply(Math, this.toImproveRetroBoardCol.retroBoardCards.map(x => x.index));
       }
 
       const incrementIndex = maxIndexOfElementInArray + 1;
-      const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, false);
+      const newItem: RetroBoardCard = this.prepareNewRetroBoardCardToSave(incrementIndex, false);
 
 
       this.toImproveRetroBoardCol.retroBoardCards.push(newItem);
@@ -197,17 +225,46 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
 
-        card.retroBoard = this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id);
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
+        const cardToSave = this.prepareRetroBoardCardToSave(card);
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave).then(retroBoardCardSnapshot => {
+          retroBoardCardSnapshot.get().then((newRetroBoardCardSnapshot) => {
+            const newRetroBoardCardId = newRetroBoardCardSnapshot.id;
+
+            const findInPotentialyToAdd = this.retroBoardCardsPotentialyToAdd.find(rbc => rbc.id === newRetroBoardCardId);
+
+            if (findInPotentialyToAdd) {
+              // remove from potentialy
+            }
+
+
+
+          });
+        });
 
       } else if (colName === TO_IMPROVE) {
         const index = this.getArrayIndex(card, this.toImproveRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.toImproveRetroBoardCol.retroBoardCards);
 
-        card.retroBoard = this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id);
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
+        const cardToSave = this.prepareRetroBoardCardToSave(card);
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
       }
     }
+  }
+
+  private prepareRetroBoardCardToSave(card: RetroBoardCard) {
+    const cardToSave = {
+      name: card.name,
+      isEdit: card.isEdit,
+      index: card.index,
+      isNewItem: card.isNewItem,
+      isMerged: card.isMerged,
+      isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
+      mergedContent: card.mergedContent,
+      retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
+      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid)
+    };
+
+    return cardToSave;
   }
 
   onClickVoteOnCart(currentCard: RetroBoardCard) {
@@ -226,7 +283,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
   }
 
-  private prepareNewRetroBoardCard(incrementIndex: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
+  private prepareNewRetroBoardCardToSave(incrementIndex: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
     return {
       name: '',
       isEdit: true,
@@ -239,7 +296,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<string>(),
-      retroBoard: this.retroBoardToProcess
+      retroBoard: this.retroBoardToProcess,
+      user: this.currentUser,
+      id: ''
     };
   }
 
@@ -260,10 +319,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    // retroBoardCards.push(this.prepareTestData(1, false));
-    // retroBoardCards.push(this.prepareTestData(2, false));
-    // retroBoardCards.push(this.prepareTestData(3, false));
-
     return retroBoardCards;
   }
 
@@ -271,29 +326,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    // retroBoardCards.push(this.prepareTestData(1, true));
-    // retroBoardCards.push(this.prepareTestData(2, true));
-    // retroBoardCards.push(this.prepareTestData(3, true));
-    // retroBoardCards.push(this.prepareTestData(4, true));
 
     return retroBoardCards;
-  }
-
-  private prepareTestData(indexNumb: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
-    return {
-      name: 'Get to work',
-      isEdit: false,
-      index: indexNumb,
-      isClickedFromCloseEdit: false,
-      isClickedFromMergeBtn: false,
-      isClickedFromVoteBtn: false,
-      isInMerge: false,
-      isMerged: false,
-      isNewItem: false,
-      isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
-      mergedContent: new Array<string>(),
-      retroBoard: null
-    };
   }
 
   private mergeProcess(currentCard: RetroBoardCard, colName: string, retroBoardCards: RetroBoardCard[]) {
