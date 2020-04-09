@@ -12,6 +12,7 @@ import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-prog
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { ActivatedRoute } from '@angular/router';
+import { RetroBoard } from 'src/app/models/retroBoard';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -27,7 +28,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   isInMerge = true;
 
   retroBoardData: any;
-  retroBoardParamId: number;
   private retroBoardParamIdSubscription: any;
 
   constructor(
@@ -64,10 +64,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       console.log(this.retroBoardData);
     } else {
       this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
-        this.retroBoardParamId = params['id'];
+        const retroBoardParamId: string = params['id'];
+
+        this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
+          if (retroBoardsSnapshot.docs.length > 0) {
+            const findedRetroBoards = retroBoardsSnapshot.docs[0].data() as RetroBoard;
+          } else {
+            // not finded any retro board
+          }
+        });
      });
     }
-
 
     this.setRetroBoardColumnCards();
     this.createAddNewRetroBoardCardForm();
