@@ -10,6 +10,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TimerOption } from 'src/app/models/timerOption';
+import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -28,6 +29,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private eventsService: EventsService,
+    private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
     public dialog: MatDialog) {}
 
   private wnetWellRetroBoardCol: Column;
