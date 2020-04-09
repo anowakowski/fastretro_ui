@@ -59,6 +59,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public retroProcessIsStoped = false;
   public shouldEnableVoteBtns = false;
   public stopRetroInProgressProcessSubscriptions: any;
+  public retroBoardCardsSubscriptions: any;
 
   ngOnInit() {
     if (this.route.snapshot.data['retroBoardData']) {
@@ -80,6 +81,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.retroBoardToProcess = findedRetroBoard;
             this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
             this.isRetroBoardIsReady = true;
+
+            this.retroBoardCardsSubscriptions =
+              this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
+                retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+                  const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+
+                  if (retroBoardCard.isWentWellRetroBoradCol) {
+                    this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
+                  } else {
+                    this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
+                  }
+
+                });
+            });
 
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();

@@ -26,4 +26,8 @@ export class FiresrtoreRetroProcessInProgressService {
   addRetroBoardAsRef(retroBoardId: string) {
     return this.firestoreBase.addAsRef('/retroBoards/', retroBoardId);
   }
+
+  retroBoardCardsFilteredSnapshotChanges() {
+    return this.firestoreBase.snapshotChanges('/retroBoardCards/');
+  }
 }
