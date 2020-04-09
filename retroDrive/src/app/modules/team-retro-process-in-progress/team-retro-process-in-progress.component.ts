@@ -16,11 +16,6 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private spinner: NgxSpinnerService, private spinnerTickService: SpinnerTickService) { }
 
   ngOnInit() {
-    if (this.route.snapshot.data['retroBoardData']) {
-      this.data = this.route.snapshot.data['retroBoardData'];
-      console.log(this.data);
-    }
-
     this.spinnerTick();
   }
 

@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
+import { ActivatedRoute } from '@angular/router';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -25,11 +26,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   newCardContentFormControl = new FormControl('', Validators.required);
   isInMerge = true;
 
+  retroBoardData: any;
+  retroBoardParamId: number;
+  private retroBoardParamIdSubscription: any;
+
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private eventsService: EventsService,
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
+    private route: ActivatedRoute,
     public dialog: MatDialog) {}
 
   private wnetWellRetroBoardCol: Column;
@@ -53,6 +59,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public stopRetroInProgressProcessSubscriptions: any;
 
   ngOnInit() {
+    if (this.route.snapshot.data['retroBoardData']) {
+      this.retroBoardData = this.route.snapshot.data['retroBoardData'];
+      console.log(this.retroBoardData);
+    } else {
+      this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
+        this.retroBoardParamId = params['id'];
+     });
+    }
+
+
     this.setRetroBoardColumnCards();
     this.createAddNewRetroBoardCardForm();
     this.subscribeEvents();
@@ -60,6 +76,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
+    this.retroBoardParamIdSubscription.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {
@@ -115,8 +132,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, true);
-
-
 
       this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
