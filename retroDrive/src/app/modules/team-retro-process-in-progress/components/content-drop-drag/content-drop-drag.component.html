@@ -1,6 +1,6 @@
 <div class="root">
   <app-nav></app-nav>
-  <div class="board">
+  <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
       <div fxFlex></div>

@@ -43,6 +43,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   public board: Board;
   private retroBoardToProcess: RetroBoard;
+  public isRetroBoardIsReady = false;
 
   timerOptions: TimerOption[] = [
     { value: '1', viewValue: '3 min' },
@@ -63,6 +64,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (this.route.snapshot.data['retroBoardData']) {
       this.retroBoardData = this.route.snapshot.data['retroBoardData'];
       this.retroBoardToProcess = this.retroBoardData;
+      this.isRetroBoardIsReady = true;
 
       this.setRetroBoardColumnCards();
       this.createAddNewRetroBoardCardForm();
@@ -77,6 +79,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
             this.retroBoardToProcess = findedRetroBoard;
             this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
+            this.isRetroBoardIsReady = true;
 
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
