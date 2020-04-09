@@ -116,6 +116,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, true);
 
+
+
       this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
@@ -128,6 +130,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, false);
+
 
       this.toImproveRetroBoardCol.retroBoardCards.push(newItem);
       this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
@@ -145,9 +148,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (colName === WENT_WELL) {
         const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
+
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
+
       } else if (colName === TO_IMPROVE) {
         const index = this.getArrayIndex(card, this.toImproveRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.toImproveRetroBoardCol.retroBoardCards);
+
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
       }
     }
   }
