@@ -76,6 +76,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           if (retroBoardsSnapshot.docs.length > 0) {
             const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
             this.retroBoardToProcess = findedRetroBoard;
+            this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
 
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
@@ -178,6 +179,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const index = this.getArrayIndex(card, this.wnetWellRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.wnetWellRetroBoardCol.retroBoardCards);
 
+        card.retroBoard = this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id);
         this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
 
       } else if (colName === TO_IMPROVE) {
@@ -217,7 +219,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isInMerge: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
-      mergedContent: new Array<string>()
+      mergedContent: new Array<string>(),
+      retroBoard: this.retroBoardToProcess
     };
   }
 
@@ -227,10 +230,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const boardTitle = 'Retro for ' + this.retroBoardToProcess.retroName + ' board';
     this.board = new Board(
-      boardTitle,
-      [this.wnetWellRetroBoardCol,
-      this.toImproveRetroBoardCol]
-    );
+      boardTitle, [
+        this.wnetWellRetroBoardCol,
+        this.toImproveRetroBoardCol
+      ],
+      this.retroBoardToProcess);
   }
 
   private getToImproveRetroBoardCards(): RetroBoardCard[] {
@@ -268,7 +272,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: false,
       isNewItem: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
-      mergedContent: new Array<string>()
+      mergedContent: new Array<string>(),
+      retroBoard: null
     };
   }
 

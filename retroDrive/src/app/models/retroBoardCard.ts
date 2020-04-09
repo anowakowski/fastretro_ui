@@ -10,4 +10,5 @@ export class RetroBoardCard {
     public isMerged: boolean;
     public mergedContent: Array<string>;
     public isWentWellRetroBoradCol: boolean;
+    public retroBoard: any;
 }

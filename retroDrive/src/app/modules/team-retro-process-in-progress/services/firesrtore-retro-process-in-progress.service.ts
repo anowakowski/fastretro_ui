@@ -23,4 +23,7 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFiltered('/retroBoards/', condition);
   }
 
+  addRetroBoardAsRef(retroBoardId: string) {
+    return this.firestoreBase.addAsRef('/retroBoards/', retroBoardId);
+  }
 }
