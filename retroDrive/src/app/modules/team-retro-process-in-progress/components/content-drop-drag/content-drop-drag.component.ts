@@ -186,6 +186,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const index = this.getArrayIndex(card, this.toImproveRetroBoardCol.retroBoardCards);
         this.updaRetroBoardCard(index, card, this.toImproveRetroBoardCol.retroBoardCards);
 
+        card.retroBoard = this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id);
         this.firestoreRetroInProgressService.addNewRetroBoardCard(card);
       }
     }
