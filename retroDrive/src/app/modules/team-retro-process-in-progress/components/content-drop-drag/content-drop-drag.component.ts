@@ -42,6 +42,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private toImproveRetroBoardCol: Column;
 
   public board: Board;
+  private retroBoardToProcess: RetroBoard;
 
   timerOptions: TimerOption[] = [
     { value: '1', viewValue: '3 min' },
@@ -61,24 +62,30 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.route.snapshot.data['retroBoardData']) {
       this.retroBoardData = this.route.snapshot.data['retroBoardData'];
-      console.log(this.retroBoardData);
+      this.retroBoardToProcess = this.retroBoardData;
+
+      this.setRetroBoardColumnCards();
+      this.createAddNewRetroBoardCardForm();
+      this.subscribeEvents();
+
     } else {
       this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
         const retroBoardParamId: string = params['id'];
 
         this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
           if (retroBoardsSnapshot.docs.length > 0) {
-            const findedRetroBoards = retroBoardsSnapshot.docs[0].data() as RetroBoard;
+            const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
+            this.retroBoardToProcess = findedRetroBoard;
+
+            this.setRetroBoardColumnCards();
+            this.createAddNewRetroBoardCardForm();
+            this.subscribeEvents();
           } else {
             // not finded any retro board
           }
         });
      });
     }
-
-    this.setRetroBoardColumnCards();
-    this.createAddNewRetroBoardCardForm();
-    this.subscribeEvents();
   }
 
   ngOnDestroy(): void {
@@ -218,10 +225,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.wnetWellRetroBoardCol = new Column(WENT_WELL, this.getWentWellRetroBoardCards());
     this.toImproveRetroBoardCol = new Column(TO_IMPROVE, this.getToImproveRetroBoardCards());
 
-    this.board = new Board('Test Board', [
-      this.wnetWellRetroBoardCol,
-      this.toImproveRetroBoardCol
-    ]);
+    const boardTitle = 'Retro for ' + this.retroBoardToProcess.retroName + ' board';
+    this.board = new Board(
+      boardTitle,
+      [this.wnetWellRetroBoardCol,
+      this.toImproveRetroBoardCol]
+    );
   }
 
   private getToImproveRetroBoardCards(): RetroBoardCard[] {
