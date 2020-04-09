@@ -30,17 +30,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     public dialog: MatDialog) {}
 
-  private wnetWellRetroBoardCol = new Column(WENT_WELL, [
-    new RetroBoardCard('Get to work', false, 1),
-    new RetroBoardCard('Get to work', false, 2),
-    new RetroBoardCard('Get to work', false, 3),
-    new RetroBoardCard('Get to work', false, 4),
-  ]);
-  private toImproveRetroBoardCol = new Column(TO_IMPROVE, [
-    new RetroBoardCard('Get to work', false, 1),
-    new RetroBoardCard('Get to work', false, 2),
-    new RetroBoardCard('Get to work', false, 3),
-  ]);
+  private wnetWellRetroBoardCol: Column;
+  private toImproveRetroBoardCol: Column;
+
+  public board: Board;
 
   timerOptions: TimerOption[] = [
     { value: '1', viewValue: '3 min' },
@@ -57,12 +50,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public shouldEnableVoteBtns = false;
   public stopRetroInProgressProcessSubscriptions: any;
 
-  board: Board = new Board('Test Board', [
-    this.wnetWellRetroBoardCol,
-    this.toImproveRetroBoardCol
-  ]);
-
   ngOnInit() {
+    this.setRetroBoardColumnCards();
     this.createAddNewRetroBoardCardForm();
     this.subscribeEvents();
   }
@@ -163,6 +152,25 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     } else if (colName === TO_IMPROVE) {
       this.mergeProcess(currentCard, colName, this.toImproveRetroBoardCol.retroBoardCards);
     }
+  }
+
+  private setRetroBoardColumnCards() {
+    this.wnetWellRetroBoardCol = new Column(WENT_WELL, [
+      new RetroBoardCard('Get to work', false, 1),
+      new RetroBoardCard('Get to work', false, 2),
+      new RetroBoardCard('Get to work', false, 3),
+      new RetroBoardCard('Get to work', false, 4),
+    ]);
+    this.toImproveRetroBoardCol = new Column(TO_IMPROVE, [
+      new RetroBoardCard('Get to work', false, 1),
+      new RetroBoardCard('Get to work', false, 2),
+      new RetroBoardCard('Get to work', false, 3),
+    ]);
+
+    this.board = new Board('Test Board', [
+      this.wnetWellRetroBoardCol,
+      this.toImproveRetroBoardCol
+    ]);
   }
 
   private mergeProcess(currentCard: RetroBoardCard, colName: string, retroBoardCards: RetroBoardCard[]) {
