@@ -107,8 +107,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (colName === WENT_WELL) {
       const maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
       const incrementIndex = maxIndexOfElementInArray + 1;
-      const newItem = new RetroBoardCard('', true, incrementIndex);
-      newItem.isNewItem = true;
+      const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, true);
 
       this.wnetWellRetroBoardCol.retroBoardCards.push(newItem);
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
@@ -116,8 +115,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     } else if (colName === TO_IMPROVE) {
       const maxIndexOfElementInArray = Math.max.apply(Math, this.toImproveRetroBoardCol.retroBoardCards.map(x => x.index));
       const incrementIndex = maxIndexOfElementInArray + 1;
-      const newItem = new RetroBoardCard('', true, incrementIndex);
-      newItem.isNewItem = true;
+
+      const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, false);
 
       this.toImproveRetroBoardCol.retroBoardCards.push(newItem);
       this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
@@ -154,10 +153,25 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
-  public checkIfRetroBoardIsExists() {
+  checkIfRetroBoardIsExists() {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
   }
 
+  private prepareNewRetroBoardCard(incrementIndex: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
+    return {
+      name: '',
+      isEdit: true,
+      index: incrementIndex,
+      isNewItem: true,
+      isClickedFromCloseEdit: false,
+      isClickedFromMergeBtn: false,
+      isClickedFromVoteBtn: false,
+      isInMerge: false,
+      isMerged: false,
+      isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
+      mergedContent: new Array<string>()
+    };
+  }
 
   private setRetroBoardColumnCards() {
     this.wnetWellRetroBoardCol = new Column(WENT_WELL, this.getWentWellRetroBoardCards());
