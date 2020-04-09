@@ -104,7 +104,8 @@ export class FirestoreRetroBoardService {
       team: this.prepareTeam(newRetroBoard.team),
       members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
-      isStarted: false
+      isStarted: false,
+      urlParamId: newRetroBoard.urlParamId
     };
   }
 }

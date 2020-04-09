@@ -6,6 +6,8 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { Teams } from 'src/app/models/teams';
 import { RetroBoard } from 'src/app/models/retroBoard';
 
+import { Guid } from "guid-typescript";
+
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
   templateUrl: './add-new-retro-board-bottomsheet.component.html',
@@ -65,13 +67,15 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   private prepareRetroBoardToSave() {
     const value = this.addNewRetroBoardForm.value;
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    const guid = Guid.create();
 
     const retroBoard = {
       sprintNumber: value.sprintNumber,
       retroName: value.retroName,
       team: value.teamsFormControl,
       members: value.membersFormControl,
-      creationDate: currentDate
+      creationDate: currentDate,
+      urlParamId: guid.toString()
     };
 
     return retroBoard;
