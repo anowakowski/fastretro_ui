@@ -25,7 +25,7 @@
             <div fxFlex></div>
             <button [disabled]="retroProcessIsStoped" mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
           </div>
-          <div class="retro-board-card-container"
+          <div *ngIf="checkIfRetroBoardIsExists()" class="retro-board-card-container"
           cdkDropList
           [cdkDropListData]="column.retroBoardCards"
           (cdkDropListDropped)="drop($event)">

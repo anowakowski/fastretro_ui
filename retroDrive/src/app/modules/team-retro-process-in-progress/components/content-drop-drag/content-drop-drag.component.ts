@@ -154,23 +154,42 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
+  public checkIfRetroBoardIsExists() {
+    return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
+  }
+
+
   private setRetroBoardColumnCards() {
-    this.wnetWellRetroBoardCol = new Column(WENT_WELL, [
-      new RetroBoardCard('Get to work', false, 1),
-      new RetroBoardCard('Get to work', false, 2),
-      new RetroBoardCard('Get to work', false, 3),
-      new RetroBoardCard('Get to work', false, 4),
-    ]);
-    this.toImproveRetroBoardCol = new Column(TO_IMPROVE, [
-      new RetroBoardCard('Get to work', false, 1),
-      new RetroBoardCard('Get to work', false, 2),
-      new RetroBoardCard('Get to work', false, 3),
-    ]);
+    this.wnetWellRetroBoardCol = new Column(WENT_WELL, this.getWentWellRetroBoardCards());
+    this.toImproveRetroBoardCol = new Column(TO_IMPROVE, this.getToImproveRetroBoardCards());
 
     this.board = new Board('Test Board', [
       this.wnetWellRetroBoardCol,
       this.toImproveRetroBoardCol
     ]);
+  }
+
+  private getToImproveRetroBoardCards(): RetroBoardCard[] {
+
+    const retroBoardCards = new Array<RetroBoardCard>();
+
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 1));
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 2));
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 3));
+
+    return retroBoardCards;
+  }
+
+  private getWentWellRetroBoardCards(): RetroBoardCard[] {
+
+    const retroBoardCards = new Array<RetroBoardCard>();
+
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 1));
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 2));
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 3));
+    retroBoardCards.push(new RetroBoardCard('Get to work', false, 4));
+
+    return retroBoardCards;
   }
 
   private mergeProcess(currentCard: RetroBoardCard, colName: string, retroBoardCards: RetroBoardCard[]) {
