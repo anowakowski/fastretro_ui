@@ -107,7 +107,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
 
     if (colName === WENT_WELL) {
-      const maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
+      let maxIndexOfElementInArray: number = 0;
+
+      if (this.wnetWellRetroBoardCol.retroBoardCards.length > 0) {
+        maxIndexOfElementInArray = Math.max.apply(Math, this.wnetWellRetroBoardCol.retroBoardCards.map(x => x.index));
+      }
+
       const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, true);
 
@@ -115,9 +120,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
 
     } else if (colName === TO_IMPROVE) {
-      const maxIndexOfElementInArray = Math.max.apply(Math, this.toImproveRetroBoardCol.retroBoardCards.map(x => x.index));
-      const incrementIndex = maxIndexOfElementInArray + 1;
+      let maxIndexOfElementInArray: number = 0;
 
+      if (this.toImproveRetroBoardCol.retroBoardCards.length > 0) {
+        maxIndexOfElementInArray = Math.max.apply(Math, this.toImproveRetroBoardCol.retroBoardCards.map(x => x.index));
+      }
+
+      const incrementIndex = maxIndexOfElementInArray + 1;
       const newItem: RetroBoardCard = this.prepareNewRetroBoardCard(incrementIndex, false);
 
       this.toImproveRetroBoardCol.retroBoardCards.push(newItem);
@@ -189,9 +198,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    retroBoardCards.push(this.prepareTestData(1, false));
-    retroBoardCards.push(this.prepareTestData(2, false));
-    retroBoardCards.push(this.prepareTestData(3, false));
+    // retroBoardCards.push(this.prepareTestData(1, false));
+    // retroBoardCards.push(this.prepareTestData(2, false));
+    // retroBoardCards.push(this.prepareTestData(3, false));
 
     return retroBoardCards;
   }
@@ -200,10 +209,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    retroBoardCards.push(this.prepareTestData(1, true));
-    retroBoardCards.push(this.prepareTestData(2, true));
-    retroBoardCards.push(this.prepareTestData(3, true));
-    retroBoardCards.push(this.prepareTestData(4, true));
+    // retroBoardCards.push(this.prepareTestData(1, true));
+    // retroBoardCards.push(this.prepareTestData(2, true));
+    // retroBoardCards.push(this.prepareTestData(3, true));
+    // retroBoardCards.push(this.prepareTestData(4, true));
 
     return retroBoardCards;
   }
