@@ -173,9 +173,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 1));
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 2));
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 3));
+    retroBoardCards.push(this.prepareTestData(1, false));
+    retroBoardCards.push(this.prepareTestData(2, false));
+    retroBoardCards.push(this.prepareTestData(3, false));
 
     return retroBoardCards;
   }
@@ -184,12 +184,28 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     const retroBoardCards = new Array<RetroBoardCard>();
 
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 1));
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 2));
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 3));
-    retroBoardCards.push(new RetroBoardCard('Get to work', false, 4));
+    retroBoardCards.push(this.prepareTestData(1, true));
+    retroBoardCards.push(this.prepareTestData(2, true));
+    retroBoardCards.push(this.prepareTestData(3, true));
+    retroBoardCards.push(this.prepareTestData(4, true));
 
     return retroBoardCards;
+  }
+
+  private prepareTestData(indexNumb: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
+    return {
+      name: 'Get to work',
+      isEdit: false,
+      index: indexNumb,
+      isClickedFromCloseEdit: false,
+      isClickedFromMergeBtn: false,
+      isClickedFromVoteBtn: false,
+      isInMerge: false,
+      isMerged: false,
+      isNewItem: false,
+      isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
+      mergedContent: new Array<string>()
+    };
   }
 
   private mergeProcess(currentCard: RetroBoardCard, colName: string, retroBoardCards: RetroBoardCard[]) {
