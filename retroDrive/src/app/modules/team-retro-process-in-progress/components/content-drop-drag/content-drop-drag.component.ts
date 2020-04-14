@@ -443,24 +443,32 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard: RetroBoardCard,
     findedCurrentRetroBoardCard: RetroBoardCard) {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
-        if (!findedFromMergedCart.isMerged) {
-          findedFromMergedCart.mergedContent = new Array<MergedRetroBoardCard>();
-          findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(findedFromMergedCart));
-        }
-        if (findedCurrentRetroBoardCard.isMerged) {
-          findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
-        } else {
-          findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(currentCard));
-        }
-
-        findedFromMergedCart.isInMerge = false;
-        findedFromMergedCart.isMerged = true;
-
-        this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
-        this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
-        const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+        this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
+        this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
       }
+  }
+
+  private saveNewMergeRetroBoardCard(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
+    findedFromMergedCart.isInMerge = false;
+    findedFromMergedCart.isMerged = true;
+
+    this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
+    this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
+    const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
+    this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+  }
+
+  private setCardWithMergeRules(
+    findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard, currentCard: RetroBoardCard) {
+    if (!findedFromMergedCart.isMerged) {
+      findedFromMergedCart.mergedContent = new Array<MergedRetroBoardCard>();
+      findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(findedFromMergedCart));
+    }
+    if (findedCurrentRetroBoardCard.isMerged) {
+      findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
+    } else {
+      findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(currentCard));
+    }
   }
 
   private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
