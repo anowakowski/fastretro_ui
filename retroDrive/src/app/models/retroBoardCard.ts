@@ -15,4 +15,5 @@ export class RetroBoardCard {
     public isWentWellRetroBoradCol: boolean;
     public retroBoard: any;
     public user: any;
+    public voteCount: number;
 }

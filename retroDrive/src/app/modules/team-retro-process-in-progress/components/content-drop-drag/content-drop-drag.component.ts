@@ -65,7 +65,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
-  public shouldEnableVoteBtns = false;
+  public shouldEnableVoteBtns = true;
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
 
@@ -198,6 +198,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
     }
+  }
+
+  onVoteCard(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromVoteBtn = true;
+    this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+      const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+      const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+      findedRetroBoardCard.voteCount++;
+      const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+      this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+    });
   }
 
   checkIfRetroBoardIsExists() {
@@ -362,7 +373,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
       retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
-      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid)
+      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
+      voteCount: card.voteCount
     };
 
     return cardToSave;
@@ -392,6 +404,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
+      voteCount: card.voteCount
     };
   }
 
@@ -410,7 +423,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       mergedContent: new Array<MergedRetroBoardCard>(),
       retroBoard: this.retroBoardToProcess,
       user: this.currentUser,
-      id: ''
+      id: '',
+      voteCount: 0
     };
   }
 

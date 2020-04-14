@@ -87,10 +87,10 @@
                 <button
                   *ngIf="shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
-                  matBadge="0" matBadgeColor="accent" 
+                  [matBadge]="item.voteCount" matBadgeColor="accent" 
                   mat-icon-button 
                   color="primary" 
-                  (click)="onClickVoteOnCart(item)">
+                  (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>                
                 <button
