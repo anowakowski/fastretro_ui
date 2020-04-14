@@ -1,3 +1,5 @@
+import { MergedRetroBoardCard } from './mergedRetroBoardCard';
+
 export class RetroBoardCard {
     public id: string;
     public name: string;
@@ -9,7 +11,7 @@ export class RetroBoardCard {
     public isNewItem: boolean;
     public isInMerge: boolean;
     public isMerged: boolean;
-    public mergedContent: Array<string>;
+    public mergedContent: Array<MergedRetroBoardCard>;
     public isWentWellRetroBoradCol: boolean;
     public retroBoard: any;
     public user: any;

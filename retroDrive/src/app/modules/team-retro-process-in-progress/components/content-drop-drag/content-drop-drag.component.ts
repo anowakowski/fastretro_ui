@@ -16,6 +16,7 @@ import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
+import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -388,7 +389,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isInMerge: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
-      mergedContent: new Array<string>(),
+      mergedContent: new Array<MergedRetroBoardCard>(),
       retroBoard: this.retroBoardToProcess,
       user: this.currentUser,
       id: ''
@@ -440,18 +441,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private mergeLocalCards(
     findedFromMergedCart: RetroBoardCard,
     currentCard: RetroBoardCard,
-    findedCurrentRetroBoardCard: RetroBoardCard,
-    retroBoardCards: RetroBoardCard[],
-    colName: string) {
+    findedCurrentRetroBoardCard: RetroBoardCard) {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
         if (!findedFromMergedCart.isMerged) {
-          findedFromMergedCart.mergedContent = new Array<string>();
-          findedFromMergedCart.mergedContent.push(findedFromMergedCart.name);
+          findedFromMergedCart.mergedContent = new Array<MergedRetroBoardCard>();
+          findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(findedFromMergedCart));
         }
         if (findedCurrentRetroBoardCard.isMerged) {
           findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
         } else {
-          findedFromMergedCart.mergedContent.push(currentCard.name);
+          findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(currentCard));
         }
 
         findedFromMergedCart.isInMerge = false;
@@ -462,6 +461,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
         this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
       }
+  }
+
+  private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
+    return { name: retroBoardCard.name, user: retroBoardCard.user };
   }
 
   private chcekIfAnyCardIsInEditMode(): boolean {
