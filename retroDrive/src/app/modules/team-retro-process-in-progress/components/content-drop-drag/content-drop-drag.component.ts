@@ -51,7 +51,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public isRetroBoardIsReady = false;
 
   currentUser: User;
-  retroBoardCardsPotentialyToAdd: Array<RetroBoardCard>;
 
   timerOptions: TimerOption[] = [
     { value: '1', viewValue: '3 min' },
@@ -91,17 +90,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.retroBoardToProcess = findedRetroBoard;
           this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
           this.isRetroBoardIsReady = true;
-          this.retroBoardCardsPotentialyToAdd = new Array<RetroBoardCard>();
-          this.retroBoardCardsSubscriptions =
-            this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
-              retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
-                const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
-                const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
-                retroBoardCard.id = retroBoardCardDocId;
-                //this.retroBoardCardsPotentialyToAdd.push(retroBoardCard);
-                this.addRetroBoardCardToCorrectColumn(retroBoardCard);
-              });
-            });
+          this.setRetroBoardCardSubscription();
           this.setRetroBoardColumnCards();
           this.createAddNewRetroBoardCardForm();
           this.subscribeEvents();
@@ -110,6 +99,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+
+  private setRetroBoardCardSubscription() {
+    this.retroBoardCardsSubscriptions =
+      this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
+        retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+          const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+          const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
+          retroBoardCard.id = retroBoardCardDocId;
+          this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+        });
+      });
   }
 
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
@@ -127,6 +128,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.setRetroBoardColumnCards();
     this.createAddNewRetroBoardCardForm();
     this.subscribeEvents();
+    this.setRetroBoardCardSubscription();
   }
 
   ngOnDestroy(): void {
