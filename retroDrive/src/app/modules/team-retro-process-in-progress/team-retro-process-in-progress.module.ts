@@ -17,6 +17,7 @@ import { TeamRetroInProgressSetTimeDialogComponent }
 import { TeamRetroInProgressAddCardActionDialogComponent } from './components/team-retro-in-progress-add-card-action-dialog/team-retro-in-progress-add-card-action-dialog.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
 
 
 @NgModule({
@@ -45,6 +46,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
     TeamRetroInProgressAddCardActionDialogComponent
+  ],
+  providers:[
+    FiresrtoreRetroProcessInProgressService
   ]
 })
 export class TeamRetroProcessInProgressModule { }

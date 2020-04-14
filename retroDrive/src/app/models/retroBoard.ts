@@ -9,4 +9,5 @@ export interface RetroBoard {
     creationDate: Date;
     isStarted: boolean;
     startDate: Date;
+    urlParamId: string;
 }

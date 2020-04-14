@@ -40,6 +40,10 @@ export class FirestoreBaseService {
     .toPromise();
   }
 
+  getFilteredById(collectionName: string, id: string) {
+    return this.afs.collection(collectionName).doc(id).ref.get();
+  }
+
   getFilteredSnapshotChanges(collectionName: string, condition: ConditionQueryData) {
     return this.afs.collection(
         collectionName,
