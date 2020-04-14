@@ -77,7 +77,16 @@
                   [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
                   (click)="onClickMergeCard(item, column.name)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
-                </button>  
+                </button>
+                <button 
+                  *ngIf="item.isMerged"
+                  style="margin-right: 15px;"
+                  matTooltip="unmerge all of merged cards"
+                  matTooltipPosition="after"
+                  color="primary"
+                  mat-icon-button >
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">sync_alt</mat-icon>
+                </button>                  
                 <!--Vote btns-->
                 <button
                   *ngIf="shouldEnableVoteBtns"
