@@ -13,6 +13,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addNewItem('/retroBoardCards/', newRetroBoardCard);
   }
 
+  updateRetroBoardCard(cardToUpdate: any, id: string) {
+    this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
+  }
+
   findRetroBoardByUrlParamId(urlParamId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'urlParamId',
@@ -21,6 +25,10 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFiltered('/retroBoards/', condition);
+  }
+
+  findRetroBoardCardById(docId: string) {
+    return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
 
   addRetroBoardAsRef(retroBoardId: string) {

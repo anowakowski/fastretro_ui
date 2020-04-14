@@ -44,17 +44,12 @@
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <div *ngIf="!item.isEdit">
                <div *ngIf="!item.isMerged">{{ item.name }}</div>
-              
                <div *ngIf="item.isMerged" >
                  <div *ngFor="let content of item.mergedContent">
-
                   <p style="margin-bottom: -3px;">{{content}}</p>
                   <p style="margin-bottom: -2px;">--------------</p>
                  </div>
-                
-
                </div>
-
                <div style="margin-top: 20px; margin-bottom: -8px;">
                 <!--Merge btns-->
                 <button 
