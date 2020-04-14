@@ -435,7 +435,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private isPosibleToMerge(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
-    return findedFromMergedCart.index !== findedCurrentRetroBoardCard.index;
+    return findedFromMergedCart.id !== findedCurrentRetroBoardCard.id;
   }
 
   private mergeLocalCards(
@@ -481,7 +481,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.setNewCardContentFormControl(card.name);
   }
 
-
   private closeEditRetroBoardCardProcess(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
     const findedRetroBoardCard = this.getRetroBoardCard(card, retroBoardCards);
     const index = this.getArrayIndex(findedRetroBoardCard, retroBoardCards);
@@ -497,7 +496,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private getRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
     return retroBoardCards.find(x => x.index === card.index);
   }
-
 
   private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
     return array.indexOf(findedRetroBoardCard);
