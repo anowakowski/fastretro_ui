@@ -42,4 +42,8 @@ export class FiresrtoreRetroProcessInProgressService {
   retroBoardCardsFilteredSnapshotChanges() {
     return this.firestoreBase.snapshotChanges('/retroBoardCards/');
   }
+
+  removeRetroBoardCard(id: string) {
+    this.firestoreBase.deleteItem('/retroBoardCards/', id);
+  }
 }

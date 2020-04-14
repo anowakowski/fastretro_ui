@@ -73,66 +73,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.prepareBaseRetroBoardData();
   }
 
-  private prepareBaseRetroBoardData() {
-    if (this.route.snapshot.data['retroBoardData']) {
-      this.getingDataAfterClickStartRetroProcess();
-    } else {
-      this.getingDataFromUrl();
-    }
-  }
-
-  private getingDataFromUrl() {
-    this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
-      const retroBoardParamId: string = params['id'];
-      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
-        if (retroBoardsSnapshot.docs.length > 0) {
-          const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
-          this.retroBoardToProcess = findedRetroBoard;
-          this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
-          this.isRetroBoardIsReady = true;
-          this.setRetroBoardCardSubscription();
-          this.setRetroBoardColumnCards();
-          this.createAddNewRetroBoardCardForm();
-          this.subscribeEvents();
-        } else {
-          // not finded any retro board
-        }
-      });
-    });
-  }
-
-  private setRetroBoardCardSubscription() {
-    this.retroBoardCardsSubscriptions =
-      this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
-        this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
-          const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
-          const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
-          retroBoardCard.id = retroBoardCardDocId;
-          this.addRetroBoardCardToCorrectColumn(retroBoardCard);
-        });
-      });
-  }
-
-  private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
-    if (retroBoardCard.isWentWellRetroBoradCol) {
-      this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
-    } else {
-      this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
-    }
-  }
-
-  private getingDataAfterClickStartRetroProcess() {
-    this.retroBoardData = this.route.snapshot.data['retroBoardData'];
-    this.retroBoardToProcess = this.retroBoardData;
-    this.isRetroBoardIsReady = true;
-    this.setRetroBoardColumnCards();
-    this.createAddNewRetroBoardCardForm();
-    this.subscribeEvents();
-    this.setRetroBoardCardSubscription();
-  }
-
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
     this.retroBoardParamIdSubscription.unsubscribe();
@@ -249,7 +189,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   onClickUnmergeCard(currentCard: RetroBoardCard, colName: string) {
+    if (currentCard.isMerged) {
 
+    }
   }
 
   checkIfRetroBoardIsExists() {
@@ -344,6 +286,66 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.newCardContentFormControl.setValue(value);
   }
 
+  private prepareBaseRetroBoardData() {
+    if (this.route.snapshot.data['retroBoardData']) {
+      this.getingDataAfterClickStartRetroProcess();
+    } else {
+      this.getingDataFromUrl();
+    }
+  }
+
+  private getingDataFromUrl() {
+    this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
+      const retroBoardParamId: string = params['id'];
+      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
+        if (retroBoardsSnapshot.docs.length > 0) {
+          const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
+          this.retroBoardToProcess = findedRetroBoard;
+          this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
+          this.isRetroBoardIsReady = true;
+          this.setRetroBoardCardSubscription();
+          this.setRetroBoardColumnCards();
+          this.createAddNewRetroBoardCardForm();
+          this.subscribeEvents();
+        } else {
+          // not finded any retro board
+        }
+      });
+    });
+  }
+
+  private setRetroBoardCardSubscription() {
+    this.retroBoardCardsSubscriptions =
+      this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
+        this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+        this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+        retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+          const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+          const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
+          retroBoardCard.id = retroBoardCardDocId;
+          this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+        });
+      });
+  }
+
+  private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
+    if (retroBoardCard.isWentWellRetroBoradCol) {
+      this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
+    } else {
+      this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
+    }
+  }
+
+  private getingDataAfterClickStartRetroProcess() {
+    this.retroBoardData = this.route.snapshot.data['retroBoardData'];
+    this.retroBoardToProcess = this.retroBoardData;
+    this.isRetroBoardIsReady = true;
+    this.setRetroBoardColumnCards();
+    this.createAddNewRetroBoardCardForm();
+    this.subscribeEvents();
+    this.setRetroBoardCardSubscription();
+  }
+
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {
     const cardToSave = {
       name: card.name,
@@ -414,7 +416,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const indexOfFindedCurrentRetroBoardCard = this.getArrayIndex(findedCurrentRetroBoardCard, retroBoardCards);
     this.setCurrentCardAsMerge(currentCard, findedCurrentRetroBoardCard);
     if (findedFromMergedCart !== undefined) {
-      this.mergeCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard, retroBoardCards, colName);
+      this.mergeLocalCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard, retroBoardCards, colName);
     } else {
       this.updateLocalRetroBoardCard(indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, retroBoardCards);
     }
@@ -433,7 +435,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return findedFromMergedCart.index !== findedCurrentRetroBoardCard.index;
   }
 
-  private mergeCards(
+  private mergeLocalCards(
     findedFromMergedCart: RetroBoardCard,
     currentCard: RetroBoardCard,
     findedCurrentRetroBoardCard: RetroBoardCard,
@@ -452,9 +454,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
         findedFromMergedCart.isInMerge = false;
         findedFromMergedCart.isMerged = true;
-        const indexOfFindedFromMergedCart = this.getArrayIndex(findedFromMergedCart, retroBoardCards);
-        this.updateLocalRetroBoardCard(indexOfFindedFromMergedCart, findedFromMergedCart, retroBoardCards);
-        this.removeLocalCardFromArray(findedCurrentRetroBoardCard, colName);
+
+        this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
+        this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
+        const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
       }
   }
 
