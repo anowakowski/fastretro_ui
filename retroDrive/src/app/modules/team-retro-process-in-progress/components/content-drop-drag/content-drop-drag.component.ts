@@ -172,7 +172,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           }
         });
       }
-
     }
   }
 
@@ -190,6 +189,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onClickUnmergeCard(currentCard: RetroBoardCard, colName: string) {
     if (currentCard.isMerged) {
+      currentCard.mergedContent.forEach(content => {
+
+      });
 
     }
   }
