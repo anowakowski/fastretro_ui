@@ -191,9 +191,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   onClickUnmergeCard(currentCard: RetroBoardCard, colName: string) {
     if (currentCard.isMerged) {
       currentCard.mergedContent.forEach(content => {
-
+         const newRetroBoardCard =
+          this.prepareRetroBoardCardToSaveFromMerged(content, currentCard.isWentWellRetroBoradCol, currentCard.index);
+         this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard);
       });
 
+      this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
     }
   }
 
@@ -365,6 +368,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return cardToSave;
   }
 
+  private prepareRetroBoardCardToSaveFromMerged(mergedCard: MergedRetroBoardCard, isWentWellRetroBoradCol: boolean, index: number) {
+    return {
+      name: mergedCard.name,
+      user: mergedCard.user,
+      // tslint:disable-next-line:object-literal-shorthand
+      index: index,
+      isNewItem: false,
+      isMerged: false,
+      isEdit: false,
+      // tslint:disable-next-line:object-literal-shorthand
+      isWentWellRetroBoradCol: isWentWellRetroBoradCol,
+      mergedContent: new Array<MergedRetroBoardCard>(),
+    };
+  }
+
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard) {
     return {
       name: card.name,
@@ -419,7 +437,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const indexOfFindedCurrentRetroBoardCard = this.getArrayIndex(findedCurrentRetroBoardCard, retroBoardCards);
     this.setCurrentCardAsMerge(currentCard, findedCurrentRetroBoardCard);
     if (findedFromMergedCart !== undefined) {
-      this.mergeLocalCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard, retroBoardCards, colName);
+      this.mergeLocalCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard);
     } else {
       this.updateLocalRetroBoardCard(indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, retroBoardCards);
     }
@@ -502,7 +520,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private getRetroBoardCard(card: RetroBoardCard, retroBoardCards: Array<RetroBoardCard>) {
-    return retroBoardCards.find(x => x.index === card.index);
+    return retroBoardCards.find(x => x.id === card.id);
   }
 
   private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
