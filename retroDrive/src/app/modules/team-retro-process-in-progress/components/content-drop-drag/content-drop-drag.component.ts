@@ -251,22 +251,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
-  private prepareRetroBoardCardToSave(card: RetroBoardCard) {
-    const cardToSave = {
-      name: card.name,
-      isEdit: card.isEdit,
-      index: card.index,
-      isNewItem: card.isNewItem,
-      isMerged: card.isMerged,
-      isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
-      mergedContent: card.mergedContent,
-      retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
-      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid)
-    };
-
-    return cardToSave;
-  }
-
   onClickVoteOnCart(currentCard: RetroBoardCard) {
     currentCard.isClickedFromVoteBtn = true;
   }
@@ -281,6 +265,110 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   checkIfRetroBoardIsExists() {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
+  }
+
+  enableVoteBtns() {
+    if (this.shouldEnableVoteBtns) {
+      this.shouldEnableVoteBtns = false;
+    } else {
+      this.shouldEnableVoteBtns = true;
+    }
+  }
+
+  editCard(currentCard: RetroBoardCard, colName: string) {
+    if (currentCard.isMerged) {
+      return;
+    }
+    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn || currentCard.isClickedFromMergeBtn) {
+      currentCard.isClickedFromVoteBtn = false;
+      currentCard.isClickedFromMergeBtn = false;
+      return;
+    }
+    if (!currentCard.isNewItem) {
+      if (this.chcekIfAnyCardIsInEditMode()) {
+        this.openSnackBar('you cant edit this card when one of the card is in edit mode.');
+        return;
+      }
+      if (currentCard.isClickedFromCloseEdit) {
+        if (colName === WENT_WELL) {
+          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
+          const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+          findedRetroBoardCard.isClickedFromCloseEdit = false;
+          this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+        } else if (colName === TO_IMPROVE) {
+          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
+          const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+          findedRetroBoardCard.isClickedFromCloseEdit = false;
+          this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+        }
+        return;
+      }
+      if (colName === WENT_WELL) {
+        this.processRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      } else if (colName === TO_IMPROVE) {
+        this.processRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
+      }
+    }
+  }
+
+  closeEditCard(card: RetroBoardCard, colName: string) {
+    const newCardContentFormControlValue = this.addNewRetroBoardCardForm.value.newCardContentFormControl;
+    if (colName === WENT_WELL) {
+      this.closeEditRetroBoardCardProcess(card, this.wnetWellRetroBoardCol.retroBoardCards);
+    } else if (colName === TO_IMPROVE) {
+      this.closeEditRetroBoardCardProcess(card, this.toImproveRetroBoardCol.retroBoardCards);
+    }
+
+    if (newCardContentFormControlValue === '' || newCardContentFormControlValue === null) {
+      this.removeCard(card, colName);
+    }
+
+    this.addNewRetroBoardCardForm.reset();
+  }
+
+  removeCard(card: RetroBoardCard, colName: string) {
+    if (colName === WENT_WELL) {
+      const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      this.wnetWellRetroBoardCol.retroBoardCards.splice(index, 1);
+    } else if (colName === TO_IMPROVE) {
+      const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
+      const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+      this.toImproveRetroBoardCol.retroBoardCards.splice(index, 1);
+    }
+
+    this.addNewRetroBoardCardForm.reset();
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  setNewCardContentFormControl(value: string) {
+    this.newCardContentFormControl.setValue(value);
+  }
+
+  private prepareRetroBoardCardToSave(card: RetroBoardCard) {
+    const cardToSave = {
+      name: card.name,
+      isEdit: card.isEdit,
+      index: card.index,
+      isNewItem: card.isNewItem,
+      isMerged: card.isMerged,
+      isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
+      mergedContent: card.mergedContent,
+      retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
+      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid)
+    };
+
+    return cardToSave;
   }
 
   private prepareNewRetroBoardCardToSave(incrementIndex: number, isWentWellRetroBoradColBln: boolean): RetroBoardCard {
@@ -378,94 +466,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         this.updaRetroBoardCard(indexOfFindedFromMergedCart, findedFromMergedCart, retroBoardCards);
         this.removeCard(findedCurrentRetroBoardCard, colName);
       }
-  }
-
-  enableVoteBtns() {
-    if (this.shouldEnableVoteBtns) {
-      this.shouldEnableVoteBtns = false;
-    } else {
-      this.shouldEnableVoteBtns = true;
-    }
-  }
-
-  editCard(currentCard: RetroBoardCard, colName: string) {
-    if (currentCard.isMerged) {
-      return;
-    }
-    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn || currentCard.isClickedFromMergeBtn) {
-      currentCard.isClickedFromVoteBtn = false;
-      currentCard.isClickedFromMergeBtn = false;
-      return;
-    }
-    if (!currentCard.isNewItem) {
-      if (this.chcekIfAnyCardIsInEditMode()) {
-        this.openSnackBar('you cant edit this card when one of the card is in edit mode.');
-        return;
-      }
-      if (currentCard.isClickedFromCloseEdit) {
-        if (colName === WENT_WELL) {
-          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
-          const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-          findedRetroBoardCard.isClickedFromCloseEdit = false;
-          this.updaRetroBoardCard(index, findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-        } else if (colName === TO_IMPROVE) {
-          const findedRetroBoardCard = this.getRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
-          const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-          findedRetroBoardCard.isClickedFromCloseEdit = false;
-          this.updaRetroBoardCard(index, findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-        }
-        return;
-      }
-      if (colName === WENT_WELL) {
-        this.processRetroBoardCard(currentCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      } else if (colName === TO_IMPROVE) {
-        this.processRetroBoardCard(currentCard, this.toImproveRetroBoardCol.retroBoardCards);
-      }
-    }
-  }
-
-  closeEditCard(card: RetroBoardCard, colName: string) {
-    const newCardContentFormControlValue = this.addNewRetroBoardCardForm.value.newCardContentFormControl;
-    if (colName === WENT_WELL) {
-      this.closeEditRetroBoardCardProcess(card, this.wnetWellRetroBoardCol.retroBoardCards);
-    } else if (colName === TO_IMPROVE) {
-      this.closeEditRetroBoardCardProcess(card, this.toImproveRetroBoardCol.retroBoardCards);
-    }
-
-    if (newCardContentFormControlValue === '' || newCardContentFormControlValue === null) {
-      this.removeCard(card, colName);
-    }
-
-    this.addNewRetroBoardCardForm.reset();
-  }
-
-  removeCard(card: RetroBoardCard, colName: string) {
-    if (colName === WENT_WELL) {
-      const findedRetroBoardCard = this.getRetroBoardCard(card, this.wnetWellRetroBoardCol.retroBoardCards);
-      const index = this.getArrayIndex(findedRetroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-      this.wnetWellRetroBoardCol.retroBoardCards.splice(index, 1);
-    } else if (colName === TO_IMPROVE) {
-      const findedRetroBoardCard = this.getRetroBoardCard(card, this.toImproveRetroBoardCol.retroBoardCards);
-      const index = this.getArrayIndex(findedRetroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-      this.toImproveRetroBoardCol.retroBoardCards.splice(index, 1);
-    }
-
-    this.addNewRetroBoardCardForm.reset();
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-    }
-  }
-
-  setNewCardContentFormControl(value: string) {
-    this.newCardContentFormControl.setValue(value);
   }
 
   private chcekIfAnyCardIsInEditMode(): boolean {
