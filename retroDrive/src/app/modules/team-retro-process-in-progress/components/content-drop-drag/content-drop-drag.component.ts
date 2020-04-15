@@ -17,6 +17,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/add-new-action-bottomsheet.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -42,7 +44,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private authServices: AuthService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    private bottomSheetRef: MatBottomSheet) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -212,7 +215,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   onAddActionToCard(currentCard: RetroBoardCard) {
-    
+    const bottomSheetRef = this.bottomSheetRef.open(AddNewActionBottomsheetComponent, {
+      data: currentCard
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      console.log('Bottom sheet has been dismissed.');
+    });
   }
 
   checkIfRetroBoardIsExists() {
