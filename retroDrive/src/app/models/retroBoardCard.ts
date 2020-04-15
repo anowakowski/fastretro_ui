@@ -8,6 +8,7 @@ export class RetroBoardCard {
     public isClickedFromCloseEdit: boolean;
     public isClickedFromVoteBtn: boolean;
     public isClickedFromMergeBtn: boolean;
+    public isClickedFromAddActionBtn: boolean;
     public isNewItem: boolean;
     public isInMerge: boolean;
     public isMerged: boolean;

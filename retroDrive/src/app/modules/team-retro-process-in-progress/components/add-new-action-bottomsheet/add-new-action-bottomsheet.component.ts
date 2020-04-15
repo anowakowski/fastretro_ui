@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 
 @Component({
   selector: 'app-add-new-action-bottomsheet',
@@ -12,8 +13,10 @@ export class AddNewActionBottomsheetComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<AddNewActionBottomsheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) { }
 
+  currentCard: RetroBoardCard;
+
   ngOnInit() {
-    console.log(this.data);
+    this.currentCard = this.data as RetroBoardCard;
   }
 
 }
