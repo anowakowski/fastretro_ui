@@ -7,3 +7,8 @@
     .example-spacer {
       flex: 1 1 auto;
     }
+
+
+    .user-avatar-img {
+      margin: 0px 0px 13px 30px;
+    }   
