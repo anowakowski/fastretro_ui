@@ -211,6 +211,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
+  onAddActionToCard(currentCard: RetroBoardCard) {
+    
+  }
+
   checkIfRetroBoardIsExists() {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
   }
