@@ -392,6 +392,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line:object-literal-shorthand
       isWentWellRetroBoradCol: isWentWellRetroBoradCol,
       mergedContent: new Array<MergedRetroBoardCard>(),
+      voteCount: 0
     };
   }
 
@@ -487,6 +488,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
     this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
     const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
+    cardToSave.voteCount = 0;
     this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
   }
 
