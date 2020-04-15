@@ -12,6 +12,7 @@ export class RetroBoardCard {
     public isNewItem: boolean;
     public isInMerge: boolean;
     public isMerged: boolean;
+    public isInAddedToAction: boolean;
     public mergedContent: Array<MergedRetroBoardCard>;
     public isWentWellRetroBoradCol: boolean;
     public retroBoard: any;

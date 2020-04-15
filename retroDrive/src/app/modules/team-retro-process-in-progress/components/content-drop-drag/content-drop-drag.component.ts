@@ -216,12 +216,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onAddActionToCard(currentCard: RetroBoardCard) {
     currentCard.isClickedFromAddActionBtn = true;
+    currentCard.isInAddedToAction = true;
     const bottomSheetRef = this.bottomSheetRef.open(AddNewActionBottomsheetComponent, {
       data: currentCard
     });
 
     bottomSheetRef.afterDismissed().subscribe(() => {
       console.log('Bottom sheet has been dismissed.');
+      currentCard.isInAddedToAction = false;
     });
   }
 
@@ -437,6 +439,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isClickedFromMergeBtn: false,
       isClickedFromVoteBtn: false,
       isClickedFromAddActionBtn: false,
+      isInAddedToAction: false,
       isInMerge: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
