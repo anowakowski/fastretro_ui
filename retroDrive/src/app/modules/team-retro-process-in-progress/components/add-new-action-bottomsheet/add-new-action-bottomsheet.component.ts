@@ -48,7 +48,7 @@ export class AddNewActionBottomsheetComponent implements OnInit {
         this.firestoreService.updateRetroBoardCard(retroBoardCardToUpdate, this.currentCard.id);
 
         this.bottomSheetRef.dismiss();
-        event.preventDefault();
+        // event.preventDefault();
       });
     });
   }
@@ -67,13 +67,17 @@ export class AddNewActionBottomsheetComponent implements OnInit {
       actions: card.actions
     };
 
-    if (!cardToUpdate.actions) {
-      cardToUpdate.actions = new Array<any>();
-    }
+    this.setNewActionArray(cardToUpdate);
 
     this.prepareNewActionToCard(actionId, cardToUpdate);
 
     return cardToUpdate;
+  }
+
+  private setNewActionArray(cardToUpdate: any) {
+    if (!cardToUpdate.actions) {
+      cardToUpdate.actions = new Array<any>();
+    }
   }
 
   private prepareNewActionToCard(actionId: any, cardToUpdate: any) {

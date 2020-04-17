@@ -394,7 +394,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       mergedContent: card.mergedContent,
       retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
       user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
-      voteCount: card.voteCount
+      voteCount: card.voteCount,
+      actions: new Array<any>()
     };
 
     return cardToSave;
@@ -412,7 +413,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line:object-literal-shorthand
       isWentWellRetroBoradCol: isWentWellRetroBoradCol,
       mergedContent: new Array<MergedRetroBoardCard>(),
-      voteCount: 0
+      voteCount: 0,
+      actions: new Array<any>()
     };
   }
 
