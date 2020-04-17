@@ -13,6 +13,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addNewItem('/retroBoardCards/', newRetroBoardCard);
   }
 
+  addNewRetroBoardCardAction(newRetroBoardCardAction) {
+    return this.firestoreBase.addNewItem('/retroBoardCardActions/', newRetroBoardCardAction);
+  }
+
   updateRetroBoardCard(cardToUpdate: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
   }
@@ -37,6 +41,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addUserAsRef(uid: string) {
     return this.firestoreBase.addAsRef('/users/', uid);
+  }
+
+  addRetroBoardCardActionAsRef(actionId: string) {
+    return this.firestoreBase.addAsRef('/retroBoardCardActions/', actionId);
   }
 
   retroBoardCardsFilteredSnapshotChanges() {

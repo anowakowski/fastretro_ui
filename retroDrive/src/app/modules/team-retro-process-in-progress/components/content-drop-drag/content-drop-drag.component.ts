@@ -447,7 +447,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       retroBoard: this.retroBoardToProcess,
       user: this.currentUser,
       id: '',
-      voteCount: 0
+      voteCount: 0,
+      actions: new Array<any>()
     };
   }
 

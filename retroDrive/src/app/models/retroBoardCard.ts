@@ -18,4 +18,5 @@ export class RetroBoardCard {
     public retroBoard: any;
     public user: any;
     public voteCount: number;
+    public actions: Array<any>;
 }
