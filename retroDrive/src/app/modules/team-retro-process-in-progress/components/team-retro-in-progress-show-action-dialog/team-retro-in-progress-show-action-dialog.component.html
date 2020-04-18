@@ -14,13 +14,16 @@
         <div fxFlex></div>
         <button mat-icon-button color="primary" style="margin-top: -20px;">
           <mat-icon>edit</mat-icon>
-        </button>        
-        <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 20px;">
+        </button>
+        <button mat-icon-button color="warn" style="margin-top: -20px;">
+          <mat-icon>close</mat-icon>
+        </button>             
+        <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
           <mat-label>Add people to action</mat-label>
           <mat-select multiple>
             <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
           </mat-select>
-        </mat-form-field>          
+        </mat-form-field>
      </mat-list-item>
      <mat-divider></mat-divider>
     </div>
