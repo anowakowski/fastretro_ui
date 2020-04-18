@@ -3,7 +3,7 @@
   <mat-list>
     <h3 matSubheader>Actions</h3>
     <div *ngFor="let action of actions">
-      <mat-list-item style="margin-top: 15px;">
+      <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
         <mat-icon matListIcon>description</mat-icon>
         <span matLine>
           <span style="font-size: 14px;">{{action.actionText}}</span>
@@ -12,7 +12,11 @@
           <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
         </span>
         <div fxFlex></div>
-        <button mat-icon-button color="primary" style="margin-top: -20px;">
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin-top: -20px;"
+          (click)="editAction(action)">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button color="warn" style="margin-top: -20px;">
@@ -24,8 +28,42 @@
             <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-divider></mat-divider>
      </mat-list-item>
-     <mat-divider></mat-divider>
+
+     <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
+      <mat-icon matListIcon>description</mat-icon>
+      <span matLine>
+        <form [formGroup]="addNewActionForRetroBoardCardForm">
+          <mat-form-field class="action-text-area">
+            <mat-label>Add new action to card</mat-label>
+            <textarea [formControl]="actionTextAreaFormControl" matInput></textarea>
+          </mat-form-field>
+        </form>
+      </span>
+      <span matLine > 
+        <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
+      </span>
+      <div fxFlex></div>
+      <button
+        mat-icon-button
+        color="primary"
+        style="margin-top: -20px;"
+        (click)="editAction(action)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" style="margin-top: -20px;">
+        <mat-icon>close</mat-icon>
+      </button>             
+      <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+        <mat-label>Add people to action</mat-label>
+        <mat-select multiple>
+          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+   </mat-list-item>     
+
     </div>
  </mat-list>
 </div>
