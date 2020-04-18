@@ -19,6 +19,7 @@ import { User } from 'src/app/models/user';
 import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/add-new-action-bottomsheet.component';
+import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -117,6 +118,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         this.eventsService.emitTimerOptions(result);
         this.retroProcessIsStoped = false;
       }
+    });
+  }
+
+  openCardActionDialog(currentCard: RetroBoardCard) {
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
+      width: '400px',
+      data: this.currentUser
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {}
     });
   }
 
