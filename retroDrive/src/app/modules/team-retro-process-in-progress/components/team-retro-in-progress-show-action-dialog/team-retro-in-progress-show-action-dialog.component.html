@@ -2,19 +2,29 @@
 <div mat-dialog-content>
   <mat-list>
     <h3 matSubheader>Actions</h3>
-    <div *ngFor="let action of dataRetroBoardCard.actions">
-      <mat-list-item >
-        <mat-icon matListIcon>done</mat-icon>
-        <h4 matLine>{{action}}</h4>
-        <p matLine class="demo-2"> test test </p>
+    <div *ngFor="let action of actions">
+      <mat-list-item style="margin-top: 15px;">
+        <mat-icon matListIcon>description</mat-icon>
+        <span matLine>
+          <span style="font-size: 16px;">{{action.actionText}}</span>
+        </span>
+        <span matLine > 
+          <span style="font-size: 14px; font-style: italic; color: rgb(126, 126, 126);">created 2020-01-01</span>
+          <div fxFlex></div>
+          <mat-form-field style="margin-top: -20px;">
+            <mat-label>Add people to action</mat-label>
+            <mat-select multiple>
+              <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+            </mat-select>
+          </mat-form-field>  
+        </span>
      </mat-list-item>
      <mat-divider></mat-divider>
     </div>
  </mat-list>
 </div>
 <div mat-dialog-actions>
-  <button mat-button>Cancel</button>
-  <button mat-button>Save actions to Excel</button>
+  <button mat-raised-button color="warn">Cancel</button>
   <div fxFlex></div>
-  <button mat-button>Ok</button>
+  <button mat-raised-button color="primary">Save Actions to Excel <i class="fa fa-file-excel-o"></i></button>
 </div>
