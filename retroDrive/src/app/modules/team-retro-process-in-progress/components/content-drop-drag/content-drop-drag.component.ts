@@ -122,6 +122,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   openCardActionDialog(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromAddActionBtn = true;
     const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
       width: '1100px',
       data: currentCard
@@ -258,10 +259,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (currentCard.isEdit ||
       currentCard.isClickedFromVoteBtn ||
       currentCard.isClickedFromMergeBtn ||
-      currentCard.isClickedFromAddActionBtn) {
+      currentCard.isClickedFromAddActionBtn ||
+      currentCard.isClickedFromShowActionBtn) {
         currentCard.isClickedFromVoteBtn = false;
         currentCard.isClickedFromMergeBtn = false;
         currentCard.isClickedFromAddActionBtn = false;
+        currentCard.isClickedFromShowActionBtn = false;
         return;
     }
     if (!currentCard.isNewItem) {
@@ -454,6 +457,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isClickedFromVoteBtn: false,
       isClickedFromAddActionBtn: false,
       isInAddedToAction: false,
+      isClickedFromShowActionBtn: false,
       isInMerge: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
