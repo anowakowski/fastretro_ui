@@ -2,6 +2,7 @@
 <div mat-dialog-content>
   <mat-list>
     <h3 matSubheader>Actions</h3>
+    <mat-divider></mat-divider>
     <div *ngFor="let action of actions">
       <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
         <mat-icon matListIcon>description</mat-icon>
