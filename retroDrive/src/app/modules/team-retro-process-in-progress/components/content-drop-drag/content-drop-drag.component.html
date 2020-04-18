@@ -113,11 +113,12 @@
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
                 </button>
                 <button
-                  [disabled]="!shouldEnableVoteBtns"
+                  *ngIf="item.actions.length > 0"
                   style="margin-left: 10px;"
                   matTooltip="click and show actions for this card"
                   matTooltipPosition="after"
-                  mat-icon-button 
+                  mat-icon-button
+                  [matBadge]="item.actions.length" matBadgeColor="accent"
                   color="primary">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">done_all</mat-icon>
                 </button>
