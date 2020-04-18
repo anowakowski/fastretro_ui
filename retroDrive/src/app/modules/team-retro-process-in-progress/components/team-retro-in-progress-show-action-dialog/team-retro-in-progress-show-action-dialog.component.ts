@@ -49,11 +49,6 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
   }
 
-  private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
-    return {
-      actions: actionsToUpdate
-    };
-  }
 
   closeEditAction(action: RetroBoardCardActions) {
     this.actionTextAreaFormControl.reset();
@@ -73,6 +68,12 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     };
 
     this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+  }
+
+  private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
+    return {
+      actions: actionsToUpdate
+    };
   }
 
   private createActionForRetroBoardForm() {

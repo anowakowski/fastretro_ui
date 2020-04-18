@@ -2,35 +2,63 @@
 <div mat-dialog-content>
   <mat-list>
     <div *ngFor="let retroBoardCard of simpleRetroBoardCards">
-      <h3 matSubheader >{{retroBoardCard.name}}</h3>
-      <mat-divider></mat-divider>
+      <h3 matSubheader style="margin-top: 10px;">Actions  of {{retroBoardCard.name}} card</h3>
       <div *ngFor="let action of retroBoardCard.actions">
-        <mat-list-item style="margin-top: 15px;">
+        <mat-list-item *ngIf="!action.isEdit">
           <mat-icon matListIcon>description</mat-icon>
           <span matLine>
             <span style="font-size: 14px;">{{action.text}}</span>
           </span>
           <span matLine > 
-            <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created </span>
+            <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
           </span>
           <div fxFlex></div>
           <button
             mat-icon-button
             color="primary"
-            style="margin-top: -20px;">
+            style="margin-top: -20px;"
+            (click)="editAction(action)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;">
+          <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;" (click)="deleteAction(action)">
             <mat-icon>delete</mat-icon>
           </button>             
           <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
             <mat-label>Add people to action</mat-label>
             <mat-select multiple>
-              <!-- <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option> -->
+              <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-divider></mat-divider>
        </mat-list-item>
+
+       <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
+        <mat-icon matListIcon>description</mat-icon>
+        <span matLine>
+          <form [formGroup]="addNewActionForRetroBoardCardForm">
+            <mat-form-field class="action-text-area">
+              <mat-label>Add new action to card</mat-label>
+              <input [formControl]="actionTextAreaFormControl" matInput/>
+            </mat-form-field>
+          </form>
+        </span>
+        <div fxFlex></div>
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin-top: -20px; margin-left: 15px;"
+          (click)="updateActionFromEdit(action)">
+          <mat-icon>save</mat-icon>
+        </button> 
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin-top: -20px;"
+          (click)="closeEditAction(action)">
+          <mat-icon>close</mat-icon>
+        </button>            
+        <mat-divider></mat-divider>
+     </mat-list-item>         
       </div>
     </div>
 
