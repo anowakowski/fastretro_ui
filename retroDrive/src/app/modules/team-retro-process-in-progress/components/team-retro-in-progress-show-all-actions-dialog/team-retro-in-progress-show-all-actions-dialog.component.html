@@ -1,3 +1,43 @@
-<p>
-  team-retro-in-progress-show-all-actions-dialog works!
-</p>
+<h1 mat-dialog-title><b>All retro actions</b></h1>
+<div mat-dialog-content>
+  <mat-list>
+    <div *ngFor="let retroBoardCard of dataRetroBoardCards">
+      <h3 matSubheader >{{retroBoardCard.name}}</h3>
+      <mat-divider></mat-divider>
+      <div *ngFor="let action of retroBoardCard.actions">
+        <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
+          <mat-icon matListIcon>description</mat-icon>
+          <span matLine>
+            <span style="font-size: 14px;">{{action.text}}</span>
+          </span>
+          <span matLine > 
+            <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created </span>
+          </span>
+          <div fxFlex></div>
+          <button
+            mat-icon-button
+            color="primary"
+            style="margin-top: -20px;">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;">
+            <mat-icon>delete</mat-icon>
+          </button>             
+          <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+            <mat-label>Add people to action</mat-label>
+            <mat-select multiple>
+              <!-- <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option> -->
+            </mat-select>
+          </mat-form-field>
+          <mat-divider></mat-divider>
+       </mat-list-item>
+      </div>
+    </div>
+
+ </mat-list>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn">Cancel</button>
+  <div fxFlex></div>
+  <button mat-raised-button color="primary">Save actions as Excel<mat-icon>get_app</mat-icon></button>
+</div>
