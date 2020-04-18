@@ -19,6 +19,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
 import { AddNewActionBottomsheetComponent } from './components/add-new-action-bottomsheet/add-new-action-bottomsheet.component';
 import { TeamRetroInProgressShowActionDialogComponent } from './components/team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 
 
 @NgModule({
@@ -41,13 +42,14 @@ import { TeamRetroInProgressShowActionDialogComponent } from './components/team-
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
     AddNewActionBottomsheetComponent,
-    TeamRetroInProgressShowActionDialogComponent
+    TeamRetroInProgressShowActionDialogComponent,
+    TeamRetroInProgressShowAllActionsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
-
+    TeamRetroInProgressShowAllActionsDialogComponent,
     AddNewActionBottomsheetComponent,
     TeamRetroInProgressShowActionDialogComponent
   ],
