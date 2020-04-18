@@ -4,6 +4,7 @@ import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-action-dialog',
@@ -21,11 +22,15 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-  actions: any[];
+  actions: RetroBoardCardActions[];
 
   ngOnInit() {
     this.prepareActions();
     this.createActionForRetroBoardForm();
+  }
+
+  closeClick(): void {
+    this.dialogRef.close();
   }
 
   editAction(action) {
@@ -33,26 +38,19 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     action.isEdit = true;
   }
 
-  deleteAction(action) {
-    const findedAction = this.actions.find(x => x.actionId === action.actionId);
+  deleteAction(action: RetroBoardCardActions) {
+    const findedAction = this.actions.find(x => x.id === action.id);
     const indexOfArray = this.actions.indexOf(findedAction);
     this.actions.splice(indexOfArray, 1);
+    const actionIds = this.actions.map(x => x.id);
 
-    this.firestoreService.deleteRetroBoardCardAction(action.actionId);
-    const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, this.actions);
+    this.firestoreService.deleteRetroBoardCardAction(action.id);
+    const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
     this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
   }
 
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
     return {
-      name: card.name,
-      isEdit: card.isEdit,
-      index: card.index,
-      isNewItem: card.isNewItem,
-      isMerged: card.isMerged,
-      isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
-      mergedContent: card.mergedContent,
-      voteCount: card.voteCount,
       actions: actionsToUpdate
     };
   }
@@ -84,16 +82,13 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   }
 
   private prepareActions() {
-    this.actions = new Array<any>();
+    this.actions = new Array<RetroBoardCardActions>();
     this.dataRetroBoardCard.actions.forEach(action => {
       action.get().then(actionSnapshot => {
-        const actionData = actionSnapshot.data();
-        this.actions.push({
-          actionText: actionData.text,
-          actionId: actionSnapshot.id,
-          creationDate: actionData.creationDate,
-          retroBoardCard: action.retroBoardCard,
-          isEdit: false});
+        const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
+        const docId = actionSnapshot.id;
+        retroBoardCardAction.id = docId;
+        this.actions.push(retroBoardCardAction);
       });
     });
   }

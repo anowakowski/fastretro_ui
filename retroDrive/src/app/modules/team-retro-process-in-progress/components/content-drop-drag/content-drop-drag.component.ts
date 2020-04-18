@@ -130,6 +130,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {}
+      //this.setRetroBoardCardSubscription();
     });
   }
 

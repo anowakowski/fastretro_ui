@@ -6,7 +6,7 @@
       <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
         <mat-icon matListIcon>description</mat-icon>
         <span matLine>
-          <span style="font-size: 14px;">{{action.actionText}}</span>
+          <span style="font-size: 14px;">{{action.text}}</span>
         </span>
         <span matLine > 
           <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
@@ -63,7 +63,7 @@
  </mat-list>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="warn">Cancel</button>
+  <button mat-raised-button color="warn" (click)="closeClick()">Cancel</button>
   <div fxFlex></div>
   <button mat-raised-button color="primary">Save actions as Excel<mat-icon>get_app</mat-icon></button>
 </div>
