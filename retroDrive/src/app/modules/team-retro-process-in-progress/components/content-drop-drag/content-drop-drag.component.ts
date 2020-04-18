@@ -54,6 +54,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public board: Board;
   private retroBoardToProcess: RetroBoard;
   public isRetroBoardIsReady = false;
+  public isExistingSomeRetroBoardCardAction = false;
 
   currentUser: User;
 
@@ -125,7 +126,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard.isClickedFromAddActionBtn = true;
     const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
       width: '1100px',
-      minHeight: '400px',
+      //minHeight: '400px',
       data: currentCard
     });
 
@@ -378,8 +379,24 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           retroBoardCard.id = retroBoardCardDocId;
           this.addRetroBoardCardToCorrectColumn(retroBoardCard);
         });
+        this.setIsExistingSomeRetroBoardCardActions();
       });
   }
+
+
+  setIsExistingSomeRetroBoardCardActions() {
+    this.isExistingSomeRetroBoardCardAction = false;
+
+    const isExistingActionInWentWell = this.wnetWellRetroBoardCol.retroBoardCards.some(x => x.actions.length > 0);
+    const isExistingActionInToImprove = this.toImproveRetroBoardCol.retroBoardCards.some(x => x.actions.length > 0);
+
+    if (isExistingActionInWentWell || isExistingActionInToImprove) {
+      this.isExistingSomeRetroBoardCardAction = true;
+    } else {
+      this.isExistingSomeRetroBoardCardAction = false;
+    }
+  }
+
 
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
     if (retroBoardCard.isWentWellRetroBoradCol) {

@@ -33,8 +33,8 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  editAction(action) {
-    this.actionTextAreaFormControl.setValue(action.actionText);
+  editAction(action: RetroBoardCardActions) {
+    this.actionTextAreaFormControl.setValue(action.text);
     action.isEdit = true;
   }
 
@@ -55,15 +55,15 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     };
   }
 
-  closeEditAction(action) {
+  closeEditAction(action: RetroBoardCardActions) {
     this.actionTextAreaFormControl.reset();
     action.isEdit = false;
   }
 
-  updateActionFromEdit(action) {
+  updateActionFromEdit(action: RetroBoardCardActions) {
     const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
     action.isEdit = false;
-    action.actionText = textValue;
+    action.text = textValue;
 
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
 
@@ -72,7 +72,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
       creationDate: currentDate,
     };
 
-    this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.actionId);
+    this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
   }
 
   private createActionForRetroBoardForm() {
