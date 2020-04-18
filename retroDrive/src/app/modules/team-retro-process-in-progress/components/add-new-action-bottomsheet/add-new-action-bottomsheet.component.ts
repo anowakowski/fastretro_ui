@@ -3,6 +3,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-add-new-action-bottomsheet',
@@ -35,9 +36,10 @@ export class AddNewActionBottomsheetComponent implements OnInit {
 
   createNewRetroBoardCardAction() {
     const actionTextValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
-
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
     const retroBoardCardActionToSave = {
       text: actionTextValue,
+      creationDate: currentDate,
       retroBoardCard: this.firestoreService.addRetroBoardAsRef(this.currentCard.id)
     };
 

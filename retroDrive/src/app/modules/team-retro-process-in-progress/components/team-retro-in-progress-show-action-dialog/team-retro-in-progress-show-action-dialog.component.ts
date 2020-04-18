@@ -22,16 +22,12 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.prepareActions();
   }
 
-
-
   private prepareActions() {
     this.actions = new Array<any>();
     this.dataRetroBoardCard.actions.forEach(action => {
       action.get().then(actionSnapshot => {
-        const actionText = actionSnapshot.data().text;
-        const actionId = actionSnapshot.id;
-        // tslint:disable-next-line:object-literal-shorthand
-        this.actions.push({ actionText: actionText, actionId: actionId });
+        const actionData = actionSnapshot.data();
+        this.actions.push({ actionText: actionData.text, actionId: actionSnapshot.id, creationDate: actionData.creationDate});
       });
     });
   }
