@@ -123,7 +123,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   openCardActionDialog(currentCard: RetroBoardCard) {
     const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
-      width: '800px',
+      width: '1100px',
       data: currentCard
     });
 
