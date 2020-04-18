@@ -37,30 +37,25 @@
         <form [formGroup]="addNewActionForRetroBoardCardForm">
           <mat-form-field class="action-text-area">
             <mat-label>Add new action to card</mat-label>
-            <textarea [formControl]="actionTextAreaFormControl" matInput></textarea>
+            <input [formControl]="actionTextAreaFormControl" matInput/>
           </mat-form-field>
         </form>
-      </span>
-      <span matLine > 
-        <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
       </span>
       <div fxFlex></div>
       <button
         mat-icon-button
         color="primary"
         style="margin-top: -20px;"
-        (click)="editAction(action)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" style="margin-top: -20px;">
+        (click)="updateActionFromEdit(action)">
+        <mat-icon>save</mat-icon>
+      </button> 
+      <button
+        mat-icon-button
+        color="primary"
+        style="margin-top: -20px;"
+        (click)="closeEditAction(action)">
         <mat-icon>close</mat-icon>
-      </button>             
-      <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
-        <mat-label>Add people to action</mat-label>
-        <mat-select multiple>
-          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      </button>            
       <mat-divider></mat-divider>
    </mat-list-item>     
 

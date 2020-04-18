@@ -21,6 +21,10 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
   }
 
+  updateRetroBoardCardAction(action: any, id: string) {
+    this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
+  }
+
   findRetroBoardByUrlParamId(urlParamId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'urlParamId',

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-action-dialog',
@@ -32,6 +33,26 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     action.isEdit = true;
   }
 
+  closeEditAction(action) {
+    this.actionTextAreaFormControl.reset();
+    action.isEdit = false;
+  }
+
+  updateActionFromEdit(action) {
+    const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
+    action.isEdit = false;
+    action.actionText = textValue;
+
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+
+    const retroBoardCardActionToSave = {
+      text: textValue,
+      creationDate: currentDate,
+    };
+
+    this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.actionId);
+  }
+
   private createActionForRetroBoardForm() {
     this.addNewActionForRetroBoardCardForm = this.formBuilder.group({
       actionTextAreaFormControl: this.actionTextAreaFormControl,
@@ -47,6 +68,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
           actionText: actionData.text,
           actionId: actionSnapshot.id,
           creationDate: actionData.creationDate,
+          retroBoardCard: action.retroBoardCard,
           isEdit: false});
       });
     });
