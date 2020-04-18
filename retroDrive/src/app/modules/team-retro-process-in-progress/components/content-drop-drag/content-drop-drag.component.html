@@ -112,6 +112,15 @@
                   (click)="onAddActionToCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
                 </button>
+                <button
+                  [disabled]="!shouldEnableVoteBtns"
+                  style="margin-left: 10px;"
+                  matTooltip="click and show actions for this card"
+                  matTooltipPosition="after"
+                  mat-icon-button 
+                  color="warn">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">done_all</mat-icon>
+                </button>
                </div>   
               </div>
               <div *ngIf="item.isEdit">
