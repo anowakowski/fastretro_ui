@@ -50,7 +50,7 @@ export class AddNewActionBottomsheetComponent implements OnInit {
         this.firestoreService.updateRetroBoardCard(retroBoardCardToUpdate, this.currentCard.id);
 
         this.bottomSheetRef.dismiss();
-        //event.preventDefault();
+        // event.preventDefault();
       });
     });
   }
