@@ -33,6 +33,30 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     action.isEdit = true;
   }
 
+  deleteAction(action) {
+    const findedAction = this.actions.find(x => x.actionId === action.actionId);
+    const indexOfArray = this.actions.indexOf(findedAction);
+    this.actions.splice(indexOfArray, 1);
+
+    this.firestoreService.deleteRetroBoardCardAction(action.actionId);
+    const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, this.actions);
+    this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
+  }
+
+  private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
+    return {
+      name: card.name,
+      isEdit: card.isEdit,
+      index: card.index,
+      isNewItem: card.isNewItem,
+      isMerged: card.isMerged,
+      isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
+      mergedContent: card.mergedContent,
+      voteCount: card.voteCount,
+      actions: actionsToUpdate
+    };
+  }
+
   closeEditAction(action) {
     this.actionTextAreaFormControl.reset();
     action.isEdit = false;

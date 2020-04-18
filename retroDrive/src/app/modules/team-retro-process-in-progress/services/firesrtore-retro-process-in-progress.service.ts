@@ -17,12 +17,16 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addNewItem('/retroBoardCardActions/', newRetroBoardCardAction);
   }
 
-  updateRetroBoardCard(cardToUpdate: any, id: string) {
-    this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
-  }
-
   updateRetroBoardCardAction(action: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
+  }
+
+  deleteRetroBoardCardAction(actionId) {
+    this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
+  }
+
+  updateRetroBoardCard(cardToUpdate: any, id: string) {
+    this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
   }
 
   findRetroBoardByUrlParamId(urlParamId: string) {
