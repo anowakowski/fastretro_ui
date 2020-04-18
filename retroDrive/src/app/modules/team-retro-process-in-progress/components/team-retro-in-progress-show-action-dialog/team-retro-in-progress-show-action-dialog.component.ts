@@ -42,7 +42,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     const findedAction = this.actions.find(x => x.id === action.id);
     const indexOfArray = this.actions.indexOf(findedAction);
     this.actions.splice(indexOfArray, 1);
-    const actionIds = this.actions.map(x => x.id);
+    const actionIds = this.actions.map(x => this.firestoreService.addRetroBoardCardActionAsRef(x.id));
 
     this.firestoreService.deleteRetroBoardCardAction(action.id);
     const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
