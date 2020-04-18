@@ -20,6 +20,7 @@ import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/add-new-action-bottomsheet.component';
 import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -128,6 +129,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       width: '1100px',
       //minHeight: '400px',
       data: currentCard
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {}
+    });
+  }
+
+  openAllCardActionDialog(){
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
+      width: '1100px',
+      data: this.wnetWellRetroBoardCol.retroBoardCards
     });
 
     dialogRef.afterClosed().subscribe(result => {

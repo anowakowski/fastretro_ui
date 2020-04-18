@@ -4,7 +4,7 @@
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
       <div fxFlex></div>
-      <button mat-raised-button color="primary" style="margin-right: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
+      <button mat-raised-button color="primary" style="margin-right: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="retroProcessIsStoped" (click)="openDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()">

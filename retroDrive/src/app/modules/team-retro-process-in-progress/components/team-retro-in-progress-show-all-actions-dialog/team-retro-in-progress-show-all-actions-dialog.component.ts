@@ -15,22 +15,28 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     @Inject(MAT_DIALOG_DATA) public dataRetroBoardCards: RetroBoardCard[]
   ) { }
 
+  simpleRetroBoardCards: any[];
+
   ngOnInit() {
-    this.prepareActions();
+    this.prepareSimpleCartAndActionsActions();
   }
 
-  public prepareActions() {
-    this.dataRetroBoardCards.forEach(retroBoardCard => {
-      const actions = new Array<RetroBoardCardActions>();
-      retroBoardCard.actions.forEach(action => {
+  public prepareSimpleCartAndActionsActions() {
+    this.simpleRetroBoardCards = new Array<any>();
+    this.dataRetroBoardCards.forEach(dataRetroBoardCard => {
+      const simpleCardToAdd: any = {};
+      simpleCardToAdd.name = dataRetroBoardCard.name;
+      simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
+      dataRetroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
           const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
           const docId = actionSnapshot.id;
+          retroBoardCardAction.isEdit = false;
           retroBoardCardAction.id = docId;
-          actions.push(retroBoardCardAction);
+          simpleCardToAdd.actions.push(retroBoardCardAction);
         });
       });
-      retroBoardCard.actions = actions;
+      this.simpleRetroBoardCards.push(simpleCardToAdd);
     });
   }
 }
