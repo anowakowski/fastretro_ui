@@ -5,7 +5,8 @@
 
 >
     <span *ngIf="!shouldHideCounterAfterStopTimer">{{currentInMinCountDown}} : {{currentInSecCountDown}}</span>
-    <span *ngIf="shouldHideCounterAfterStopTimer"><mat-icon style="margin-top: 12px;">free_breakfast</mat-icon></span>
+    <span *ngIf="shouldHideCounterAfterStopTimer && !shouldShowStartTimerIcon && retroProcessIsStop"><mat-icon style="margin-top: 12px;">free_breakfast</mat-icon></span>
+    <span *ngIf="shouldHideCounterAfterStopTimer && shouldShowStartTimerIcon && !retroProcessIsStop"><mat-icon style="margin-top: 12px;">play_arrow</mat-icon></span>
   </div>
   <round-progress
   [current]="currentInMin"
