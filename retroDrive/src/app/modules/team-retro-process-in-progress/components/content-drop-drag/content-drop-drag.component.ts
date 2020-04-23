@@ -17,6 +17,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/add-new-action-bottomsheet.component';
+import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -42,7 +46,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private authServices: AuthService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    private bottomSheetRef: MatBottomSheet) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -50,6 +55,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public board: Board;
   private retroBoardToProcess: RetroBoard;
   public isRetroBoardIsReady = false;
+  public isExistingSomeRetroBoardCardAction = false;
 
   currentUser: User;
 
@@ -114,6 +120,42 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         this.eventsService.emitTimerOptions(result);
         this.retroProcessIsStoped = false;
       }
+    });
+  }
+
+  openCardActionDialog(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromAddActionBtn = true;
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
+      width: '1100px',
+      //minHeight: '400px',
+      data: currentCard
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {}
+    });
+  }
+
+  openAllCardActionDialog() {
+    const retroBoardCardToShow = new Array<RetroBoardCard>();
+    this.prepareRetroBoardCardToShowInAllActionView(this.wnetWellRetroBoardCol.retroBoardCards, retroBoardCardToShow);
+    this.prepareRetroBoardCardToShowInAllActionView(this.toImproveRetroBoardCol.retroBoardCards, retroBoardCardToShow);
+
+    retroBoardCardToShow.concat(this.toImproveRetroBoardCol.retroBoardCards);
+
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
+      width: '1100px',
+      data: retroBoardCardToShow
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {}
+    });
+  }
+
+  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
+    retroBoardCards.forEach(retroBoardCard => {
+      retroBoardCardsToShow.push(retroBoardCard);
     });
   }
 
@@ -211,6 +253,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
+  onAddActionToCard(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromAddActionBtn = true;
+    currentCard.isInAddedToAction = true;
+    const bottomSheetRef = this.bottomSheetRef.open(AddNewActionBottomsheetComponent, {
+      data: currentCard
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      console.log('Bottom sheet has been dismissed.');
+      currentCard.isInAddedToAction = false;
+    });
+  }
+
   checkIfRetroBoardIsExists() {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
   }
@@ -227,10 +282,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (currentCard.isMerged) {
       return;
     }
-    if (currentCard.isEdit || currentCard.isClickedFromVoteBtn || currentCard.isClickedFromMergeBtn) {
-      currentCard.isClickedFromVoteBtn = false;
-      currentCard.isClickedFromMergeBtn = false;
-      return;
+    if (currentCard.isEdit ||
+      currentCard.isClickedFromVoteBtn ||
+      currentCard.isClickedFromMergeBtn ||
+      currentCard.isClickedFromAddActionBtn ||
+      currentCard.isClickedFromShowActionBtn) {
+        currentCard.isClickedFromVoteBtn = false;
+        currentCard.isClickedFromMergeBtn = false;
+        currentCard.isClickedFromAddActionBtn = false;
+        currentCard.isClickedFromShowActionBtn = false;
+        return;
     }
     if (!currentCard.isNewItem) {
       if (this.chcekIfAnyCardIsInEditMode()) {
@@ -342,8 +403,24 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           retroBoardCard.id = retroBoardCardDocId;
           this.addRetroBoardCardToCorrectColumn(retroBoardCard);
         });
+        this.setIsExistingSomeRetroBoardCardActions();
       });
   }
+
+
+  setIsExistingSomeRetroBoardCardActions() {
+    this.isExistingSomeRetroBoardCardAction = false;
+
+    const isExistingActionInWentWell = this.wnetWellRetroBoardCol.retroBoardCards.some(x => x.actions.length > 0);
+    const isExistingActionInToImprove = this.toImproveRetroBoardCol.retroBoardCards.some(x => x.actions.length > 0);
+
+    if (isExistingActionInWentWell || isExistingActionInToImprove) {
+      this.isExistingSomeRetroBoardCardAction = true;
+    } else {
+      this.isExistingSomeRetroBoardCardAction = false;
+    }
+  }
+
 
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
     if (retroBoardCard.isWentWellRetroBoradCol) {
@@ -374,7 +451,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       mergedContent: card.mergedContent,
       retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
       user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
-      voteCount: card.voteCount
+      voteCount: card.voteCount,
+      actions: new Array<any>()
     };
 
     return cardToSave;
@@ -392,7 +470,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line:object-literal-shorthand
       isWentWellRetroBoradCol: isWentWellRetroBoradCol,
       mergedContent: new Array<MergedRetroBoardCard>(),
-      voteCount: 0
+      voteCount: 0,
+      actions: new Array<any>()
     };
   }
 
@@ -418,6 +497,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isClickedFromCloseEdit: false,
       isClickedFromMergeBtn: false,
       isClickedFromVoteBtn: false,
+      isClickedFromAddActionBtn: false,
+      isInAddedToAction: false,
+      isClickedFromShowActionBtn: false,
       isInMerge: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
@@ -425,7 +507,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       retroBoard: this.retroBoardToProcess,
       user: this.currentUser,
       id: '',
-      voteCount: 0
+      voteCount: 0,
+      actions: new Array<any>()
     };
   }
 

@@ -4,7 +4,7 @@
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
       <div fxFlex></div>
-
+      <button mat-raised-button color="primary" style="margin-right: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="retroProcessIsStoped" (click)="openDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()">
@@ -36,7 +36,8 @@
                 'retro-board-card-new-item': item.isEdit === true,
                 'retro-board-card-new-item-went-well': item.isEdit === true && column.name === 'Went Well',
                 'retro-board-card-new-item-to-improve': item.isEdit === true && column.name === 'To Improve',
-                'retro-board-card-chosen-for-merge': item.isInMerge === true
+                'retro-board-card-chosen-for-merge': item.isInMerge === true,
+                'retro-board-card-chosen-to-add-action': item.isInAddedToAction === true
               }" 
               *ngFor="let item of column.retroBoardCards"
               cdkDrag
@@ -107,8 +108,20 @@
                   matTooltip="click to add action to this card"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="primary">
+                  color="primary"
+                  (click)="onAddActionToCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
+                </button>
+                <button
+                  *ngIf="item.actions.length > 0"
+                  style="margin-left: 10px;"
+                  matTooltip="click and show actions for this card"
+                  matTooltipPosition="after"
+                  mat-icon-button
+                  [matBadge]="item.actions.length" matBadgeColor="accent"
+                  color="primary"
+                  (click)="openCardActionDialog(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">description</mat-icon>
                 </button>
                </div>   
               </div>
