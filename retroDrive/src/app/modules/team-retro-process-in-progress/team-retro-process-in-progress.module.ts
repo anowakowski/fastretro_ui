@@ -14,10 +14,12 @@ import { TeamRetroInProgressSnackbarComponent }
   from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 import { TeamRetroInProgressSetTimeDialogComponent }
   from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
-import { TeamRetroInProgressAddCardActionDialogComponent } from './components/team-retro-in-progress-add-card-action-dialog/team-retro-in-progress-add-card-action-dialog.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
+import { AddNewActionBottomsheetComponent } from './components/add-new-action-bottomsheet/add-new-action-bottomsheet.component';
+import { TeamRetroInProgressShowActionDialogComponent } from './components/team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 
 
 @NgModule({
@@ -39,15 +41,19 @@ import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-r
     ContentDropDragComponent,
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
-    TeamRetroInProgressAddCardActionDialogComponent
+    AddNewActionBottomsheetComponent,
+    TeamRetroInProgressShowActionDialogComponent,
+    TeamRetroInProgressShowAllActionsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
     TeamRetroInProgressSnackbarComponent,
     TeamRetroInProgressSetTimeDialogComponent,
-    TeamRetroInProgressAddCardActionDialogComponent
+    TeamRetroInProgressShowAllActionsDialogComponent,
+    AddNewActionBottomsheetComponent,
+    TeamRetroInProgressShowActionDialogComponent
   ],
-  providers:[
+  providers: [
     FiresrtoreRetroProcessInProgressService
   ]
 })

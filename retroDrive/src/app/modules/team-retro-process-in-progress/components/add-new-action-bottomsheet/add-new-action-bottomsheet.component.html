@@ -1,0 +1,9 @@
+<mat-nav-list>
+  <form [formGroup]="addNewActionForRetroBoardCardForm" (ngSubmit)="createNewRetroBoardCardAction()">
+    <mat-form-field class="example-full-width">
+      <mat-label>Add new action to card</mat-label>
+      <textarea rows="2" [formControl]="actionTextAreaFormControl" matInput></textarea>
+    </mat-form-field>
+    <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
+  </form>
+</mat-nav-list>

@@ -1,0 +1,70 @@
+<h1 mat-dialog-title>Card <b>{{dataRetroBoardCard.name}}</b></h1>
+<div mat-dialog-content>
+  <mat-list>
+    <h3 matSubheader>Actions</h3>
+    <mat-divider></mat-divider>
+    <div *ngFor="let action of actions">
+      <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
+        <mat-icon matListIcon>description</mat-icon>
+        <span matLine>
+          <span style="font-size: 14px;">{{action.text}}</span>
+        </span>
+        <span matLine > 
+          <span style="font-size: 12px; font-style: italic; color: rgb(126, 126, 126);">created {{action.creationDate}}</span>
+        </span>
+        <div fxFlex></div>
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin-top: -20px;"
+          (click)="editAction(action)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;" (click)="deleteAction(action)">
+          <mat-icon>delete</mat-icon>
+        </button>             
+        <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+          <mat-label>Add people to action</mat-label>
+          <mat-select multiple>
+            <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-divider></mat-divider>
+     </mat-list-item>
+
+     <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
+      <mat-icon matListIcon>description</mat-icon>
+      <span matLine>
+        <form [formGroup]="addNewActionForRetroBoardCardForm">
+          <mat-form-field class="action-text-area">
+            <mat-label>Add new action to card</mat-label>
+            <input [formControl]="actionTextAreaFormControl" matInput/>
+          </mat-form-field>
+        </form>
+      </span>
+      <div fxFlex></div>
+      <button
+        mat-icon-button
+        color="primary"
+        style="margin-top: -20px; margin-left: 15px;"
+        (click)="updateActionFromEdit(action)">
+        <mat-icon>save</mat-icon>
+      </button> 
+      <button
+        mat-icon-button
+        color="primary"
+        style="margin-top: -20px;"
+        (click)="closeEditAction(action)">
+        <mat-icon>close</mat-icon>
+      </button>            
+      <mat-divider></mat-divider>
+   </mat-list-item>     
+
+    </div>
+ </mat-list>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="closeClick()">Cancel</button>
+  <div fxFlex></div>
+  <button mat-raised-button color="primary">Save actions as Excel<mat-icon>get_app</mat-icon></button>
+</div>
