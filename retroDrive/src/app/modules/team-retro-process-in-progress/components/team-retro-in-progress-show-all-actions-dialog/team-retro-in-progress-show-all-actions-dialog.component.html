@@ -29,7 +29,6 @@
               <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-divider></mat-divider>
        </mat-list-item>
 
        <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
@@ -57,9 +56,10 @@
           (click)="closeEditAction(action)">
           <mat-icon>close</mat-icon>
         </button>            
-        <mat-divider></mat-divider>
+
      </mat-list-item>         
       </div>
+      <mat-divider></mat-divider>
     </div>
 
  </mat-list>

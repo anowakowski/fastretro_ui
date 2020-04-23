@@ -136,14 +136,26 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  openAllCardActionDialog(){
+  openAllCardActionDialog() {
+    const retroBoardCardToShow = new Array<RetroBoardCard>();
+    this.prepareRetroBoardCardToShowInAllActionView(this.wnetWellRetroBoardCol.retroBoardCards, retroBoardCardToShow);
+    this.prepareRetroBoardCardToShowInAllActionView(this.toImproveRetroBoardCol.retroBoardCards, retroBoardCardToShow);
+
+    retroBoardCardToShow.concat(this.toImproveRetroBoardCol.retroBoardCards);
+
     const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
       width: '1100px',
-      data: this.wnetWellRetroBoardCol.retroBoardCards
+      data: retroBoardCardToShow
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {}
+    });
+  }
+
+  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
+    retroBoardCards.forEach(retroBoardCard => {
+      retroBoardCardsToShow.push(retroBoardCard);
     });
   }
 
