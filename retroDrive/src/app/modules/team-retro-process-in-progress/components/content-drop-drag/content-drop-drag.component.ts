@@ -108,6 +108,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   openRetroProcess() {
     this.retroProcessIsStoped = false;
     this.shouldEnableVoteBtns = true;
+    this.eventsService.emitStartRetroInProgressProcessEmiter(true);
   }
 
   openSnackBar(displayText: string) {

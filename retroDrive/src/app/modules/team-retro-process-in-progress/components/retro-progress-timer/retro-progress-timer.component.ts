@@ -17,6 +17,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   public stopRetroInProgressProcessSubscriptions: any;
   public stopTimerSubscriptions: any;
   public timerOptionsSubscriptions: any;
+  public startRetroInProgressProcessSubscriptions: any;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -55,6 +56,8 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribeTimer();
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
+    this.stopTimerSubscriptions.unsubscribe();
+    this.timerOptionsSubscriptions.unsubscribe();
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
@@ -64,8 +67,12 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   private unsubscribeTimer() {
-    this.timerMinSubscription.unsubscribe();
-    this.timerSecSubscription.unsubscribe();
+    if (this.timerMinSubscription !== undefined) {
+      this.timerMinSubscription.unsubscribe();
+    }
+    if (this.timerSecSubscription !== undefined) {
+      this.timerSecSubscription.unsubscribe();
+    }
   }
 
   private subscribeCounterForTimer() {
@@ -127,14 +134,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   private subscribeEvents() {
-    this.stopRetroInProgressProcessSubscriptions =
-      this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
-        this.shouldShowStartTimerIcon = false;
-        this.retroProcessIsStop = true;
-        if (shouldStopRetroProcess && !this.timerIsStopped) {
-          this.stopRetroTimer();
-        }
-    });
+    this.subscribeStopRetroProcess();
     this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
       this.setNewTimer(timerOptions);
       this.shouldShowStartTimerIcon = false;
@@ -147,5 +147,23 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         }
       }
     });
+    this.startRetroInProgressProcessSubscriptions =
+      this.eventsServices.getStartRetroInProgressProcessEmiter().subscribe(shouldStartRetroProcess => {
+        this.shouldShowStartTimerIcon = true;
+        this.retroProcessIsStop = false;
+
+        this.subscribeStopRetroProcess();
+    });
+  }
+
+  private subscribeStopRetroProcess() {
+    this.stopRetroInProgressProcessSubscriptions =
+      this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
+        this.shouldShowStartTimerIcon = false;
+        this.retroProcessIsStop = true;
+        if (shouldStopRetroProcess && !this.timerIsStopped) {
+          this.stopRetroTimer();
+        }
+      });
   }
 }
