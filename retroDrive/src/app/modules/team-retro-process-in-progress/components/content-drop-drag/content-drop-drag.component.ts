@@ -71,6 +71,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
+  public timerIsRunning = false;
+
   public shouldEnableVoteBtns = true;
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
@@ -92,10 +94,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   stopTimer() {
-    this.shouldStopTimer = true;
+    this.timerIsRunning = false;
+    this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
   stopRetroProcess() {
+    this.retroProcessIsStoped = true;
+    this.timerIsRunning = false;
     this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
@@ -109,7 +114,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  openDialog(): void {
+  openSetTimerDialog(): void {
     const dialogRef = this.dialog.open(TeamRetroInProgressSetTimeDialogComponent, {
       width: '400px',
       data: this.timerOptions
@@ -119,6 +124,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
         this.eventsService.emitTimerOptions(result);
         this.retroProcessIsStoped = false;
+        this.timerIsRunning = true;
       }
     });
   }

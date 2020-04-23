@@ -3,15 +3,21 @@
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
+      <button mat-raised-button color="primary" style="margin-left: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
       <div fxFlex></div>
-      <button mat-raised-button color="primary" style="margin-right: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
-      <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="retroProcessIsStoped" (click)="openDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
-      <button mat-raised-button color="warn" (click)="stopRetroProcess()"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
-      <button mat-raised-button color="primary" style="margin-left: 10px;" (click)="enableVoteBtns()">
+      <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
+      <button mat-raised-button color="accent" *ngIf="retroProcessIsStoped"><mat-icon >power_settings_new</mat-icon>&nbsp; ReOpen Retro</button>
+      <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()">
         <mat-icon>favorite</mat-icon>&nbsp;  
         <span *ngIf="!shouldEnableVoteBtns">Enable Vote Buttons</span>
         <span *ngIf="shouldEnableVoteBtns">Disable Vote Buttons</span>
       </button>
+
+      
+
+      <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
+      <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>&nbsp; Stop Current Timer</button>
+
       <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
       <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->
     </div>
