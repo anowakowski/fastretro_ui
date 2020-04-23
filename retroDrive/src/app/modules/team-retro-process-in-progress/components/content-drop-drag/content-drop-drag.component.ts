@@ -105,6 +105,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
+  openRetroProcess() {
+    this.retroProcessIsStoped = false;
+  }
+
   openSnackBar(displayText: string) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(TeamRetroInProgressSnackbarComponent, {
@@ -358,13 +362,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
+    if (!this.retroProcessIsStoped) {
+      if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        transferArrayItem(event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex);
+      }
     }
   }
 

@@ -6,7 +6,7 @@
       <button mat-raised-button color="primary" style="margin-left: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
       <div fxFlex></div>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
-      <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped"><mat-icon >power_settings_new</mat-icon>&nbsp; ReOpen Retro</button>
+      <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped" (click)="openRetroProcess()" style="margin-right: 18px;"><mat-icon >power_settings_new</mat-icon>&nbsp; Open Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()" *ngIf="!retroProcessIsStoped">
         <mat-icon>favorite</mat-icon>&nbsp;  
         <span *ngIf="!shouldEnableVoteBtns">Enable Vote Buttons</span>
@@ -58,6 +58,7 @@
                <div style="margin-top: 20px; margin-bottom: -8px;">
                 <!--Merge btns-->
                 <button 
+                  [disabled]="retroProcessIsStoped"
                   *ngIf="!item.isInMerge"
                   style="margin-right: 15px;"
                   matTooltip="click and merge with oder card"
@@ -78,7 +79,8 @@
                   (click)="onClickMergeCard(item, column.name)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
                 </button>
-                <button 
+                <button
+                  [disabled]="retroProcessIsStoped"
                   *ngIf="item.isMerged"
                   style="margin-right: 15px;"
                   matTooltip="unmerge all of merged cards"
