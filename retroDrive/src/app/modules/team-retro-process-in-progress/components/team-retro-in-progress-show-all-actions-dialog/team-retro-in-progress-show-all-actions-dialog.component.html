@@ -4,7 +4,7 @@
     <div *ngFor="let retroBoardCard of simpleRetroBoardCards">
       <h3 matSubheader style="margin-top: 10px;">Actions  of {{retroBoardCard.name}} card</h3>
       <div *ngFor="let action of retroBoardCard.actions">
-        <mat-list-item *ngIf="!action.isEdit">
+        <mat-list-item *ngIf="!action.isEdit" style="margin-top: -18px;">
           <mat-icon matListIcon>description</mat-icon>
           <span matLine>
             <span style="font-size: 14px;">{{action.text}}</span>
@@ -64,7 +64,7 @@
 
  </mat-list>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions style="margin-top: 10px; margin-bottom: -15px;">
   <button mat-raised-button color="warn">Cancel</button>
   <div fxFlex></div>
   <button mat-raised-button color="primary">Save actions as Excel<mat-icon>get_app</mat-icon></button>
