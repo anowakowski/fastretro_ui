@@ -95,7 +95,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   stopTimer() {
     this.timerIsRunning = false;
-    this.eventsService.emitStopRetroInProgressProcessEmiter(true);
+    this.eventsService.emitStopTimer(true);
   }
 
   stopRetroProcess() {

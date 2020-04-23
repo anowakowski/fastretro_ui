@@ -15,6 +15,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   @Input() shouldHideBigTimer = false;
 
   public stopRetroInProgressProcessSubscriptions: any;
+  public stopTimerSubscriptions: any;
   public timerOptionsSubscriptions: any;
 
   private timerMinSubscription: any;
@@ -44,7 +45,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.currentInMinCountDown = this.maxInMin - 1;
     this.currentInSecCountDown = 59;
     this.setCounter();
-    this.subscribeCounterForTimer();
+    // this.subscribeCounterForTimer();
     this.subscribeEvents();
   }
 
@@ -131,6 +132,11 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     });
     this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
       this.setNewTimer(timerOptions);
+    });
+    this.stopTimerSubscriptions = this.eventsServices.getStopTimerEmiter().subscribe(shouldStopTimer =>{
+      if (shouldStopTimer && !this.timerIsStopped) {
+        this.stopRetroTimer();
+      }
     });
   }
 }
