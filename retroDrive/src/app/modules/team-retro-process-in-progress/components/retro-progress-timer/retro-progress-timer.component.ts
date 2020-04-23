@@ -95,7 +95,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
       if (this.currentInSec === this.currentMaxSec) {
         this.stopRetroTimer();
 
-        this.eventsServices.emitStopRetroInProgressProcessEmiter(true);
+        this.eventsServices.emitTimerIsFinished();
       }
     }
   }

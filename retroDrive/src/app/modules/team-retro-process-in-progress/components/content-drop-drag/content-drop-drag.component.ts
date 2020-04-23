@@ -37,6 +37,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   retroBoardData: any;
   private retroBoardParamIdSubscription: any;
+  private timerIsFinsihedSubscriptions: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -85,6 +86,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
     this.retroBoardParamIdSubscription.unsubscribe();
+    this.timerIsFinsihedSubscriptions.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {
@@ -645,5 +647,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private subscribeEvents() {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsService.getStopRetroInProgressProcessEmiter().subscribe(retoIsStoped => this.retroProcessIsStoped = retoIsStoped);
+
+    this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
   }
 }

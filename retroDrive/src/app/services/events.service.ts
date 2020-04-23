@@ -12,6 +12,7 @@ constructor() { }
   private timerOptionsEmiter: EventEmitter<TimerOption> = new EventEmitter();
   private stopTimerEmiter: EventEmitter<boolean> = new EventEmitter();
   private startRetroInProgressProcessEmiter: EventEmitter<boolean> = new EventEmitter();
+  private timerIsFinishedEmiter: EventEmitter<void> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -43,6 +44,14 @@ constructor() { }
 
   getStartRetroInProgressProcessEmiter() {
     return this.startRetroInProgressProcessEmiter;
+  }
+
+  emitTimerIsFinished() {
+    this.timerIsFinishedEmiter.emit();
+  }
+
+  getTimerIsFinishedEmiter() {
+    return this.timerIsFinishedEmiter;
   }
 }
 
