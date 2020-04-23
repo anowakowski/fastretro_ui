@@ -154,7 +154,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
-    retroBoardCards.forEach(retroBoardCard => {
+    const fliteredRetroBoardCard = retroBoardCards.filter(rtb => rtb.actions.some(a => a));
+    fliteredRetroBoardCard.forEach(retroBoardCard => {
       retroBoardCardsToShow.push(retroBoardCard);
     });
   }
