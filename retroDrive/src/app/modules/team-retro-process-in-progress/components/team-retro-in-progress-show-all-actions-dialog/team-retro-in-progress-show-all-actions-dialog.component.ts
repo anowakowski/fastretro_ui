@@ -71,6 +71,16 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
   }
 
+  shouldShowDivider(currentRetroBoardCard) {
+    const currentRetroBoardIndex = this.dataRetroBoardCards.indexOf(currentRetroBoardCard);
+    const retroBoardCardCount = this.dataRetroBoardCards.length;
+
+    if (currentRetroBoardIndex === retroBoardCardCount) {
+      
+    }
+    
+  }
+
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
     return {
       actions: actionsToUpdate
@@ -100,5 +110,8 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
       });
       this.simpleRetroBoardCards.push(simpleCardToAdd);
     });
+  }
+
+  private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
   }
 }
