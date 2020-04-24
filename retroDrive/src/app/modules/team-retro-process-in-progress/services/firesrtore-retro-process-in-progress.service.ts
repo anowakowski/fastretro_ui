@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
+import { TimerOption } from 'src/app/models/timerOption';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addNewRetroBoardCardAction(newRetroBoardCardAction) {
     return this.firestoreBase.addNewItem('/retroBoardCardActions/', newRetroBoardCardAction);
+  }
+
+  addNewTimerOptions(timerOption: TimerOption) {
+    this.firestoreBase.addNewItem('/timerOptions/', timerOption);
   }
 
   updateRetroBoardCardAction(action: any, id: string) {
@@ -43,6 +48,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
 
+  getAllTimerOptions() {
+    return this.firestoreBase.getAll('/timerOptions/');
+  }
+
   addRetroBoardAsRef(retroBoardId: string) {
     return this.firestoreBase.addAsRef('/retroBoards/', retroBoardId);
   }
@@ -57,6 +66,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   retroBoardCardsFilteredSnapshotChanges() {
     return this.firestoreBase.snapshotChanges('/retroBoardCards/');
+  }
+
+  findRetroBoardByIdSnapshotChanges(id: string) {
+    return this.firestoreBase.getFilteredByIdSnapshotChanges('retroBoards', id);
   }
 
   removeRetroBoardCard(id: string) {

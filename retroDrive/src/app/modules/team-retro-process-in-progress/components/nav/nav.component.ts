@@ -14,6 +14,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   public shouldChangeRetroDisplayText = false;
   public stopRetroInProgressProcessSubscriptions: any;
+  public startRetroInProgressProcessSubscriptions: any;
+
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -41,7 +43,14 @@ export class NavComponent implements OnInit, OnDestroy {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsServices.getStopRetroInProgressProcessEmiter().subscribe(shouldStopRetroProcess => {
       if (shouldStopRetroProcess) {
-        this.shouldChangeRetroDisplayText = true;
+        this.shouldChangeRetroDisplayText = shouldStopRetroProcess;
+      }
+    });
+
+    this.startRetroInProgressProcessSubscriptions =
+      this.eventsServices.getStartRetroInProgressProcessEmiter().subscribe(shouldStartRetroProcess => {
+      if (shouldStartRetroProcess) {
+        this.shouldChangeRetroDisplayText = false;
       }
     });
   }

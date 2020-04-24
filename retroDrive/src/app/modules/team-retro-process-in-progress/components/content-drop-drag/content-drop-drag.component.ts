@@ -37,6 +37,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   retroBoardData: any;
   private retroBoardParamIdSubscription: any;
+  private timerIsFinsihedSubscriptions: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,18 +60,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   currentUser: User;
 
-  timerOptions: TimerOption[] = [
-    { value: '1', viewValue: '3 min' },
-    { value: '5', viewValue: '5 min' },
-    { value: '7', viewValue: '7 min' },
-    { value: '10', viewValue: '10 min' },
-    { value: '13', viewValue: '13 min' },
-    { value: '15', viewValue: '15 min' },
-    { value: '20', viewValue: '20 min' },
-  ];
+  timerOptions: TimerOption[];
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
+  public timerIsRunning = false;
+
   public shouldEnableVoteBtns = true;
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
@@ -78,11 +73,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
+    this.getTimerOptions();
+    //this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
     this.retroBoardParamIdSubscription.unsubscribe();
+    this.timerIsFinsihedSubscriptions.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {
@@ -92,11 +90,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   stopTimer() {
-    this.shouldStopTimer = true;
+    this.timerIsRunning = false;
+    this.eventsService.emitStopTimer(true);
   }
 
   stopRetroProcess() {
+    this.retroProcessIsStoped = true;
+    this.timerIsRunning = false;
+    this.shouldEnableVoteBtns = false;
     this.eventsService.emitStopRetroInProgressProcessEmiter(true);
+  }
+
+  openRetroProcess() {
+    this.retroProcessIsStoped = false;
+    this.shouldEnableVoteBtns = true;
+    this.eventsService.emitStartRetroInProgressProcessEmiter(true);
   }
 
   openSnackBar(displayText: string) {
@@ -109,7 +117,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  openDialog(): void {
+  openSetTimerDialog(): void {
     const dialogRef = this.dialog.open(TeamRetroInProgressSetTimeDialogComponent, {
       width: '400px',
       data: this.timerOptions
@@ -119,6 +127,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
         this.eventsService.emitTimerOptions(result);
         this.retroProcessIsStoped = false;
+        this.timerIsRunning = true;
       }
     });
   }
@@ -153,12 +162,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
-    const fliteredRetroBoardCard = retroBoardCards.filter(rtb => rtb.actions.some(a => a));
-    fliteredRetroBoardCard.forEach(retroBoardCard => {
-      retroBoardCardsToShow.push(retroBoardCard);
-    });
-  }
 
   addNewCardToColumn(colName: string) {
     if (this.chcekIfAnyCardIsInEditMode()) {
@@ -351,19 +354,55 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
+    if (!this.retroProcessIsStoped) {
+      if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        transferArrayItem(event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex);
+      }
     }
   }
 
   setNewCardContentFormControl(value: string) {
     this.newCardContentFormControl.setValue(value);
   }
+
+  private createPersistentTimerOptions() {
+    const timerOptionsToSave: TimerOption[] = [
+      { value: '3', viewValue: '3 min' },
+      { value: '5', viewValue: '5 min' },
+      { value: '7', viewValue: '7 min' },
+      { value: '10', viewValue: '10 min' },
+      { value: '13', viewValue: '13 min' },
+      { value: '15', viewValue: '15 min' },
+      { value: '20', viewValue: '20 min' },
+    ];
+
+    timerOptionsToSave.forEach(timerOpt => {
+      this.firestoreRetroInProgressService.addNewTimerOptions(timerOpt);
+    });
+  }
+
+  private getTimerOptions() {
+    this.timerOptions = new Array<TimerOption>();
+    this.firestoreRetroInProgressService.getAllTimerOptions().then(timerOptionsSnapshot => {
+      timerOptionsSnapshot.docs.forEach(timerOptDoc => {
+        this.timerOptions.push(timerOptDoc.data() as TimerOption);
+      });
+      this.timerOptions.sort((a, b ) => a.value - b.value);
+    });
+  }
+
+  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
+    const fliteredRetroBoardCard = retroBoardCards.filter(rtb => rtb.actions.some(a => a));
+    fliteredRetroBoardCard.forEach(retroBoardCard => {
+      retroBoardCardsToShow.push(retroBoardCard);
+    });
+  }
+
 
   private prepareBaseRetroBoardData() {
     if (this.route.snapshot.data['retroBoardData']) {
@@ -630,5 +669,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private subscribeEvents() {
     this.stopRetroInProgressProcessSubscriptions =
       this.eventsService.getStopRetroInProgressProcessEmiter().subscribe(retoIsStoped => this.retroProcessIsStoped = retoIsStoped);
+
+    this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
   }
 }

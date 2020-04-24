@@ -51,6 +51,10 @@ export class FirestoreBaseService {
       .snapshotChanges();
   }
 
+  getFilteredByIdSnapshotChanges(collectionName: string, id: string) {
+    return this.afs.collection(collectionName).doc(id).snapshotChanges();
+  }
+
   snapshotChanges(collectionName: string) {
     return this.afs.collection(collectionName).snapshotChanges();
   }
