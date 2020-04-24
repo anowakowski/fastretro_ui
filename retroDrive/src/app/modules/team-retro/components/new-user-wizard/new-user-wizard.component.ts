@@ -297,6 +297,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
       name: workspaceName,
       isNewWorkspace: this.isNewWorkspace,
       isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
+      isCurrent: true,
       creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
     };
   }

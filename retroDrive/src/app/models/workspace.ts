@@ -3,4 +3,5 @@ export interface Workspace {
     creationDate: string;
     isNewWorkspace: boolean;
     isWithRequireAccess: boolean;
+    isCurrent: boolean;
 }
