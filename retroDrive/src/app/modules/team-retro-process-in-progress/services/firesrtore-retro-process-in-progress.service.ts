@@ -48,6 +48,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
 
+  getAllTimerOptions() {
+    return this.firestoreBase.getAll('/timerOptions/');
+  }
+
   addRetroBoardAsRef(retroBoardId: string) {
     return this.firestoreBase.addAsRef('/retroBoards/', retroBoardId);
   }

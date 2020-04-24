@@ -60,15 +60,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   currentUser: User;
 
-  timerOptions: TimerOption[] = [
-    { value: '3', viewValue: '3 min' },
-    { value: '5', viewValue: '5 min' },
-    { value: '7', viewValue: '7 min' },
-    { value: '10', viewValue: '10 min' },
-    { value: '13', viewValue: '13 min' },
-    { value: '15', viewValue: '15 min' },
-    { value: '20', viewValue: '20 min' },
-  ];
+  timerOptions: TimerOption[];
 
   public shouldStopTimer = false;
   public retroProcessIsStoped = false;
@@ -81,6 +73,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
+    this.getTimerOptions();
     //this.createPersistentTimerOptions();
   }
 
@@ -390,6 +383,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     timerOptionsToSave.forEach(timerOpt => {
       this.firestoreRetroInProgressService.addNewTimerOptions(timerOpt);
+    });
+  }
+
+  private getTimerOptions() {
+    this.timerOptions = new Array<TimerOption>();
+    this.firestoreRetroInProgressService.getAllTimerOptions().then(timerOptionsSnapshot => {
+      timerOptionsSnapshot.docs.forEach(timerOptDoc => {
+        this.timerOptions.push(timerOptDoc.data() as TimerOption);
+      });
+      this.timerOptions.sort((a, b ) => a.value - b.value);
     });
   }
 
