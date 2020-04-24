@@ -68,6 +68,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.snapshotChanges('/retroBoardCards/');
   }
 
+  findRetroBoardByIdSnapshotChanges(id: string) {
+    return this.firestoreBase.getFilteredByIdSnapshotChanges('retroBoards', id);
+  }
+
   removeRetroBoardCard(id: string) {
     this.firestoreBase.deleteItem('/retroBoardCards/', id);
   }
