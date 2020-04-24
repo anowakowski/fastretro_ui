@@ -25,4 +25,8 @@ export class TeamsComponent implements OnInit {
   prepareTeamsForCurrentWorkspace() {
     this.currenUserWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
   }
+
+  createNewTeamBottomShet() {
+    
+  }
 }
