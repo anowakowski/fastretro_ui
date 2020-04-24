@@ -61,7 +61,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   currentUser: User;
 
   timerOptions: TimerOption[] = [
-    { value: '1', viewValue: '3 min' },
+    { value: '3', viewValue: '3 min' },
     { value: '5', viewValue: '5 min' },
     { value: '7', viewValue: '7 min' },
     { value: '10', viewValue: '10 min' },
@@ -81,6 +81,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
+    //this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
@@ -168,12 +169,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
-    const fliteredRetroBoardCard = retroBoardCards.filter(rtb => rtb.actions.some(a => a));
-    fliteredRetroBoardCard.forEach(retroBoardCard => {
-      retroBoardCardsToShow.push(retroBoardCard);
-    });
-  }
 
   addNewCardToColumn(colName: string) {
     if (this.chcekIfAnyCardIsInEditMode()) {
@@ -381,6 +376,30 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   setNewCardContentFormControl(value: string) {
     this.newCardContentFormControl.setValue(value);
   }
+
+  private createPersistentTimerOptions() {
+    const timerOptionsToSave: TimerOption[] = [
+      { value: '3', viewValue: '3 min' },
+      { value: '5', viewValue: '5 min' },
+      { value: '7', viewValue: '7 min' },
+      { value: '10', viewValue: '10 min' },
+      { value: '13', viewValue: '13 min' },
+      { value: '15', viewValue: '15 min' },
+      { value: '20', viewValue: '20 min' },
+    ];
+
+    timerOptionsToSave.forEach(timerOpt => {
+      this.firestoreRetroInProgressService.addNewTimerOptions(timerOpt);
+    });
+  }
+
+  private prepareRetroBoardCardToShowInAllActionView(retroBoardCards: RetroBoardCard[], retroBoardCardsToShow: RetroBoardCard[]) {
+    const fliteredRetroBoardCard = retroBoardCards.filter(rtb => rtb.actions.some(a => a));
+    fliteredRetroBoardCard.forEach(retroBoardCard => {
+      retroBoardCardsToShow.push(retroBoardCard);
+    });
+  }
+
 
   private prepareBaseRetroBoardData() {
     if (this.route.snapshot.data['retroBoardData']) {
