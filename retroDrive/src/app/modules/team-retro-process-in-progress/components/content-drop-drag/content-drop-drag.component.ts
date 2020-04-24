@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeamRetroInProgressSnackbarComponent } from '../team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
 import { EventsService } from 'src/app/services/events.service';
 import { MatDialog } from '@angular/material/dialog';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
@@ -19,7 +20,9 @@ import { User } from 'src/app/models/user';
 import { MergedRetroBoardCard } from 'src/app/models/mergedRetroBoardCard';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/add-new-action-bottomsheet.component';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 
 const WENT_WELL = 'Went Well';
@@ -74,7 +77,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
-    //this.createPersistentTimerOptions();
+    // this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
@@ -136,7 +139,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard.isClickedFromAddActionBtn = true;
     const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
       width: '1100px',
-      //minHeight: '400px',
       data: currentCard
     });
 
@@ -405,6 +407,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
 
   private prepareBaseRetroBoardData() {
+    // tslint:disable-next-line:no-string-literal
     if (this.route.snapshot.data['retroBoardData']) {
       this.getingDataAfterClickStartRetroProcess();
     } else {
@@ -414,6 +417,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private getingDataFromUrl() {
     this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
+      // tslint:disable-next-line:no-string-literal
       const retroBoardParamId: string = params['id'];
       this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
         if (retroBoardsSnapshot.docs.length > 0) {
@@ -471,6 +475,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private getingDataAfterClickStartRetroProcess() {
+    // tslint:disable-next-line:no-string-literal
     this.retroBoardData = this.route.snapshot.data['retroBoardData'];
     this.retroBoardToProcess = this.retroBoardData;
     this.isRetroBoardIsReady = true;
