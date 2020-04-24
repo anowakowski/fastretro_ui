@@ -1,7 +1,7 @@
 
   <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">You can joint to team or create new</mat-card>
 
-  <mat-card class="example-card">
+  <mat-card class="example-card" style="opacity: 0.97;">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Your teams in your current (<i><b>{{currenUserWorkspace.name}}</b></i>) workspaces</mat-card-title>
@@ -20,10 +20,14 @@
             Options selected: {{shoes.selectedOptions.selected.length}}
           </p>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="warn">Remove</button>
+  </mat-card>
+
+  <mat-card class="example-card" style="margin-top: 5px;">
+    <mat-card-actions style="margin-top: -14px;">
+      <button mat-raised-button color="primary">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
+      <button mat-raised-button color="accent">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
       <div fxFlex></div>
-      <button mat-raised-button color="primary">Add New Team<mat-icon>add</mat-icon></button>      
+      <button mat-raised-button color="warn">Remove</button>
     </mat-card-actions>
   </mat-card>
   
