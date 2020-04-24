@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-teams',
@@ -10,6 +11,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 export class TeamsComponent implements OnInit {
 
   userWorkspace: UserWorkspace;
+  currenUserWorkspace: Workspace;
 
   constructor(private localStorageService: LocalStorageService) { }
 
@@ -17,11 +19,10 @@ export class TeamsComponent implements OnInit {
 
   ngOnInit() {
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.prepareTeamsForCurrentWorkspace();
   }
 
   prepareTeamsForCurrentWorkspace() {
-    
-
+    this.currenUserWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
   }
-
 }
