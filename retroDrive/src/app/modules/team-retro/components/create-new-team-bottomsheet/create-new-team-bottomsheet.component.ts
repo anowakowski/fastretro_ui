@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+// tslint:disable-next-line:max-line-length
+import { FiresrtoreRetroProcessInProgressService } from 'src/app/modules/team-retro-process-in-progress/services/firesrtore-retro-process-in-progress.service';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -7,9 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateNewTeamBottomsheetComponent implements OnInit {
 
-  constructor() { }
+  addNewTeamForm: FormGroup;
+  teamNameFormControl = new FormControl('');
+
+  constructor(
+    private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private firestoreService: FiresrtoreRetroProcessInProgressService) { }
 
   ngOnInit() {
+    this.createNewTeamsForm();
   }
+
+  createNewTeamsForm() {
+    this.addNewTeamForm = this.formBuilder.group({
+      actionTextAreaFormControl: this.teamNameFormControl,
+    });
+  }
+
+  createNewTeam() {
+    console.log('kocham Madzie');
+  }
+
 
 }

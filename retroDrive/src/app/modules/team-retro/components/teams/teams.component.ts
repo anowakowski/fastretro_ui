@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { Workspace } from 'src/app/models/workspace';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomsheet/create-new-team-bottomsheet.component';
 
 @Component({
   selector: 'app-teams',
@@ -13,7 +15,7 @@ export class TeamsComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currenUserWorkspace: Workspace;
 
-  constructor(private localStorageService: LocalStorageService) { }
+  constructor(private localStorageService: LocalStorageService, private bottomSheetRef: MatBottomSheet) { }
 
   teams: string[] = ['#Tean1 Alpha', '#Team2 Beta', '#Team3 Gamma'];
 
@@ -27,6 +29,13 @@ export class TeamsComponent implements OnInit {
   }
 
   createNewTeamBottomShet() {
-    
+    const bottomSheetRef = this.bottomSheetRef.open(CreateNewTeamBottomsheetComponent, {
+      data: 'currentCard'
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      console.log('Bottom sheet has been dismissed.');
+      
+    });
   }
 }
