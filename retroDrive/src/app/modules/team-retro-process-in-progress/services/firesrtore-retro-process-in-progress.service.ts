@@ -64,6 +64,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addAsRef('/retroBoardCardActions/', actionId);
   }
 
+  addWorkspaceAsRef(workspaceId: string) {
+    return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
+  }
+
   retroBoardCardsFilteredSnapshotChanges() {
     return this.firestoreBase.snapshotChanges('/retroBoardCards/');
   }
