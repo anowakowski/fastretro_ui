@@ -38,6 +38,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getAll('/teams/');
   }
 
+  getUserTeams(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
   findWorkspacesByName(name: string) {
     const condition: ConditionQueryData = {
       fieldName: 'name',

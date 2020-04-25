@@ -38,6 +38,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
         const teamId = teamSnapshot.id as string;
         team.id = teamId;
         this.teams.push(team);
+        this.getProcesForUserTeamsForRemovingCurrentlyJoinedTeam();
       });
     });
   }
@@ -57,10 +58,48 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  private getProcesForUserTeamsForRemovingCurrentlyJoinedTeam() {
+    this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
+      userTeamsSnapshot.docs.forEach(userTeamDoc => {
+        const findedUserTeamData = userTeamDoc.data();
+        findedUserTeamData.teams.forEach(teamRef => {
+         teamRef.get().then(teamDoc => {
+           const findedUserTeam = teamDoc.data() as Team;
+           findedUserTeam.id = teamDoc.id as string;
+
+           this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
+         });
+        });
+      });
+   });
+  }
+
+  private removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam: Team) {
+    if (this.isExistingTeam(findedUserTeam)) {
+      const findedTeamOnLocal = this.teams.find(t => t.id === findedUserTeam.id);
+      const teamArrayIndex = this.getTeamsArrayIndex(findedTeamOnLocal);
+      this.removeFromLocalTeams(teamArrayIndex);
+    }
+  }
+
+  private removeFromLocalTeams(teamArrayIndex: number) {
+    this.teams.splice(teamArrayIndex, 1);
+  }
+
+  private isExistingTeam(findedUserTeam: Team) {
+    return this.teams.some(t => t.id === findedUserTeam.id);
+  }
+
+
+
   private createActionForRetroBoardForm() {
     this.joinToExisitngTeamForm = this.formBuilder.group({
       existingTeamIdFormControl: this.existingTeamIdFormControl,
     });
+  }
+
+  private getTeamsArrayIndex(findedTeamOnLocal: Team) {
+    return this.teams.indexOf(findedTeamOnLocal);
   }
 
 }
