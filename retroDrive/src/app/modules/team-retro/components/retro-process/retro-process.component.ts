@@ -8,8 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
-
-import { Guid } from "guid-typescript";
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'app-retro-process',
@@ -94,7 +93,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private prepareTeams(team: any, retroBoard: RetroBoard) {
     team.then(teamSnap => {
-      const teamToAdd = teamSnap.data() as Teams;
+      const teamToAdd = teamSnap.data() as Team;
       retroBoard.team = teamToAdd;
       this.addToRetroBoards(retroBoard);
     });
