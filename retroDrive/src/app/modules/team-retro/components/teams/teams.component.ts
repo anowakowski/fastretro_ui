@@ -5,6 +5,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomsheet/create-new-team-bottomsheet.component';
 import { Workspace } from 'src/app/models/workspace';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'app-teams',
@@ -21,7 +22,7 @@ export class TeamsComponent implements OnInit {
     private bottomSheetRef: MatBottomSheet,
     private firestoreService: FirestoreRetroBoardService) { }
 
-  teams: string[] = ['#Tean1 Alpha', '#Team2 Beta', '#Team3 Gamma'];
+  teams: Team[]
 
   ngOnInit() {
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
@@ -30,10 +31,13 @@ export class TeamsComponent implements OnInit {
   }
 
   prepareTeamsForCurrentWorkspace() {
+    this.teams = new Array<Team>();
     this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.currentWorkspace.id).subscribe(teamsSnapshot => {
       teamsSnapshot.forEach(teamSnapshot => {
-        const team = teamSnapshot.payload.doc.data();
+        const team = teamSnapshot.payload.doc.data() as Team;
         const teamId = teamSnapshot.payload.doc.id as string;
+        team.id = teamId;
+        this.teams.push(team);
       });
     });
   }
@@ -43,9 +47,6 @@ export class TeamsComponent implements OnInit {
       data: this.currentWorkspace
     });
 
-    bottomSheetRef.afterDismissed().subscribe(() => {
-      console.log('Bottom sheet has been dismissed.');
-      
-    });
+    bottomSheetRef.afterDismissed().subscribe(() => {});
   }
 }

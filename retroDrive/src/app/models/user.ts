@@ -7,4 +7,5 @@ export interface User {
     myCustomData?: string;
     isNewUser: boolean;
     chosenAvatarUrl: string;
-  }
+}
+

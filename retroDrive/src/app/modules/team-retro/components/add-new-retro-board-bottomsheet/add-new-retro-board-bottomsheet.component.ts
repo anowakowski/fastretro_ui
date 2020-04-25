@@ -6,7 +6,7 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { Teams } from 'src/app/models/teams';
 import { RetroBoard } from 'src/app/models/retroBoard';
 
-import { Guid } from "guid-typescript";
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
