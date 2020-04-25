@@ -7,7 +7,6 @@ import { TimerOption } from 'src/app/models/timerOption';
   providedIn: 'root'
 })
 export class FiresrtoreRetroProcessInProgressService {
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -20,6 +19,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addNewTimerOptions(timerOption: TimerOption) {
     this.firestoreBase.addNewItem('/timerOptions/', timerOption);
+  }
+
+  addNewTeam(teamToSave: any) {
+    this.firestoreBase.addNewItem('/teams/', teamToSave);
   }
 
   updateRetroBoardCardAction(action: any, id: string) {

@@ -29,7 +29,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
 
   createNewTeamsForm() {
     this.addNewTeamForm = this.formBuilder.group({
-      actionTextAreaFormControl: this.teamNameFormControl,
+      teamNameFormControl: this.teamNameFormControl,
     });
   }
 
@@ -42,6 +42,10 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
       creationDate: currentDate,
       workspace: this.firestoreService.addWorkspaceAsRef(this.data.id)
     };
+
+    this.firestoreService.addNewTeam(teamToSave);
+    this.bottomSheetRef.dismiss();
+    event.preventDefault();
   }
 
 
