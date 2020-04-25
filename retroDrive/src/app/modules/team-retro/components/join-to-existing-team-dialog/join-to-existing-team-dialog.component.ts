@@ -38,7 +38,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
         const teamId = teamSnapshot.id as string;
         team.id = teamId;
         this.teams.push(team);
-        this.getProcesForUserTeamsForRemovingCurrentlyJoinedTeam();
+        this.getUserTeamsForRemovingCurrentlyJoinedTeam();
       });
     });
   }
@@ -58,7 +58,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  private getProcesForUserTeamsForRemovingCurrentlyJoinedTeam() {
+  private getUserTeamsForRemovingCurrentlyJoinedTeam() {
     this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
       userTeamsSnapshot.docs.forEach(userTeamDoc => {
         const findedUserTeamData = userTeamDoc.data();
