@@ -65,7 +65,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
   private createUserWorkspace(currentUser): UserWorkspace {
     return {
       user: currentUser,
-      workspaces: new Array<WorkspaceToSave>()
+      workspaces: new Array<Workspace>()
     };
   }
 
@@ -75,6 +75,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private spinnerTick() {
     this.spinner.show();
+    // tslint:disable-next-line:no-shadowed-variable
     this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
       if (interval === 1) {
         this.shouldShowContent = true;
