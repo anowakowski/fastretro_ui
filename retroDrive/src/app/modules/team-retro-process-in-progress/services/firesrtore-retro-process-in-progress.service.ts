@@ -7,7 +7,6 @@ import { TimerOption } from 'src/app/models/timerOption';
   providedIn: 'root'
 })
 export class FiresrtoreRetroProcessInProgressService {
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -62,6 +61,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addRetroBoardCardActionAsRef(actionId: string) {
     return this.firestoreBase.addAsRef('/retroBoardCardActions/', actionId);
+  }
+
+  addWorkspaceAsRef(workspaceId: string) {
+    return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
   }
 
   retroBoardCardsFilteredSnapshotChanges() {

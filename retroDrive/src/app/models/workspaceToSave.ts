@@ -1,5 +1,4 @@
-export class Workspace {
-    id: string;
+export interface WorkspaceToSave {
     name: string;
     creationDate: string;
     isNewWorkspace: boolean;

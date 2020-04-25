@@ -10,16 +10,22 @@ import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { RetroProgressTimerComponent } from './components/retro-progress-timer/retro-progress-timer.component';
 import { ContentDropDragComponent } from './components/content-drop-drag/content-drop-drag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// tslint:disable-next-line:import-spacing
 import { TeamRetroInProgressSnackbarComponent }
   from './components/team-retro-in-progress-snackbar/team-retro-in-progress-snackbar.component';
+// tslint:disable-next-line:import-spacing
 import { TeamRetroInProgressSetTimeDialogComponent }
   from './components/team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
 import { AddNewActionBottomsheetComponent } from './components/add-new-action-bottomsheet/add-new-action-bottomsheet.component';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowActionDialogComponent } from './components/team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { JoinToExistingTeamDialogComponent } from '../team-retro/components/join-to-existing-team-dialog/join-to-existing-team-dialog.component';
 
 
 @NgModule({
@@ -43,7 +49,8 @@ import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/t
     TeamRetroInProgressSetTimeDialogComponent,
     AddNewActionBottomsheetComponent,
     TeamRetroInProgressShowActionDialogComponent,
-    TeamRetroInProgressShowAllActionsDialogComponent
+    TeamRetroInProgressShowAllActionsDialogComponent,
+    JoinToExistingTeamDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -51,7 +58,8 @@ import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/t
     TeamRetroInProgressSetTimeDialogComponent,
     TeamRetroInProgressShowAllActionsDialogComponent,
     AddNewActionBottomsheetComponent,
-    TeamRetroInProgressShowActionDialogComponent
+    TeamRetroInProgressShowActionDialogComponent,
+    JoinToExistingTeamDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService

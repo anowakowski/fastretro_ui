@@ -7,7 +7,7 @@ import { Avatar } from 'src/app/models/avatar';
 import { MatStepper } from '@angular/material/stepper';
 import { retryWhen, find } from 'rxjs/operators';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { MatDialog } from '@angular/material/dialog';
@@ -198,7 +198,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   nextStepFromAvatarToSummary() {
     this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
       workspaceSnapshot.docs.forEach(workspaceDoc => {
-        const findedWorkspace = workspaceDoc.data() as Workspace;
+        const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
         this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
       });
     });
@@ -282,7 +282,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   private createNewWorkspace(findedUsr: User) {
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
-    const workspace: Workspace = this.prepareWorkspaceModel(workspaceName);
+    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName);
 
     this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
       snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
@@ -292,11 +292,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareWorkspaceModel(workspaceName: any): Workspace {
+  private prepareWorkspaceModel(workspaceName: any): WorkspaceToSave {
     return {
       name: workspaceName,
       isNewWorkspace: this.isNewWorkspace,
       isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
+      isCurrent: true,
       creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
     };
   }
@@ -345,6 +346,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
 
   private workspaceValidation(form: FormGroup) {
+    // tslint:disable-next-line:prefer-const
     let tt = form;
 
     return { notValidData: true };

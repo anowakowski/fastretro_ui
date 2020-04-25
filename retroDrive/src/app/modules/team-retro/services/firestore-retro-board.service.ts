@@ -4,9 +4,10 @@ import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { User } from 'src/app/models/user';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -22,12 +23,34 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
+  addNewTeam(teamToSave: any) {
+    return this.firestoreBase.addNewItem('/teams/', teamToSave);
+  }
+
+  addNewUserTeams(userTeamsToSave: UserTeamsToSave) {
+    this.firestoreBase.addNewItem('/userTeams/', userTeamsToSave);
+  }
+
+  updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {
+    this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
+  }
+
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
 
   getTeams() {
     return this.firestoreBase.getAll('/teams/');
+  }
+
+  getUserTeams(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFiltered('/userTeams/', condition);
   }
 
   findWorkspacesByName(name: string) {
@@ -70,7 +93,7 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.updateUserData(user);
   }
 
-  addNewWorkspace(workspace: Workspace) {
+  addNewWorkspace(workspace: WorkspaceToSave) {
     return this.firestoreBase.addNewItem('/workspaces', workspace);
   }
 
@@ -80,6 +103,10 @@ export class FirestoreRetroBoardService {
 
   addUserAsRef(user: User) {
     return this.firestoreBase.addAsRef('/users/', user.uid);
+  }
+
+  addTeamAsRef(teamId: string) {
+    return this.firestoreBase.addAsRef('/teams/', teamId);
   }
 
   addWorkspaceAsRef(workspaceId: string) {
@@ -97,12 +124,42 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFiltered('/userworkspaces/', condition);
   }
 
+  findUserTeamsSnapshotChanges(userId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: userId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/userTeams/', condition);
+  }
+
+  findUserTeams(userId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: userId
+    };
+
+    return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
+  findTeamsInCurrentWorkspace(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFiltered('/teams/', condition);
+  }
+
   private prepareRetroBoardToSave(newRetroBoard: any) {
     return {
       sprintNumber: newRetroBoard.sprintNumber,
       retroName: newRetroBoard.retroName,
       team: this.prepareTeam(newRetroBoard.team),
-      members: newRetroBoard.members,
+      // members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
       isStarted: false,
       urlParamId: newRetroBoard.urlParamId

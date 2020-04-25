@@ -1,28 +1,28 @@
 
-  
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">You can joint to team or create new</mat-card>
 
-  <mat-card class="example-card">
+  <mat-card class="example-card" style="opacity: 0.97;">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>your teams</mat-card-title>
+      <mat-card-title>Teams you joined in <i><b>{{currentWorkspace.name}}</b></i> workspace</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
         <mat-selection-list #shoes>
             <mat-list-option *ngFor="let team of teams">
-              {{team}}
+              {{team.name}}
               <mat-divider></mat-divider>
             </mat-list-option>
-
           </mat-selection-list>
-          
-          <p>
-            Options selected: {{shoes.selectedOptions.selected.length}}
-          </p>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-button>Remove selected team</button>
-      <button mat-button>add new or join to exists team</button>
+  </mat-card>
+
+  <mat-card class="example-card" style="margin-top: 5px;">
+    <mat-card-actions style="margin-top: -14px;">
+      <button mat-raised-button color="primary" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
+      <button mat-raised-button color="accent" (click)="jointToExisitngTeamDialog()">Join to another existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
+      <div fxFlex></div>
+      <button mat-raised-button color="warn">Remove</button>
     </mat-card-actions>
   </mat-card>
   

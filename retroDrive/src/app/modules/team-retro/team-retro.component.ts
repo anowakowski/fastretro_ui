@@ -6,8 +6,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { FirestoreRetroBoardService } from './services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { User } from 'firebase';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-team-retro',
@@ -50,6 +51,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
           findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
             worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
               userWorkspace.workspaces.push(userWorkspacesData);
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
@@ -73,6 +75,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private spinnerTick() {
     this.spinner.show();
+    // tslint:disable-next-line:no-shadowed-variable
     this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
       if (interval === 1) {
         this.shouldShowContent = true;

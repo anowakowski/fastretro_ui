@@ -6,12 +6,13 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 import { User } from 'src/app/models/user';
 import { MatDialog } from '@angular/material/dialog';
+// tslint:disable-next-line:import-spacing
 import { WelcomeInfoNewUsersDashboardDialogComponent }
   from '../welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 
 @Component({
   selector: 'app-dashboard',

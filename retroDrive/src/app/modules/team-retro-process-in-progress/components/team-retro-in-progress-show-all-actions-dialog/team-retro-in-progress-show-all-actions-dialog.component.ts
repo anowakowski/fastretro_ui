@@ -47,8 +47,8 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     const actionIds = this.actions.map(x => this.firestoreService.addRetroBoardCardActionAsRef(x.id));
 
     this.firestoreService.deleteRetroBoardCardAction(action.id);
-    //const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
-    //this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
+    // const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
+    // this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
   }
 
   closeEditAction(action: any) {
@@ -75,10 +75,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     const currentRetroBoardIndex = this.dataRetroBoardCards.indexOf(currentRetroBoardCard);
     const retroBoardCardCount = this.dataRetroBoardCards.length;
 
-    if (currentRetroBoardIndex === retroBoardCardCount) {
-      
-    }
-    
+    if (currentRetroBoardIndex === retroBoardCardCount) {}
   }
 
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
