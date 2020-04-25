@@ -72,6 +72,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public shouldEnableVoteBtns = true;
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
+  public retroBoardSubscriptions: any;
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -422,17 +423,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(filteredRetroBoardsSnapshot => {
         if (filteredRetroBoardsSnapshot.docs.length > 0) {
 
-          // tslint:disable-next-line:max-line-length
-          this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
-            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
-            this.retroBoardToProcess = findedRetroBoard;
-            this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
-            this.isRetroBoardIsReady = true;
+          this.retroBoardSubscriptions =
+          this.firestoreRetroInProgressService
+            .findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
+              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+              this.retroBoardToProcess = findedRetroBoard;
+              this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
+              this.isRetroBoardIsReady = true;
 
-            this.setRetroBoardCardSubscription();
-            this.setRetroBoardColumnCards();
-            this.createAddNewRetroBoardCardForm();
-            this.subscribeEvents();
+              this.setRetroBoardCardSubscription();
+              this.setRetroBoardColumnCards();
+              this.createAddNewRetroBoardCardForm();
+              this.subscribeEvents();
           });
 
         } else {
@@ -482,13 +484,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private getingDataAfterClickStartRetroProcess() {
     // tslint:disable-next-line:no-string-literal
-    this.retroBoardData = this.route.snapshot.data['retroBoardData'];
-    this.retroBoardToProcess = this.retroBoardData;
-    this.isRetroBoardIsReady = true;
-    this.setRetroBoardColumnCards();
-    this.createAddNewRetroBoardCardForm();
-    this.subscribeEvents();
-    this.setRetroBoardCardSubscription();
+    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoard;
+
+    this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardDataSnapshot.urlParamId).then(filteredRetroBoardSnapshot => {
+      if (filteredRetroBoardSnapshot.docs.length > 0) {
+        this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardDataSnapshot.urlParamId)
+          .subscribe(retroBoardsSnapshot => {
+            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+            this.retroBoardToProcess = findedRetroBoard;
+            this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
+            this.retroBoardData = this.retroBoardToProcess;
+            this.isRetroBoardIsReady = true;
+
+            this.setRetroBoardColumnCards();
+            this.createAddNewRetroBoardCardForm();
+            this.subscribeEvents();
+            this.setRetroBoardCardSubscription();
+        })
+      } else {
+        // if url not exisis
+      }
+    });
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {
