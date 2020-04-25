@@ -431,7 +431,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
               this.isRetroBoardIsReady = true;
 
-              this.setRetroBoardCardSubscription();
+              this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
               this.createAddNewRetroBoardCardForm();
               this.subscribeEvents();
@@ -444,18 +444,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setRetroBoardCardSubscription() {
+  private setRetroBoardCardSubscription(retroBoardId: string) {
     this.retroBoardCardsSubscriptions =
-      this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
-        this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
-          const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
-          const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
-          retroBoardCard.id = retroBoardCardDocId;
-          this.addRetroBoardCardToCorrectColumn(retroBoardCard);
-        });
-        this.setIsExistingSomeRetroBoardCardActions();
+      this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
+        .subscribe(retroBoardCardsSnapshot => {
+          this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+            const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+            const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
+            retroBoardCard.id = retroBoardCardDocId;
+            this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+          });
+          this.setIsExistingSomeRetroBoardCardActions();
       });
   }
 
@@ -499,7 +500,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
             this.subscribeEvents();
-            this.setRetroBoardCardSubscription();
+            this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
         })
       } else {
         // if url not exisis
@@ -516,7 +517,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
-      retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
+      retroBoardId: card.retroBoardId,
       user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
       voteCount: card.voteCount,
       actions: new Array<any>()
@@ -551,7 +552,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
-      voteCount: card.voteCount
+      voteCount: card.voteCount,
+      retroBoardId: card.retroBoardId
     };
   }
 
@@ -571,7 +573,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<MergedRetroBoardCard>(),
-      retroBoard: this.retroBoardToProcess,
+      retroBoardId: this.retroBoardToProcess.id,
       user: this.currentUser,
       id: '',
       voteCount: 0,
