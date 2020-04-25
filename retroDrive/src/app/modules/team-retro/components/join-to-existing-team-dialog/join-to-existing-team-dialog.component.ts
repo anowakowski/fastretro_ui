@@ -32,10 +32,10 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
 
   prepareTeamsForCurrentWorkspace() {
     this.teams = new Array<Team>();
-    this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.data.currentWorkspace.id).subscribe(teamsSnapshot => {
+    this.firestoreService.findTeamsInCurrentWorkspace(this.data.currentWorkspace.id).then(teamsSnapshot => {
       teamsSnapshot.forEach(teamSnapshot => {
-        const team = teamSnapshot.payload.doc.data() as Team;
-        const teamId = teamSnapshot.payload.doc.id as string;
+        const team = teamSnapshot.data() as Team;
+        const teamId = teamSnapshot.id as string;
         team.id = teamId;
         this.teams.push(team);
       });
@@ -50,7 +50,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
     };
 
     this.firestoreService.addNewUserTeams(userTeamsToSave);
-
+    this.dialogRef.close();
   }
 
   onNoClick(): void {

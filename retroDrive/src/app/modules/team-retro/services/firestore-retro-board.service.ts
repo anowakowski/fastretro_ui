@@ -119,6 +119,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/teams/', condition);
   }
 
+  findTeamsInCurrentWorkspace(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFiltered('/teams/', condition);
+  }
+
   private prepareRetroBoardToSave(newRetroBoard: any) {
     return {
       sprintNumber: newRetroBoard.sprintNumber,
