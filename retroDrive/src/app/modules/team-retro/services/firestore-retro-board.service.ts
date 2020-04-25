@@ -119,14 +119,14 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFiltered('/userworkspaces/', condition);
   }
 
-  findTeamsInCurrentWorkspaceSnapshotChanges(workspaceId: string) {
+  findUserTeamsSnapshotChanges(userId: string) {
     const condition: ConditionQueryData = {
-      fieldName: 'workspaceId',
+      fieldName: 'userId',
       conditionOperator: '==',
-      value: workspaceId
+      value: userId
     };
 
-    return this.firestoreBase.getFilteredSnapshotChanges('/teams/', condition);
+    return this.firestoreBase.getFilteredSnapshotChanges('/userTeams/', condition);
   }
 
   findTeamsInCurrentWorkspace(workspaceId: string) {

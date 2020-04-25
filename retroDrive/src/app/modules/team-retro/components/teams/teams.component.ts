@@ -9,6 +9,8 @@ import { Team } from 'src/app/models/team';
 import { JoinToExistingTeamDialogComponent } from '../join-to-existing-team-dialog/join-to-existing-team-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
+import { UserTeams } from 'src/app/models/userTeams';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 @Component({
   selector: 'app-teams',
@@ -37,13 +39,27 @@ export class TeamsComponent implements OnInit {
   }
 
   prepareTeamsForCurrentWorkspace() {
-    this.teams = new Array<Team>();
-    this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.currentWorkspace.id).subscribe(teamsSnapshot => {
-      teamsSnapshot.forEach(teamSnapshot => {
-        const team = teamSnapshot.payload.doc.data() as Team;
-        const teamId = teamSnapshot.payload.doc.id as string;
-        team.id = teamId;
-        this.teams.push(team);
+    this.firestoreService.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
+      this.teams = new Array<Team>();
+      userTeamsSnapshot.forEach(userTeamSnapshot => {
+        const userTeams = userTeamSnapshot.payload.doc.data() as UserTeamsToSave;
+        userTeams.teams.forEach(teamRef => {
+          teamRef.get().then(teamDoc => {
+            const findedUserTeam = teamDoc.data();
+            findedUserTeam.id = teamDoc.id as string;
+            findedUserTeam.workspace.get().then(workspaceSnapshot => {
+              const userTeamToAdd = findedUserTeam as Team;
+              const findedWorkspace = workspaceSnapshot.data() as Workspace;
+              findedWorkspace.id = workspaceSnapshot.id;
+              userTeamToAdd.workspace = findedWorkspace;
+
+              if (findedWorkspace.id === this.currentWorkspace.id) {
+                this.teams.push(findedUserTeam);
+              }
+            });
+          });
+        });
+
       });
     });
   }

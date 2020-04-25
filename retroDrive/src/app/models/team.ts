@@ -4,4 +4,5 @@ export class Team {
     id: string;
     name: string;
     workspaceId: string;
+    workspace: Workspace;
 }
