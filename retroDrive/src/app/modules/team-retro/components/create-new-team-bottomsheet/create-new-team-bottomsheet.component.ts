@@ -5,6 +5,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 import { FiresrtoreRetroProcessInProgressService } from 'src/app/modules/team-retro-process-in-progress/services/firesrtore-retro-process-in-progress.service';
 import { formatDate } from '@angular/common';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -18,7 +19,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: WorkspaceToSave,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: Workspace,
     private formBuilder: FormBuilder,
     private firestoreService: FiresrtoreRetroProcessInProgressService) { }
 
@@ -39,9 +40,8 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
     const teamToSave = {
       name: teamNameValue,
       creationDate: currentDate,
-      //workspace: this.firestoreService.addWorkspaceAsRef(data.id)
+      workspace: this.firestoreService.addWorkspaceAsRef(this.data.id)
     };
-    
   }
 
 
