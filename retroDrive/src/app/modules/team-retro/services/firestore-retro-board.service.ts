@@ -86,6 +86,10 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.addAsRef('/users/', user.uid);
   }
 
+  addTeamAsRef(teamId: string) {
+    return this.firestoreBase.addAsRef('/teams', teamId);
+  }
+
   addWorkspaceAsRef(workspaceId: string) {
     return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
   }

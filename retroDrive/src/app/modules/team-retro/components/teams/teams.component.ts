@@ -6,6 +6,9 @@ import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomshee
 import { Workspace } from 'src/app/models/workspace';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { Team } from 'src/app/models/team';
+import { JoinToExistingTeamDialogComponent } from '../join-to-existing-team-dialog/join-to-existing-team-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-teams',
@@ -16,15 +19,18 @@ export class TeamsComponent implements OnInit {
 
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
+  currentUser: User;
 
   constructor(
     private localStorageService: LocalStorageService,
     private bottomSheetRef: MatBottomSheet,
-    private firestoreService: FirestoreRetroBoardService) { }
+    private firestoreService: FirestoreRetroBoardService,
+    public dialog: MatDialog) { }
 
   teams: Team[];
 
   ngOnInit() {
+    this.currentUser = this.localStorageService.getItem('');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
     this.prepareTeamsForCurrentWorkspace();
@@ -48,5 +54,20 @@ export class TeamsComponent implements OnInit {
     });
 
     bottomSheetRef.afterDismissed().subscribe(() => {});
+  }
+
+  jointToExisitngTeamDialog() {
+    const dialogRef = this.dialog.open(JoinToExistingTeamDialogComponent, {
+      width: '600px',
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+      }
+    });
   }
 }
