@@ -1,11 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-// tslint:disable-next-line:max-line-length
-import { FiresrtoreRetroProcessInProgressService } from 'src/app/modules/team-retro-process-in-progress/services/firesrtore-retro-process-in-progress.service';
 import { formatDate } from '@angular/common';
-import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { Workspace } from 'src/app/models/workspace';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -21,7 +19,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: Workspace,
     private formBuilder: FormBuilder,
-    private firestoreService: FiresrtoreRetroProcessInProgressService) { }
+    private firestoreService: FirestoreRetroBoardService) { }
 
   ngOnInit() {
     this.createNewTeamsForm();

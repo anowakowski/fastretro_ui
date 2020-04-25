@@ -22,6 +22,10 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
+  addNewTeam(teamToSave: any) {
+    this.firestoreBase.addNewItem('/teams/', teamToSave);
+  }
+
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
@@ -95,6 +99,16 @@ export class FirestoreRetroBoardService {
     };
 
     return this.firestoreBase.getFiltered('/userworkspaces/', condition);
+  }
+
+  findTeamsInCurrentWorkspaceSnapshotChanges(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspace',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFiltered('/teams/', condition);
   }
 
   private prepareRetroBoardToSave(newRetroBoard: any) {

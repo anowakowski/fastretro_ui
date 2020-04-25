@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomsheet/create-new-team-bottomsheet.component';
 import { Workspace } from 'src/app/models/workspace';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-teams',
@@ -16,17 +16,23 @@ export class TeamsComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
 
-  constructor(private localStorageService: LocalStorageService, private bottomSheetRef: MatBottomSheet) { }
+  constructor(
+    private localStorageService: LocalStorageService,
+    private bottomSheetRef: MatBottomSheet,
+    private firestoreService: FirestoreRetroBoardService) { }
 
   teams: string[] = ['#Tean1 Alpha', '#Team2 Beta', '#Team3 Gamma'];
 
   ngOnInit() {
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
     this.prepareTeamsForCurrentWorkspace();
   }
 
   prepareTeamsForCurrentWorkspace() {
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+    this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.currentWorkspace.id).then(teamsSnapshot => {
+      const test = teamsSnapshot.docs.length;
+    })
   }
 
   createNewTeamBottomShet() {

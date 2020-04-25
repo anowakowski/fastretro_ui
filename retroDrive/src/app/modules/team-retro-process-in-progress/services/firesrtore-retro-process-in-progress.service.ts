@@ -21,10 +21,6 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.addNewItem('/timerOptions/', timerOption);
   }
 
-  addNewTeam(teamToSave: any) {
-    this.firestoreBase.addNewItem('/teams/', teamToSave);
-  }
-
   updateRetroBoardCardAction(action: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
   }
