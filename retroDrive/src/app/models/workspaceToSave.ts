@@ -1,4 +1,4 @@
-export interface Workspace {
+export interface WorkspaceToSave {
     name: string;
     creationDate: string;
     isNewWorkspace: boolean;

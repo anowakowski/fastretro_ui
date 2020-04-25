@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomsheet/create-new-team-bottomsheet.component';
 
@@ -13,7 +13,7 @@ import { CreateNewTeamBottomsheetComponent } from '../create-new-team-bottomshee
 export class TeamsComponent implements OnInit {
 
   userWorkspace: UserWorkspace;
-  currenUserWorkspace: Workspace;
+  currenUserWorkspace: WorkspaceToSave;
 
   constructor(private localStorageService: LocalStorageService, private bottomSheetRef: MatBottomSheet) { }
 

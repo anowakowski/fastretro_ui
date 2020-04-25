@@ -4,7 +4,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 // tslint:disable-next-line:max-line-length
 import { FiresrtoreRetroProcessInProgressService } from 'src/app/modules/team-retro-process-in-progress/services/firesrtore-retro-process-in-progress.service';
 import { formatDate } from '@angular/common';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -18,7 +18,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: Workspace,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: WorkspaceToSave,
     private formBuilder: FormBuilder,
     private firestoreService: FiresrtoreRetroProcessInProgressService) { }
 

@@ -11,7 +11,7 @@ import { WelcomeInfoNewUsersDashboardDialogComponent }
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 
 @Component({
   selector: 'app-dashboard',

@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { FirestoreRetroBoardService } from './services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { User } from 'firebase';
 
 @Component({
@@ -49,7 +49,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
           const findedUserWorkspaceToSave = userWorkspaceDoc.data();
           findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
             worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
-              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as WorkspaceToSave;
               userWorkspace.workspaces.push(userWorkspacesData);
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
@@ -63,7 +63,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
   private createUserWorkspace(currentUser): UserWorkspace {
     return {
       user: currentUser,
-      workspaces: new Array<Workspace>()
+      workspaces: new Array<WorkspaceToSave>()
     };
   }
 

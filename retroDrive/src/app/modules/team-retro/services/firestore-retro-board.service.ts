@@ -4,7 +4,7 @@ import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { User } from 'src/app/models/user';
-import { Workspace } from 'src/app/models/workspace';
+import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
@@ -70,7 +70,7 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.updateUserData(user);
   }
 
-  addNewWorkspace(workspace: Workspace) {
+  addNewWorkspace(workspace: WorkspaceToSave) {
     return this.firestoreBase.addNewItem('/workspaces', workspace);
   }
 

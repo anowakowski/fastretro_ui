@@ -1,7 +1,7 @@
 import { User } from './user';
-import { Workspace } from './workspace';
+import { WorkspaceToSave } from './workspaceToSave';
 
 export interface UserWorkspace {
     user: User;
-    workspaces: Array<Workspace>;
+    workspaces: Array<WorkspaceToSave>;
 }
