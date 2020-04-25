@@ -39,23 +39,35 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
     const teamToSave = {
       name: teamNameValue,
       creationDate: currentDate,
-      workspaceId: this.data.id,
-      workspace: this.firestoreService.addWorkspaceAsRef(this.data.id)
+      workspaceId: this.data.currentWorkspace.id,
+      workspace: this.firestoreService.addWorkspaceAsRef(this.data.currentWorkspace.id)
     };
 
     this.firestoreService.addNewTeam(teamToSave).then(newTeamDocRefSnapshot => {
       newTeamDocRefSnapshot.get().then(newTeamSnapshot => {
         const newTeamId = newTeamSnapshot.id;
 
-        const userTeamsToSave: UserTeamsToSave = {
-          userId: this.data.currentUser.uid,
-          teams: [this.firestoreService.addTeamAsRef(newTeamId)]
-        };
-        
+        this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
+          const isExistngUserTeams = userTeamsSnapshot.docs.length > 0;
+          if (isExistngUserTeams) {
+            const exisitngUserTeam = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+            const exisitngUserTeamId = userTeamsSnapshot.docs[0].id;
+            exisitngUserTeam.teams.push(this.firestoreService.addTeamAsRef(newTeamId));
+            this.firestoreService.updateUserTeams(exisitngUserTeam, exisitngUserTeamId);
+          } else {
+            const userTeamsToSave: UserTeamsToSave = {
+              userId: this.data.currentUser.uid,
+              teams: [this.firestoreService.addTeamAsRef(newTeamId)]
+            };
+            this.firestoreService.addNewUserTeams(userTeamsToSave);
+          }
+
+          this.bottomSheetRef.dismiss();
+        });
+
       });
     });
-    this.bottomSheetRef.dismiss();
-    event.preventDefault();
+
   }
 
 

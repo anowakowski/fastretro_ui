@@ -66,7 +66,10 @@ export class TeamsComponent implements OnInit {
 
   createNewTeamBottomShet() {
     const bottomSheetRef = this.bottomSheetRef.open(CreateNewTeamBottomsheetComponent, {
-      data: this.currentWorkspace
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser
+      }
     });
 
     bottomSheetRef.afterDismissed().subscribe(() => {});
