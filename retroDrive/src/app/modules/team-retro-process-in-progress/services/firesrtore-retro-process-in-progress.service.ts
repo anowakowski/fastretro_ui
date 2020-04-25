@@ -43,6 +43,16 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFiltered('/retroBoards/', condition);
   }
 
+  findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'urlParamId',
+      conditionOperator: '==',
+      value: urlParamId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
+  }
+
   findRetroBoardCardById(docId: string) {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }

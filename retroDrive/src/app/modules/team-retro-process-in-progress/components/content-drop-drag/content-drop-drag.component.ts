@@ -419,16 +419,22 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
       // tslint:disable-next-line:no-string-literal
       const retroBoardParamId: string = params['id'];
-      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
-        if (retroBoardsSnapshot.docs.length > 0) {
-          const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
-          this.retroBoardToProcess = findedRetroBoard;
-          this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
-          this.isRetroBoardIsReady = true;
-          this.setRetroBoardCardSubscription();
-          this.setRetroBoardColumnCards();
-          this.createAddNewRetroBoardCardForm();
-          this.subscribeEvents();
+      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(filteredRetroBoardsSnapshot => {
+        if (filteredRetroBoardsSnapshot.docs.length > 0) {
+
+          // tslint:disable-next-line:max-line-length
+          this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
+            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+            this.retroBoardToProcess = findedRetroBoard;
+            this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
+            this.isRetroBoardIsReady = true;
+
+            this.setRetroBoardCardSubscription();
+            this.setRetroBoardColumnCards();
+            this.createAddNewRetroBoardCardForm();
+            this.subscribeEvents();
+          });
+
         } else {
           // not finded any retro board
         }
