@@ -22,7 +22,7 @@ export class TeamsComponent implements OnInit {
     private bottomSheetRef: MatBottomSheet,
     private firestoreService: FirestoreRetroBoardService) { }
 
-  teams: Team[]
+  teams: Team[];
 
   ngOnInit() {
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
