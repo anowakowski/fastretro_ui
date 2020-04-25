@@ -38,6 +38,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
     const teamToSave = {
       name: teamNameValue,
       creationDate: currentDate,
+      workspaceId: this.data.id,
       workspace: this.firestoreService.addWorkspaceAsRef(this.data.id)
     };
 

@@ -30,9 +30,12 @@ export class TeamsComponent implements OnInit {
   }
 
   prepareTeamsForCurrentWorkspace() {
-    this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.currentWorkspace.id).then(teamsSnapshot => {
-      const test = teamsSnapshot.docs.length;
-    })
+    this.firestoreService.findTeamsInCurrentWorkspaceSnapshotChanges(this.currentWorkspace.id).subscribe(teamsSnapshot => {
+      teamsSnapshot.forEach(teamSnapshot => {
+        const team = teamSnapshot.payload.doc.data();
+        const teamId = teamSnapshot.payload.doc.id as string;
+      });
+    });
   }
 
   createNewTeamBottomShet() {

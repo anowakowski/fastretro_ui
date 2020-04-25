@@ -103,12 +103,12 @@ export class FirestoreRetroBoardService {
 
   findTeamsInCurrentWorkspaceSnapshotChanges(workspaceId: string) {
     const condition: ConditionQueryData = {
-      fieldName: 'workspace',
+      fieldName: 'workspaceId',
       conditionOperator: '==',
       value: workspaceId
     };
 
-    return this.firestoreBase.getFiltered('/teams/', condition);
+    return this.firestoreBase.getFilteredSnapshotChanges('/teams/', condition);
   }
 
   private prepareRetroBoardToSave(newRetroBoard: any) {
