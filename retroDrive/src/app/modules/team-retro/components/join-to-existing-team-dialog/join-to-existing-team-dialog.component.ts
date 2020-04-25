@@ -49,6 +49,8 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
       teams: [this.firestoreService.addTeamAsRef(chosenTeamId)]
     };
 
+    this.firestoreService.addNewUserTeams(userTeamsToSave);
+
   }
 
   onNoClick(): void {

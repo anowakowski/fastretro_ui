@@ -7,6 +7,7 @@ import { User } from 'src/app/models/user';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -14,7 +15,6 @@ const RETRO_BOARD_COLLECTION = '/retroBoards';
   providedIn: 'root'
 })
 export class FirestoreRetroBoardService {
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
@@ -24,6 +24,10 @@ export class FirestoreRetroBoardService {
 
   addNewTeam(teamToSave: any) {
     this.firestoreBase.addNewItem('/teams/', teamToSave);
+  }
+
+  addNewUserTeams(userTeamsToSave: UserTeamsToSave) {
+    this.firestoreBase.addNewItem('/userTeams/', userTeamsToSave);
   }
 
   prepareTeam(team: Teams) {
@@ -87,7 +91,7 @@ export class FirestoreRetroBoardService {
   }
 
   addTeamAsRef(teamId: string) {
-    return this.firestoreBase.addAsRef('/teams', teamId);
+    return this.firestoreBase.addAsRef('/teams/', teamId);
   }
 
   addWorkspaceAsRef(workspaceId: string) {

@@ -30,7 +30,7 @@ export class TeamsComponent implements OnInit {
   teams: Team[];
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('');
+    this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
     this.prepareTeamsForCurrentWorkspace();
