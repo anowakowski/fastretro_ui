@@ -5,6 +5,7 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { Workspace } from 'src/app/models/workspace';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 @Component({
   selector: 'app-join-to-existing-team-dialog',
@@ -45,13 +46,24 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
 
   joinToExisitngTeam() {
     const chosenTeamId = this.joinToExisitngTeamForm.value.existingTeamIdFormControl;
-    const userTeamsToSave: UserTeamsToSave = {
-      userId: this.data.currentUser.uid,
-      teams: [this.firestoreService.addTeamAsRef(chosenTeamId)]
-    };
 
-    this.firestoreService.addNewUserTeams(userTeamsToSave);
-    this.dialogRef.close();
+    this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
+      const isExistngUserTeams = userTeamsSnapshot.docs.length > 0;
+      if (isExistngUserTeams) {
+        const exisitngUserTeam = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+        const exisitngUserTeamId = userTeamsSnapshot.docs[0].id;
+        exisitngUserTeam.teams.push(this.firestoreService.addTeamAsRef(chosenTeamId));
+        this.firestoreService.updateUserTeams(exisitngUserTeam, exisitngUserTeamId);
+      } else {
+        const userTeamsToSave: UserTeamsToSave = {
+          userId: this.data.currentUser.uid,
+          teams: [this.firestoreService.addTeamAsRef(chosenTeamId)]
+        };
+        this.firestoreService.addNewUserTeams(userTeamsToSave);
+      }
+
+      this.dialogRef.close();
+    });
   }
 
   onNoClick(): void {

@@ -4,6 +4,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 import { formatDate } from '@angular/common';
 import { Workspace } from 'src/app/models/workspace';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -17,7 +18,7 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: Workspace,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private formBuilder: FormBuilder,
     private firestoreService: FirestoreRetroBoardService) { }
 
@@ -42,7 +43,17 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
       workspace: this.firestoreService.addWorkspaceAsRef(this.data.id)
     };
 
-    this.firestoreService.addNewTeam(teamToSave);
+    this.firestoreService.addNewTeam(teamToSave).then(newTeamDocRefSnapshot => {
+      newTeamDocRefSnapshot.get().then(newTeamSnapshot => {
+        const newTeamId = newTeamSnapshot.id;
+
+        const userTeamsToSave: UserTeamsToSave = {
+          userId: this.data.currentUser.uid,
+          teams: [this.firestoreService.addTeamAsRef(newTeamId)]
+        };
+        
+      });
+    });
     this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
