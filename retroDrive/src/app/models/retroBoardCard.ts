@@ -17,7 +17,7 @@ export class RetroBoardCard {
     public mergedContent: Array<MergedRetroBoardCard>;
     public isWentWellRetroBoradCol: boolean;
     public retroBoardId: string;
-    public user: any;
+    public userId: string;
     public voteCount: number;
     public actions: Array<any>;
 }

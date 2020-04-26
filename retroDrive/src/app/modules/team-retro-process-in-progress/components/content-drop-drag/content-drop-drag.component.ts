@@ -147,11 +147,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
             }
           });
-        
         // this.eventsService.emitTimerOptions(result);
-
-        
-
         this.retroProcessIsStoped = false;
         this.timerIsRunning = true;
       }
@@ -308,6 +304,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   editCard(currentCard: RetroBoardCard, colName: string) {
+    if (this.currentUser.uid !== currentCard.userId) {
+      return;
+    }
+    if (this.retroBoardToProcess.isFinished) {
+      return;
+    }
     if (currentCard.isMerged) {
       return;
     }
@@ -566,7 +568,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
       retroBoardId: card.retroBoardId,
-      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
+      user: this.currentUser.uid,
       voteCount: card.voteCount,
       actions: new Array<any>()
     };
@@ -577,7 +579,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private prepareRetroBoardCardToSaveFromMerged(mergedCard: MergedRetroBoardCard, isWentWellRetroBoradCol: boolean, index: number) {
     return {
       name: mergedCard.name,
-      user: mergedCard.user,
+      userId: mergedCard.userId,
       // tslint:disable-next-line:object-literal-shorthand
       index: index,
       isNewItem: false,
@@ -622,7 +624,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<MergedRetroBoardCard>(),
       retroBoardId: this.retroBoardToProcess.id,
-      user: this.currentUser,
+      userId: this.currentUser.uid,
       id: '',
       voteCount: 0,
       actions: new Array<any>()
@@ -706,7 +708,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
-    return { name: retroBoardCard.name, user: retroBoardCard.user };
+    return { name: retroBoardCard.name, userId: retroBoardCard.userId };
   }
 
   private chcekIfAnyCardIsInEditMode(): boolean {
