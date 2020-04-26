@@ -99,15 +99,24 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   stopRetroProcess() {
-    this.retroProcessIsStoped = true;
     this.timerIsRunning = false;
     this.shouldEnableVoteBtns = false;
+
+    this.setIsFinishedInRetroBoard(true);
     this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
+  private setIsFinishedInRetroBoard(isFinished: boolean) {
+    this.retroProcessIsStoped = isFinished;
+    // tslint:disable-next-line:object-literal-shorthand
+    const retroBoardToUpdate = { isFinished: isFinished };
+    this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
+  }
+
   openRetroProcess() {
-    this.retroProcessIsStoped = false;
     this.shouldEnableVoteBtns = true;
+
+    this.setIsFinishedInRetroBoard(false);
     this.eventsService.emitStartRetroInProgressProcessEmiter(true);
   }
 
@@ -443,6 +452,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.retroBoardToProcess = findedRetroBoard;
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
               this.isRetroBoardIsReady = true;
+              this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
@@ -532,6 +542,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
             this.retroBoardData = this.retroBoardToProcess;
             this.isRetroBoardIsReady = true;
+            this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
