@@ -80,6 +80,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges(RETRO_BOARD_COLLECTION, condition);
   }
 
+  retroBoardFilteredByWorkspaceIdSnapshotChanges(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
+  }
+
   deleteRetroBoard(retroBoard: RetroBoard) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
   }
@@ -167,7 +177,8 @@ export class FirestoreRetroBoardService {
       creationDate: newRetroBoard.creationDate,
       isFinished: newRetroBoard.isFinished,
       isStarted: false,
-      urlParamId: newRetroBoard.urlParamId
+      urlParamId: newRetroBoard.urlParamId,
+      workspaceId: newRetroBoard.workspaceId
     };
   }
 }

@@ -7,6 +7,10 @@ import { Teams } from 'src/app/models/teams';
 import { RetroBoard } from 'src/app/models/retroBoard';
 
 import { Guid } from 'guid-typescript';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -22,6 +26,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   sprintNumber = new FormControl('');
   shouldDisableMembersControl = true;
 
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
+  currentUser: User;
+
   teams: Teams[];
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
@@ -29,11 +37,16 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
     private formBuilder: FormBuilder,
-    private frbs: FirestoreRetroBoardService) { }
+    private frbs: FirestoreRetroBoardService,
+    private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
     this.createAddNewRetroBoardForm();
     this.prepareTeams();
+
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
   }
 
   openLink(event: MouseEvent): void {
@@ -76,7 +89,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       isFinished: false,
       // members: value.membersFormControl,
       creationDate: currentDate,
-      urlParamId: guid.toString()
+      urlParamId: guid.toString(),
+      workspaceId: this.currentWorkspace.id
     };
 
     return retroBoard;

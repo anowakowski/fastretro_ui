@@ -13,6 +13,8 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
+import { Workspace } from 'src/app/models/workspace';
+import { RetroBoard } from 'src/app/models/retroBoard';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +32,10 @@ export class DashboardComponent implements OnInit {
 
   currentUser: User;
   userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
+
+  retroBoards: Array<RetroBoard>;
+
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -47,11 +53,8 @@ export class DashboardComponent implements OnInit {
     if (this.currentUser.isNewUser) {
       this.openDialog();
     }
-  }
 
-  private prepareUserInLocalStorage() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.setRetroBoardForCurrentWorkspace();
   }
 
   openDialog() {
@@ -63,4 +66,31 @@ export class DashboardComponent implements OnInit {
       console.log('dialog was close');
     });
   }
+  
+  private prepareUserInLocalStorage() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+  }
+
+  private setRetroBoardForCurrentWorkspace() {
+    this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
+      this.retroBoards = new Array<RetroBoard>();
+      retroBoardsSnapshot.forEach(retroBoardSnapshot => {
+        const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoard;
+        retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
+
+        retroBoardData.team.get().then(teamSnapshot => {
+          const team = teamSnapshot.data();
+          retroBoardData.team = team;
+
+          if (retroBoardData.isStarted) {
+            this.retroBoards.push(retroBoardData);
+          }
+        });
+      });
+    });
+  }
+
 }

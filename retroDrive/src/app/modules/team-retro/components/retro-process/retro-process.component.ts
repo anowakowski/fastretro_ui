@@ -9,6 +9,10 @@ import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 import { Team } from 'src/app/models/team';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-retro-process',
@@ -22,12 +26,18 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   dataIsLoading = true;
 
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
+  currentUser: User;
+
+
   constructor(
     private bottomSheetRef: MatBottomSheet,
     private frbs: FirestoreRetroBoardService,
     private dataPassingService: DataPassingService,
     private snackBar: MatSnackBar,
-    private router: Router) { }
+    private router: Router,
+    private localStorageService: LocalStorageService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -35,6 +45,10 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.prepareRetroBoard();
+
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
   }
 
   openBottomSheet(): void {

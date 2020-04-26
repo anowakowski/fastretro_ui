@@ -5,11 +5,11 @@ export interface RetroBoard {
     id: string;
     sprintNumber: string;
     retroName: string;
-    team: Team;
-    members: any[];
+    team: any;
     creationDate: Date;
     isStarted: boolean;
     isFinished: boolean;
     startDate: Date;
     urlParamId: string;
+    workspaceId: string;
 }

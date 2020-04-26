@@ -78,7 +78,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
-    //this.createPersistentTimerOptions();
+    // this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
