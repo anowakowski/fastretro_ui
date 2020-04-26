@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
 import { TimerOption } from 'src/app/models/timerOption';
+import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -42,7 +43,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   retroProcessIsStop = false;
   shouldShowStartTimerIcon: boolean;
 
-  constructor(private eventsServices: EventsService) { }
+  constructor(private eventsServices: EventsService, private firebaseService: FiresrtoreRetroProcessInProgressService) { }
 
   ngOnInit() {
     this.currentInMinCountDown = this.maxInMin - 1;

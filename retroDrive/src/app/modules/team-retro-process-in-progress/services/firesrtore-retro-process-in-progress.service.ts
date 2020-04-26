@@ -7,6 +7,8 @@ import { TimerOption } from 'src/app/models/timerOption';
   providedIn: 'root'
 })
 export class FiresrtoreRetroProcessInProgressService {
+
+
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -21,8 +23,16 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.addNewItem('/timerOptions/', timerOption);
   }
 
+  addNewTimerSettingForRetroBoard(timerSetting: any) {
+    this.firestoreBase.addNewItem('/timerSettings/', timerSetting);
+  }
+
   updateRetroBoardCardAction(action: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
+  }
+
+  updateCurrentTimerSettings(timerSettingToUpdate: any, timerSettingId: string) {
+    this.firestoreBase.updateItem('/timerSettings/', timerSettingId, timerSettingToUpdate);
   }
 
   deleteRetroBoardCardAction(actionId) {
@@ -59,6 +69,26 @@ export class FiresrtoreRetroProcessInProgressService {
 
   getAllTimerOptions() {
     return this.firestoreBase.getAll('/timerOptions/');
+  }
+
+  getFilteredTimerSettingForCurrentRetroBoard(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/timerSettings/', condition);
+  }
+
+  getFilteredTimerSettingForCurrentRetroBoardSnapshotChanges(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/timerSettings/', condition);
   }
 
   addRetroBoardAsRef(retroBoardId: string) {

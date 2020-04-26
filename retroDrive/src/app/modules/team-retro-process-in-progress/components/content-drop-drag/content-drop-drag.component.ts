@@ -47,7 +47,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private eventsService: EventsService,
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
-    private authServices: AuthService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
@@ -129,7 +128,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        this.eventsService.emitTimerOptions(result);
+        const timerOpt = result as TimerOption;
+        this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(this.retroBoardToProcess.id)
+          .then(timerSettingsSnapshot => {
+            if (timerSettingsSnapshot.docs.length  > 0) {
+              const timerSettingId = timerSettingsSnapshot.docs[0].id;
+              const timerSettingToUpdate = { chosenTimerOpt: timerOpt };
+              this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
+            }
+          });
+        
+        // this.eventsService.emitTimerOptions(result);
+
+        
+
         this.retroProcessIsStoped = false;
         this.timerIsRunning = true;
       }
@@ -435,12 +447,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setRetroBoardColumnCards();
               this.createAddNewRetroBoardCardForm();
               this.subscribeEvents();
+              this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
           });
 
         } else {
           // not finded any retro board
         }
       });
+    });
+  }
+
+  private setUpTimerBaseSetting(retroBoardId: string) {
+    this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(retroBoardId).then(timerSettingsSnapshot => {
+      if (timerSettingsSnapshot.docs.length === 0) {
+        const timerSetting: any = {
+          chosenTimerOpt: {},
+          // tslint:disable-next-line:object-literal-shorthand
+          retroBoardId: retroBoardId,
+          isStarted: false
+        };
+        this.firestoreRetroInProgressService.addNewTimerSettingForRetroBoard(timerSetting);
+      }
     });
   }
 
@@ -501,7 +528,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.createAddNewRetroBoardCardForm();
             this.subscribeEvents();
             this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
-        })
+            this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+        });
       } else {
         // if url not exisis
       }
