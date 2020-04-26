@@ -1,8 +1,8 @@
 <div *ngIf="!currentUser.isNewUser">
-  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">List of finished retro board</mat-card>
 
   <div *ngFor="let retroBoard of retroBoards">
-    <mat-card class="example-card" style="opacity: 0.97;">
+    <mat-card class="example-card" style="opacity: 0.985;">
       <mat-card-header>
         <mat-card-title>#team {{retroBoard.team.name}} Board</mat-card-title>
         <mat-card-subtitle>
@@ -20,15 +20,21 @@
           </canvas>
         </div>
       </mat-card-content>
+      <mat-card-content *ngIf="!retroBoard.isFinished">
+        <div>
+          <h3 style="margin-top: 15px;">Retro in progress...</h3>
+          <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+        </div>
+      </mat-card-content>
     </mat-card>
 
-    <mat-card class="example-card" style="margin-top: 5px;" *ngIf="retroBoard.isFinished">
+    <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
       <mat-card-actions style="margin-top: -14px;">
         <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro Board Details</button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="example-card" style="margin-top: 5px;" *ngIf="!retroBoard.isFinished">
+    <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
       <mat-card-actions style="margin-top: -14px;">
         <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro</button>
       </mat-card-actions>
