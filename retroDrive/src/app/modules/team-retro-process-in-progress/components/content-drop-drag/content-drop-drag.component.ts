@@ -78,7 +78,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
-    // this.createPersistentTimerOptions();
+    //this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
@@ -388,13 +388,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private createPersistentTimerOptions() {
     const timerOptionsToSave: TimerOption[] = [
-      { value: '3', viewValue: '3 min' },
-      { value: '5', viewValue: '5 min' },
-      { value: '7', viewValue: '7 min' },
-      { value: '10', viewValue: '10 min' },
-      { value: '13', viewValue: '13 min' },
-      { value: '15', viewValue: '15 min' },
-      { value: '20', viewValue: '20 min' },
+      { value: 3, viewValue: '3 min' },
+      { value: 5, viewValue: '5 min' },
+      { value: 7, viewValue: '7 min' },
+      { value: 10, viewValue: '10 min' },
+      { value: 13, viewValue: '13 min' },
+      { value: 15, viewValue: '15 min' },
+      { value: 20, viewValue: '20 min' },
     ];
 
     timerOptionsToSave.forEach(timerOpt => {

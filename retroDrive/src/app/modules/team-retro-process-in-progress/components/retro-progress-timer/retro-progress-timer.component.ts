@@ -46,6 +46,9 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   shouldShowStartTimerIcon: boolean;
   currentTimerSettingId: any;
 
+  maxValueToMinitor: number;
+  timerIsInConfigurationMode: boolean;
+
   constructor(private eventsServices: EventsService, private firebaseService: FiresrtoreRetroProcessInProgressService) { }
 
   ngOnInit() {
@@ -65,7 +68,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
-    if (progressBarValue === this.maxInMin) {
+    if (progressBarValue === this.maxValueToMinitor) {
       this.shouldMonitortheLastCountDounInSec = true;
     }
   }
@@ -137,15 +140,14 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.currentInMinCountDown = this.maxInMin - 1;
     this.currentInSecCountDown = 59;
 
+    this.maxValueToMinitor = this.maxInMin - 1;
+
     this.subscribeCounterForTimer();
   }
 
   private subscribeEvents() {
     this.subscribeStopRetroProcess();
-    // this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
-    //   this.setNewTimer(timerOptions);
-    //   this.shouldShowStartTimerIcon = false;
-    // });
+
     this.stopTimerSubscriptions = this.eventsServices.getStopTimerEmiter().subscribe(shouldStopTimer => {
       if (shouldStopTimer && !this.timerIsStopped) {
         this.stopRetroTimer();
@@ -162,7 +164,8 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         .subscribe(timerSettingsSnapshot => {
           const timerSetting = timerSettingsSnapshot.payload.data() as TimerSettingToSave;
           const chosenTimerOption = timerSetting.chosenTimerOpt;
-          if (chosenTimerOption.value !== undefined) {
+          this.timerIsInConfigurationMode = timerSetting.isStarted;
+          if (chosenTimerOption.value !== undefined && timerSetting.isStarted) {
             this.setNewTimer(chosenTimerOption);
             this.shouldShowStartTimerIcon = false;
           }

@@ -1,4 +1,4 @@
 export class TimerOption {
-    public value: any;
-    public viewValue: any;
+    public value: number;
+    public viewValue: string;
   }
