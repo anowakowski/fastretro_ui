@@ -568,7 +568,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
       retroBoardId: card.retroBoardId,
-      user: this.currentUser.uid,
+      userId: this.currentUser.uid,
       voteCount: card.voteCount,
       actions: new Array<any>()
     };
