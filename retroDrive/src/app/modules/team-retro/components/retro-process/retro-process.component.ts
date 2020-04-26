@@ -70,6 +70,12 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   onStartRetroProcess(retroBoard) {
+    const retroBoardToUpdate = {
+      isStarted: true
+    };
+
+    this.frbs.updateRetroBoard(retroBoardToUpdate, retroBoard.id);
+
     this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
   }
@@ -89,6 +95,10 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       const team = retroBoardSnapshot.payload.doc.data().team.get();
       this.prepareTeams(team, retroBoard);
     });
+
+    if (snapshot.length === 0) {
+      this.dataIsLoading = false;
+    }
   }
 
   private prepareTeams(team: any, retroBoard: RetroBoard) {

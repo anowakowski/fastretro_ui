@@ -9,6 +9,7 @@ export interface RetroBoard {
     members: any[];
     creationDate: Date;
     isStarted: boolean;
+    isFinished: boolean;
     startDate: Date;
     urlParamId: string;
 }

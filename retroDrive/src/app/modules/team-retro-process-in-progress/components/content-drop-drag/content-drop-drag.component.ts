@@ -24,6 +24,7 @@ import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/
 import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
+import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -47,7 +48,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private eventsService: EventsService,
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
-    private authServices: AuthService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
@@ -72,12 +72,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public shouldEnableVoteBtns = true;
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
+  public retroBoardSubscriptions: any;
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
-    // this.createPersistentTimerOptions();
+    //this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
@@ -98,15 +99,24 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   stopRetroProcess() {
-    this.retroProcessIsStoped = true;
     this.timerIsRunning = false;
     this.shouldEnableVoteBtns = false;
+
+    this.setIsFinishedInRetroBoard(true);
     this.eventsService.emitStopRetroInProgressProcessEmiter(true);
   }
 
+  private setIsFinishedInRetroBoard(isFinished: boolean) {
+    this.retroProcessIsStoped = isFinished;
+    // tslint:disable-next-line:object-literal-shorthand
+    const retroBoardToUpdate = { isFinished: isFinished };
+    this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
+  }
+
   openRetroProcess() {
-    this.retroProcessIsStoped = false;
     this.shouldEnableVoteBtns = true;
+
+    this.setIsFinishedInRetroBoard(false);
     this.eventsService.emitStartRetroInProgressProcessEmiter(true);
   }
 
@@ -128,7 +138,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        this.eventsService.emitTimerOptions(result);
+        const timerOpt = result as TimerOption;
+        this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(this.retroBoardToProcess.id)
+          .then(timerSettingsSnapshot => {
+            if (timerSettingsSnapshot.docs.length  > 0) {
+              const timerSettingId = timerSettingsSnapshot.docs[0].id;
+              const timerSettingToUpdate = { chosenTimerOpt: timerOpt, isStarted: true };
+              this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
+            }
+          });
+        
+        // this.eventsService.emitTimerOptions(result);
+
+        
+
         this.retroProcessIsStoped = false;
         this.timerIsRunning = true;
       }
@@ -374,13 +397,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private createPersistentTimerOptions() {
     const timerOptionsToSave: TimerOption[] = [
-      { value: '3', viewValue: '3 min' },
-      { value: '5', viewValue: '5 min' },
-      { value: '7', viewValue: '7 min' },
-      { value: '10', viewValue: '10 min' },
-      { value: '13', viewValue: '13 min' },
-      { value: '15', viewValue: '15 min' },
-      { value: '20', viewValue: '20 min' },
+      { value: 3, viewValue: '3 min' },
+      { value: 5, viewValue: '5 min' },
+      { value: 7, viewValue: '7 min' },
+      { value: 10, viewValue: '10 min' },
+      { value: 13, viewValue: '13 min' },
+      { value: 15, viewValue: '15 min' },
+      { value: 20, viewValue: '20 min' },
     ];
 
     timerOptionsToSave.forEach(timerOpt => {
@@ -419,16 +442,25 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
       // tslint:disable-next-line:no-string-literal
       const retroBoardParamId: string = params['id'];
-      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(retroBoardsSnapshot => {
-        if (retroBoardsSnapshot.docs.length > 0) {
-          const findedRetroBoard = retroBoardsSnapshot.docs[0].data() as RetroBoard;
-          this.retroBoardToProcess = findedRetroBoard;
-          this.retroBoardToProcess.id = retroBoardsSnapshot.docs[0].id;
-          this.isRetroBoardIsReady = true;
-          this.setRetroBoardCardSubscription();
-          this.setRetroBoardColumnCards();
-          this.createAddNewRetroBoardCardForm();
-          this.subscribeEvents();
+      this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(filteredRetroBoardsSnapshot => {
+        if (filteredRetroBoardsSnapshot.docs.length > 0) {
+
+          this.retroBoardSubscriptions =
+          this.firestoreRetroInProgressService
+            .findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
+              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+              this.retroBoardToProcess = findedRetroBoard;
+              this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
+              this.isRetroBoardIsReady = true;
+              this.retroProcessIsStoped = findedRetroBoard.isFinished;
+
+              this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
+              this.setRetroBoardColumnCards();
+              this.createAddNewRetroBoardCardForm();
+              this.subscribeEvents();
+              this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+          });
+
         } else {
           // not finded any retro board
         }
@@ -436,18 +468,41 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setRetroBoardCardSubscription() {
-    this.retroBoardCardsSubscriptions =
-      this.firestoreRetroInProgressService.retroBoardCardsFilteredSnapshotChanges().subscribe(retroBoardCardsSnapshot => {
-        this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-        retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
-          const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
-          const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
-          retroBoardCard.id = retroBoardCardDocId;
-          this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+  private setUpTimerBaseSetting(retroBoardId: string) {
+    this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(retroBoardId).then(timerSettingsSnapshot => {
+      if (timerSettingsSnapshot.docs.length === 0) {
+        const timerSetting: TimerSettingToSave = {
+          chosenTimerOpt: {},
+          // tslint:disable-next-line:object-literal-shorthand
+          retroBoardId: retroBoardId,
+          isStarted: false
+        };
+        this.firestoreRetroInProgressService.addNewTimerSettingForRetroBoard(timerSetting).then(newTimerSettingSnapshot => {
+          newTimerSettingSnapshot.get().then(newTimerSettingDocs => {
+            const newTimerSettingId = newTimerSettingDocs.id;
+            this.eventsService.emitNewTimerSetting(newTimerSettingId);
+          });
         });
-        this.setIsExistingSomeRetroBoardCardActions();
+      } else if (timerSettingsSnapshot.docs.length === 1) {
+        const timerSettingId = timerSettingsSnapshot.docs[0].id;
+        this.eventsService.emitNewTimerSetting(timerSettingId);
+      }
+    });
+  }
+
+  private setRetroBoardCardSubscription(retroBoardId: string) {
+    this.retroBoardCardsSubscriptions =
+      this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
+        .subscribe(retroBoardCardsSnapshot => {
+          this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
+            const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
+            const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
+            retroBoardCard.id = retroBoardCardDocId;
+            this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+          });
+          this.setIsExistingSomeRetroBoardCardActions();
       });
   }
 
@@ -476,13 +531,29 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private getingDataAfterClickStartRetroProcess() {
     // tslint:disable-next-line:no-string-literal
-    this.retroBoardData = this.route.snapshot.data['retroBoardData'];
-    this.retroBoardToProcess = this.retroBoardData;
-    this.isRetroBoardIsReady = true;
-    this.setRetroBoardColumnCards();
-    this.createAddNewRetroBoardCardForm();
-    this.subscribeEvents();
-    this.setRetroBoardCardSubscription();
+    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoard;
+
+    this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardDataSnapshot.urlParamId).then(filteredRetroBoardSnapshot => {
+      if (filteredRetroBoardSnapshot.docs.length > 0) {
+        this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardDataSnapshot.urlParamId)
+          .subscribe(retroBoardsSnapshot => {
+            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+            this.retroBoardToProcess = findedRetroBoard;
+            this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
+            this.retroBoardData = this.retroBoardToProcess;
+            this.isRetroBoardIsReady = true;
+            this.retroProcessIsStoped = findedRetroBoard.isFinished;
+
+            this.setRetroBoardColumnCards();
+            this.createAddNewRetroBoardCardForm();
+            this.subscribeEvents();
+            this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
+            this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+        });
+      } else {
+        // if url not exisis
+      }
+    });
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {
@@ -494,7 +565,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
-      retroBoard: this.firestoreRetroInProgressService.addRetroBoardAsRef(this.retroBoardToProcess.id),
+      retroBoardId: card.retroBoardId,
       user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
       voteCount: card.voteCount,
       actions: new Array<any>()
@@ -529,7 +600,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
-      voteCount: card.voteCount
+      voteCount: card.voteCount,
+      retroBoardId: card.retroBoardId
     };
   }
 
@@ -549,7 +621,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<MergedRetroBoardCard>(),
-      retroBoard: this.retroBoardToProcess,
+      retroBoardId: this.retroBoardToProcess.id,
       user: this.currentUser,
       id: '',
       voteCount: 0,

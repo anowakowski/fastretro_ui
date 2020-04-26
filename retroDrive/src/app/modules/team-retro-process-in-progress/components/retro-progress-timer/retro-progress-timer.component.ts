@@ -3,6 +3,8 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
 import { TimerOption } from 'src/app/models/timerOption';
+import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
+import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -18,6 +20,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   public stopTimerSubscriptions: any;
   public timerOptionsSubscriptions: any;
   public startRetroInProgressProcessSubscriptions: any;
+  public newTimerSettingsSubscriptions: any;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -41,8 +44,12 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   timerIsStopped = false;
   retroProcessIsStop = false;
   shouldShowStartTimerIcon: boolean;
+  currentTimerSettingId: any;
 
-  constructor(private eventsServices: EventsService) { }
+  maxValueToMinitor: number;
+  timerIsInConfigurationMode: boolean;
+
+  constructor(private eventsServices: EventsService, private firebaseService: FiresrtoreRetroProcessInProgressService) { }
 
   ngOnInit() {
     this.currentInMinCountDown = this.maxInMin - 1;
@@ -61,7 +68,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
-    if (progressBarValue === this.maxInMin) {
+    if (progressBarValue === this.maxValueToMinitor) {
       this.shouldMonitortheLastCountDounInSec = true;
     }
   }
@@ -116,6 +123,9 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.timerIsStopped = true;
     this.currentInMin = this.maxInMin;
     this.unsubscribeTimer();
+
+    const timerSettingToUpdate = { chosenTimerOpt: {}, isStarted: false };
+    this.firebaseService.updateCurrentTimerSettings(timerSettingToUpdate, this.currentTimerSettingId);
   }
 
   private setNewTimer(timerOption: TimerOption) {
@@ -130,15 +140,14 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.currentInMinCountDown = this.maxInMin - 1;
     this.currentInSecCountDown = 59;
 
+    this.maxValueToMinitor = this.maxInMin - 1;
+
     this.subscribeCounterForTimer();
   }
 
   private subscribeEvents() {
     this.subscribeStopRetroProcess();
-    this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
-      this.setNewTimer(timerOptions);
-      this.shouldShowStartTimerIcon = false;
-    });
+
     this.stopTimerSubscriptions = this.eventsServices.getStopTimerEmiter().subscribe(shouldStopTimer => {
       if (shouldStopTimer && !this.timerIsStopped) {
         this.stopRetroTimer();
@@ -147,6 +156,24 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.newTimerSettingsSubscriptions = this.eventsServices.getNewTimerSettingEmiter().subscribe(newTimerSettingId => {
+      this.currentTimerSettingId = newTimerSettingId;
+      this.timerOptionsSubscriptions =
+      this.firebaseService.getFilteredTimerSettingByIdSnapshotChanges(newTimerSettingId)
+        .subscribe(timerSettingsSnapshot => {
+          const timerSetting = timerSettingsSnapshot.payload.data() as TimerSettingToSave;
+          const chosenTimerOption = timerSetting.chosenTimerOpt;
+          this.timerIsInConfigurationMode = timerSetting.isStarted;
+          if (chosenTimerOption.value !== undefined && timerSetting.isStarted) {
+            this.setNewTimer(chosenTimerOption);
+            this.shouldShowStartTimerIcon = false;
+          }
+        });
+    });
+
+
+
     this.startRetroInProgressProcessSubscriptions =
       this.eventsServices.getStartRetroInProgressProcessEmiter().subscribe(shouldStartRetroProcess => {
         this.shouldShowStartTimerIcon = true;

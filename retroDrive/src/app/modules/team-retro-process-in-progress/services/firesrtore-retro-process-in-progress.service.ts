@@ -7,6 +7,8 @@ import { TimerOption } from 'src/app/models/timerOption';
   providedIn: 'root'
 })
 export class FiresrtoreRetroProcessInProgressService {
+
+
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -21,8 +23,16 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.addNewItem('/timerOptions/', timerOption);
   }
 
+  addNewTimerSettingForRetroBoard(timerSetting: any) {
+    return this.firestoreBase.addNewItem('/timerSettings/', timerSetting);
+  }
+
   updateRetroBoardCardAction(action: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
+  }
+
+  updateCurrentTimerSettings(timerSettingToUpdate: any, timerSettingId: string) {
+    this.firestoreBase.updateItem('/timerSettings/', timerSettingId, timerSettingToUpdate);
   }
 
   deleteRetroBoardCardAction(actionId) {
@@ -43,12 +53,46 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFiltered('/retroBoards/', condition);
   }
 
+  findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'urlParamId',
+      conditionOperator: '==',
+      value: urlParamId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
+  }
+
   findRetroBoardCardById(docId: string) {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
 
   getAllTimerOptions() {
     return this.firestoreBase.getAll('/timerOptions/');
+  }
+
+  getFilteredTimerSettingForCurrentRetroBoard(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/timerSettings/', condition);
+  }
+
+  getFilteredTimerSettingForCurrentRetroBoardSnapshotChanges(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/timerSettings/', condition);
+  }
+
+  getFilteredTimerSettingByIdSnapshotChanges(timerSettingId: string) {
+    return this.firestoreBase.getFilteredByIdSnapshotChanges('/timerSettings/', timerSettingId);
   }
 
   addRetroBoardAsRef(retroBoardId: string) {
@@ -67,8 +111,22 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
   }
 
+  updateRetroBoard(retroBoardToUpdate: any, id: any) {
+    this.firestoreBase.updateItem('/retroBoards/', id, retroBoardToUpdate);
+  }
+
   retroBoardCardsFilteredSnapshotChanges() {
     return this.firestoreBase.snapshotChanges('/retroBoardCards/');
+  }
+
+  retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/retroBoardCards/', condition);
   }
 
   findRetroBoardByIdSnapshotChanges(id: string) {

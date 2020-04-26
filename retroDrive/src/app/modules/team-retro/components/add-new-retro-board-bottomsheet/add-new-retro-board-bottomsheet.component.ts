@@ -73,6 +73,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       sprintNumber: value.sprintNumber,
       retroName: value.retroName,
       team: value.teamsFormControl,
+      isFinished: false,
       // members: value.membersFormControl,
       creationDate: currentDate,
       urlParamId: guid.toString()
