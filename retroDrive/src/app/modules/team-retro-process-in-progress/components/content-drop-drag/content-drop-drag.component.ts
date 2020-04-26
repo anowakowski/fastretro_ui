@@ -24,6 +24,7 @@ import { AddNewActionBottomsheetComponent } from '../add-new-action-bottomsheet/
 import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-progress-show-action-dialog/team-retro-in-progress-show-action-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
+import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -460,13 +461,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private setUpTimerBaseSetting(retroBoardId: string) {
     this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(retroBoardId).then(timerSettingsSnapshot => {
       if (timerSettingsSnapshot.docs.length === 0) {
-        const timerSetting: any = {
+        const timerSetting: TimerSettingToSave = {
           chosenTimerOpt: {},
           // tslint:disable-next-line:object-literal-shorthand
           retroBoardId: retroBoardId,
           isStarted: false
         };
-        this.firestoreRetroInProgressService.addNewTimerSettingForRetroBoard(timerSetting);
+        this.firestoreRetroInProgressService.addNewTimerSettingForRetroBoard(timerSetting).then(newTimerSettingSnapshot => {
+          newTimerSettingSnapshot.get().then(newTimerSettingDocs => {
+            const newTimerSettingId = newTimerSettingDocs.id;
+            this.eventsService.emitNewTimerSetting(newTimerSettingId);
+          });
+        });
       }
     });
   }

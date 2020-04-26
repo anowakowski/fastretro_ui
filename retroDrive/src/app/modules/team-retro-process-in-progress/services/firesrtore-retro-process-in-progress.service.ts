@@ -24,7 +24,7 @@ export class FiresrtoreRetroProcessInProgressService {
   }
 
   addNewTimerSettingForRetroBoard(timerSetting: any) {
-    this.firestoreBase.addNewItem('/timerSettings/', timerSetting);
+    return this.firestoreBase.addNewItem('/timerSettings/', timerSetting);
   }
 
   updateRetroBoardCardAction(action: any, id: string) {
@@ -89,6 +89,10 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFilteredSnapshotChanges('/timerSettings/', condition);
+  }
+
+  getFilteredTimerSettingByIdSnapshotChanges(timerSettingId: string) {
+    return this.firestoreBase.getFilteredByIdSnapshotChanges('/timerSettings/', timerSettingId);
   }
 
   addRetroBoardAsRef(retroBoardId: string) {

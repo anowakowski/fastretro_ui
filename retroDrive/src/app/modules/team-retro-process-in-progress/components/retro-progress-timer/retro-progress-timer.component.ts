@@ -4,6 +4,7 @@ import { Observable, interval } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
+import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -19,6 +20,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   public stopTimerSubscriptions: any;
   public timerOptionsSubscriptions: any;
   public startRetroInProgressProcessSubscriptions: any;
+  public newTimerSettingsSubscriptions: any;
 
   private timerMinSubscription: any;
   private timerSecSubscription: any;
@@ -136,10 +138,10 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
   private subscribeEvents() {
     this.subscribeStopRetroProcess();
-    this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
-      this.setNewTimer(timerOptions);
-      this.shouldShowStartTimerIcon = false;
-    });
+    // this.timerOptionsSubscriptions = this.eventsServices.getTimerOptionsEmiter().subscribe(timerOptions => {
+    //   this.setNewTimer(timerOptions);
+    //   this.shouldShowStartTimerIcon = false;
+    // });
     this.stopTimerSubscriptions = this.eventsServices.getStopTimerEmiter().subscribe(shouldStopTimer => {
       if (shouldStopTimer && !this.timerIsStopped) {
         this.stopRetroTimer();
@@ -148,6 +150,22 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.newTimerSettingsSubscriptions = this.eventsServices.getNewTimerSettingEmiter().subscribe(newTimerSettingId => {
+      this.timerOptionsSubscriptions =
+      this.firebaseService.getFilteredTimerSettingByIdSnapshotChanges(newTimerSettingId)
+        .subscribe(timerSettingsSnapshot => {
+          const timerSetting = timerSettingsSnapshot.payload.data() as TimerSettingToSave;
+          const chosenTimerOption = timerSetting.chosenTimerOpt;
+          if (chosenTimerOption.value !== undefined) {
+            this.setNewTimer(chosenTimerOption);
+            this.shouldShowStartTimerIcon = false;
+          }
+        });
+    });
+
+
+
     this.startRetroInProgressProcessSubscriptions =
       this.eventsServices.getStartRetroInProgressProcessEmiter().subscribe(shouldStartRetroProcess => {
         this.shouldShowStartTimerIcon = true;
