@@ -15,7 +15,7 @@ const RETRO_BOARD_COLLECTION = '/retroBoards';
   providedIn: 'root'
 })
 export class FirestoreRetroBoardService {
-
+  
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
@@ -35,6 +35,9 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
   }
 
+  updateRetroBoard(retroBoardToUpdate: any, id: any) {
+    this.firestoreBase.updateItem('/retroBoards/', id, retroBoardToUpdate);
+  }
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
@@ -161,6 +164,7 @@ export class FirestoreRetroBoardService {
       team: this.prepareTeam(newRetroBoard.team),
       // members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
+      isFinished: newRetroBoard.isFinished,
       isStarted: false,
       urlParamId: newRetroBoard.urlParamId
     };
