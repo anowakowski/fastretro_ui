@@ -15,6 +15,8 @@ import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { Workspace } from 'src/app/models/workspace';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { DataPassingService } from 'src/app/services/data-passing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +27,9 @@ export class DashboardComponent implements OnInit {
   constructor(
     private localStorageService: LocalStorageService,
     public dialog: MatDialog,
-    private firestoreRBServices: FirestoreRetroBoardService) {
+    private firestoreRBServices: FirestoreRetroBoardService,
+    private dataPassingService: DataPassingService,
+    private router: Router) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -66,7 +70,12 @@ export class DashboardComponent implements OnInit {
       console.log('dialog was close');
     });
   }
-  
+
+  onRetroDetails(retroBoard: RetroBoard) {
+    this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
+    this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
+  }
+
   private prepareUserInLocalStorage() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');

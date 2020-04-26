@@ -22,9 +22,15 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="example-card" style="margin-top: 5px;">
+    <mat-card class="example-card" style="margin-top: 5px;" *ngIf="retroBoard.isFinished">
       <mat-card-actions style="margin-top: -14px;">
-        <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
+        <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro Board Details</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="example-card" style="margin-top: 5px;" *ngIf="!retroBoard.isFinished">
+      <mat-card-actions style="margin-top: -14px;">
+        <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro</button>
       </mat-card-actions>
     </mat-card>
   </div>
