@@ -134,7 +134,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           .then(timerSettingsSnapshot => {
             if (timerSettingsSnapshot.docs.length  > 0) {
               const timerSettingId = timerSettingsSnapshot.docs[0].id;
-              const timerSettingToUpdate = { chosenTimerOpt: timerOpt };
+              const timerSettingToUpdate = { chosenTimerOpt: timerOpt, isStarted: true };
               this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
             }
           });
@@ -473,6 +473,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.eventsService.emitNewTimerSetting(newTimerSettingId);
           });
         });
+      } else if (timerSettingsSnapshot.docs.length === 1) {
+        const timerSettingId = timerSettingsSnapshot.docs[0].id;
+        this.eventsService.emitNewTimerSetting(timerSettingId);
       }
     });
   }

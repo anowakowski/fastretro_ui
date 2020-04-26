@@ -44,6 +44,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   timerIsStopped = false;
   retroProcessIsStop = false;
   shouldShowStartTimerIcon: boolean;
+  currentTimerSettingId: any;
 
   constructor(private eventsServices: EventsService, private firebaseService: FiresrtoreRetroProcessInProgressService) { }
 
@@ -119,6 +120,9 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.timerIsStopped = true;
     this.currentInMin = this.maxInMin;
     this.unsubscribeTimer();
+
+    const timerSettingToUpdate = { chosenTimerOpt: {}, isStarted: false };
+    this.firebaseService.updateCurrentTimerSettings(timerSettingToUpdate, this.currentTimerSettingId);
   }
 
   private setNewTimer(timerOption: TimerOption) {
@@ -152,6 +156,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     });
 
     this.newTimerSettingsSubscriptions = this.eventsServices.getNewTimerSettingEmiter().subscribe(newTimerSettingId => {
+      this.currentTimerSettingId = newTimerSettingId;
       this.timerOptionsSubscriptions =
       this.firebaseService.getFilteredTimerSettingByIdSnapshotChanges(newTimerSettingId)
         .subscribe(timerSettingsSnapshot => {
