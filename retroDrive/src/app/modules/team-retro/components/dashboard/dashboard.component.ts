@@ -86,9 +86,9 @@ export class DashboardComponent implements OnInit {
       this.retroBoards = new Array<RetroBoard>();
       const finishedRetroBoards = new Array<RetroBoard>();
       const openRetroBoards = new Array<RetroBoard>();
-      let currentLenghtIndex = 0;
+      let currentLenghtIndex = 1;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
-        currentLenghtIndex++;
+
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoard;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
 
@@ -129,10 +129,8 @@ export class DashboardComponent implements OnInit {
                 return <any> a.isFinished - <any> b.isFinished;
               });
             }
-
-
-
           }
+          currentLenghtIndex++;
         });
       });
 
