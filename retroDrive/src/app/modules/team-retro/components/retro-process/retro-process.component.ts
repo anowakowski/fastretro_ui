@@ -106,14 +106,17 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   private CreateBaseRetroBoardData(snapshot: any) {
     snapshot.forEach(retroBoardSnapshot => {
       const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
-      retroBoard.id = retroBoardSnapshot.payload.doc.id;
-      const team = retroBoardSnapshot.payload.doc.data().team.get();
-      this.prepareTeams(team, retroBoard);
-    });
 
-    if (snapshot.length === 0) {
-      this.dataIsLoading = false;
-    }
+      if (retroBoard.isStarted) {
+        this.dataIsLoading = false;
+      }
+
+      if (!retroBoard.isStarted) {
+        retroBoard.id = retroBoardSnapshot.payload.doc.id;
+        const team = retroBoardSnapshot.payload.doc.data().team.get();
+        this.prepareTeams(team, retroBoard);
+      }
+    });
   }
 
   private prepareTeams(team: any, retroBoard: RetroBoard) {
