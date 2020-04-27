@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { User } from 'src/app/models/user';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
@@ -90,7 +90,7 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
-  deleteRetroBoard(retroBoard: RetroBoard) {
+  deleteRetroBoard(retroBoard: RetroBoardToSave) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
   }
 
@@ -104,7 +104,7 @@ export class FirestoreRetroBoardService {
   }
 
   findFilteredRetroBoardCardActions() {
-    
+
   }
 
   updateUsr(user: User) {

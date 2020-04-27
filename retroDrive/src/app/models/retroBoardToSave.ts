@@ -1,7 +1,7 @@
 import { Teams } from './teams';
 import { Team } from './team';
 
-export interface RetroBoard {
+export interface RetroBoardToSave {
     id: string;
     sprintNumber: string;
     retroName: string;

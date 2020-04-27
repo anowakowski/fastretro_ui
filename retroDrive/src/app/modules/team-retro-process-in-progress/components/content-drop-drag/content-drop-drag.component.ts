@@ -13,7 +13,7 @@ import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-prog
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { ActivatedRoute } from '@angular/router';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
@@ -57,7 +57,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private toImproveRetroBoardCol: Column;
 
   public board: Board;
-  private retroBoardToProcess: RetroBoard;
+  private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
   public isExistingSomeRetroBoardCardAction = false;
 
@@ -450,7 +450,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.retroBoardSubscriptions =
           this.firestoreRetroInProgressService
             .findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
-              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
               this.retroBoardToProcess = findedRetroBoard;
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
               this.isRetroBoardIsReady = true;
@@ -533,13 +533,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private getingDataAfterClickStartRetroProcess() {
     // tslint:disable-next-line:no-string-literal
-    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoard;
+    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoardToSave;
 
     this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardDataSnapshot.urlParamId).then(filteredRetroBoardSnapshot => {
       if (filteredRetroBoardSnapshot.docs.length > 0) {
         this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardDataSnapshot.urlParamId)
           .subscribe(retroBoardsSnapshot => {
-            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
             this.retroBoardToProcess = findedRetroBoard;
             this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
             this.retroBoardData = this.retroBoardToProcess;

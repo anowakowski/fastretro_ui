@@ -4,7 +4,7 @@ import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet'
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { Teams } from 'src/app/models/teams';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 
 import { Guid } from 'guid-typescript';
 import { UserWorkspace } from 'src/app/models/userWorkspace';

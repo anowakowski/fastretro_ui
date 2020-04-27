@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { Teams } from 'src/app/models/teams';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
@@ -21,7 +21,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class RetroProcessComponent implements OnInit, OnDestroy {
 
-  retroBoards: RetroBoard[];
+  retroBoards: RetroBoardToSave[];
   retroBoardSubscriptions: any;
 
   dataIsLoading = true;
@@ -68,7 +68,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  deleteRetroBoard(retroBoard: RetroBoard) {
+  deleteRetroBoard(retroBoard: RetroBoardToSave) {
     this.frbs.deleteRetroBoard(retroBoard);
     this.openSnackBarForDelete(retroBoard.retroName);
   }
@@ -105,7 +105,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private CreateBaseRetroBoardData(snapshot: any) {
     snapshot.forEach(retroBoardSnapshot => {
-      const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
+      const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
 
       if (retroBoard.isStarted) {
         this.dataIsLoading = false;
@@ -119,7 +119,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareTeams(team: any, retroBoard: RetroBoard) {
+  private prepareTeams(team: any, retroBoard: RetroBoardToSave) {
     team.then(teamSnap => {
       const teamToAdd = teamSnap.data() as Team;
       retroBoard.team = teamToAdd;
@@ -127,7 +127,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addToRetroBoards(retroBoard: RetroBoard) {
+  private addToRetroBoards(retroBoard: RetroBoardToSave) {
     this.retroBoards.push(retroBoard);
     this.dataIsLoading = false;
   }

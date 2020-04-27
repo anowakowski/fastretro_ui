@@ -11,7 +11,7 @@ import { WelcomeInfoNewUsersDashboardDialogComponent }
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
 
-  retroBoards: Array<RetroBoard>;
+  retroBoards: Array<RetroBoardToSave>;
 
 
   public pieChartOptions: ChartOptions = {
@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  onRetroDetails(retroBoard: RetroBoard) {
+  onRetroDetails(retroBoard: RetroBoardToSave) {
     this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
   }
@@ -83,13 +83,13 @@ export class DashboardComponent implements OnInit {
 
   private setRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
-      this.retroBoards = new Array<RetroBoard>();
-      const finishedRetroBoards = new Array<RetroBoard>();
-      const openRetroBoards = new Array<RetroBoard>();
+      this.retroBoards = new Array<RetroBoardToSave>();
+      const finishedRetroBoards = new Array<RetroBoardToSave>();
+      const openRetroBoards = new Array<RetroBoardToSave>();
       let currentLenghtIndex = 1;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
 
-        const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoard;
+        const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
 
         retroBoardData.team.get().then(teamSnapshot => {
@@ -130,7 +130,7 @@ export class DashboardComponent implements OnInit {
               });
             }
           } else {
-           //this.firestoreRBServices.find 
+           // this.firestoreRBServices.find
           }
           currentLenghtIndex++;
 
