@@ -129,8 +129,13 @@ export class DashboardComponent implements OnInit {
                 return <any> a.isFinished - <any> b.isFinished;
               });
             }
+          } else {
+           //this.firestoreRBServices.find 
           }
           currentLenghtIndex++;
+
+
+
         });
       });
 

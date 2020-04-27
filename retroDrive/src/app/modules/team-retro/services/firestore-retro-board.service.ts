@@ -38,7 +38,7 @@ export class FirestoreRetroBoardService {
   updateRetroBoard(retroBoardToUpdate: any, id: any) {
     this.firestoreBase.updateItem('/retroBoards/', id, retroBoardToUpdate);
   }
-  
+
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
@@ -101,6 +101,10 @@ export class FirestoreRetroBoardService {
       value: mail
     };
     return this.firestoreBase.getFiltered('/users', condition);
+  }
+
+  findFilteredRetroBoardCardActions() {
+    
   }
 
   updateUsr(user: User) {
