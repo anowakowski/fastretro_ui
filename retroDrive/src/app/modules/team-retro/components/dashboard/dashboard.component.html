@@ -1,10 +1,12 @@
 <div *ngIf="!currentUser.isNewUser">
-  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">List of finished retro board</mat-card>
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">List of last retro boards</mat-card>
 
   <div *ngFor="let retroBoard of retroBoards">
     <mat-card class="example-card" style="opacity: 0.985;">
       <mat-card-header>
-        <mat-card-title>#team <b>{{retroBoard.team.name}}</b> Board</mat-card-title>
+        <mat-card-title>
+          Your current retro  - #team <b>{{retroBoard.team.name}}</b> Board
+        </mat-card-title>
         <mat-card-subtitle>
           <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
           <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
