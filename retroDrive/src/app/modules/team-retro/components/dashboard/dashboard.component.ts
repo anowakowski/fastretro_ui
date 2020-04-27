@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 import { User } from 'src/app/models/user';
@@ -11,8 +10,6 @@ import { WelcomeInfoNewUsersDashboardDialogComponent }
   from '../welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
-import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
-import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { Workspace } from 'src/app/models/workspace';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { DataPassingService } from 'src/app/services/data-passing.service';
@@ -24,6 +21,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+
   constructor(
     private localStorageService: LocalStorageService,
     public dialog: MatDialog,
@@ -86,7 +84,11 @@ export class DashboardComponent implements OnInit {
   private setRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
+      const finishedRetroBoards = new Array<RetroBoard>();
+      const openRetroBoards = new Array<RetroBoard>();
+      let currentLenghtIndex = 0;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
+        currentLenghtIndex++;
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoard;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
 
@@ -95,12 +97,49 @@ export class DashboardComponent implements OnInit {
           retroBoardData.team = team;
 
           if (retroBoardData.isStarted) {
-            this.retroBoards.push(retroBoardData);
+            if (retroBoardData.isFinished) {
+              finishedRetroBoards.push(retroBoardData);
+            } else {
+              openRetroBoards.push(retroBoardData);
+            }
 
-            
+            if (currentLenghtIndex === retroBoardsSnapshot.length) {
+              finishedRetroBoards.sort((a, b) => {
+                // tslint:disable-next-line:no-angle-bracket-type-assertion
+                return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
+              });
+
+              openRetroBoards.sort((a, b) => {
+                // tslint:disable-next-line:no-angle-bracket-type-assertion
+                return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
+              });
+
+              const finishedRetroBoardToDisplay = finishedRetroBoards[0];
+              const openRetroBoardToDisplay = openRetroBoards[0];
+
+              if (finishedRetroBoardToDisplay) {
+                this.retroBoards.push(finishedRetroBoardToDisplay);
+              }
+              if (openRetroBoardToDisplay) {
+                this.retroBoards.push(openRetroBoardToDisplay);
+              }
+
+              this.retroBoards.sort((a, b) => {
+                // tslint:disable-next-line:no-angle-bracket-type-assertion
+                return <any> a.isFinished - <any> b.isFinished;
+              });
+            }
+
+
+
           }
         });
       });
+
+
+
+
+
     });
   }
 
