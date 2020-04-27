@@ -96,6 +96,8 @@ export class DashboardComponent implements OnInit {
 
           if (retroBoardData.isStarted) {
             this.retroBoards.push(retroBoardData);
+
+            
           }
         });
       });

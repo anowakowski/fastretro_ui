@@ -79,7 +79,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   private prepareRetroBoardToSave() {
     const value = this.addNewRetroBoardForm.value;
-    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const guid = Guid.create();
 
     const retroBoard = {
