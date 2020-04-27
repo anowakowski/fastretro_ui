@@ -44,11 +44,11 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.prepareRetroBoard();
-
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+    this.prepareRetroBoard();
   }
 
   openBottomSheet(): void {
@@ -95,10 +95,11 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoard() {
-    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredSnapshotChanges().subscribe(snapshot => {
-      this.dataIsLoading = true;
-      this.retroBoards = [];
-      this.CreateBaseRetroBoardData(snapshot);
+    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
+      .subscribe(snapshot => {
+        this.dataIsLoading = true;
+        this.retroBoards = [];
+        this.CreateBaseRetroBoardData(snapshot);
     });
   }
 
