@@ -1,11 +1,19 @@
 <div *ngIf="!currentUser.isNewUser">
-  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">List of last retro boards</mat-card>
+  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+    <span>List of last your retro boards in <b>{{currentWorkspace.name}}</b> workspace</span> 
+    <div fxFlex></div>
+    <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
+      <mat-icon>assignment</mat-icon>&nbsp; show all your retro board in {{currentWorkspace.name}} workspace
+    </button>
+  </mat-card>
 
   <div *ngFor="let retroBoard of retroBoards">
     <mat-card class="example-card" style="opacity: 0.985;">
       <mat-card-header>
         <mat-card-title>
-          Your current retro  - #team <b>{{retroBoard.team.name}}</b> Board
+          <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
+          <span *ngIf="!retroBoard.isFinished">Your current opened retro</span> 
+          - #team <b>{{retroBoard.team.name}}</b> Board
         </mat-card-title>
         <mat-card-subtitle>
           <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
@@ -32,13 +40,13 @@
 
     <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
       <mat-card-actions style="margin-top: -14px;">
-        <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro Board Details</button>
+        <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro Board Details <mat-icon>vertical_split</mat-icon></button>
       </mat-card-actions>
     </mat-card>
 
     <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
       <mat-card-actions style="margin-top: -14px;">
-        <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro</button>
+        <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro <mat-icon>arrow_right_alt</mat-icon></button>
       </mat-card-actions>
     </mat-card>
   </div>
