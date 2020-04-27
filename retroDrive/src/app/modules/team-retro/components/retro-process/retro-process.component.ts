@@ -13,6 +13,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { RetroBoard } from 'src/app/models/retroBoard';
 
 @Component({
   selector: 'app-retro-process',
@@ -21,7 +22,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class RetroProcessComponent implements OnInit, OnDestroy {
 
-  retroBoards: RetroBoardToSave[];
+  retroBoards: RetroBoard[];
   retroBoardSubscriptions: any;
 
   dataIsLoading = true;
@@ -68,7 +69,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  deleteRetroBoard(retroBoard: RetroBoardToSave) {
+  deleteRetroBoard(retroBoard: RetroBoard) {
     this.frbs.deleteRetroBoard(retroBoard);
     this.openSnackBarForDelete(retroBoard.retroName);
   }
@@ -83,7 +84,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  onStartRetroProcess(retroBoard) {
+  onStartRetroProcess(retroBoard: RetroBoard) {
     const retroBoardToUpdate = {
       isStarted: true
     };
@@ -105,7 +106,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private CreateBaseRetroBoardData(snapshot: any) {
     snapshot.forEach(retroBoardSnapshot => {
-      const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
+      const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
 
       if (retroBoard.isStarted) {
         this.dataIsLoading = false;
@@ -119,7 +120,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareTeams(team: any, retroBoard: RetroBoardToSave) {
+  private prepareTeams(team: any, retroBoard: RetroBoard) {
     team.then(teamSnap => {
       const teamToAdd = teamSnap.data() as Team;
       retroBoard.team = teamToAdd;
@@ -127,7 +128,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addToRetroBoards(retroBoard: RetroBoardToSave) {
+  private addToRetroBoards(retroBoard: RetroBoard) {
     this.retroBoards.push(retroBoard);
     this.dataIsLoading = false;
   }
