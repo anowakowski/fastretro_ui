@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit {
   currentWorkspace: Workspace;
 
   retroBoards: Array<RetroBoard>;
+  wentWellActionCount: number;
+  toImproveActionCount: number;
 
 
   public pieChartOptions: ChartOptions = {
@@ -161,5 +163,10 @@ export class DashboardComponent implements OnInit {
       }
       this.retroBoards.push(finishedRetroBoard);
     });
+  }
+
+  prepareChartForFinisedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
+    const wentWellActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
+    const toImproveActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
   }
 }
