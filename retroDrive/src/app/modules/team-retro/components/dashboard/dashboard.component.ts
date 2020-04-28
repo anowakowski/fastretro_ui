@@ -16,6 +16,7 @@ import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
+import { RetroBoard } from 'src/app/models/retroBoard';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,7 +40,7 @@ export class DashboardComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
 
-  retroBoards: Array<RetroBoardToSave>;
+  retroBoards: Array<RetroBoard>;
 
 
   public pieChartOptions: ChartOptions = {
@@ -86,7 +87,7 @@ export class DashboardComponent implements OnInit {
 
   private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
-      this.retroBoards = new Array<RetroBoardToSave>();
+      this.retroBoards = new Array<RetroBoard>();
       const finishedRetroBoards = new Array<RetroBoardToSave>();
       const openRetroBoards = new Array<RetroBoardToSave>();
 
@@ -138,38 +139,27 @@ export class DashboardComponent implements OnInit {
     const finishedRetroBoardToDisplay = finishedRetroBoards[0];
     const openRetroBoardToDisplay = openRetroBoards[0];
     if (finishedRetroBoardToDisplay) {
-      this.retroBoards.push(finishedRetroBoardToDisplay);
-      // this.prepareActionForFinishedRetroBoardCards();
+      this.prepareActionForFinishedRetroBoardCards(finishedRetroBoardToDisplay as RetroBoard);
     }
     if (openRetroBoardToDisplay) {
-      this.retroBoards.push(openRetroBoardToDisplay);
+      this.retroBoards.push(openRetroBoardToDisplay as RetroBoard);
     }
   }
 
-  private prepareActionForFinishedRetroBoardCards() {
-    const finishedRetroBoard = this.retroBoards[0];
+  private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
 
-    this.firestoreRBServices.retroBoardCardsFilteredByRetroBoardId(finishedRetroBoard.id).then(retroBoardCardsSnapshot => {
-      if (retroBoardCardsSnapshot.docs.length > 0) {
-        this.simpleRetroBoardCards = new Array<any>();
-        retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
-          const dataRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
-          const simpleCardToAdd: any = {};
-          simpleCardToAdd.name = dataRetroBoardCard.name;
-          simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
-          dataRetroBoardCard.actions.forEach(action => {
-            action.get().then(actionSnapshot => {
-              const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
-              const docId = actionSnapshot.id;
-              retroBoardCardAction.isEdit = false;
-              retroBoardCardAction.id = docId;
-              simpleCardToAdd.actions.push(retroBoardCardAction);
-            });
-          });
-          console.log(simpleCardToAdd.actions.length);
-          // this.simpleRetroBoardCards.push(simpleCardToAdd);
+    finishedRetroBoard.actions = new Array<RetroBoardCardActions>();
+
+    this.firestoreRBServices.retroBoardCardActionsFilteredByRetroBoardId(finishedRetroBoard.id).then(retroBoardCardActionsSnapshot => {
+      if (retroBoardCardActionsSnapshot.docs.length > 0) {
+
+        retroBoardCardActionsSnapshot.docs.forEach(retroBoardCardSnapshot => {
+          const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
+          dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
+          finishedRetroBoard.actions.push(dataRetroBoardCardAction);
         });
       }
+      this.retroBoards.push(finishedRetroBoard);
     });
   }
 }

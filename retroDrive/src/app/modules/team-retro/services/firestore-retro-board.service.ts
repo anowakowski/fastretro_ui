@@ -90,14 +90,14 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
-  retroBoardCardsFilteredByRetroBoardId(retroBoardId: string) {
+  retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'retroBoardId',
       conditionOperator: '==',
       value: retroBoardId
     };
 
-    return this.firestoreBase.getFiltered('/retroBoardCards/', condition);
+    return this.firestoreBase.getFiltered('/retroBoardCardActions/', condition);
   }
 
 

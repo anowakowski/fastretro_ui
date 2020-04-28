@@ -11,4 +11,5 @@ export class RetroBoard {
     startDate: Date;
     urlParamId: string;
     workspaceId: string;
+    actions: Array<RetroBoardCardActions>;
 }
