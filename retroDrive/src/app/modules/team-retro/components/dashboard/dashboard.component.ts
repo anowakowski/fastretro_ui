@@ -48,8 +48,8 @@ export class DashboardComponent implements OnInit {
   public pieChartOptions: ChartOptions = {
     responsive: true,
   };
-  public pieChartLabels: Label[] = [['Negative'], ['Positive'], ''];
-  public pieChartData: SingleDataSet = [7, 5, 0];
+  public pieChartLabels: Label[] = [['Negative Actions'], ['Positive Actions'], ''];
+  public pieChartData: SingleDataSet;
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = false;
   public pieChartPlugins = [];
@@ -149,7 +149,6 @@ export class DashboardComponent implements OnInit {
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
-
     finishedRetroBoard.actions = new Array<RetroBoardCardActions>();
 
     this.firestoreRBServices.retroBoardCardActionsFilteredByRetroBoardId(finishedRetroBoard.id).then(retroBoardCardActionsSnapshot => {
@@ -162,11 +161,25 @@ export class DashboardComponent implements OnInit {
         });
       }
       this.retroBoards.push(finishedRetroBoard);
+      this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
     });
   }
 
-  prepareChartForFinisedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
+  prepareChartForFinishedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
     const wentWellActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
-    const toImproveActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
+    const toImproveActions = finiszedRetroBoardActions.filter(act => !act.isWentWell);
+
+    const wentWellActionsCount = this.prepareCorrectValueForChartPieData(wentWellActions.length);
+    const toImproveActionsCount = this.prepareCorrectValueForChartPieData(toImproveActions.length);
+
+    this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
+  }
+
+  private prepareCorrectValueForChartPieData(value: number) {
+    if (!value) {
+      return 0;
+    }
+
+    return value;
   }
 }
