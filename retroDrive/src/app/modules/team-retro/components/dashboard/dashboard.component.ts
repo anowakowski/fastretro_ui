@@ -14,6 +14,8 @@ import { Workspace } from 'src/app/models/workspace';
 import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
+import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
+import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +23,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  simpleRetroBoardCards: any[];
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -56,7 +59,7 @@ export class DashboardComponent implements OnInit {
       this.openDialog();
     }
 
-    this.setRetroBoardForCurrentWorkspace();
+    this.prepreRetroBoardForCurrentWorkspace();
   }
 
   openDialog() {
@@ -81,11 +84,12 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  private setRetroBoardForCurrentWorkspace() {
+  private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoardToSave>();
       const finishedRetroBoards = new Array<RetroBoardToSave>();
       const openRetroBoards = new Array<RetroBoardToSave>();
+
       let currentLenghtIndex = 1;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
 
@@ -99,6 +103,7 @@ export class DashboardComponent implements OnInit {
           if (retroBoardData.isStarted) {
             if (retroBoardData.isFinished) {
               finishedRetroBoards.push(retroBoardData);
+
             } else {
               openRetroBoards.push(retroBoardData);
             }
@@ -114,36 +119,57 @@ export class DashboardComponent implements OnInit {
                 return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
               });
 
-              const finishedRetroBoardToDisplay = finishedRetroBoards[0];
-              const openRetroBoardToDisplay = openRetroBoards[0];
-
-              if (finishedRetroBoardToDisplay) {
-                this.retroBoards.push(finishedRetroBoardToDisplay);
-              }
-              if (openRetroBoardToDisplay) {
-                this.retroBoards.push(openRetroBoardToDisplay);
-              }
+              this.addToRetroBoards(finishedRetroBoards, openRetroBoards);
 
               this.retroBoards.sort((a, b) => {
                 // tslint:disable-next-line:no-angle-bracket-type-assertion
                 return <any> a.isFinished - <any> b.isFinished;
               });
             }
-          } else {
-           // this.firestoreRBServices.find
           }
           currentLenghtIndex++;
-
-
-
         });
       });
-
-
-
-
-
     });
   }
 
+
+  private addToRetroBoards(finishedRetroBoards: RetroBoardToSave[], openRetroBoards: RetroBoardToSave[]) {
+    const finishedRetroBoardToDisplay = finishedRetroBoards[0];
+    const openRetroBoardToDisplay = openRetroBoards[0];
+    if (finishedRetroBoardToDisplay) {
+      this.retroBoards.push(finishedRetroBoardToDisplay);
+      // this.prepareActionForFinishedRetroBoardCards();
+    }
+    if (openRetroBoardToDisplay) {
+      this.retroBoards.push(openRetroBoardToDisplay);
+    }
+  }
+
+  private prepareActionForFinishedRetroBoardCards() {
+    const finishedRetroBoard = this.retroBoards[0];
+
+    this.firestoreRBServices.retroBoardCardsFilteredByRetroBoardId(finishedRetroBoard.id).then(retroBoardCardsSnapshot => {
+      if (retroBoardCardsSnapshot.docs.length > 0) {
+        this.simpleRetroBoardCards = new Array<any>();
+        retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
+          const dataRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
+          const simpleCardToAdd: any = {};
+          simpleCardToAdd.name = dataRetroBoardCard.name;
+          simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
+          dataRetroBoardCard.actions.forEach(action => {
+            action.get().then(actionSnapshot => {
+              const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
+              const docId = actionSnapshot.id;
+              retroBoardCardAction.isEdit = false;
+              retroBoardCardAction.id = docId;
+              simpleCardToAdd.actions.push(retroBoardCardAction);
+            });
+          });
+          console.log(simpleCardToAdd.actions.length);
+          // this.simpleRetroBoardCards.push(simpleCardToAdd);
+        });
+      }
+    });
+  }
 }

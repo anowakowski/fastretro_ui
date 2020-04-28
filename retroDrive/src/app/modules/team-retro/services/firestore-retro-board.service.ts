@@ -90,6 +90,17 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
+  retroBoardCardsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCards/', condition);
+  }
+
+
   deleteRetroBoard(retroBoard: RetroBoardToSave) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
   }
