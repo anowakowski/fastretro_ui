@@ -5,4 +5,5 @@ export class RetroBoardCardActions {
     public text: string;
     public creationDate: string;
     public isEdit: boolean;
+    public retroBoardId: string;
 }
