@@ -41,13 +41,39 @@ export class LoginRegisterFormComponent implements OnInit {
     });
   }
 
+  CreateUserByEmailAndPass() {
+    const emailVaule = this.addNewEmailPassForm.value.emailFormControl;
+    const passValue = this.addNewEmailPassForm.value.passFormControl;
+
+    this.auth.emailSigUp(emailVaule, passValue).then((userCredentials) => {
+      const logedUser = userCredentials.user;
+      this.fls.findUsers(logedUser.email)
+        .then(snapshotFindedUsr => {
+          if (snapshotFindedUsr.docs.length === 0) {
+            const logedUserModel: User = this.prepareUserMOdel(logedUser);
+            this.fls.updateUsr(logedUserModel);
+          }
+        }).finally(() => {
+          this.router.navigate(['/']);
+        });
+    });
+  }
+
   loginByEmailAndPass() {
     const emailVaule = this.addNewEmailPassForm.value.emailFormControl;
     const passValue = this.addNewEmailPassForm.value.passFormControl;
 
-    this.auth.emailSigin(emailVaule, passValue).then( (userCredentials) => {
+    this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
       const logedUser = userCredentials.user;
-
+      this.fls.findUsers(logedUser.email)
+        .then(snapshotFindedUsr => {
+          if (snapshotFindedUsr.docs.length === 0) {
+            const logedUserModel: User = this.prepareUserMOdel(logedUser);
+            this.fls.updateUsr(logedUserModel);
+          }
+        }).finally(() => {
+          this.router.navigate(['/']);
+        });
     });
   }
 

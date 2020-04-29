@@ -5,17 +5,17 @@
       <mat-card-title>Log in</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form" [formGroup]="addNewEmailPassForm">
+    <form class="example-form" [formGroup]="addNewEmailPassForm" (ngSubmit)="loginByEmailAndPass()">
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input [formControl]="emailFormControl" matInput placeholder="@email">
+          <input type="email" [formControl]="emailFormControl" matInput placeholder="@email">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input [formControl]="passFormControl" matInput placeholder="Password">
+          <input type="password" [formControl]="passFormControl" matInput placeholder="Password">
         </mat-form-field>
       </mat-card-content>
-      <button mat-stroked-button color="accent" class="btn-block">Log in with mail</button>
+      <button mat-stroked-button color="accent" class="btn-block" type="submit">Log in with mail</button>
       <div class="or-seperator"><i>or</i></div>
       <p class="text-center">Login with your social media account</p>
       <div>

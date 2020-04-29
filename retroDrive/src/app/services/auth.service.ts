@@ -50,8 +50,12 @@ export class AuthService {
     return await this.afAuth.auth.signInWithPopup(provider);
   }
 
-  async emailSigin(email: string, password: string) {
+  async emailSigUp(email: string, password: string) {
     return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  async emailSigIn(email: string, password: string) {
+    return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   isLoggedIn() {
