@@ -5,7 +5,7 @@
       <mat-card-title>Log in</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form" [formGroup]="addNewEmailPassForm" (ngSubmit)="loginByEmailAndPass()">
+    <form class="example-form" [formGroup]="addNewEmailPassLoginForm" (ngSubmit)="loginByEmailAndPass()">
       <mat-card-content>
         <mat-form-field class="example-full-width">
           <input type="email" [formControl]="emailFormControl" matInput placeholder="@email">
