@@ -41,12 +41,12 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
-    this.createAddNewRetroBoardForm();
-    this.prepareTeams();
-
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+    this.createAddNewRetroBoardForm();
+    this.prepareTeams();
   }
 
   openLink(event: MouseEvent): void {
@@ -99,7 +99,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   private prepareTeams() {
     this.teams = new Array<Teams>();
-    this.frbs.getTeams().then(snapshotTeams => {
+    this.frbs.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
       snapshotTeams.docs.forEach(doc => {
         const team: Teams = {
           id: doc.id,
