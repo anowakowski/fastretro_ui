@@ -89,6 +89,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       isFinished: false,
       // members: value.membersFormControl,
       creationDate: currentDate,
+      lastModifiedDate: currentDate,
       urlParamId: guid.toString(),
       workspaceId: this.currentWorkspace.id
     };

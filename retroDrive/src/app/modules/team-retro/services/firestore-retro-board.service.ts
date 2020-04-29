@@ -190,6 +190,7 @@ export class FirestoreRetroBoardService {
       team: this.prepareTeam(newRetroBoard.team),
       // members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
+      lastModifiedDate: newRetroBoard.lastModifiedDate,
       isFinished: newRetroBoard.isFinished,
       isStarted: false,
       urlParamId: newRetroBoard.urlParamId,
