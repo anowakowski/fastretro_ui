@@ -66,7 +66,7 @@
       <div fxFlex></div>
       <button mat-raised-button color="primary"
         style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px; width: 280px;"
-        [routerLink]="['/retro/teams']">
+        (click)="goToTeams()">
         <mat-icon>people_alt</mat-icon>&nbsp; Go to teams
       </button>
     </mat-card>
@@ -74,7 +74,7 @@
     <mat-card style="margin-top: 10px; opacity: 0.985;">
       <span>If you in team - Create new retro board </span>
       <div fxFlex></div>
-      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" [routerLink]="['/retro/process']">
+      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToRetroProcess()">
         <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; Go to retro board configuration
       </button>
     </mat-card>

@@ -18,6 +18,7 @@ import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +34,8 @@ export class DashboardComponent implements OnInit {
     private firestoreRBServices: FirestoreRetroBoardService,
     private dataPassingService: DataPassingService,
     private router: Router,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private eventServices: EventsService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -45,7 +47,6 @@ export class DashboardComponent implements OnInit {
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
   wentWellActionCount: number;
   toImproveActionCount: number;
-
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -155,6 +156,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  goToTeams() {
+    this.eventServices.emitSetTeamsAsDefaultSection();
+    this.router.navigate(['/retro/teams']);
+  }
+
+  goToRetroProcess() {
+    this.eventServices.emitSetRetroProcessAsDefaultSectionEmiter();
+    this.router.navigate(['/retro/process']);
+  }
 
   private addToRetroBoards(finishedRetroBoards: RetroBoardToSave[], openRetroBoards: RetroBoardToSave[]) {
     const finishedRetroBoardToDisplay = finishedRetroBoards[0];
@@ -184,7 +194,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  prepareChartForFinishedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
+  private prepareChartForFinishedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
     const wentWellActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
     const toImproveActions = finiszedRetroBoardActions.filter(act => !act.isWentWell);
 
