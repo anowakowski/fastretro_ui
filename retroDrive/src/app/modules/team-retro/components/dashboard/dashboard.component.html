@@ -60,7 +60,7 @@
     <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
   </div>
 
-  <div>
+  <div *ngIf="retroBoards.length === 0">
     <mat-card style="opacity: 0.985;">
       <span style="font-size: 16px;">Go to teams and joint to existng team or create new</span>
       <div fxFlex></div>
