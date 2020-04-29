@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
 import { User } from 'src/app/models/user';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-login-register-form',
@@ -11,12 +12,21 @@ import { User } from 'src/app/models/user';
 })
 export class LoginRegisterFormComponent implements OnInit {
 
-  constructor(public auth: AuthService, private router: Router, private fls: FirestoreLoginRegisterService) { }
+  addNewEmailPassForm: FormGroup;
+  emailFormControl = new FormControl('');
+  passFormControl = new FormControl('');
+
+  constructor(
+    public auth: AuthService,
+    private router: Router,
+    private fls: FirestoreLoginRegisterService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.createNewEmailPassForm();
   }
 
-  login() {
+  loginByGoogle() {
     this.auth.googleSignin().then((userCredentials) => {
       const logedUser = userCredentials.user;
       this.fls.findUsers(logedUser.email)
@@ -28,6 +38,23 @@ export class LoginRegisterFormComponent implements OnInit {
         }).finally(() => {
           this.router.navigate(['/']);
         });
+    });
+  }
+
+  loginByEmailAndPass() {
+    const emailVaule = this.addNewEmailPassForm.value.emailFormControl;
+    const passValue = this.addNewEmailPassForm.value.passFormControl;
+
+    this.auth.emailSigin(emailVaule, passValue).then( (userCredentials) => {
+      const logedUser = userCredentials.user;
+
+    });
+  }
+
+  createNewEmailPassForm() {
+    this.addNewEmailPassForm = this.formBuilder.group({
+      emailFormControl: this.emailFormControl,
+      passFormControl: this.passFormControl
     });
   }
 

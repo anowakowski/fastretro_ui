@@ -5,14 +5,14 @@
       <mat-card-title>Log in</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form">
+    <form class="example-form" [formGroup]="addNewEmailPassForm">
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Username">
+          <input [formControl]="emailFormControl" matInput placeholder="@email">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Password">
+          <input [formControl]="passFormControl" matInput placeholder="Password">
         </mat-form-field>
       </mat-card-content>
       <button mat-stroked-button color="accent" class="btn-block">Log in with mail</button>
@@ -20,7 +20,7 @@
       <p class="text-center">Login with your social media account</p>
       <div>
         <!--<button style="width: 100%;" mat-raised-button color="primary"><i class="fa fa-facebook"></i>&nbsp; Facebook</button> <br/>-->
-        <button style="width: 100%; margin-top: 10px;" mat-raised-button color="accent" (click)="login()"><i class="fa fa-google"></i>&nbsp; Goolgle</button>
+        <button style="width: 100%; margin-top: 10px;" mat-raised-button color="accent" (click)="loginByGoogle()"><i class="fa fa-google"></i>&nbsp; Goolgle</button>
       </div>
     </form>
   </mat-card>
