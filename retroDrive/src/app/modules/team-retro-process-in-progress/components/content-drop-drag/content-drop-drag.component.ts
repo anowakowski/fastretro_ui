@@ -25,6 +25,7 @@ import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-p
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
+import { formatDate } from '@angular/common';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -108,8 +109,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private setIsFinishedInRetroBoard(isFinished: boolean) {
     this.retroProcessIsStoped = isFinished;
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     // tslint:disable-next-line:object-literal-shorthand
-    const retroBoardToUpdate = { isFinished: isFinished };
+    const retroBoardToUpdate = { isFinished: isFinished, lastModifiedDate: currentDate };
     this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
   }
 
