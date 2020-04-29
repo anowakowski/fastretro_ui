@@ -12,7 +12,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 })
 export class LoginRegisterFormComponent implements OnInit {
 
-  addNewEmailPassForm: FormGroup;
+  addNewEmailPassRegisterForm: FormGroup;
   emailFormControl = new FormControl('');
   passFormControl = new FormControl('');
 
@@ -23,7 +23,7 @@ export class LoginRegisterFormComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.createNewEmailPassForm();
+    this.createNewEmailPassRegisterForm();
   }
 
   loginByGoogle() {
@@ -42,8 +42,8 @@ export class LoginRegisterFormComponent implements OnInit {
   }
 
   CreateUserByEmailAndPass() {
-    const emailVaule = this.addNewEmailPassForm.value.emailFormControl;
-    const passValue = this.addNewEmailPassForm.value.passFormControl;
+    const emailVaule = this.addNewEmailPassRegisterForm.value.emailFormControl;
+    const passValue = this.addNewEmailPassRegisterForm.value.passFormControl;
 
     this.auth.emailSigUp(emailVaule, passValue).then((userCredentials) => {
       const logedUser = userCredentials.user;
@@ -60,8 +60,8 @@ export class LoginRegisterFormComponent implements OnInit {
   }
 
   loginByEmailAndPass() {
-    const emailVaule = this.addNewEmailPassForm.value.emailFormControl;
-    const passValue = this.addNewEmailPassForm.value.passFormControl;
+    const emailVaule = this.addNewEmailPassRegisterForm.value.emailFormControl;
+    const passValue = this.addNewEmailPassRegisterForm.value.passFormControl;
 
     this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
       const logedUser = userCredentials.user;
@@ -77,8 +77,8 @@ export class LoginRegisterFormComponent implements OnInit {
     });
   }
 
-  createNewEmailPassForm() {
-    this.addNewEmailPassForm = this.formBuilder.group({
+  createNewEmailPassRegisterForm() {
+    this.addNewEmailPassRegisterForm = this.formBuilder.group({
       emailFormControl: this.emailFormControl,
       passFormControl: this.passFormControl
     });
