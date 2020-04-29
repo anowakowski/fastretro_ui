@@ -3,17 +3,18 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginRegisterComponent } from './login-register.component';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { LoginRegisterFormComponent } from './components/login-register-form/login-register-form.component';
 
 
 
 const routes: Routes = [
   {
     path: '',
-    component: LoginRegisterComponent
-  },
-  {
-    path: 'register',
-    component: RegisterFormComponent
+    component: LoginRegisterComponent,
+    children: [
+      {path: '', component: LoginRegisterFormComponent},
+      {path: 'register', component: RegisterFormComponent}
+    ]
   }
 ];
 
