@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
 
-  retroBoards: Array<RetroBoard>;
+  retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
   wentWellActionCount: number;
   toImproveActionCount: number;
 
