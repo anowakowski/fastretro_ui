@@ -1,3 +1,21 @@
-<p>
-  register-form works!
-</p>
+<div style="margin-top: 10%;" class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+  <mat-card style="background-color: #8a91b6ea;" class="box">
+    <mat-card-header>
+      <mat-card-title>Log in</mat-card-title>
+    </mat-card-header>
+
+    <form class="example-form" [formGroup]="addNewEmailPassRegisterForm" (ngSubmit)="CreateUserByEmailAndPass()">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input type="email" [formControl]="emailFormControl" matInput placeholder="@email">
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <input type="password" [formControl]="passFormControl" matInput placeholder="Password">
+        </mat-form-field>
+      </mat-card-content>
+      <button mat-stroked-button color="accent" class="btn-block" type="submit">Log in with mail</button>
+    </form>
+  </mat-card>
+</div>
