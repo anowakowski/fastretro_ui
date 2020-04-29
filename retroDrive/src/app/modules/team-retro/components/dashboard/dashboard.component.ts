@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,7 +32,8 @@ export class DashboardComponent implements OnInit {
     public dialog: MatDialog,
     private firestoreRBServices: FirestoreRetroBoardService,
     private dataPassingService: DataPassingService,
-    private router: Router) {
+    private router: Router,
+    private authService: AuthService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -57,15 +59,24 @@ export class DashboardComponent implements OnInit {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
-    this.prepareUserInLocalStorage();
-    if (this.currentUser.isNewUser) {
-      this.openDialog();
-    }
 
-    this.prepreRetroBoardForCurrentWorkspace();
+    this.currentUser = this.localStorageService.getItem('currentUser');
+
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+        this.prepreRetroBoardForCurrentWorkspace();
+      } else {
+        this.openInfoForNewUsersDialog();
+      }
+    }
   }
 
-  openDialog() {
+  openInfoForNewUsersDialog() {
     const dialogRef = this.dialog.open(WelcomeInfoNewUsersDashboardDialogComponent, {
       width: '400px'
     });
@@ -82,9 +93,17 @@ export class DashboardComponent implements OnInit {
 
   private prepareUserInLocalStorage() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
 
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+      } else {
+        this.router.navigate(['/']);
+      }
+    }
   }
 
   private prepreRetroBoardForCurrentWorkspace() {

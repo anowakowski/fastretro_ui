@@ -14,6 +14,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-retro-process',
@@ -38,7 +39,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private dataPassingService: DataPassingService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private localStorageService: LocalStorageService) { }
+    private localStorageService: LocalStorageService,
+    private authService: AuthService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -48,6 +50,17 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+      } else {
+        this.router.navigate(['/']);
+      }
+    }
 
     this.prepareRetroBoard();
   }
