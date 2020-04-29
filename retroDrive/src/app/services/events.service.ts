@@ -14,6 +14,8 @@ constructor() { }
   private startRetroInProgressProcessEmiter: EventEmitter<boolean> = new EventEmitter();
   private timerIsFinishedEmiter: EventEmitter<void> = new EventEmitter();
   private newTimerSettingEmiter: EventEmitter<string> = new EventEmitter();
+  private setTeamsAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+  private setRetroProcessAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -61,6 +63,22 @@ constructor() { }
 
   getNewTimerSettingEmiter() {
     return this.newTimerSettingEmiter;
+  }
+
+  emitSetTeamsAsDefaultSection() {
+    this.setTeamsAsDefaultSectionEmiter.emit();
+  }
+
+  getSetTeamsAsDefaultSectionEmiter() {
+    return this.setTeamsAsDefaultSectionEmiter;
+  }
+
+  emitSetRetroProcessAsDefaultSectionEmiter() {
+    this.setRetroProcessAsDefaultSectionEmiter.emit();
+  }
+
+  getSetRetroProcessAsDefaultSectionEmiter() {
+    return this.setRetroProcessAsDefaultSectionEmiter;
   }
 }
 

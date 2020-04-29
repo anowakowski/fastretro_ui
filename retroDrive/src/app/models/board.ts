@@ -1,7 +1,6 @@
 import { Column } from './column';
-import { RetroBoard } from './retroBoard';
-
+import { RetroBoardToSave } from './retroBoardToSave';
 
 export class Board {
-    constructor(public name: string, public columns: Column[], retroBoardToProces: RetroBoard) {}
+    constructor(public name: string, public columns: Column[], retroBoardToProces: RetroBoardToSave) {}
 }

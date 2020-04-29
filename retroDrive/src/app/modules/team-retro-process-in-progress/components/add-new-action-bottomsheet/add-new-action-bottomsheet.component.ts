@@ -40,7 +40,9 @@ export class AddNewActionBottomsheetComponent implements OnInit {
     const retroBoardCardActionToSave = {
       text: actionTextValue,
       creationDate: currentDate,
-      retroBoardCard: this.firestoreService.addRetroBoardAsRef(this.currentCard.id)
+      retroBoardCard: this.firestoreService.addRetroBoardAsRef(this.currentCard.id),
+      retroBoardId: this.currentCard.retroBoardId,
+      isWentWell: this.currentCard.isWentWellRetroBoradCol
     };
 
     this.firestoreService.addNewRetroBoardCardAction(retroBoardCardActionToSave).then(retroBoardCardActionSnapshot => {

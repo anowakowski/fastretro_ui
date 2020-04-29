@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
 import { UserTeams } from 'src/app/models/userTeams';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-teams',
@@ -27,7 +29,9 @@ export class TeamsComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private bottomSheetRef: MatBottomSheet,
     private firestoreService: FirestoreRetroBoardService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private router: Router,
+    private authService: AuthService) { }
 
   teams: Team[];
 
@@ -35,6 +39,19 @@ export class TeamsComponent implements OnInit {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+      } else {
+        this.router.navigate(['/']);
+      }
+    }
+
+
     this.prepareTeamsForCurrentWorkspace();
   }
 

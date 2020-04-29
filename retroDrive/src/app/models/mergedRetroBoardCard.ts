@@ -1,4 +1,4 @@
 export class MergedRetroBoardCard {
     public name: string;
-    public user: any;
+    public userId: string;
 }

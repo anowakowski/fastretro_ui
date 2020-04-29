@@ -4,6 +4,8 @@ import { MatDrawer } from '@angular/material/sidenav/drawer';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Router } from '@angular/router';
+import { EventsService } from 'src/app/services/events.service';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
@@ -39,11 +41,23 @@ export class SlidenavComponent implements OnInit {
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
 
-  constructor(public auth: AuthService, private localStorageService: LocalStorageService) { }
+  setNewTeamsSubscription: any;
+  setRetroProcessSubscription: any;
+
+  constructor(
+    public auth: AuthService,
+    private localStorageService: LocalStorageService,
+    public router: Router,
+    private eventService: EventsService) { }
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.currentChosenSection = DASHBOARD_SECTION;
+    this.currentRouteSecction = this.router.url;
+
+    this.setCurrentSectionByRoute();
+    this.subscribeEvents();
+
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
   }
@@ -91,11 +105,21 @@ export class SlidenavComponent implements OnInit {
   }
 
   private setCurrentSectionByRoute() {
-    if (this.currentRouteSecction.search(EDIT_TEAMS_SECCTION) === 1) {
+    if (this.currentRouteSecction.search(EDIT_TEAMS_SECCTION) > 0) {
       this.setBtnColor(EDIT_TEAMS_SECCTION);
       return;
+    } else if (this.currentRouteSecction.search('process') > 0) {
+      this.setBtnColor(RETRO_PROCES_SECCTION);
+    } else {
+      this.setBtnColor(DASHBOARD_SECTION);
     }
-    this.setBtnColor(DASHBOARD_SECTION);
+  }
+
+  private subscribeEvents() {
+    this.setNewTeamsSubscription = this.eventService.getSetTeamsAsDefaultSectionEmiter()
+      .subscribe(() => this.setBtnColor(EDIT_TEAMS_SECCTION));
+    this.setRetroProcessSubscription = this.eventService.getSetRetroProcessAsDefaultSectionEmiter()
+      .subscribe(() => this.setBtnColor(RETRO_PROCES_SECCTION));
   }
 
 }

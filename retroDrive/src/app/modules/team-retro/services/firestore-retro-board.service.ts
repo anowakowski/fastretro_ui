@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { Teams } from 'src/app/models/teams';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { User } from 'src/app/models/user';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
@@ -38,13 +38,23 @@ export class FirestoreRetroBoardService {
   updateRetroBoard(retroBoardToUpdate: any, id: any) {
     this.firestoreBase.updateItem('/retroBoards/', id, retroBoardToUpdate);
   }
-  
+
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
 
   getTeams() {
     return this.firestoreBase.getAll('/teams/');
+  }
+
+  getTeamsFiltered(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFiltered('/teams/', condition);
   }
 
   getUserTeams(uid: string) {
@@ -80,7 +90,28 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges(RETRO_BOARD_COLLECTION, condition);
   }
 
-  deleteRetroBoard(retroBoard: RetroBoard) {
+  retroBoardFilteredByWorkspaceIdSnapshotChanges(workspaceId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
+  }
+
+  retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCardActions/', condition);
+  }
+
+
+  deleteRetroBoard(retroBoard: RetroBoardToSave) {
     this.firestoreBase.deleteItem(RETRO_BOARD_COLLECTION, retroBoard.id);
   }
 
@@ -91,6 +122,10 @@ export class FirestoreRetroBoardService {
       value: mail
     };
     return this.firestoreBase.getFiltered('/users', condition);
+  }
+
+  findFilteredRetroBoardCardActions() {
+
   }
 
   updateUsr(user: User) {
@@ -165,9 +200,11 @@ export class FirestoreRetroBoardService {
       team: this.prepareTeam(newRetroBoard.team),
       // members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
+      lastModifiedDate: newRetroBoard.lastModifiedDate,
       isFinished: newRetroBoard.isFinished,
       isStarted: false,
-      urlParamId: newRetroBoard.urlParamId
+      urlParamId: newRetroBoard.urlParamId,
+      workspaceId: newRetroBoard.workspaceId
     };
   }
 }

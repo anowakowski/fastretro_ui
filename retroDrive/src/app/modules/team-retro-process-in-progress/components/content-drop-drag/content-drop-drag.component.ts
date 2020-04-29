@@ -13,7 +13,7 @@ import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-prog
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { ActivatedRoute } from '@angular/router';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
@@ -25,6 +25,7 @@ import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-p
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
+import { formatDate } from '@angular/common';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -57,7 +58,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private toImproveRetroBoardCol: Column;
 
   public board: Board;
-  private retroBoardToProcess: RetroBoard;
+  private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
   public isExistingSomeRetroBoardCardAction = false;
 
@@ -78,7 +79,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
-    //this.createPersistentTimerOptions();
+    // this.createPersistentTimerOptions();
   }
 
   ngOnDestroy(): void {
@@ -108,8 +109,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private setIsFinishedInRetroBoard(isFinished: boolean) {
     this.retroProcessIsStoped = isFinished;
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     // tslint:disable-next-line:object-literal-shorthand
-    const retroBoardToUpdate = { isFinished: isFinished };
+    const retroBoardToUpdate = { isFinished: isFinished, lastModifiedDate: currentDate };
     this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
   }
 
@@ -147,11 +149,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
             }
           });
-        
         // this.eventsService.emitTimerOptions(result);
-
-        
-
         this.retroProcessIsStoped = false;
         this.timerIsRunning = true;
       }
@@ -308,6 +306,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   editCard(currentCard: RetroBoardCard, colName: string) {
+    if (this.currentUser.uid !== currentCard.userId) {
+      return;
+    }
+    if (this.retroBoardToProcess.isFinished) {
+      return;
+    }
     if (currentCard.isMerged) {
       return;
     }
@@ -448,7 +452,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.retroBoardSubscriptions =
           this.firestoreRetroInProgressService
             .findRetroBoardByUrlParamIdSnapshotChanges(retroBoardParamId).subscribe(retroBoardsSnapshot => {
-              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+              const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
               this.retroBoardToProcess = findedRetroBoard;
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
               this.isRetroBoardIsReady = true;
@@ -531,13 +535,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private getingDataAfterClickStartRetroProcess() {
     // tslint:disable-next-line:no-string-literal
-    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoard;
+    const retroBoardDataSnapshot = this.route.snapshot.data['retroBoardData'] as RetroBoardToSave;
 
     this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardDataSnapshot.urlParamId).then(filteredRetroBoardSnapshot => {
       if (filteredRetroBoardSnapshot.docs.length > 0) {
         this.firestoreRetroInProgressService.findRetroBoardByUrlParamIdSnapshotChanges(retroBoardDataSnapshot.urlParamId)
           .subscribe(retroBoardsSnapshot => {
-            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoard;
+            const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
             this.retroBoardToProcess = findedRetroBoard;
             this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
             this.retroBoardData = this.retroBoardToProcess;
@@ -566,7 +570,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
       retroBoardId: card.retroBoardId,
-      user: this.firestoreRetroInProgressService.addUserAsRef(this.currentUser.uid),
+      userId: this.currentUser.uid,
       voteCount: card.voteCount,
       actions: new Array<any>()
     };
@@ -577,7 +581,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private prepareRetroBoardCardToSaveFromMerged(mergedCard: MergedRetroBoardCard, isWentWellRetroBoradCol: boolean, index: number) {
     return {
       name: mergedCard.name,
-      user: mergedCard.user,
+      userId: mergedCard.userId,
       // tslint:disable-next-line:object-literal-shorthand
       index: index,
       isNewItem: false,
@@ -622,7 +626,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<MergedRetroBoardCard>(),
       retroBoardId: this.retroBoardToProcess.id,
-      user: this.currentUser,
+      userId: this.currentUser.uid,
       id: '',
       voteCount: 0,
       actions: new Array<any>()
@@ -706,7 +710,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
-    return { name: retroBoardCard.name, user: retroBoardCard.user };
+    return { name: retroBoardCard.name, userId: retroBoardCard.userId };
   }
 
   private chcekIfAnyCardIsInEditMode(): boolean {

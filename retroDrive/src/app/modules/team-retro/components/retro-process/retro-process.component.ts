@@ -2,13 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { Teams } from 'src/app/models/teams';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 import { Team } from 'src/app/models/team';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { RetroBoard } from 'src/app/models/retroBoard';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-retro-process',
@@ -22,18 +28,40 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   dataIsLoading = true;
 
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
+  currentUser: User;
+
+
   constructor(
     private bottomSheetRef: MatBottomSheet,
     private frbs: FirestoreRetroBoardService,
     private dataPassingService: DataPassingService,
     private snackBar: MatSnackBar,
-    private router: Router) { }
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    private authService: AuthService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
   }
 
   ngOnInit() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+      } else {
+        this.router.navigate(['/']);
+      }
+    }
+
     this.prepareRetroBoard();
   }
 
@@ -69,7 +97,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  onStartRetroProcess(retroBoard) {
+  onStartRetroProcess(retroBoard: RetroBoard) {
     const retroBoardToUpdate = {
       isStarted: true
     };
@@ -81,24 +109,28 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoard() {
-    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredSnapshotChanges().subscribe(snapshot => {
-      this.dataIsLoading = true;
-      this.retroBoards = [];
-      this.CreateBaseRetroBoardData(snapshot);
+    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
+      .subscribe(snapshot => {
+        this.dataIsLoading = snapshot.length > 0;
+        this.retroBoards = [];
+        this.CreateBaseRetroBoardData(snapshot);
     });
   }
 
   private CreateBaseRetroBoardData(snapshot: any) {
     snapshot.forEach(retroBoardSnapshot => {
       const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
-      retroBoard.id = retroBoardSnapshot.payload.doc.id;
-      const team = retroBoardSnapshot.payload.doc.data().team.get();
-      this.prepareTeams(team, retroBoard);
-    });
 
-    if (snapshot.length === 0) {
-      this.dataIsLoading = false;
-    }
+      if (retroBoard.isStarted) {
+        this.dataIsLoading = false;
+      }
+
+      if (!retroBoard.isStarted) {
+        retroBoard.id = retroBoardSnapshot.payload.doc.id;
+        const team = retroBoardSnapshot.payload.doc.data().team.get();
+        this.prepareTeams(team, retroBoard);
+      }
+    });
   }
 
   private prepareTeams(team: any, retroBoard: RetroBoard) {

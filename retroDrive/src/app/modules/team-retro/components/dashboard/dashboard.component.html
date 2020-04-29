@@ -1,30 +1,84 @@
 <div *ngIf="!currentUser.isNewUser">
-  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">List of finished retro board</mat-card>
-  <mat-card class="example-card" style="opacity: 0.97;">
-    <mat-card-header>
-      <mat-card-title>#team Alpha Board</mat-card-title>
-      <mat-card-subtitle>
-        <span style="font-size: 17px;">Retro for Sprint 21</span> <br />
-        <i>Retro Board Created <span> march 2020</span></i>
-      </mat-card-subtitle>
-    </mat-card-header>
+  <div *ngIf="retroBoards.length > 0">
 
-    <mat-card-content>
-      <div class="chart-wrapper">
-        <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-          [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
-        </canvas>
-      </div>
-    </mat-card-content>
-  </mat-card>
 
-  <mat-card class="example-card" style="margin-top: 5px;">
-    <mat-card-actions style="margin-top: -14px;">
-      <button style="width: 100%;" mat-raised-button color="primary">Retro Details</button>
-    </mat-card-actions>
-  </mat-card>
+    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+      <span>Your last retro boards </span>
+      <div fxFlex></div>
+      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
+        <mat-icon>assignment</mat-icon>&nbsp; All retro boards in {{currentWorkspace.name}} workspace
+      </button>
+    </mat-card>
 
-  <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+
+
+    <div *ngFor="let retroBoard of retroBoards">
+      <mat-card class="example-card" style="opacity: 0.985;">
+        <mat-card-header>
+          <mat-card-title>
+            <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
+            <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
+            - #team <b>{{retroBoard.team.name}}</b> Board
+          </mat-card-title>
+          <mat-card-subtitle>
+            <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
+            <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
+            <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+            <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content *ngIf="retroBoard.isFinished">
+          <div class="chart-wrapper">
+            <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+              [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+            </canvas>
+          </div>
+        </mat-card-content>
+        <mat-card-content *ngIf="!retroBoard.isFinished">
+          <div>
+            <h3 style="margin-top: 15px;">Retro in progress...</h3>
+            <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
+        <mat-card-actions style="margin-top: -14px;">
+          <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+            Board Details <mat-icon>vertical_split</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
+        <mat-card-actions style="margin-top: -14px;">
+          <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+            <mat-icon>arrow_right_alt</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+  </div>
+
+  <div *ngIf="retroBoards.length === 0">
+    <mat-card style="opacity: 0.985;">
+      <span style="font-size: 16px;">Go to teams and joint to existng team or create new</span>
+      <div fxFlex></div>
+      <button mat-raised-button color="primary"
+        style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px; width: 280px;"
+        (click)="goToTeams()">
+        <mat-icon>people_alt</mat-icon>&nbsp; Go to teams
+      </button>
+    </mat-card>
+
+    <mat-card style="margin-top: 10px; opacity: 0.985;">
+      <span>If you in team - Create new retro board </span>
+      <div fxFlex></div>
+      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToRetroProcess()">
+        <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; Go to retro board configuration
+      </button>
+    </mat-card>
+  </div>
 </div>
 <div *ngIf="currentUser.isNewUser">
   <app-new-user-wizard></app-new-user-wizard>

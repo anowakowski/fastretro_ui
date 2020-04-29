@@ -1,6 +1,7 @@
-import { RetroBoardCardActions } from './retroBoardCardActions';
+import { Teams } from './teams';
+import { Team } from './team';
 
-export class RetroBoard {
+export interface RetroBoardToSave {
     id: string;
     sprintNumber: string;
     retroName: string;
@@ -11,5 +12,4 @@ export class RetroBoard {
     startDate: Date;
     urlParamId: string;
     workspaceId: string;
-    actions: Array<RetroBoardCardActions>;
 }

@@ -4,9 +4,13 @@ import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet'
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { Teams } from 'src/app/models/teams';
-import { RetroBoard } from 'src/app/models/retroBoard';
+import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 
 import { Guid } from 'guid-typescript';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+import { User } from 'src/app/models/user';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -22,6 +26,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   sprintNumber = new FormControl('');
   shouldDisableMembersControl = true;
 
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
+  currentUser: User;
+
   teams: Teams[];
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
@@ -29,9 +37,14 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
     private formBuilder: FormBuilder,
-    private frbs: FirestoreRetroBoardService) { }
+    private frbs: FirestoreRetroBoardService,
+    private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+
     this.createAddNewRetroBoardForm();
     this.prepareTeams();
   }
@@ -66,7 +79,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   private prepareRetroBoardToSave() {
     const value = this.addNewRetroBoardForm.value;
-    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const guid = Guid.create();
 
     const retroBoard = {
@@ -76,7 +89,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       isFinished: false,
       // members: value.membersFormControl,
       creationDate: currentDate,
-      urlParamId: guid.toString()
+      lastModifiedDate: currentDate,
+      urlParamId: guid.toString(),
+      workspaceId: this.currentWorkspace.id
     };
 
     return retroBoard;
@@ -84,7 +99,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   private prepareTeams() {
     this.teams = new Array<Teams>();
-    this.frbs.getTeams().then(snapshotTeams => {
+    this.frbs.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
       snapshotTeams.docs.forEach(doc => {
         const team: Teams = {
           id: doc.id,
