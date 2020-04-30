@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
-    <span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
+    <span [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" class="user-avatar-img" width="40" height="40" alt="logo">
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
     <span class="example-spacer"></span>
