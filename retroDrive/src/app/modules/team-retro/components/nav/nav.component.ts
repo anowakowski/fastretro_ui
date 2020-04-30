@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-nav',
@@ -12,7 +13,8 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 })
 export class NavComponent implements OnInit {
 
-  constructor(public auth: AuthService, private router: Router, private localStorageService: LocalStorageService) { }
+  constructor(
+    public auth: AuthService, private router: Router, private localStorageService: LocalStorageService) { }
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -22,8 +24,14 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentUserWorkspaceName = this.userWorkspace.workspaces[0].name;
+
+    if (this.currentUser === undefined) {
+      this.auth.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+      }
+    }
   }
 
   signOut() {
