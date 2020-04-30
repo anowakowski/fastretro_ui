@@ -59,7 +59,14 @@ export class SlidenavComponent implements OnInit {
     this.subscribeEvents();
 
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+
+    if (this.currentUser === undefined) {
+      this.auth.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+      }
+    }
   }
 
   isScreenSmall(): boolean {

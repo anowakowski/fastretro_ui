@@ -10,6 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from 'src/app/shared/material-module';
 import { LoginRegisterFormComponent } from './components/login-register-form/login-register-form.component';
 import { FirestoreLoginRegisterService } from './services/firestore-login-register.service';
+import { RegisterFormComponent } from './components/register-form/register-form.component';
 
 
 
@@ -22,7 +23,7 @@ import { FirestoreLoginRegisterService } from './services/firestore-login-regist
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent],
+  declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent, RegisterFormComponent],
   providers: [
     FirestoreLoginRegisterService
   ],

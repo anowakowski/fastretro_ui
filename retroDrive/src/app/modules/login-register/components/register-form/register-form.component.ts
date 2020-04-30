@@ -6,13 +6,12 @@ import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'app-login-register-form',
-  templateUrl: './login-register-form.component.html',
-  styleUrls: ['./login-register-form.component.css']
+  selector: 'app-register-form',
+  templateUrl: './register-form.component.html',
+  styleUrls: ['./register-form.component.css']
 })
-export class LoginRegisterFormComponent implements OnInit {
-
-  addNewEmailPassLoginForm: FormGroup;
+export class RegisterFormComponent implements OnInit {
+  addNewEmailPassRegisterForm: FormGroup;
   emailFormControl = new FormControl('');
   passFormControl = new FormControl('');
 
@@ -23,11 +22,14 @@ export class LoginRegisterFormComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.createNewEmailPassLoginForm();
+    this.createNewEmailPassRegisterForm();
   }
 
-  loginByGoogle() {
-    this.auth.googleSignin().then((userCredentials) => {
+  CreateUserByEmailAndPass() {
+    const emailVaule = this.addNewEmailPassRegisterForm.value.emailFormControl;
+    const passValue = this.addNewEmailPassRegisterForm.value.passFormControl;
+
+    this.auth.emailSigUp(emailVaule, passValue).then((userCredentials) => {
       const logedUser = userCredentials.user;
       this.fls.findUsers(logedUser.email)
         .then(snapshotFindedUsr => {
@@ -41,26 +43,8 @@ export class LoginRegisterFormComponent implements OnInit {
     });
   }
 
-  loginByEmailAndPass() {
-    const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
-    const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
-
-    this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
-      const logedUser = userCredentials.user;
-      this.fls.findUsers(logedUser.email)
-        .then(snapshotFindedUsr => {
-          if (snapshotFindedUsr.docs.length === 0) {
-            const logedUserModel: User = this.prepareUserModel(logedUser);
-            this.fls.updateUsr(logedUserModel);
-          }
-        }).finally(() => {
-          this.router.navigate(['/']);
-        });
-    });
-  }
-
-  createNewEmailPassLoginForm() {
-    this.addNewEmailPassLoginForm = this.formBuilder.group({
+  createNewEmailPassRegisterForm() {
+    this.addNewEmailPassRegisterForm = this.formBuilder.group({
       emailFormControl: this.emailFormControl,
       passFormControl: this.passFormControl
     });
@@ -76,4 +60,5 @@ export class LoginRegisterFormComponent implements OnInit {
       chosenAvatarUrl: ''
     };
   }
+
 }

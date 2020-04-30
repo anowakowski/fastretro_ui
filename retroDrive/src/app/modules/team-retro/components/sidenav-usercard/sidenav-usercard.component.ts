@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-sidenav-usercard',
@@ -15,13 +17,22 @@ export class SidenavUsercardComponent implements OnInit {
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
 
-  constructor(private localStorageService: LocalStorageService) { }
+  constructor(
+    private localStorageService: LocalStorageService,
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
 
-    this.currentUserWorkspaceName = this.userWorkspace.workspaces[0].name;
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+        this.currentUserWorkspaceName = currentWorkspace.name;
+      }
+    }
   }
 
 }
