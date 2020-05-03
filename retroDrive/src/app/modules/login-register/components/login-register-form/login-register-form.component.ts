@@ -14,6 +14,7 @@ export class LoginRegisterFormComponent implements OnInit {
   addNewEmailPassLoginForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  shouldShowNotExisitngUserError = false;
 
   constructor(
     public auth: AuthService,
@@ -27,28 +28,8 @@ export class LoginRegisterFormComponent implements OnInit {
   }
 
   loginByGoogle() {
-    this.auth.googleSignin().then((userCredentials) => {
-      const logedUser = userCredentials.user;
-      this.fls
-        .findUsers(logedUser.email)
-        .then((snapshotFindedUsr) => {
-          if (snapshotFindedUsr.docs.length === 0) {
-            const logedUserModel: User = this.prepareUserModel(logedUser);
-            this.fls.updateUsr(logedUserModel);
-          }
-        })
-        .finally(() => {
-          this.router.navigate(['/']);
-        });
-    });
-  }
-
-  loginByEmailAndPass() {
-    if (this.addNewEmailPassLoginForm.valid) {
-      const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
-      const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
-
-      this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
+    this.auth.googleSignin()
+      .then((userCredentials) => {
         const logedUser = userCredentials.user;
         this.fls
           .findUsers(logedUser.email)
@@ -61,6 +42,32 @@ export class LoginRegisterFormComponent implements OnInit {
           .finally(() => {
             this.router.navigate(['/']);
           });
+    }).catch(error => {
+      const errorForm = error;
+    });
+  }
+
+  loginByEmailAndPass() {
+    if (this.addNewEmailPassLoginForm.valid) {
+      const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
+      const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
+
+      this.auth.emailSigIn(emailVaule, passValue)
+        .then((userCredentials) => {
+          const logedUser = userCredentials.user;
+          this.fls
+            .findUsers(logedUser.email)
+            .then((snapshotFindedUsr) => {
+              if (snapshotFindedUsr.docs.length === 0) {
+                const logedUserModel: User = this.prepareUserModel(logedUser);
+                this.fls.updateUsr(logedUserModel);
+              }
+            })
+            .finally(() => {
+              this.router.navigate(['/']);
+            });
+      }).catch(error => {
+        this.shouldShowNotExisitngUserError = true;
       });
     }
   }
