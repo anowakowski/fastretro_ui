@@ -4,6 +4,8 @@
     <span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
     <span class="example-spacer"></span>
     <span>Login / Register</span>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">arrow_right_alt</mat-icon>
+    <mat-icon class="example-icon" aria-hidden="false" style="margin-left: -10px;">arrow_right_alt</mat-icon>
+    <button mat-raised-button color="accent" [routerLink]="['/login-register']" style="margin-left: 10px;"><i class="fa fa-sign-in"></i>&nbsp; Log in</button>
+    <button mat-raised-button color="accent" [routerLink]="['/login-register/signup']" style="margin-left: 10px;"><i class="fa fa-external-link"></i>&nbsp; Sign Up</button>
   </mat-toolbar-row>
 </mat-toolbar>
