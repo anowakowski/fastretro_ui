@@ -50,6 +50,11 @@ export class AuthService {
     return await this.afAuth.auth.signInWithPopup(provider);
   }
 
+  async facebookSignin() {
+    const provider = new auth.FacebookAuthProvider();
+    return await this.afAuth.auth.signInWithPopup(provider);
+  }
+
   async emailSigUp(email: string, password: string) {
     return await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
   }

@@ -76,6 +76,8 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
+  
+
   private prepareUserModel(logedUser): User {
     return {
       uid: logedUser.uid,

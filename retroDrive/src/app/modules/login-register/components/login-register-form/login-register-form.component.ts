@@ -50,6 +50,27 @@ export class LoginRegisterFormComponent implements OnInit {
     });
   }
 
+  loginByFacebook() {
+    this.auth.facebookSignin()
+      .then((userCredentials) => {
+        const logedUser = userCredentials.user;
+        this.fls
+          .findUsers(logedUser.email)
+          .then((snapshotFindedUsr) => {
+            if (snapshotFindedUsr.docs.length === 0) {
+              const logedUserModel: User = this.prepareUserModel(logedUser);
+              this.fls.updateUsr(logedUserModel);
+            }
+          })
+          .finally(() => {
+            this.router.navigate(['/']);
+          });
+    }).catch(error => {
+      const errorForm = error;
+    });
+
+  }
+
   loginByEmailAndPass() {
     if (this.addNewEmailPassLoginForm.valid) {
       const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
