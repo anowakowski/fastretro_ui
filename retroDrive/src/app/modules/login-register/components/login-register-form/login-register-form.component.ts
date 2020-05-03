@@ -14,7 +14,7 @@ export class LoginRegisterFormComponent implements OnInit {
 
   addNewEmailPassLoginForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  passFormControl = new FormControl('');
+  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
   constructor(
     public auth: AuthService,
