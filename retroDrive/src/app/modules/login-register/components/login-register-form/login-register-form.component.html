@@ -8,7 +8,13 @@
     <form class="example-form" [formGroup]="addNewEmailPassLoginForm" (ngSubmit)="loginByEmailAndPass()">
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input type="email" [formControl]="emailFormControl" matInput placeholder="@email">
+          <input type="email" [formControl]="emailFormControl" matInput placeholder="@email" required>
+          <mat-error *ngIf="this.emailFormControl.hasError('required')">
+            An Email is required
+          </mat-error>
+          <mat-error *ngIf="this.emailFormControl.hasError('email')">
+            Please enter a valid Email address
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
