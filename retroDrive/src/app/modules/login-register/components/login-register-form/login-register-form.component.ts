@@ -6,41 +6,47 @@ import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-login-register-form',
-  templateUrl: './login-register-form.component.html',
-  styleUrls: ['./login-register-form.component.css']
+  selector: "app-login-register-form",
+  templateUrl: "./login-register-form.component.html",
+  styleUrls: ["./login-register-form.component.css"],
 })
 export class LoginRegisterFormComponent implements OnInit {
-
   addNewEmailPassLoginForm: FormGroup;
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  emailFormControl = new FormControl("", [
+    Validators.required,
+    Validators.email,
+  ]);
+  passFormControl = new FormControl("", [
+    Validators.required,
+    Validators.minLength(8),
+  ]);
 
   constructor(
     public auth: AuthService,
     private router: Router,
     private fls: FirestoreLoginRegisterService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.createNewEmailPassLoginForm();
   }
 
   loginByGoogle() {
-    if (this.addNewEmailPassLoginForm.valid) {
-      this.auth.googleSignin().then((userCredentials) => {
-        const logedUser = userCredentials.user;
-        this.fls.findUsers(logedUser.email)
-          .then(snapshotFindedUsr => {
-            if (snapshotFindedUsr.docs.length === 0) {
-              const logedUserModel: User = this.prepareUserModel(logedUser);
-              this.fls.updateUsr(logedUserModel);
-            }
-          }).finally(() => {
-            this.router.navigate(['/']);
-          });
-      });
-    }
+    this.auth.googleSignin().then((userCredentials) => {
+      const logedUser = userCredentials.user;
+      this.fls
+        .findUsers(logedUser.email)
+        .then((snapshotFindedUsr) => {
+          if (snapshotFindedUsr.docs.length === 0) {
+            const logedUserModel: User = this.prepareUserModel(logedUser);
+            this.fls.updateUsr(logedUserModel);
+          }
+        })
+        .finally(() => {
+          this.router.navigate(['/']);
+        });
+    });
   }
 
   loginByEmailAndPass() {
@@ -50,14 +56,16 @@ export class LoginRegisterFormComponent implements OnInit {
 
       this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
         const logedUser = userCredentials.user;
-        this.fls.findUsers(logedUser.email)
-          .then(snapshotFindedUsr => {
+        this.fls
+          .findUsers(logedUser.email)
+          .then((snapshotFindedUsr) => {
             if (snapshotFindedUsr.docs.length === 0) {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fls.updateUsr(logedUserModel);
             }
-          }).finally(() => {
-            this.router.navigate(['/']);
+          })
+          .finally(() => {
+            this.router.navigate(["/"]);
           });
       });
     }
@@ -66,7 +74,7 @@ export class LoginRegisterFormComponent implements OnInit {
   createNewEmailPassLoginForm() {
     this.addNewEmailPassLoginForm = this.formBuilder.group({
       emailFormControl: this.emailFormControl,
-      passFormControl: this.passFormControl
+      passFormControl: this.passFormControl,
     });
   }
 
@@ -77,7 +85,7 @@ export class LoginRegisterFormComponent implements OnInit {
       splayName: logedUser.displayName,
       photoURL: logedUser.photoURL,
       isNewUser: true,
-      chosenAvatarUrl: ''
+      chosenAvatarUrl: "",
     };
   }
 }
