@@ -8,9 +8,9 @@ import { DataResolverService } from './resolvers/data-resolver.service';
 const routes: Routes = [
   { path: '', redirectTo: 'retro', pathMatch: 'full' },
   {
-    path: 'login',
+    path: 'login-register',
     loadChildren: () => import('./modules/login-register/login-register.module').then( m => m.LoginRegisterModule),
-    canActivate: [LoginRegisterGuard]
+    // canActivate: [LoginRegisterGuard]
   },
   {
     path: 'retro',

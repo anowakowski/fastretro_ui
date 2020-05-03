@@ -11,6 +11,7 @@ import { MaterialModule } from 'src/app/shared/material-module';
 import { LoginRegisterFormComponent } from './components/login-register-form/login-register-form.component';
 import { FirestoreLoginRegisterService } from './services/firestore-login-register.service';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { ShowInfoSnackbarComponent } from './components/show-info-snackbar/show-info-snackbar.component';
 
 
 
@@ -23,10 +24,13 @@ import { RegisterFormComponent } from './components/register-form/register-form.
     FlexLayoutModule,
     MaterialModule
   ],
-  declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent, RegisterFormComponent],
+  declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent, RegisterFormComponent, ShowInfoSnackbarComponent],
   providers: [
     FirestoreLoginRegisterService
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  entryComponents: [
+    ShowInfoSnackbarComponent
+  ]
 })
 export class LoginRegisterModule { }

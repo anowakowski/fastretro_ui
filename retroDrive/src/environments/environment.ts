@@ -11,8 +11,7 @@ export const environment = {
     projectId: 'fastretro-64ade',
     storageBucket: 'fastretro-64ade.appspot.com',
     messagingSenderId: '118347139489',
-    appId: '1:118347139489:web:218a2165ed856771d663e0',
-    measurementId: 'G-0JRTWZ4K3L'
+    appId: '1:118347139489:web:218a2165ed856771d663e0'
   }
 };
 

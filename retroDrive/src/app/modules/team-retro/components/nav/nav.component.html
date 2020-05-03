@@ -8,7 +8,7 @@
     </mat-icon>
     <span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
 
-    <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px;" alt="logo">
+    <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
 
     <span class="example-spacer"></span>
