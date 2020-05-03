@@ -1,4 +1,8 @@
-.mat-form-field {
-    margin-right: 8px;
-  }
-  
+.info-warrning-snackbar {
+    margin-left: 42px;
+    font-size: 15px;
+}
+
+.info-icon-warrning-sncakbar {
+    color: #f34e4e
+}
