@@ -28,15 +28,20 @@
 </div>
 
 
+<!--SignUp with email-->
 <div *ngIf="shouldHideChoseLoginOptionForm" style="margin-top: 10%;" class="login-wrapper" fxLayout="row"
   fxLayoutAlign="center center">
 
   <mat-card style="background-color: #ecececfa;" class="box">
+    <p class="text-center" style="font-size: 16px; margin-bottom: 20px; margin-top: -10px;">Signup with 
+      <a [routerLink]="['/login-register']" routerLinkActive="router-link-active"> Facebook</a> or 
+      <a [routerLink]="['/login-register']" routerLinkActive="router-link-active"> Google</a> or </p>
+
     <mat-card-header>
-      <mat-card-title>Log in</mat-card-title>
+      <mat-card-title>Sign up</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form" [formGroup]="addNewEmailPassRegisterForm" (ngSubmit)="CreateUserByEmailAndPass()">
+    <form class="example-form" [formGroup]="addNewEmailPassRegisterForm" (ngSubmit)="CreateUserByEmailAndPass()" style="margin-top: 20px;">
       <mat-card-content>
         <mat-form-field class="example-full-width">
           <input type="email" [formControl]="emailFormControl" matInput placeholder="@email" required>
@@ -49,7 +54,7 @@
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input type="password" [formControl]="passFormControl" matInput placeholder="Password" required>
+          <input type="password" [formControl]="passFormControl" matInput placeholder="Password (min 8 characters)" required>
           <mat-error *ngIf="passFormControl.hasError('required')">
             An Password is required
           </mat-error>
