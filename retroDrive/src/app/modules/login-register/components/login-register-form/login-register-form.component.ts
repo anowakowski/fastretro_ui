@@ -68,7 +68,6 @@ export class LoginRegisterFormComponent implements OnInit {
     }).catch(error => {
       const errorForm = error;
     });
-
   }
 
   loginByEmailAndPass() {
