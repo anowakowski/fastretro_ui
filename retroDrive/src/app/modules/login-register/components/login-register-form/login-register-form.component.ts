@@ -6,20 +6,14 @@ import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: "app-login-register-form",
-  templateUrl: "./login-register-form.component.html",
-  styleUrls: ["./login-register-form.component.css"],
+  selector: 'app-login-register-form',
+  templateUrl: './login-register-form.component.html',
+  styleUrls: ['./login-register-form.component.css'],
 })
 export class LoginRegisterFormComponent implements OnInit {
   addNewEmailPassLoginForm: FormGroup;
-  emailFormControl = new FormControl("", [
-    Validators.required,
-    Validators.email,
-  ]);
-  passFormControl = new FormControl("", [
-    Validators.required,
-    Validators.minLength(8),
-  ]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
   constructor(
     public auth: AuthService,
@@ -65,7 +59,7 @@ export class LoginRegisterFormComponent implements OnInit {
             }
           })
           .finally(() => {
-            this.router.navigate(["/"]);
+            this.router.navigate(['/']);
           });
       });
     }
@@ -85,7 +79,7 @@ export class LoginRegisterFormComponent implements OnInit {
       splayName: logedUser.displayName,
       photoURL: logedUser.photoURL,
       isNewUser: true,
-      chosenAvatarUrl: "",
+      chosenAvatarUrl: '',
     };
   }
 }
