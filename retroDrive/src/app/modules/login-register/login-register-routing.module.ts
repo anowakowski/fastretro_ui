@@ -13,7 +13,7 @@ const routes: Routes = [
     component: LoginRegisterComponent,
     children: [
       {path: '', component: LoginRegisterFormComponent},
-      {path: 'register', component: RegisterFormComponent}
+      {path: 'signup', component: RegisterFormComponent}
     ]
   }
 ];
