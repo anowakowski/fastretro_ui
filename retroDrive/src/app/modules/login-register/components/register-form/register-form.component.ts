@@ -3,7 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
 import { User } from 'src/app/models/user';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register-form',
@@ -12,8 +12,10 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 })
 export class RegisterFormComponent implements OnInit {
   addNewEmailPassRegisterForm: FormGroup;
-  emailFormControl = new FormControl('');
-  passFormControl = new FormControl('');
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+
+  shouldHideChoseLoginOptionForm = false;
 
   constructor(
     public auth: AuthService,
@@ -23,6 +25,10 @@ export class RegisterFormComponent implements OnInit {
 
   ngOnInit() {
     this.createNewEmailPassRegisterForm();
+  }
+
+  continueWithMail() {
+    this.shouldHideChoseLoginOptionForm = true;
   }
 
   CreateUserByEmailAndPass() {
