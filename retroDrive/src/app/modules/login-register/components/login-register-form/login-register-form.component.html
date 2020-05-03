@@ -1,6 +1,6 @@
 <div style="margin-top: 10%;" class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-  <mat-card style="background-color: #707edaa8;" class="box">
+  <mat-card style="background-color: #ecececfa;" class="box">
     <mat-card-header>
       <mat-card-title>Log in</mat-card-title>
     </mat-card-header>
@@ -24,6 +24,8 @@
         <!--<button style="width: 100%;" mat-raised-button color="primary"><i class="fa fa-facebook"></i>&nbsp; Facebook</button> <br/>-->
         <button style="width: 100%; margin-top: 10px;" mat-raised-button color="accent" (click)="loginByGoogle()"><i class="fa fa-google"></i>&nbsp; Google</button>
       </div>
+
+      <p class="text-center" style="font-size: 16px; margin-top: 20px; margin-bottom: -20px;">Dont have an account? <a [routerLink]="['/login-register/signup']" routerLinkActive="router-link-active" > Sign up</a></p>
 
   </mat-card>
 </div>
