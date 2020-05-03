@@ -56,6 +56,26 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
+  loginByGoogle() {
+    this.auth.googleSignin()
+      .then((userCredentials) => {
+        const logedUser = userCredentials.user;
+        this.fls
+          .findUsers(logedUser.email)
+          .then((snapshotFindedUsr) => {
+            if (snapshotFindedUsr.docs.length === 0) {
+              const logedUserModel: User = this.prepareUserModel(logedUser);
+              this.fls.updateUsr(logedUserModel);
+            }
+          })
+          .finally(() => {
+            this.router.navigate(['/']);
+          });
+    }).catch(error => {
+      const errorForm = error;
+    });
+  }
+
   private prepareUserModel(logedUser): User {
     return {
       uid: logedUser.uid,
