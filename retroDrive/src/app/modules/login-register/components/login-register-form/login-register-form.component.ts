@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
 import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snackbar.component';
 
 @Component({
   selector: 'app-login-register-form',
@@ -20,7 +22,8 @@ export class LoginRegisterFormComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private fls: FirestoreLoginRegisterService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -67,7 +70,7 @@ export class LoginRegisterFormComponent implements OnInit {
               this.router.navigate(['/']);
             });
       }).catch(error => {
-        this.shouldShowNotExisitngUserError = true;
+        this.openInfoSnackBar('User with given email not exist');
       });
     }
   }
@@ -88,5 +91,15 @@ export class LoginRegisterFormComponent implements OnInit {
       isNewUser: true,
       chosenAvatarUrl: '',
     };
+  }
+
+  private openInfoSnackBar(textToDisplay) {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        displayText: '' + textToDisplay
+      }
+    });
   }
 }
