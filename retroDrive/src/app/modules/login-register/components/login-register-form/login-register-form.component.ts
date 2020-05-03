@@ -3,7 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
 import { User } from 'src/app/models/user';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login-register-form',
@@ -13,7 +13,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 export class LoginRegisterFormComponent implements OnInit {
 
   addNewEmailPassLoginForm: FormGroup;
-  emailFormControl = new FormControl('');
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passFormControl = new FormControl('');
 
   constructor(
@@ -27,36 +27,40 @@ export class LoginRegisterFormComponent implements OnInit {
   }
 
   loginByGoogle() {
-    this.auth.googleSignin().then((userCredentials) => {
-      const logedUser = userCredentials.user;
-      this.fls.findUsers(logedUser.email)
-        .then(snapshotFindedUsr => {
-          if (snapshotFindedUsr.docs.length === 0) {
-            const logedUserModel: User = this.prepareUserModel(logedUser);
-            this.fls.updateUsr(logedUserModel);
-          }
-        }).finally(() => {
-          this.router.navigate(['/']);
-        });
-    });
+    if (this.addNewEmailPassLoginForm.valid) {
+      this.auth.googleSignin().then((userCredentials) => {
+        const logedUser = userCredentials.user;
+        this.fls.findUsers(logedUser.email)
+          .then(snapshotFindedUsr => {
+            if (snapshotFindedUsr.docs.length === 0) {
+              const logedUserModel: User = this.prepareUserModel(logedUser);
+              this.fls.updateUsr(logedUserModel);
+            }
+          }).finally(() => {
+            this.router.navigate(['/']);
+          });
+      });
+    }
   }
 
   loginByEmailAndPass() {
-    const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
-    const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
+    if (this.addNewEmailPassLoginForm.valid) {
+      const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
+      const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
 
-    this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
-      const logedUser = userCredentials.user;
-      this.fls.findUsers(logedUser.email)
-        .then(snapshotFindedUsr => {
-          if (snapshotFindedUsr.docs.length === 0) {
-            const logedUserModel: User = this.prepareUserModel(logedUser);
-            this.fls.updateUsr(logedUserModel);
-          }
-        }).finally(() => {
-          this.router.navigate(['/']);
-        });
-    });
+      this.auth.emailSigIn(emailVaule, passValue).then((userCredentials) => {
+        const logedUser = userCredentials.user;
+        this.fls.findUsers(logedUser.email)
+          .then(snapshotFindedUsr => {
+            if (snapshotFindedUsr.docs.length === 0) {
+              const logedUserModel: User = this.prepareUserModel(logedUser);
+              this.fls.updateUsr(logedUserModel);
+            }
+          }).finally(() => {
+            this.router.navigate(['/']);
+          });
+      });
+    }
   }
 
   createNewEmailPassLoginForm() {
