@@ -30,7 +30,6 @@ import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcom
 import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-bottomsheet/create-new-team-bottomsheet.component';
-import { AllRetroboardListRoutingModule } from '../all-retroboard-list/all-retroboard-list-routing.module';
 
 @NgModule({
   imports: [
@@ -60,8 +59,7 @@ import { AllRetroboardListRoutingModule } from '../all-retroboard-list/all-retro
     WelcomeInfoNewUsersDashboardDialogComponent,
     NewUserWiazrdInfoDialogComponent,
     ValueDataValidator,
-    CreateNewTeamBottomsheetComponent,
-    AllRetroboardListRoutingModule
+    CreateNewTeamBottomsheetComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
