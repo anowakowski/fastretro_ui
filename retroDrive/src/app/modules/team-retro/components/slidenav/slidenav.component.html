@@ -29,7 +29,7 @@
       </div>
     </div>
    </mat-drawer>
-   <div class="teams-retro-background-img">
+   <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection}">
     <div class="app-sidenav-content">
       <div class="wrapper">
         <nav aria-label="breadcrumb">

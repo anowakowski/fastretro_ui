@@ -53,6 +53,11 @@ export class AllRetroboardListComponent implements OnInit {
     }
   }
 
+  onRetroDetails(retroBoard: RetroBoardToSave) {
+    // this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
+    // this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
+  }
+
   private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
@@ -67,46 +72,27 @@ export class AllRetroboardListComponent implements OnInit {
         retroBoardData.team.get().then(teamSnapshot => {
           const team = teamSnapshot.data();
           retroBoardData.team = team;
-
           if (retroBoardData.isStarted) {
-            if (retroBoardData.isFinished) {
-              finishedRetroBoards.push(retroBoardData);
-            } else {
-              openRetroBoards.push(retroBoardData);
-            }
 
-            finishedRetroBoards.sort((a, b) => {
-              // tslint:disable-next-line:no-angle-bracket-type-assertion
-              return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
-            });
-
-            openRetroBoards.sort((a, b) => {
-              // tslint:disable-next-line:no-angle-bracket-type-assertion
-              return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
-            });
-
-            this.addToRetroBoards(finishedRetroBoards);
-            this.addToRetroBoards(openRetroBoards);
-
+            this.addToRetroBoards(retroBoardData);
             this.retroBoards.sort((a, b) => {
               // tslint:disable-next-line:no-angle-bracket-type-assertion
               return <any> a.isFinished - <any> b.isFinished;
             });
+
+            console.log(this.retroBoards);
           }
         });
       });
     });
   }
 
-  private addToRetroBoards(retroBoards: RetroBoardToSave[]) {
-
-    retroBoards.forEach(retroBoard => {
-      if (retroBoard.isFinished) {
-        this.prepareActionForFinishedRetroBoardCards(retroBoard as RetroBoard);
-      } else {
-        this.retroBoards.push(retroBoard as RetroBoard);
-      }
-    });
+  private addToRetroBoards(retroBoard: RetroBoardToSave) {
+    if (retroBoard.isFinished) {
+      this.prepareActionForFinishedRetroBoardCards(retroBoard as RetroBoard);
+    } else {
+      this.retroBoards.push(retroBoard as RetroBoard);
+    }
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {

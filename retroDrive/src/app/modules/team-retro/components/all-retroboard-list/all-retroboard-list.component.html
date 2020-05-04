@@ -1,5 +1,56 @@
-<p>test</p>
 
-<mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+    <div *ngIf="retroBoards.length > 0">
+  
+  
+      <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+        <span>All of your active and close retro boards </span>
+      </mat-card>
+  
+      <div *ngFor="let retroBoard of retroBoards">
+        <mat-card class="example-card" style="opacity: 0.985;">
+          <mat-card-header>
+            <mat-card-title>
+              <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
+              <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
+              - #team <b>{{retroBoard.team.name}}</b> Board
+            </mat-card-title>
+            <mat-card-subtitle>
+              <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
+              <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
+              <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+              <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+            </mat-card-subtitle>
+          </mat-card-header>
+  
+          <mat-card-content *ngIf="retroBoard.isFinished">
+            <div class="chart-wrapper">
+              <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+              </canvas>
+            </div>
+          </mat-card-content>
+          <mat-card-content *ngIf="!retroBoard.isFinished">
+            <div>
+              <h3 style="margin-top: 15px;">Retro in progress...</h3>
+              <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+            </div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
+          <mat-card-actions style="margin-top: -14px;">
+            <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+              Board Details <mat-icon>vertical_split</mat-icon></button>
+          </mat-card-actions>
+        </mat-card>
+  
+        <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
+          <mat-card-actions style="margin-top: -14px;">
+            <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+              <mat-icon>arrow_right_alt</mat-icon></button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+    </div>
 
-</mat-card>
