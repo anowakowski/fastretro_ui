@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartType, ChartOptions } from 'chart.js';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
@@ -12,20 +12,24 @@ import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { SingleDataSet, Label } from 'ng2-charts';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 
 @Component({
   selector: 'app-all-retroboard-list',
   templateUrl: './all-retroboard-list.component.html',
   styleUrls: ['./all-retroboard-list.component.css']
 })
-export class AllRetroboardListComponent implements OnInit {
+export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
     private authService: AuthService,
     private localStorageService: LocalStorageService,
     private dataPassingService: DataPassingService,
-    private router: Router) { }
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private spinnerTickService: SpinnerTickService,) { }
 
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
 
@@ -37,6 +41,9 @@ export class AllRetroboardListComponent implements OnInit {
   showOnlyFinishedIsFiltered = false;
   dataIsLoading = false;
 
+  shouldShowContent = false;
+  private spinnerTickSubscription: any;
+
   public pieChartOptions: ChartOptions = {
     responsive: true,
   };
@@ -47,6 +54,7 @@ export class AllRetroboardListComponent implements OnInit {
   public pieChartPlugins = [];
 
   ngOnInit() {
+    this.spinnerTick();
     this.dataIsLoading = true;
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -61,6 +69,11 @@ export class AllRetroboardListComponent implements OnInit {
       }
     }
   }
+
+  ngOnDestroy(): void {
+    this.unsubscribeTickService();
+  }
+
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
      this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
@@ -182,5 +195,22 @@ export class AllRetroboardListComponent implements OnInit {
     }
 
     return value;
+  }
+
+  private unsubscribeTickService() {
+    this.spinnerTickSubscription.unsubscribe();
+  }
+
+  private spinnerTick() {
+    this.spinner.show();
+    // tslint:disable-next-line:no-shadowed-variable
+    this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
+      if (interval === 1) {
+        this.shouldShowContent = true;
+      } else if (interval === 2) {
+        this.spinner.hide();
+        this.unsubscribeTickService();
+      }
+    });
   }
 }
