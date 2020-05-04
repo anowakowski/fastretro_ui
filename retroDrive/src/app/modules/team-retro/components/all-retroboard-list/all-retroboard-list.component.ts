@@ -70,17 +70,27 @@ export class AllRetroboardListComponent implements OnInit {
   }
 
   showOnlyOpenedRetro() {
-    this.showOnlyOpenedIsFiltered = true;
-    this.showOnlyFinishedIsFiltered = false;
-
-    this.prepreRetroBoardForCurrentWorkspace(true, false);
+    if (this.showOnlyOpenedIsFiltered) {
+      this.showOnlyOpenedIsFiltered = false;
+      this.showOnlyFinishedIsFiltered = false;
+      this.prepreRetroBoardForCurrentWorkspace();
+    } else {
+      this.showOnlyOpenedIsFiltered = true;
+      this.showOnlyFinishedIsFiltered = false;
+      this.prepreRetroBoardForCurrentWorkspace(true, false);
+    }
   }
 
   showOnlyFinishedRetro() {
-    this.showOnlyOpenedIsFiltered = false;
-    this.showOnlyFinishedIsFiltered = true;
-
-    this.prepreRetroBoardForCurrentWorkspace(false, true);
+    if (this.showOnlyFinishedIsFiltered) {
+      this.showOnlyOpenedIsFiltered = false;
+      this.showOnlyFinishedIsFiltered = false;
+      this.prepreRetroBoardForCurrentWorkspace();
+    } else {
+      this.showOnlyOpenedIsFiltered = false;
+      this.showOnlyFinishedIsFiltered = true;
+      this.prepreRetroBoardForCurrentWorkspace(false, true);
+    }
   }
 
   private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false) {
