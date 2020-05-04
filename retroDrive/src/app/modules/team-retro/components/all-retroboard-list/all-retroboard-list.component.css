@@ -1,0 +1,52 @@
+.container {
+    display: flex; /* or inline-flex */
+  }
+
+.mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-form-field {
+    margin-top: 16px;
+  }
+
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.example-margin {
+  margin-bottom: -15px;
+}
+
+.sidenav-userprofile-card {
+    max-width: 150px;
+  }
+
+
+.sidnav-userprofile-header-image {
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
+
+  .avatar-card-view {
+    border-radius: 70px 70px 70px 70px;
+    border: solid 1.5px;
+    border-color: #2567b3;
+  }
+ 

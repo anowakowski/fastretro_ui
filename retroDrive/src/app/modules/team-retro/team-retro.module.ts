@@ -30,6 +30,7 @@ import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcom
 import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-bottomsheet/create-new-team-bottomsheet.component';
+import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
 
 @NgModule({
   imports: [
@@ -59,7 +60,8 @@ import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-
     WelcomeInfoNewUsersDashboardDialogComponent,
     NewUserWiazrdInfoDialogComponent,
     ValueDataValidator,
-    CreateNewTeamBottomsheetComponent
+    CreateNewTeamBottomsheetComponent,
+    AllRetroboardListComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
