@@ -102,6 +102,8 @@ export class SlidenavComponent implements OnInit {
       this.teamsColor = BASIC_BTN_COLOR;
     } else if (this.currentChosenSection === RETRO_PROCES_SECCTION) {
       this.retroProcessColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === All_RETROBOARDS_LIST_SECTION) {
+      this.allRetroBoardListColor = BASIC_BTN_COLOR;
     }
   }
 
@@ -112,6 +114,8 @@ export class SlidenavComponent implements OnInit {
       this.teamsColor = CURRENT_BTN_COLOR;
     } else if (sectionNameToCurrent === RETRO_PROCES_SECCTION) {
       this.retroProcessColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
+      this.allRetroBoardListColor = CURRENT_BTN_COLOR;
     }
   }
 
@@ -121,6 +125,8 @@ export class SlidenavComponent implements OnInit {
       return;
     } else if (this.currentRouteSecction.search('process') > 0) {
       this.setBtnColor(RETRO_PROCES_SECCTION);
+    } else if (this.currentRouteSecction.search('all-retroboard-list') > 0) {
+      this.setBtnColor(All_RETROBOARDS_LIST_SECTION);
     } else {
       this.setBtnColor(DASHBOARD_SECTION);
     }
