@@ -1,7 +1,4 @@
-
     <div *ngIf="retroBoards.length > 0">
-  
-  
       <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
         <span>All of your Retro Boards </span>
         <div fxFlex></div>
@@ -20,7 +17,6 @@
             </mat-chip>
         </mat-chip-list>            
       </mat-card>
-  
       <div *ngFor="let retroBoard of retroBoards">
         <mat-card class="example-card" style="opacity: 0.985;">
           <mat-card-header>
@@ -36,7 +32,6 @@
               <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
             </mat-card-subtitle>
           </mat-card-header>
-  
           <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(retroBoard.chartData)">
             <div class="chart-wrapper">
               <canvas baseChart height="20" [data]="retroBoard.chartData" [labels]="pieChartLabels" [chartType]="pieChartType"
@@ -51,14 +46,12 @@
             </div>
           </mat-card-content>
         </mat-card>
-  
         <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
           <mat-card-actions style="margin-top: -14px;">
             <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
               Board Details <mat-icon>vertical_split</mat-icon></button>
           </mat-card-actions>
         </mat-card>
-  
         <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
           <mat-card-actions style="margin-top: -14px;">
             <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
@@ -67,5 +60,10 @@
         </mat-card>
       </div>
       <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+    </div>
+
+    
+    <div style="margin-top: 50px; margin-left: 22px;">
+        <app-loadding-single-elements-spinner *ngIf="dataIsLoading"></app-loadding-single-elements-spinner>
     </div>
 

@@ -35,6 +35,7 @@ export class AllRetroboardListComponent implements OnInit {
 
   showOnlyOpenedIsFiltered = false;
   showOnlyFinishedIsFiltered = false;
+  dataIsLoading = false;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -46,6 +47,7 @@ export class AllRetroboardListComponent implements OnInit {
   public pieChartPlugins = [];
 
   ngOnInit() {
+    this.dataIsLoading = true;
     this.currentUser = this.localStorageService.getItem('currentUser');
 
     if (this.currentUser === undefined) {
@@ -70,6 +72,7 @@ export class AllRetroboardListComponent implements OnInit {
   }
 
   showOnlyOpenedRetro() {
+    this.dataIsLoading = true;
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
@@ -82,6 +85,7 @@ export class AllRetroboardListComponent implements OnInit {
   }
 
   showOnlyFinishedRetro() {
+    this.dataIsLoading = true;
     if (this.showOnlyFinishedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
@@ -121,6 +125,8 @@ export class AllRetroboardListComponent implements OnInit {
               // tslint:disable-next-line:no-angle-bracket-type-assertion
               return <any> a.isFinished - <any> b.isFinished;
             });
+
+            this.dataIsLoading = false;
           }
         });
       });
@@ -132,6 +138,7 @@ export class AllRetroboardListComponent implements OnInit {
       this.prepareActionForFinishedRetroBoardCards(retroBoard as RetroBoard);
     } else {
       this.retroBoards.push(retroBoard as RetroBoard);
+
     }
   }
 
