@@ -69,11 +69,7 @@ export class AllRetroboardListComponent implements OnInit {
   private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
-      const finishedRetroBoards = new Array<RetroBoardToSave>();
-      const openRetroBoards = new Array<RetroBoardToSave>();
-
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
-
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
 
