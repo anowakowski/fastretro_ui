@@ -1,3 +1,5 @@
+<div *ngIf="shouldShowContent">
+
 
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
         <span>All of your Retro Boards </span>
@@ -67,4 +69,5 @@
     <div style="margin-top: 50px; margin-left: 22px;">
         <app-loadding-single-elements-spinner *ngIf="dataIsLoading"></app-loadding-single-elements-spinner>
     </div>
+</div>    
 
