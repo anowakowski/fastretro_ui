@@ -14,6 +14,7 @@ import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
+import { Teams } from 'src/app/models/teams';
 
 @Component({
   selector: 'app-all-retroboard-list',
@@ -36,6 +37,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   currentUser: User;
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
+
+  teams: Teams[];
 
   showOnlyOpenedIsFiltered = false;
   showOnlyFinishedIsFiltered = false;
@@ -66,6 +69,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
 
         this.prepreRetroBoardForCurrentWorkspace();
+        this.prepareTeams();
       }
     }
   }
@@ -106,6 +110,13 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = true;
       this.prepreRetroBoardForCurrentWorkspace(false, true);
+    }
+  }
+
+
+  onChangeTeams(eventValue) {
+    if (eventValue !== null) {
+      //this.shouldDisableMembersControl = false;
     }
   }
 
@@ -194,6 +205,19 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     }
 
     return value;
+  }
+
+  private prepareTeams() {
+    this.teams = new Array<Teams>();
+    this.firestoreRBServices.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
+      snapshotTeams.docs.forEach(doc => {
+        const team: Teams = {
+          id: doc.id,
+          name: doc.data().name
+        };
+        this.teams.push(team);
+      });
+    });
   }
 
   private unsubscribeTickService() {

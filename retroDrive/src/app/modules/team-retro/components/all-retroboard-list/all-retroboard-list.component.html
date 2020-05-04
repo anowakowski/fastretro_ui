@@ -17,7 +17,13 @@
                         'chip-not-chosen': showOnlyFinishedIsFiltered === false}"
                 >Show all finished retro boards
             </mat-chip>
-        </mat-chip-list>            
+        </mat-chip-list>      
+        <mat-form-field style="width: 120px; margin-top: -15px; margin-left: 15px; margin-bottom: -20px;">
+          <mat-label>Choose Teams</mat-label>
+          <mat-select (selectionChange)="onChangeTeams($event.value)" multiple>
+          <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
     </mat-card>
     <div *ngIf="retroBoards.length > 0">
       <div *ngFor="let retroBoard of retroBoards">
