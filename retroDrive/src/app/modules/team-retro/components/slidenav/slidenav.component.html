@@ -48,6 +48,7 @@
   </mat-drawer-container>
 </div>
 <div *ngIf="shouldShowSmallSlidenav" >
+  <app-nav (toggleSidenav)="drawerSmall.toggle()"></app-nav>
   <mat-drawer-container class="app-container" autosize>
     <mat-drawer 
       #drawerSmall class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image-small mat-drawer-width-small"
