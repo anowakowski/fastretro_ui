@@ -9,12 +9,14 @@ const routes: Routes = [
   { path: '', redirectTo: 'retro', pathMatch: 'full' },
   {
     path: 'login-register',
-    loadChildren: () => import('./modules/login-register/login-register.module').then( m => m.LoginRegisterModule),
+    loadChildren: () => import('./modules/login-register/login-register.module')
+      .then( m => m.LoginRegisterModule),
     // canActivate: [LoginRegisterGuard]
   },
   {
     path: 'retro',
-    loadChildren: () => import('./modules/team-retro/team-retro.module').then( m => m.TeamRetroModule),
+    loadChildren: () => import('./modules/team-retro/team-retro.module')
+      .then( m => m.TeamRetroModule),
     canActivate: [AuthGuard]
   },
   {
@@ -31,7 +33,13 @@ const routes: Routes = [
     loadChildren: () => import('./modules/team-retro-process-in-progress/team-retro-process-in-progress.module')
       .then( m => m.TeamRetroProcessInProgressModule),
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: 'retroboard-list',
+    loadChildren: () => import('./modules/all-retroboard-list/all-retroboard-list.module')
+      .then( m => m.AllRetroboardListModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({
