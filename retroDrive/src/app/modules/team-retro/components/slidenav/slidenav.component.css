@@ -17,7 +17,7 @@
   }
 
   .sidenav-container-background-image-small {
-    background: url('../../../../../assets/geometric1.jpg') ;
+    background: url('../../../../../assets/slidenav6.jpg') ;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -34,7 +34,7 @@
   }
 
   .mat-drawer-width-small {
-    width: 100px;
+    width: 150px;
   }
   
   .wrapper {

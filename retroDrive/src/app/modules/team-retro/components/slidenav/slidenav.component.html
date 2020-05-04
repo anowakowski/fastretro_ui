@@ -1,6 +1,7 @@
 
 <div *ngIf="!shouldShowSmallSlidenav">
-  <app-nav (toggleSidenav)="drawer.toggle()"></app-nav>
+<app-nav (toggleSidenav)="drawer.toggle()"></app-nav>
+
   <mat-drawer-container class="app-container" autosize>
     <mat-drawer 
       #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
@@ -29,7 +30,8 @@
           </button>
         </div>
       </div>
-    </mat-drawer>
+    </mat-drawer> 
+
     <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection}">
       <div class="app-sidenav-content">
         <div class="wrapper">
@@ -47,6 +49,8 @@
 
   </mat-drawer-container>
 </div>
+
+<!--
 <div *ngIf="shouldShowSmallSlidenav" >
   <app-nav (toggleSidenav)="drawerSmall.toggle()"></app-nav>
   <mat-drawer-container class="app-container" autosize>
@@ -55,17 +59,17 @@
       [opened]="!isScreenSmall() && !currentUser.isNewUser"
       [mode]="isScreenSmall() ? 'over' : 'side'">
       <div class="sidenav-element-flex-container">
-        <div class="sidenav-element-flex-container" style="margin-left: 9px;">
-          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-mini-fab (click)="setBtnColor(dashboardSection)">
+        <div class="sidenav-element-flex-container" style="margin-left: 26px;">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-fab (click)="setBtnColor(dashboardSection)">
             <mat-icon>dashboard</mat-icon>
           </button>
-          <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-mini-fab (click)="setBtnColor(teamsSection)">
+          <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-fab (click)="setBtnColor(teamsSection)">
             <mat-icon>people_alt</mat-icon>
           </button>
-          <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-mini-fab (click)="setBtnColor(retroProcessSection)">
+          <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-fab (click)="setBtnColor(retroProcessSection)">
             <mat-icon>mood</mat-icon>
           </button>
-          <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-mini-fab (click)="setBtnColor(allRetroBoardListSection)">
+          <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-fab (click)="setBtnColor(allRetroBoardListSection)">
             <mat-icon>view_headline</mat-icon>
           </button>        
         </div>
@@ -85,6 +89,6 @@
         </div>
       </div>
     </div>
-
   </mat-drawer-container>
 </div>
+-->

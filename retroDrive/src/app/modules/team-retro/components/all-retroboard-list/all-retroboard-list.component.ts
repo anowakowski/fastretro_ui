@@ -70,8 +70,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribeTickService();
+  ngOnDestroy() {
+    //this.unsubscribeTickService();
   }
 
 
