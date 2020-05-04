@@ -15,6 +15,13 @@
   .sidenav-container-background-image ::after {
     opacity: 0.7;
   }
+
+  .sidenav-container-background-image-small {
+    background: url('../../../../../assets/geometric1.jpg') ;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
   
   .app-sidenav-content {
     display: flex;
@@ -24,6 +31,10 @@
   
   mat-drawer {
     width: 400px;
+  }
+
+  .mat-drawer-width-small {
+    width: 100px;
   }
   
   .wrapper {

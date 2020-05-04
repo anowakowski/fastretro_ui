@@ -48,6 +48,8 @@ export class SlidenavComponent implements OnInit {
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
 
+  shouldShowSmallSlidenav = true;
+
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
