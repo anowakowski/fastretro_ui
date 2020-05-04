@@ -1,5 +1,5 @@
-    <div *ngIf="retroBoards.length > 0">
-      <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+
+    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
         <span>All of your Retro Boards </span>
         <div fxFlex></div>
         <span style="margin-right: 10px;">Filters: </span>
@@ -16,18 +16,19 @@
                 >Show all finished retro boards
             </mat-chip>
         </mat-chip-list>            
-      </mat-card>
+    </mat-card>
+    <div *ngIf="retroBoards.length > 0">
       <div *ngFor="let retroBoard of retroBoards">
         <mat-card class="example-card" style="opacity: 0.985;">
           <mat-card-header>
             <mat-card-title>
-              <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
-              <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
-              - #team <b>{{retroBoard.team.name}}</b> Board
+              <span *ngIf="retroBoard.isFinished"><b>Finished Retro Board</b> for </span>
+              <span *ngIf="!retroBoard.isFinished"><b>Opened Retro Board</b> for </span>
+              #team <b>{{retroBoard.team.name}}</b>
             </mat-card-title>
             <mat-card-subtitle>
               <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
-              <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
+              <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
               <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
               <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
             </mat-card-subtitle>

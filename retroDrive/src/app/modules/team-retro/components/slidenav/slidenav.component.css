@@ -80,12 +80,15 @@
 }
 
 .teams-retro-background-img-all-retroboard-section  {
-  background: url("../../../../../assets/idea2.jpeg"); 
+  background-color: #dddddd;
+  height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;  
   margin-bottom: -65px;
 }
+
+
 
 .card-title {
   background-color: #8ea045;
