@@ -3,7 +3,13 @@
   
   
       <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
-        <span>All of your active and close retro boards </span>
+        <span>All of your Retro Boards </span>
+        <div fxFlex></div>
+        <span style="margin-right: 10px;">Filters: </span>
+        <mat-chip-list color="primary" style="margin-top: -6px; margin-right: -8px; margin-bottom: -8px;">
+            <mat-chip color="accent" selected>Show all opened retro boards</mat-chip>
+            <mat-chip color="primary" style="background-color: #3f51b5; color:white">Show all finished retro boards</mat-chip>
+        </mat-chip-list>            
       </mat-card>
   
       <div *ngFor="let retroBoard of retroBoards">
@@ -22,9 +28,9 @@
             </mat-card-subtitle>
           </mat-card-header>
   
-          <mat-card-content *ngIf="retroBoard.isFinished">
+          <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(retroBoard.chartData)">
             <div class="chart-wrapper">
-              <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+              <canvas baseChart height="20" [data]="retroBoard.chartData" [labels]="pieChartLabels" [chartType]="pieChartType"
                 [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
               </canvas>
             </div>

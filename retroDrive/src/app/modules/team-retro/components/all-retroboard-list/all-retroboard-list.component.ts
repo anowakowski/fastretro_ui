@@ -10,6 +10,8 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { SingleDataSet, Label } from 'ng2-charts';
+import { DataPassingService } from 'src/app/services/data-passing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-retroboard-list',
@@ -21,7 +23,9 @@ export class AllRetroboardListComponent implements OnInit {
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
     private authService: AuthService,
-    private localStorageService: LocalStorageService) { }
+    private localStorageService: LocalStorageService,
+    private dataPassingService: DataPassingService,
+    private router: Router) { }
 
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
 
@@ -54,8 +58,12 @@ export class AllRetroboardListComponent implements OnInit {
   }
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
-    // this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
-    // this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
+     this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
+     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
+  }
+
+  checkIfChartDataExists(chartData: any[]) {
+    return chartData.some(x => x > 0);
   }
 
   private prepreRetroBoardForCurrentWorkspace() {
@@ -79,8 +87,6 @@ export class AllRetroboardListComponent implements OnInit {
               // tslint:disable-next-line:no-angle-bracket-type-assertion
               return <any> a.isFinished - <any> b.isFinished;
             });
-
-            console.log(this.retroBoards);
           }
         });
       });
@@ -107,19 +113,26 @@ export class AllRetroboardListComponent implements OnInit {
           finishedRetroBoard.actions.push(dataRetroBoardCardAction);
         });
       }
-      this.retroBoards.push(finishedRetroBoard);
-      this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
+      // this.retroBoards.push(finishedRetroBoard);
+      this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard);
     });
   }
 
-  private prepareChartForFinishedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
-    const wentWellActions = finiszedRetroBoardActions.filter(act => act.isWentWell);
-    const toImproveActions = finiszedRetroBoardActions.filter(act => !act.isWentWell);
+  private prepareChartForFinishedRetroBoardActions(finishedRetroBoard) {
+
+    let finishedRetroBoardActions: RetroBoardCardActions[];
+    finishedRetroBoardActions = finishedRetroBoard.actions;
+
+    const wentWellActions = finishedRetroBoardActions.filter(act => act.isWentWell);
+    const toImproveActions = finishedRetroBoardActions.filter(act => !act.isWentWell);
 
     const wentWellActionsCount = this.prepareCorrectValueForChartPieData(wentWellActions.length);
     const toImproveActionsCount = this.prepareCorrectValueForChartPieData(toImproveActions.length);
 
-    this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
+    const pieChartDataToAdd: SingleDataSet = [toImproveActionsCount, wentWellActionsCount, 0];
+    finishedRetroBoard.chartData = pieChartDataToAdd;
+    this.retroBoards.push(finishedRetroBoard);
+    // this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
   }
 
   private prepareCorrectValueForChartPieData(value: number) {
