@@ -71,9 +71,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.unsubscribeTickService();
+    this.unsubscribeTickService();
   }
-
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
      this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
