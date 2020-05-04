@@ -4,6 +4,7 @@ import { TeamRetroComponent } from './team-retro.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
+import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
 
 
 
@@ -15,6 +16,7 @@ const routes: Routes = [
       {path: '', component: DashboardComponent},
       {path: 'teams', component: TeamsComponent},
       {path: 'process', component: RetroProcessComponent},
+      {path: 'all-retroboard-list', component: AllRetroboardListComponent},
     ]
   }
 ];

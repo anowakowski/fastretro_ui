@@ -17,7 +17,7 @@
         <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-raised-button  (click)="setBtnColor(retroProcessSection)">
           <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; Retro Boards Process Configuration
         </button>
-        <button class="sidenav-elemnt" color="primary" mat-raised-button >
+        <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']"  mat-raised-button (click)="setBtnColor(allRetroBoardListSection)">
           <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
         </button>        
 

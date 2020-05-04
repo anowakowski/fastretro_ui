@@ -13,6 +13,8 @@ const BASIC_BTN_COLOR = 'primary';
 const DASHBOARD_SECTION = 'dashboard';
 const EDIT_TEAMS_SECCTION = 'teams';
 const RETRO_PROCES_SECCTION = 'retroProcess';
+// tslint:disable-next-line:variable-name
+const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
 
 
 @Component({
@@ -36,10 +38,12 @@ export class SlidenavComponent implements OnInit {
   public dashboardSection = DASHBOARD_SECTION;
   public teamsSection = EDIT_TEAMS_SECCTION;
   public retroProcessSection = RETRO_PROCES_SECCTION;
+  public allRetroBoardListSection = All_RETROBOARDS_LIST_SECTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
+  public allRetroBoardListColor = BASIC_BTN_COLOR;
 
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
