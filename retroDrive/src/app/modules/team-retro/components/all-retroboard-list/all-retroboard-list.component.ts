@@ -33,6 +33,9 @@ export class AllRetroboardListComponent implements OnInit {
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
 
+  showOnlyOpenedIsFiltered = false;
+  showOnlyFinishedIsFiltered = false;
+
   public pieChartOptions: ChartOptions = {
     responsive: true,
   };
@@ -66,7 +69,21 @@ export class AllRetroboardListComponent implements OnInit {
     return chartData.some(x => x > 0);
   }
 
-  private prepreRetroBoardForCurrentWorkspace() {
+  showOnlyOpenedRetro() {
+    this.showOnlyOpenedIsFiltered = true;
+    this.showOnlyFinishedIsFiltered = false;
+
+    this.prepreRetroBoardForCurrentWorkspace(true, false);
+  }
+
+  showOnlyFinishedRetro() {
+    this.showOnlyOpenedIsFiltered = false;
+    this.showOnlyFinishedIsFiltered = true;
+
+    this.prepreRetroBoardForCurrentWorkspace(false, true);
+  }
+
+  private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false) {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
@@ -78,7 +95,18 @@ export class AllRetroboardListComponent implements OnInit {
           retroBoardData.team = team;
           if (retroBoardData.isStarted) {
 
-            this.addToRetroBoards(retroBoardData);
+            if (showOnlyOpenedRetro) {
+              if (!retroBoardData.isFinished) {
+                this.addToRetroBoards(retroBoardData);
+              }
+            } else if (showOnlyFinishedRetro) {
+              if (retroBoardData.isFinished) {
+                this.addToRetroBoards(retroBoardData);
+              }
+            } else {
+              this.addToRetroBoards(retroBoardData);
+            }
+
             this.retroBoards.sort((a, b) => {
               // tslint:disable-next-line:no-angle-bracket-type-assertion
               return <any> a.isFinished - <any> b.isFinished;

@@ -7,8 +7,17 @@
         <div fxFlex></div>
         <span style="margin-right: 10px;">Filters: </span>
         <mat-chip-list color="primary" style="margin-top: -6px; margin-right: -8px; margin-bottom: -8px;">
-            <mat-chip color="accent" selected>Show all opened retro boards</mat-chip>
-            <mat-chip color="primary" style="background-color: #3f51b5; color:white">Show all finished retro boards</mat-chip>
+            <mat-chip 
+                (click)="showOnlyOpenedRetro()"
+                [ngClass]="{'chip-chosen-active': showOnlyOpenedIsFiltered === true,
+                            'chip-not-chosen': showOnlyOpenedIsFiltered === false}"> Show all opened retro boards
+            </mat-chip>
+            <mat-chip 
+                (click)="showOnlyFinishedRetro()"
+                [ngClass]="{'chip-chosen-active': showOnlyFinishedIsFiltered === true,
+                        'chip-not-chosen': showOnlyFinishedIsFiltered === false}"
+                >Show all finished retro boards
+            </mat-chip>
         </mat-chip-list>            
       </mat-card>
   
