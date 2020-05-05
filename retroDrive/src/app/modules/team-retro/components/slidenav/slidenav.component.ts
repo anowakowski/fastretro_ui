@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatDrawer } from '@angular/material/sidenav/drawer';
 import { User } from 'src/app/models/user';
@@ -22,7 +22,7 @@ const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
   templateUrl: './slidenav.component.html',
   styleUrls: ['./slidenav.component.css']
 })
-export class SlidenavComponent implements OnInit {
+export class SlidenavComponent implements OnInit, OnDestroy {
 
   private mediaMatcher: MediaQueryList =
     matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
@@ -47,6 +47,7 @@ export class SlidenavComponent implements OnInit {
 
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
+  goOutFromAllRetroBoardSubscription: any;
 
   shouldCloseSlidenav = false;
 
@@ -55,6 +56,7 @@ export class SlidenavComponent implements OnInit {
     private localStorageService: LocalStorageService,
     public router: Router,
     private eventService: EventsService) { }
+
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
@@ -73,6 +75,12 @@ export class SlidenavComponent implements OnInit {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.setNewTeamsSubscription.unsubscribe();
+    this.setRetroProcessSubscription.unsubscribe();
+    this.goOutFromAllRetroBoardSubscription.unsubscribe();
   }
 
   isScreenSmall(): boolean {
@@ -148,6 +156,8 @@ export class SlidenavComponent implements OnInit {
       .subscribe(() => this.setBtnColor(EDIT_TEAMS_SECCTION));
     this.setRetroProcessSubscription = this.eventService.getSetRetroProcessAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(RETRO_PROCES_SECCTION));
+    this.goOutFromAllRetroBoardSubscription = this.eventService.getSetReciveGoOutFromAllRetroBoardListEmiter()
+      .subscribe(() => this.setBtnColor(DASHBOARD_SECTION));
   }
 
 }

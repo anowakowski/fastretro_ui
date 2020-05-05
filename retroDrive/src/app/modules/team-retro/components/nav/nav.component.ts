@@ -5,6 +5,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { User } from 'src/app/models/user';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-nav',
@@ -14,7 +15,10 @@ import { Workspace } from 'src/app/models/workspace';
 export class NavComponent implements OnInit {
 
   constructor(
-    public auth: AuthService, private router: Router, private localStorageService: LocalStorageService) { }
+    public auth: AuthService,
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    private eventsService: EventsService) { }
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -33,6 +37,11 @@ export class NavComponent implements OnInit {
         this.currentUserWorkspaceName = this.userWorkspace.workspaces.find(x => x.isCurrent).name;
       }
     }
+  }
+
+  backToDashboard() {
+    this.eventsService.emitSetReciveGoOutFromAllRetroBoardListEmiter();
+    this.router.navigate(['/']);
   }
 
   signOut() {
