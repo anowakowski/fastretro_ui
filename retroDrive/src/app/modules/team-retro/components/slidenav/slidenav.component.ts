@@ -48,7 +48,7 @@ export class SlidenavComponent implements OnInit {
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
 
-  shouldShowSmallSlidenav = false;
+  shouldCloseSlidenav = false;
 
   constructor(
     public auth: AuthService,
@@ -93,16 +93,16 @@ export class SlidenavComponent implements OnInit {
     }
     this.setCurrentColor(sectionNameToCurrent);
     this.setBasicColor();
-    // this.setSlidenavSize(sectionNameToCurrent);
+    this.setSlidenavPosition(sectionNameToCurrent);
 
     this.currentChosenSection = sectionNameToCurrent;
   }
 
-  setSlidenavSize(sectionNameToCurrent: string) {
+  setSlidenavPosition(sectionNameToCurrent: string) {
     if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
-      this.shouldShowSmallSlidenav = true;
+      this.shouldCloseSlidenav = true;
     } else {
-      this.shouldShowSmallSlidenav = false;
+      this.shouldCloseSlidenav = false;
     }
   }
 
