@@ -5,6 +5,7 @@
         <span>All of your Retro Boards </span>
         <div fxFlex></div>
         <span style="margin-right: 10px;">Filters: </span>
+
         <mat-chip-list color="primary" style="margin-top: -6px; margin-right: -8px; margin-bottom: -8px;">
             <mat-chip 
                 (click)="showOnlyOpenedRetro()"
@@ -18,11 +19,24 @@
                 >Show all finished retro boards
             </mat-chip>
         </mat-chip-list>      
-        <mat-form-field style="width: 120px; margin-top: -15px; margin-left: 15px; margin-bottom: -20px;">
+        <mat-form-field style="width: 120px; margin-top: -15px; margin-left: 20px; margin-bottom: -20px;">
           <mat-label>Choose Teams</mat-label>
           <mat-select (selectionChange)="onChangeTeams($event.value)" multiple>
           <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
           </mat-select>
+        </mat-form-field>
+        <mat-divider [vertical]="true" style="margin-left: 10px; margin-right: 10px;"></mat-divider>
+        <mat-form-field style="width: 150px; margin-top: -15px; margin-bottom: -20px;">
+          <mat-label>Choose a date from</mat-label>
+          <input matInput [matDatepicker]="pickerDateFrom">
+          <mat-datepicker-toggle matSuffix [for]="pickerDateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDateFrom></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field style="width: 150px; margin-top: -15px; margin-left: 5px; margin-bottom: -20px;">
+          <mat-label>Choose a date to</mat-label>
+          <input matInput [matDatepicker]="pickerDateTo">
+          <mat-datepicker-toggle matSuffix [for]="pickerDateTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDateTo></mat-datepicker>
         </mat-form-field>
     </mat-card>
     <div *ngIf="retroBoards.length > 0">
