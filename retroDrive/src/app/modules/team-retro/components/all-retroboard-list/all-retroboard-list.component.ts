@@ -57,7 +57,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   public pieChartPlugins = [];
 
   ngOnInit() {
-    this.spinnerTick();
+    //this.spinnerTick();
     this.dataIsLoading = true;
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -75,7 +75,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubscribeTickService();
+    //this.unsubscribeTickService();
   }
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
@@ -116,7 +116,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   onChangeTeams(eventValue) {
     if (eventValue !== null) {
-      //this.shouldDisableMembersControl = false;
+      // this.shouldDisableMembersControl = false;
     }
   }
 
