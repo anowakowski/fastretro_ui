@@ -44,6 +44,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   showOnlyFinishedIsFiltered = false;
   dataIsLoading = false;
 
+  retroBoardSubscriptions: any;
+
   shouldShowContent = false;
   private spinnerTickSubscription: any;
 
@@ -76,6 +78,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     //this.unsubscribeTickService();
+    this.retroBoardSubscriptions.unsubscribe();
   }
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
@@ -121,7 +124,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false) {
-    this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
+    this.retroBoardSubscriptions =
+      this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
