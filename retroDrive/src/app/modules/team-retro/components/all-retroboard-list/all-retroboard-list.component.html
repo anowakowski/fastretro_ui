@@ -3,6 +3,12 @@
 
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
         <span>All of your Retro Boards </span>
+        <mat-form-field style="width: 100px; margin-top: -15px; margin-left: 20px; margin-bottom: -20px;">
+          <mat-label>Sort by</mat-label>
+          <mat-select (selectionChange)="onChangeTeams($event.value)">
+          <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div fxFlex></div>
         <span style="margin-right: 10px;">Filters: </span>
 
@@ -25,7 +31,7 @@
           <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-divider [vertical]="true" style="margin-left: 10px; margin-right: 10px;"></mat-divider>
+        <mat-divider [vertical]="true" style="margin-left: 15px; margin-right: 15px;"></mat-divider>
         <mat-form-field style="width: 150px; margin-top: -15px; margin-bottom: -20px;">
           <mat-label>Choose a date from</mat-label>
           <input matInput [matDatepicker]="pickerDateFrom">
@@ -49,7 +55,7 @@
               #team <b>{{retroBoard.team.name}}</b>
             </mat-card-title>
             <mat-card-subtitle>
-              <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
+              <span style="font-size: 17px;">Retro for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
               <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
               <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
               <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
