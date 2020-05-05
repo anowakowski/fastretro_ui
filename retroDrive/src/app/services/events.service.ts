@@ -17,6 +17,7 @@ constructor() { }
   private setTeamsAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setRetroProcessAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setReciveGoOutFromAllRetroBoardListEmiter: EventEmitter<string> = new EventEmitter();
+  private setAllRetroBoardBackgroudnMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -88,6 +89,14 @@ constructor() { }
 
   getSetReciveGoOutFromAllRetroBoardListEmiter() {
     return this.setReciveGoOutFromAllRetroBoardListEmiter;
+  }
+
+  emitSetAllRetroBoardBackgroudnMoreHigherEmiter() {
+    this.setAllRetroBoardBackgroudnMoreHigherEmiter.emit();
+  }
+
+  getSetAllRetroBoardBackgroudnMoreHigherEmiter() {
+    return this.setAllRetroBoardBackgroudnMoreHigherEmiter;
   }
 }
 

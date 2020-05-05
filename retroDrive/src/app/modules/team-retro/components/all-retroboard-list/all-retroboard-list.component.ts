@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { Teams } from 'src/app/models/teams';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-all-retroboard-list',
@@ -30,7 +31,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     private dataPassingService: DataPassingService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private spinnerTickService: SpinnerTickService,) { }
+    private spinnerTickService: SpinnerTickService,
+    private eventsService: EventsService) { }
 
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
 
@@ -127,6 +129,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
+
+      let currentLenghtIndex = 1;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
@@ -153,11 +157,25 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
               return <any> a.isFinished - <any> b.isFinished;
             });
 
-            this.dataIsLoading = false;
+            if (currentLenghtIndex === retroBoardsSnapshot.length) {
+              const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);
+              if (showOnlyOpenedRetro || !isFinishedIsExisting) {
+                this.dataIsLoading = false;
+                this.emitSetMoreHigherForBackground();
+              }
+            }
           }
+          currentLenghtIndex++;
         });
       });
+
     });
+  }
+
+  private emitSetMoreHigherForBackground() {
+    if (this.retroBoards.length > 0 && this.retroBoards.length < 3) {
+      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
+    }
   }
 
   private addToRetroBoards(retroBoard: RetroBoardToSave) {
@@ -180,6 +198,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
           dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
           finishedRetroBoard.actions.push(dataRetroBoardCardAction);
         });
+
       }
       // this.retroBoards.push(finishedRetroBoard);
       this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard);
@@ -200,6 +219,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     const pieChartDataToAdd: SingleDataSet = [toImproveActionsCount, wentWellActionsCount, 0];
     finishedRetroBoard.chartData = pieChartDataToAdd;
     this.retroBoards.push(finishedRetroBoard);
+    this.dataIsLoading = false;
+    this.emitSetMoreHigherForBackground();
     // this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
   }
 

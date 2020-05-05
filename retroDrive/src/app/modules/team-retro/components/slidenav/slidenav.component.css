@@ -99,12 +99,9 @@
 }
 
 .teams-retro-background-img-all-retroboard-section-with-height  {
-  background-color: #dddddd;
+
   height: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+
 }
 
 .card-title {

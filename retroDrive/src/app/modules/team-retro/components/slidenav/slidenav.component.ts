@@ -48,8 +48,10 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
   goOutFromAllRetroBoardSubscription: any;
+  setMoreHigherForBackgroundSubscription: any;
 
   shouldCloseSlidenav = false;
+  shouldShowMoreHigherOnAllRetroBoardList = false;
 
   constructor(
     public auth: AuthService,
@@ -158,6 +160,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       .subscribe(() => this.setBtnColor(RETRO_PROCES_SECCTION));
     this.goOutFromAllRetroBoardSubscription = this.eventService.getSetReciveGoOutFromAllRetroBoardListEmiter()
       .subscribe(() => this.setBtnColor(DASHBOARD_SECTION));
+    this.setMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnMoreHigherEmiter()
+      .subscribe(() => this.shouldShowMoreHigherOnAllRetroBoardList = true);
   }
 
 }
