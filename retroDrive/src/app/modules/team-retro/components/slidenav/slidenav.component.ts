@@ -49,6 +49,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   setRetroProcessSubscription: any;
   goOutFromAllRetroBoardSubscription: any;
   setMoreHigherForBackgroundSubscription: any;
+  setNoMoreHigherForBackgroundSubscription: any;
 
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
@@ -162,6 +163,12 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       .subscribe(() => this.setBtnColor(DASHBOARD_SECTION));
     this.setMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnMoreHigherEmiter()
       .subscribe(() => this.shouldShowMoreHigherOnAllRetroBoardList = true);
+    this.setNoMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnNoMoreHigherEmiter()
+      .subscribe(() => { 
+        if (this.shouldShowMoreHigherOnAllRetroBoardList) {
+          this.shouldShowMoreHigherOnAllRetroBoardList = false;
+        }
+      });
   }
 
 }

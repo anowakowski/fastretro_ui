@@ -175,6 +175,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   private emitSetMoreHigherForBackground() {
     if (this.retroBoards.length > 0 && this.retroBoards.length < 3) {
       this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
+    } else if (this.retroBoards.length > 3) {
+      this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
     }
   }
 
