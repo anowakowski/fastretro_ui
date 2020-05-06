@@ -25,6 +25,7 @@ export class NavComponent implements OnInit {
   public currentUserWorkspaceName: string;
 
   @Output() toggleSidenav = new EventEmitter<void>();
+  @Input() shouldShowBackToDashboard = false;
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
