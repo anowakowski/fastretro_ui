@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -57,6 +57,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog,
     private bottomSheetRef: MatBottomSheet) {}
 
@@ -620,6 +621,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const isUserJoinToRetroBoardWorkspace = result;
           if (isUserJoinToRetroBoardWorkspace) {
             this.userIsNotInCurrentRetroBoardWorkspace = false;
+          } else {
+            this.router.navigate(['/']);
           }
         });
       });
