@@ -614,7 +614,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.firestoreRetroInProgressService.findWorkspaceById(findedRetroBoard.workspaceId).then(workspacesSnapshot => {
         const findedWorkspace = workspacesSnapshot.data() as Workspace;
         const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
-          width: '630px',
+          width: '670px',
           data: findedWorkspace.name
         });
         dialogRef.afterClosed().subscribe(result => {
