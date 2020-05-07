@@ -28,6 +28,9 @@ import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 import { formatDate } from '@angular/common';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { Team } from 'src/app/models/team';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -45,6 +48,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   retroBoardData: any;
   private retroBoardParamIdSubscription: any;
   private timerIsFinsihedSubscriptions: any;
+  userIsNotInCurrentRetroBoardWorkspace: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -65,6 +69,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public isExistingSomeRetroBoardCardAction = false;
 
   currentUser: User;
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
 
   timerOptions: TimerOption[];
 
@@ -79,6 +85,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
     // this.createPersistentTimerOptions();
@@ -461,6 +469,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.isRetroBoardIsReady = true;
               this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
+              this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
               this.checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard);
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
@@ -592,6 +601,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         // if url not exisis
       }
     });
+  }
+
+  private checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard: RetroBoardToSave) {
+    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.id === findedRetroBoard.workspaceId);
+    if (!isUsertInRetroBoardWorkspace) {
+      this.userIsNotInCurrentRetroBoardWorkspace = true;
+      const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
+        width: '630px',
+        data: findedRetroBoard.workspaceId
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.userIsNotInCurrentRetroBoardWorkspace = false;
+      });
+    }
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {

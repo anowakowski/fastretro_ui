@@ -1,5 +1,8 @@
 <div class="root">
   <app-nav></app-nav>
+  <div *ngIf="!userIsNotInCurrentRetroBoardWorkspace">
+
+  
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
@@ -153,4 +156,5 @@
       </div>
     </div>
   </div>
+ </div>
 </div>
