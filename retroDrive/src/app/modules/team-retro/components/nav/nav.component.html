@@ -7,14 +7,15 @@
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in
     </mat-icon>
     <span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
-
-    <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
-    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
-
+    <button *ngIf="shouldShowBackToDashboard" mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
+      <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
+    </button>
     <span class="example-spacer"></span>
-    <span *ngIf="!currentUser.isNewUser">{{currentUserWorkspaceName}}</span>
-    <mat-icon *ngIf="!currentUser.isNewUser" style="margin-left: -10px;" class="example-icon" aria-hidden="false" aria-label="Example user verified icon">ballot</mat-icon>
     
+    <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
+    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-right: 5px;">{{currentUser.displayName}}</span>    
+
+    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace <b>{{currentUserWorkspaceName}}</b></button>    
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>
   </mat-toolbar-row>
 </mat-toolbar>

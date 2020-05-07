@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatDrawer } from '@angular/material/sidenav/drawer';
 import { User } from 'src/app/models/user';
@@ -13,6 +13,8 @@ const BASIC_BTN_COLOR = 'primary';
 const DASHBOARD_SECTION = 'dashboard';
 const EDIT_TEAMS_SECCTION = 'teams';
 const RETRO_PROCES_SECCTION = 'retroProcess';
+// tslint:disable-next-line:variable-name
+const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
 
 
 @Component({
@@ -20,7 +22,7 @@ const RETRO_PROCES_SECCTION = 'retroProcess';
   templateUrl: './slidenav.component.html',
   styleUrls: ['./slidenav.component.css']
 })
-export class SlidenavComponent implements OnInit {
+export class SlidenavComponent implements OnInit, OnDestroy {
 
   private mediaMatcher: MediaQueryList =
     matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
@@ -36,19 +38,28 @@ export class SlidenavComponent implements OnInit {
   public dashboardSection = DASHBOARD_SECTION;
   public teamsSection = EDIT_TEAMS_SECCTION;
   public retroProcessSection = RETRO_PROCES_SECCTION;
+  public allRetroBoardListSection = All_RETROBOARDS_LIST_SECTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
+  public allRetroBoardListColor = BASIC_BTN_COLOR;
 
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
+  goOutFromAllRetroBoardSubscription: any;
+  setMoreHigherForBackgroundSubscription: any;
+  setNoMoreHigherForBackgroundSubscription: any;
+
+  shouldCloseSlidenav = false;
+  shouldShowMoreHigherOnAllRetroBoardList = false;
 
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     public router: Router,
     private eventService: EventsService) { }
+
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
@@ -69,6 +80,12 @@ export class SlidenavComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.setNewTeamsSubscription.unsubscribe();
+    this.setRetroProcessSubscription.unsubscribe();
+    this.goOutFromAllRetroBoardSubscription.unsubscribe();
+  }
+
   isScreenSmall(): boolean {
     return this.mediaMatcher.matches;
   }
@@ -87,8 +104,17 @@ export class SlidenavComponent implements OnInit {
     }
     this.setCurrentColor(sectionNameToCurrent);
     this.setBasicColor();
+    this.setSlidenavPosition(sectionNameToCurrent);
 
     this.currentChosenSection = sectionNameToCurrent;
+  }
+
+  setSlidenavPosition(sectionNameToCurrent: string) {
+    if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
+      this.shouldCloseSlidenav = true;
+    } else {
+      this.shouldCloseSlidenav = false;
+    }
   }
 
   private setBasicColor() {
@@ -98,6 +124,8 @@ export class SlidenavComponent implements OnInit {
       this.teamsColor = BASIC_BTN_COLOR;
     } else if (this.currentChosenSection === RETRO_PROCES_SECCTION) {
       this.retroProcessColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === All_RETROBOARDS_LIST_SECTION) {
+      this.allRetroBoardListColor = BASIC_BTN_COLOR;
     }
   }
 
@@ -108,6 +136,8 @@ export class SlidenavComponent implements OnInit {
       this.teamsColor = CURRENT_BTN_COLOR;
     } else if (sectionNameToCurrent === RETRO_PROCES_SECCTION) {
       this.retroProcessColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
+      this.allRetroBoardListColor = CURRENT_BTN_COLOR;
     }
   }
 
@@ -117,6 +147,8 @@ export class SlidenavComponent implements OnInit {
       return;
     } else if (this.currentRouteSecction.search('process') > 0) {
       this.setBtnColor(RETRO_PROCES_SECCTION);
+    } else if (this.currentRouteSecction.search('all-retroboard-list') > 0) {
+      this.setBtnColor(All_RETROBOARDS_LIST_SECTION);
     } else {
       this.setBtnColor(DASHBOARD_SECTION);
     }
@@ -127,6 +159,16 @@ export class SlidenavComponent implements OnInit {
       .subscribe(() => this.setBtnColor(EDIT_TEAMS_SECCTION));
     this.setRetroProcessSubscription = this.eventService.getSetRetroProcessAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(RETRO_PROCES_SECCTION));
+    this.goOutFromAllRetroBoardSubscription = this.eventService.getSetReciveGoOutFromAllRetroBoardListEmiter()
+      .subscribe(() => this.setBtnColor(DASHBOARD_SECTION));
+    this.setMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnMoreHigherEmiter()
+      .subscribe(() => this.shouldShowMoreHigherOnAllRetroBoardList = true);
+    this.setNoMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnNoMoreHigherEmiter()
+      .subscribe(() => { 
+        if (this.shouldShowMoreHigherOnAllRetroBoardList) {
+          this.shouldShowMoreHigherOnAllRetroBoardList = false;
+        }
+      });
   }
 
 }

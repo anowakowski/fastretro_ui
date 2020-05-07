@@ -79,7 +79,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
     this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
       if (interval === 1) {
         this.shouldShowContent = true;
-      } else if (interval === 5) {
+      } else if (interval === 4) {
         this.spinner.hide();
         this.unsubscribeTickService();
       }

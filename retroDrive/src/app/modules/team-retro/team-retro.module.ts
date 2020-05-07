@@ -22,12 +22,15 @@ import { RetroBoardSnackbarComponent } from './components/retro-board-snackbar/r
 import { MyTestCompComponent } from './components/my-test-comp/my-test-comp.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+// tslint:disable-next-line:max-line-length
 import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
 import { NewUserWizardComponent } from './components/new-user-wizard/new-user-wizard.component';
+// tslint:disable-next-line:max-line-length
 import { WelcomeInfoNewUsersDashboardDialogComponent } from './components/welcome-info-new-users-dashboard-dialog/welcome-info-new-users-dashboard-dialog.component';
 import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-info-dialog/new-user-wiazrd-info-dialog.component';
 import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-bottomsheet/create-new-team-bottomsheet.component';
+import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
 
 @NgModule({
   imports: [
@@ -57,7 +60,8 @@ import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-
     WelcomeInfoNewUsersDashboardDialogComponent,
     NewUserWiazrdInfoDialogComponent,
     ValueDataValidator,
-    CreateNewTeamBottomsheetComponent
+    CreateNewTeamBottomsheetComponent,
+    AllRetroboardListComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,

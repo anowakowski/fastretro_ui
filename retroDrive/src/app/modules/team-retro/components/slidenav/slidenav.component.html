@@ -1,47 +1,88 @@
-
-<app-nav (toggleSidenav)="drawer.toggle()"></app-nav>
-<mat-drawer-container class="app-container" autosize>
-  <mat-drawer 
-    #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
-    [opened]="!isScreenSmall() && !currentUser.isNewUser"
-    [mode]="isScreenSmall() ? 'over' : 'side'">
-    <div class="sidenav-element-flex-container">
+<app-nav (toggleSidenav)="drawer.toggle()" [shouldShowBackToDashboard]="shouldCloseSlidenav"></app-nav>
+  <mat-drawer-container class="app-container" autosize>
+    <mat-drawer 
+      #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
+      [opened]="!isScreenSmall() && !currentUser.isNewUser && !shouldCloseSlidenav"
+      [mode]="isScreenSmall() ? 'over' : 'side'">
       <div class="sidenav-element-flex-container">
-        <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
-          <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
-        </button>
-        <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
-          <mat-icon>people_alt</mat-icon>&nbsp; Teams
-        </button>
-  
-        <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-raised-button  (click)="setBtnColor(retroProcessSection)">
-          <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; Retro Boards Process Configuration
-        </button>
-        <button class="sidenav-elemnt" color="primary" mat-raised-button >
-          <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
-        </button>        
-
-        <app-sidenav-usercard></app-sidenav-usercard>
-
-        <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
-          <i class="fa fa-sign-out"></i>&nbsp; SignOut
-        </button>
+        <div class="sidenav-element-flex-container">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
+            <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
+          </button>
+          <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
+            <mat-icon>people_alt</mat-icon>&nbsp; Teams
+          </button>
+          <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-raised-button (click)="setBtnColor(retroProcessSection)">
+            <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; Retro Boards Process Configuration
+          </button>
+          <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-raised-button (click)="setBtnColor(allRetroBoardListSection)">
+            <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
+          </button>        
+          <app-sidenav-usercard></app-sidenav-usercard>
+          <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
+            <i class="fa fa-sign-out"></i>&nbsp; SignOut
+          </button>
+        </div>
+      </div>
+    </mat-drawer> 
+    <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 
+    'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection,
+    'teams-retro-background-img-all-retroboard-section-with-height': shouldShowMoreHigherOnAllRetroBoardList === true}">
+      <div class="app-sidenav-content">
+        <div class="wrapper">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
+              <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>
+            </ol>
+          </nav>
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-   </mat-drawer>
-   <div class="teams-retro-background-img">
-    <div class="app-sidenav-content">
-      <div class="wrapper">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
-            <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>
-          </ol>
-        </nav>
-        <router-outlet></router-outlet>
+  </mat-drawer-container>
+
+
+<!--
+<div *ngIf="shouldShowSmallSlidenav" >
+  <app-nav (toggleSidenav)="drawerSmall.toggle()"></app-nav>
+  <mat-drawer-container class="app-container" autosize>
+    <mat-drawer 
+      #drawerSmall class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image-small mat-drawer-width-small"
+      [opened]="!isScreenSmall() && !currentUser.isNewUser"
+      [mode]="isScreenSmall() ? 'over' : 'side'">
+      <div class="sidenav-element-flex-container">
+        <div class="sidenav-element-flex-container" style="margin-left: 26px;">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-fab (click)="setBtnColor(dashboardSection)">
+            <mat-icon>dashboard</mat-icon>
+          </button>
+          <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-fab (click)="setBtnColor(teamsSection)">
+            <mat-icon>people_alt</mat-icon>
+          </button>
+          <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-fab (click)="setBtnColor(retroProcessSection)">
+            <mat-icon>mood</mat-icon>
+          </button>
+          <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-fab (click)="setBtnColor(allRetroBoardListSection)">
+            <mat-icon>view_headline</mat-icon>
+          </button>        
+        </div>
+      </div>
+    </mat-drawer>
+    <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection}">
+      <div class="app-sidenav-content">
+        <div class="wrapper">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
+              <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>
+            </ol>
+          </nav>
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-   </div>
-
-</mat-drawer-container>
+  </mat-drawer-container>
+</div>
+-->

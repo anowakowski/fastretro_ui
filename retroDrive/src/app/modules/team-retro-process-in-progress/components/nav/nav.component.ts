@@ -4,6 +4,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { User } from 'src/app/models/user';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -21,7 +22,7 @@ export class NavComponent implements OnInit, OnDestroy {
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
 
-  constructor(private eventsServices: EventsService, private localStorageService: LocalStorageService) { }
+  constructor(private eventsServices: EventsService, private localStorageService: LocalStorageService, private router: Router) { }
 
   ngOnInit() {
     this.subscribeEvents();
@@ -37,6 +38,10 @@ export class NavComponent implements OnInit, OnDestroy {
 
   stopTimer() {
     this.shouldChangeRetroDisplayText = true;
+  }
+
+  backToDashboard() {
+    this.router.navigate(['/']);
   }
 
   private subscribeEvents() {
