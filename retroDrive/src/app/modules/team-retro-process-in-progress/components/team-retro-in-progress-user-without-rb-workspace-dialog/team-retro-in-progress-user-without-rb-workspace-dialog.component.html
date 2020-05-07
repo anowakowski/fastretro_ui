@@ -1,9 +1,10 @@
 <h1 mat-dialog-title>Join to existing workspace</h1>
 <div mat-dialog-content>
-  <p>Currently you do not belong to workspaces test1, but if you want to join confirm your choice</p>
+  <p>Currently you do not belong to workspaces <b>{{dataName}}</b>, where this retro take place </p>
+  <p>but if you want to join please confirm your choice, and then join the team to which this retro board belongs</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="warn" (click)="onNoClick()">No Thanks</button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">No Thanks <mat-icon>cancel</mat-icon></button>
   <div fxFlex></div>
-  <button mat-raised-button type="submit" color="primary">Joint to existing workspace<mat-icon>get_app</mat-icon></button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">Joint to existing workspace<mat-icon>add</mat-icon></button>
 </div>

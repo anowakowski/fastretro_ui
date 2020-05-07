@@ -77,6 +77,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
 
+  findWorkspaceById(docId: string) {
+    return this.firestoreBase.getFilteredById('/workspaces/', docId);
+  }
+
   getAllTimerOptions() {
     return this.firestoreBase.getAll('/timerOptions/');
   }

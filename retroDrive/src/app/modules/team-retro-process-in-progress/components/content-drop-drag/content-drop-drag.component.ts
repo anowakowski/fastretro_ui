@@ -607,12 +607,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.id === findedRetroBoard.workspaceId);
     if (!isUsertInRetroBoardWorkspace) {
       this.userIsNotInCurrentRetroBoardWorkspace = true;
-      const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
-        width: '630px',
-        data: findedRetroBoard.workspaceId
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        this.userIsNotInCurrentRetroBoardWorkspace = false;
+
+      this.firestoreRetroInProgressService.findWorkspaceById(findedRetroBoard.workspaceId).then(workspacesSnapshot => {
+        const findedWorkspace = workspacesSnapshot.data() as Workspace;
+        const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
+          width: '630px',
+          data: findedWorkspace.name
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          this.userIsNotInCurrentRetroBoardWorkspace = false;
+        });
       });
     }
   }
