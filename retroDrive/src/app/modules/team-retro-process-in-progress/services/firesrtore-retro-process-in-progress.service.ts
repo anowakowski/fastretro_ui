@@ -53,6 +53,16 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFiltered('/retroBoards/', condition);
   }
 
+  getUserTeams(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
   findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'urlParamId',

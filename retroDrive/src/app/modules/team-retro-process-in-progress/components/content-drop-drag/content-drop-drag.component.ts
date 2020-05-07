@@ -26,6 +26,8 @@ import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-p
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 import { formatDate } from '@angular/common';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { Team } from 'src/app/models/team';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -446,6 +448,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
       // tslint:disable-next-line:no-string-literal
       const retroBoardParamId: string = params['id'];
+
       this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(filteredRetroBoardsSnapshot => {
         if (filteredRetroBoardsSnapshot.docs.length > 0) {
 
@@ -457,6 +460,34 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
               this.isRetroBoardIsReady = true;
               this.retroProcessIsStoped = findedRetroBoard.isFinished;
+
+              findedRetroBoard.team.get().then(teamSnapshot => {
+                const findedTeamId = teamSnapshot.id as string;
+                this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+                  userTeamsSnapshot.docs.forEach(userTeamDoc => {
+                    const findedUserTeamData = userTeamDoc.data();
+                    let currentLenghtIndex = 1;
+                    let isUserInCurrentRetroBoardTeam = false;
+                    findedUserTeamData.teams.forEach(teamRef => {
+                      teamRef.get().then(teamDoc => {
+                        const findedUserTeam = teamDoc.data() as Team;
+                        findedUserTeam.id = teamDoc.id as string;
+
+                        if (findedUserTeam.id === findedTeamId) {
+                          isUserInCurrentRetroBoardTeam = true;
+                        }
+
+                        if (currentLenghtIndex === findedUserTeamData.teams.length) {
+                          if (!isUserInCurrentRetroBoardTeam) {
+                            // show dialog wih join to team
+                          }
+                        }
+                        currentLenghtIndex++;
+                      });
+                     });
+                  });
+                });
+              });
 
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
