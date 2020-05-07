@@ -32,7 +32,7 @@
           margin-left: 18px;
           font-size: 20px;
           font-weight: bold;
-          color: #4452a0;
+          color: #363c42;
       }
   }
 
@@ -69,6 +69,7 @@
                   font-family: 'Lato', sans-serif;
                   text-transform: uppercase;
                   margin-bottom: 20px;
+                  color: #363c42;
               }
           }
       }
@@ -96,11 +97,13 @@
 }
 
 .retro-board-card-went-well {
-  background: #17c71b82;
+  // background: #17c71b82;
+  background: #2db500a6;
 }
 
 .retro-board-card-to-improve {
-  background: #f74437a8;;
+  // background: #f74437a8;
+  background: #ff2c22b0;
 }
 
 .retro-board-card-new-item {

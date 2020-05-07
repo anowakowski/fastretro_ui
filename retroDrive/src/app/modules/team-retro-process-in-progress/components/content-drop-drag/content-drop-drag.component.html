@@ -60,11 +60,10 @@
                 <button 
                   [disabled]="retroProcessIsStoped"
                   *ngIf="!item.isInMerge"
-                  style="margin-right: 15px;"
+                  style="margin-right: 15px; color: #363c42;"
                   matTooltip="click and merge with oder card"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="primary"
                   [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
                   (click)="onClickMergeCard(item, column.name)">
                   <mat-icon style=" font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
@@ -82,10 +81,9 @@
                 <button
                   [disabled]="retroProcessIsStoped"
                   *ngIf="item.isMerged"
-                  style="margin-right: 15px;"
+                  style="margin-right: 15px; color: #363c42;"
                   matTooltip="unmerge all of merged cards"
                   matTooltipPosition="after"
-                  color="primary"
                   (click)="onClickUnmergeCard(item, column.name)"
                   mat-icon-button >
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">sync_alt</mat-icon>
@@ -94,9 +92,9 @@
                 <button
                   *ngIf="shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
-                  [matBadge]="item.voteCount" matBadgeColor="accent" 
+                  [matBadge]="item.voteCount" matBadgeColor="primary" 
                   mat-icon-button 
-                  color="primary" 
+                  style="color: #363c42;" 
                   (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>                
@@ -104,28 +102,26 @@
                   *ngIf="!shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
                   mat-icon-button
-                  color="primary"
+                  style="color: #363c42;"
                   (click)="onClickVoteOnCart(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>
                 <button
                   [disabled]="!shouldEnableVoteBtns"
-                  style="margin-left: 15px;"
+                  style="margin-left: 10px; color: #363c42;"
                   matTooltip="click to add action to this card"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="primary"
                   (click)="onAddActionToCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
                 </button>
                 <button
                   *ngIf="item.actions.length > 0"
-                  style="margin-left: 10px;"
+                  style="margin-left: 10px; color: #363c42;"
                   matTooltip="click and show actions for this card"
                   matTooltipPosition="after"
                   mat-icon-button
-                  [matBadge]="item.actions.length" matBadgeColor="accent"
-                  color="primary"
+                  [matBadge]="item.actions.length" matBadgeColor="priamry"
                   (click)="openCardActionDialog(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">description</mat-icon>
                 </button>
