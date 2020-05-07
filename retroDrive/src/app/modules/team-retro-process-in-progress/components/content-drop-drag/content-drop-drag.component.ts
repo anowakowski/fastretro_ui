@@ -486,33 +486,35 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
-    findedRetroBoard.team.get().then(teamSnapshot => {
-      const findedTeamId = teamSnapshot.id as string;
-      this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-        userTeamsSnapshot.docs.forEach(userTeamDoc => {
-          const findedUserTeamData = userTeamDoc.data();
-          let currentLenghtIndex = 1;
-          let isUserInCurrentRetroBoardTeam = false;
-          findedUserTeamData.teams.forEach(teamRef => {
-            teamRef.get().then(teamDoc => {
-              const findedUserTeam = teamDoc.data() as Team;
-              findedUserTeam.id = teamDoc.id as string;
-
-              if (findedUserTeam.id === findedTeamId) {
-                isUserInCurrentRetroBoardTeam = true;
-              }
-
-              if (currentLenghtIndex === findedUserTeamData.teams.length) {
-                if (!isUserInCurrentRetroBoardTeam) {
-                  // show dialog wih join to team
+    if (!this.userIsNotInCurrentRetroBoardWorkspace) {
+      findedRetroBoard.team.get().then(teamSnapshot => {
+        const findedTeamId = teamSnapshot.id as string;
+        this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+          userTeamsSnapshot.docs.forEach(userTeamDoc => {
+            const findedUserTeamData = userTeamDoc.data();
+            let currentLenghtIndex = 1;
+            let isUserInCurrentRetroBoardTeam = false;
+            findedUserTeamData.teams.forEach(teamRef => {
+              teamRef.get().then(teamDoc => {
+                const findedUserTeam = teamDoc.data() as Team;
+                findedUserTeam.id = teamDoc.id as string;
+                if (findedUserTeam.id === findedTeamId) {
+                  isUserInCurrentRetroBoardTeam = true;
                 }
-              }
-              currentLenghtIndex++;
-            });
-           });
+                if (currentLenghtIndex === findedUserTeamData.teams.length) {
+                  if (!isUserInCurrentRetroBoardTeam) {
+                    if (findedUserTeam.workspaceId !== findedRetroBoard.workspaceId) {
+                      // show dialog wih join to team
+                    }
+                  }
+                }
+                currentLenghtIndex++;
+              });
+             });
+          });
         });
       });
-    });
+    }
   }
 
   private setUpTimerBaseSetting(retroBoardId: string) {
@@ -615,7 +617,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           data: findedWorkspace.name
         });
         dialogRef.afterClosed().subscribe(result => {
-          this.userIsNotInCurrentRetroBoardWorkspace = false;
+          const isUserJoinToRetroBoardWorkspace = result;
+          if (isUserJoinToRetroBoardWorkspace) {
+            this.userIsNotInCurrentRetroBoardWorkspace = false;
+          }
         });
       });
     }
