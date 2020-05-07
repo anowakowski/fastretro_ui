@@ -461,34 +461,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.isRetroBoardIsReady = true;
               this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
-              findedRetroBoard.team.get().then(teamSnapshot => {
-                const findedTeamId = teamSnapshot.id as string;
-                this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-                  userTeamsSnapshot.docs.forEach(userTeamDoc => {
-                    const findedUserTeamData = userTeamDoc.data();
-                    let currentLenghtIndex = 1;
-                    let isUserInCurrentRetroBoardTeam = false;
-                    findedUserTeamData.teams.forEach(teamRef => {
-                      teamRef.get().then(teamDoc => {
-                        const findedUserTeam = teamDoc.data() as Team;
-                        findedUserTeam.id = teamDoc.id as string;
-
-                        if (findedUserTeam.id === findedTeamId) {
-                          isUserInCurrentRetroBoardTeam = true;
-                        }
-
-                        if (currentLenghtIndex === findedUserTeamData.teams.length) {
-                          if (!isUserInCurrentRetroBoardTeam) {
-                            // show dialog wih join to team
-                          }
-                        }
-                        currentLenghtIndex++;
-                      });
-                     });
-                  });
-                });
-              });
-
+              this.checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard);
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
               this.createAddNewRetroBoardCardForm();
@@ -499,6 +472,36 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         } else {
           // not finded any retro board
         }
+      });
+    });
+  }
+
+  private checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
+    findedRetroBoard.team.get().then(teamSnapshot => {
+      const findedTeamId = teamSnapshot.id as string;
+      this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+        userTeamsSnapshot.docs.forEach(userTeamDoc => {
+          const findedUserTeamData = userTeamDoc.data();
+          let currentLenghtIndex = 1;
+          let isUserInCurrentRetroBoardTeam = false;
+          findedUserTeamData.teams.forEach(teamRef => {
+            teamRef.get().then(teamDoc => {
+              const findedUserTeam = teamDoc.data() as Team;
+              findedUserTeam.id = teamDoc.id as string;
+
+              if (findedUserTeam.id === findedTeamId) {
+                isUserInCurrentRetroBoardTeam = true;
+              }
+
+              if (currentLenghtIndex === findedUserTeamData.teams.length) {
+                if (!isUserInCurrentRetroBoardTeam) {
+                  // show dialog wih join to team
+                }
+              }
+              currentLenghtIndex++;
+            });
+           });
+        });
       });
     });
   }
