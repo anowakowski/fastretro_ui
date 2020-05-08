@@ -26,6 +26,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   shouldShowContent = false;
   private spinnerTickSubscription: any;
+  private userSubscritpion: any;
 
   ngOnInit() {
     this.spinnerTick();
@@ -34,10 +35,11 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribeTickService();
+    this.userSubscritpion.unsubscribe();
   }
 
   private setupCurrentUserWithUserWorkspace() {
-    this.authService.user$.subscribe(currentUser => {
+    this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setItem('currentUser', currentUser);
       this.prepareUserWorkspace(currentUser);
     });
