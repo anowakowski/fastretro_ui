@@ -33,6 +33,7 @@ import { Workspace } from 'src/app/models/workspace';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -642,7 +643,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private addUserWorkspaces(workspaceId: string) {
     this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
       const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
-      findedUserWorkspace.workspaces.push(this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId));
+
+      const userWorkspaceDataToSave: UserWorkspaceDataToSave = {
+        isCurrent: true,
+        workspace: this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId)
+      };
+
+      findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
       this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
     });
   }
