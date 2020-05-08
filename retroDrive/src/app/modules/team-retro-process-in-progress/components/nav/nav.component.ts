@@ -16,7 +16,7 @@ export class NavComponent implements OnInit, OnDestroy {
   public shouldChangeRetroDisplayText = false;
   public stopRetroInProgressProcessSubscriptions: any;
   public startRetroInProgressProcessSubscriptions: any;
-
+  public setCurrentWorkspaceSubscriptions: any;
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -35,6 +35,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
+    this.startRetroInProgressProcessSubscriptions.unsubscribe();
+    this.setCurrentWorkspaceSubscriptions.unsubscribe();
   }
 
   stopTimer() {
@@ -59,5 +61,10 @@ export class NavComponent implements OnInit, OnDestroy {
         this.shouldChangeRetroDisplayText = false;
       }
     });
+
+    this.setCurrentWorkspaceSubscriptions =
+      this.eventsServices.getSetNewCurrentWorkspaceEmiterEmiter().subscribe(currentWorkspace => {
+        this.currentUserWorkspaceName = currentWorkspace.name;
+      });
   }
 }
