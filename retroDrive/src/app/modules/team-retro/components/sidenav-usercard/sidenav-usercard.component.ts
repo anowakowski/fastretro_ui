@@ -29,7 +29,7 @@ export class SidenavUsercardComponent implements OnInit {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+        const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
         this.currentUserWorkspaceName = currentWorkspace.name;
       }
     }

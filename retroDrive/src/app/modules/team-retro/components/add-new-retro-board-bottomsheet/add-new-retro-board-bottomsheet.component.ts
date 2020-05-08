@@ -43,7 +43,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
 
     this.createAddNewRetroBoardForm();
     this.prepareTeams();

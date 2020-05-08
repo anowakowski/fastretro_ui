@@ -61,7 +61,6 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   public pieChartPlugins = [];
 
   ngOnInit() {
-    //this.spinnerTick();
     this.dataIsLoading = true;
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -70,7 +69,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
 
         this.prepreRetroBoardForCurrentWorkspace();
         this.prepareTeams();
@@ -79,7 +78,6 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.unsubscribeTickService();
     this.retroBoardSubscriptions.unsubscribe();
   }
 
@@ -249,18 +247,5 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   private unsubscribeTickService() {
     this.spinnerTickSubscription.unsubscribe();
-  }
-
-  private spinnerTick() {
-    this.spinner.show();
-    // tslint:disable-next-line:no-shadowed-variable
-    this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
-      if (interval === 1) {
-        this.shouldShowContent = true;
-      } else if (interval === 2) {
-        this.spinner.hide();
-        this.unsubscribeTickService();
-      }
-    });
   }
 }

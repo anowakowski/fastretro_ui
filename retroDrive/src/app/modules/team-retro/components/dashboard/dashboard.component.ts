@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
 
         this.prepreRetroBoardForCurrentWorkspace();
       } else {

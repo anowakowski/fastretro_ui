@@ -30,6 +30,7 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { Team } from 'src/app/models/team';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
@@ -88,7 +89,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
     // this.createPersistentTimerOptions();

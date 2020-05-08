@@ -29,7 +29,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentUserWorkspaceName = this.userWorkspace.workspaces[0].name;
+    const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+    this.currentUserWorkspaceName = currentWorkspace.name;
   }
 
   ngOnDestroy() {

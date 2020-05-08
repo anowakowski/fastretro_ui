@@ -37,15 +37,13 @@ export class TeamsComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
 
     if (this.currentUser === undefined) {
       this.authService.signOut();
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
       } else {
         this.router.navigate(['/']);
       }

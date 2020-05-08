@@ -3,5 +3,4 @@ export interface WorkspaceToSave {
     creationDate: string;
     isNewWorkspace: boolean;
     isWithRequireAccess: boolean;
-    isCurrent: boolean;
 }

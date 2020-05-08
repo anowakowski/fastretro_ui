@@ -53,7 +53,12 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
             worskspace.workspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
               userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
-              userWorkspace.workspaces.push(userWorkspacesData);
+              const userWorkspacesDataToAdd = {
+                workspaceRef: userWorkspacesData,
+                isCurrent: worskspace.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
             });
