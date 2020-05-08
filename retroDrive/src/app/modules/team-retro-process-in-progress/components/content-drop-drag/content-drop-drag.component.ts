@@ -612,7 +612,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard: RetroBoardToSave) {
-    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.id === findedRetroBoard.workspaceId);
+    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.workspaceRef.id === findedRetroBoard.workspaceId);
     if (!isUsertInRetroBoardWorkspace) {
       this.userIsNotInCurrentRetroBoardWorkspace = true;
 
