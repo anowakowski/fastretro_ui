@@ -478,7 +478,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
               this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
-              this.checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard);
+              this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
               this.createAddNewRetroBoardCardForm();
@@ -493,7 +493,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private checkIfCurrentUserIsJoinedTORetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
+  private checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
     if (!this.userIsNotInCurrentRetroBoardWorkspace) {
       findedRetroBoard.team.get().then(teamSnapshot => {
         const findedTeamId = teamSnapshot.id as string;
