@@ -646,6 +646,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
       this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+
+      this.currentWorkspace = findedUserWorkspace.workspaces.find(uw => uw.isCurrent).workspace as Workspace;
     });
   }
 
