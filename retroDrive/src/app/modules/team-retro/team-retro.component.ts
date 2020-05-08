@@ -48,6 +48,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
       if (userWorksapcesSnapshot.docs.length > 0) {
         userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
           const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          userWorkspace.id = userWorkspaceDoc.id;
           findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
             worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
@@ -64,6 +65,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private createUserWorkspace(currentUser): UserWorkspace {
     return {
+      id: '',
       user: currentUser,
       workspaces: new Array<Workspace>()
     };

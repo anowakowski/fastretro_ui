@@ -31,6 +31,7 @@ import { Team } from 'src/app/models/team';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -613,20 +614,33 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       this.firestoreRetroInProgressService.findWorkspaceById(findedRetroBoard.workspaceId).then(workspacesSnapshot => {
         const findedWorkspace = workspacesSnapshot.data() as Workspace;
-        const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
-          width: '670px',
-          data: findedWorkspace.name
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          const isUserJoinToRetroBoardWorkspace = result;
-          if (isUserJoinToRetroBoardWorkspace) {
-            this.userIsNotInCurrentRetroBoardWorkspace = false;
-          } else {
-            this.router.navigate(['/']);
-          }
-        });
+        this.openDialogAboutUserWorkspaces(findedWorkspace, findedRetroBoard);
       });
     }
+  }
+
+  private openDialogAboutUserWorkspaces(findedWorkspace: Workspace, findedRetroBoard: RetroBoardToSave) {
+    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
+      width: '670px',
+      data: findedWorkspace.name
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      const isUserJoinToRetroBoardWorkspace = result;
+      if (isUserJoinToRetroBoardWorkspace) {
+        this.addUserWorkspaces(findedRetroBoard.workspaceId);
+        this.userIsNotInCurrentRetroBoardWorkspace = false;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  private addUserWorkspaces(workspaceId: string) {
+    this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
+      const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+      findedUserWorkspace.workspaces.push(this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId));
+      this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
+    });
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {

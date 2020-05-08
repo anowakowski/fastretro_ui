@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { TimerOption } from 'src/app/models/timerOption';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.addNewItem('/timerSettings/', timerSetting);
   }
 
+  addNewUserWorkspace(userWorkspace: UserWorkspaceToSave) {
+    this.firestoreBase.addNewItem('/userworkspaces', userWorkspace);
+  }
+
   updateRetroBoardCardAction(action: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCardActions/', id, action);
   }
@@ -34,6 +39,11 @@ export class FiresrtoreRetroProcessInProgressService {
   updateCurrentTimerSettings(timerSettingToUpdate: any, timerSettingId: string) {
     this.firestoreBase.updateItem('/timerSettings/', timerSettingId, timerSettingToUpdate);
   }
+
+  updateUserWorkspaces(findedUserWorkspace: UserWorkspaceToSave, userWorkspaceId: string) {
+    this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
+  }
+
 
   deleteRetroBoardCardAction(actionId) {
     this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
@@ -79,6 +89,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   findWorkspaceById(docId: string) {
     return this.firestoreBase.getFilteredById('/workspaces/', docId);
+  }
+
+  findUserWorkspacesById(id: string) {
+    return this.firestoreBase.getFilteredById('/userworkspaces/', id);
   }
 
   getAllTimerOptions() {
