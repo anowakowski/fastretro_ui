@@ -34,6 +34,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -647,9 +648,48 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
       this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
 
-      this.currentWorkspace = findedUserWorkspace.workspaces.find(uw => uw.isCurrent).workspace as Workspace;
+
+      this.prepareUserWorkspace(findedUserWorkspace);
     });
   }
+
+  private prepareUserWorkspace(findedUserWorkspace) {
+    const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
+    this.firestoreRetroInProgressService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
+      if (userWorksapcesSnapshot.docs.length > 0) {
+        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
+          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          userWorkspace.id = userWorkspaceDoc.id;
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+              this.localStorageService.removeItem('userWorkspace');
+              this.localStorageService.setItem('userWorkspace', userWorkspace);
+
+              this.currentWorkspace = findedUserWorkspace.workspaces.find(uw => uw.isCurrent).workspace as Workspace;
+              // emit do navbara
+            });
+          });
+        });
+      }
+    });
+  }
+
+  private createUserWorkspace(currentUser): UserWorkspace {
+    return {
+      id: '',
+      user: currentUser,
+      workspaces: new Array<UserWorkspaceData>()
+    };
+  }
+
 
   private addNewUserWorkspaceAsCurrent(workspaceId: string, findedUserWorkspace: UserWorkspaceToSave) {
     const userWorkspaceDataToSave: UserWorkspaceDataToSave = {
