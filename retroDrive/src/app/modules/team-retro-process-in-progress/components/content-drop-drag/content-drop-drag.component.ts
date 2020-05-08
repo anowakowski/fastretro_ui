@@ -621,7 +621,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private openDialogAboutUserWorkspaces(findedWorkspace: Workspace, findedRetroBoard: RetroBoardToSave) {
     const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
-      width: '670px',
+      width: '700px',
       data: findedWorkspace.name
     });
     dialogRef.afterClosed().subscribe(result => {
