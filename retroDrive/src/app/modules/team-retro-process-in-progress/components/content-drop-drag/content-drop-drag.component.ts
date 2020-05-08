@@ -98,7 +98,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
-    this.retroBoardParamIdSubscription.unsubscribe();
+    if (this.retroBoardParamIdSubscription !== undefined) {
+      this.retroBoardParamIdSubscription.unsubscribe();
+    }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
 
