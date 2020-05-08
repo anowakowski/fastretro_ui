@@ -44,6 +44,9 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
   }
 
+  updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {
+    this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
+  }
 
   deleteRetroBoardCardAction(actionId) {
     this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
@@ -147,6 +150,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addWorkspaceAsRef(workspaceId: string) {
     return this.firestoreBase.addAsRef('/workspaces/', workspaceId);
+  }
+
+  addTeamAsRef(teamId: string) {
+    return this.firestoreBase.addAsRef('/teams/', teamId);
   }
 
   updateRetroBoard(retroBoardToUpdate: any, id: any) {

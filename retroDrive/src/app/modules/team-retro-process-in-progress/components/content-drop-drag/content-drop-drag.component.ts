@@ -635,7 +635,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       const isUserJoinToRetroBoardWorkspace = result;
       if (isUserJoinToRetroBoardWorkspace) {
-        this.addUserWorkspaces(findedRetroBoard.workspaceId);
+        this.addUserWorkspacesWithTeam(findedRetroBoard.workspaceId);
         this.userIsNotInCurrentRetroBoardWorkspace = false;
       } else {
         this.router.navigate(['/']);
@@ -643,26 +643,23 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addUserWorkspaces(workspaceId: string) {
+  private addUserWorkspacesWithTeam(workspaceId: string) {
     this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
       if (!this.userIsNotInCurrentRetroBoardWorkspace) {
         this.retroBoardToProcess.team.get().then(teamSnapshot => {
+          const retroBoardTeamId = teamSnapshot.id as string;
+
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
             userTeamsSnapshot.docs.forEach(userTeamDoc => {
-              const findedUserTeamData = userTeamDoc.data();
-              findedUserTeamData.teams.forEach(teamRef => {
-                teamRef.get().then(teamDoc => {
-                  const findedUserTeam = teamDoc.data() as Team;
-                  findedUserTeam.id = teamDoc.id as string;
+              const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+              const findedUserTeamId = userTeamDoc.id;
+              findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
+              this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
 
-                  const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
-
-                  this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
-                  this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
-
-                  this.prepareUserWorkspace(findedUserWorkspace);
-                });
-              });
+              const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+              this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+              this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+              this.prepareUserWorkspace(findedUserWorkspace);
             });
           });
         });
