@@ -644,14 +644,24 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
       const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
 
-      const userWorkspaceDataToSave: UserWorkspaceDataToSave = {
-        isCurrent: true,
-        workspace: this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId)
-      };
-
-      findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
-      this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
+      this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+      this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
     });
+  }
+
+  private addNewUserWorkspaceAsCurrent(workspaceId: string, findedUserWorkspace: UserWorkspaceToSave) {
+    const userWorkspaceDataToSave: UserWorkspaceDataToSave = {
+      isCurrent: true,
+      workspace: this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId)
+    };
+    findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
+    this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
+  }
+
+  private changeUserWorkspaceIsCurrentState(findedUserWorkspace: UserWorkspaceToSave) {
+    const findedCurrentWorkspaceDataToChange = findedUserWorkspace.workspaces.find(uw => uw.isCurrent);
+    findedCurrentWorkspaceDataToChange.isCurrent = false;
+    this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {
