@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
         this.prepreRetroBoardForCurrentWorkspace();
       } else {
@@ -90,21 +90,6 @@ export class DashboardComponent implements OnInit {
   onRetroDetails(retroBoard: RetroBoardToSave) {
     this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
-  }
-
-  private prepareUserInLocalStorage() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
-
-    if (this.currentUser === undefined) {
-      this.authService.signOut();
-    } else {
-      if (!this.currentUser.isNewUser) {
-        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
-      } else {
-        this.router.navigate(['/']);
-      }
-    }
   }
 
   private prepreRetroBoardForCurrentWorkspace() {

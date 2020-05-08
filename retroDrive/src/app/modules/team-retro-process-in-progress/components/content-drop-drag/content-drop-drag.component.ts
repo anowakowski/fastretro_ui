@@ -89,7 +89,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
@@ -612,7 +612,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard: RetroBoardToSave) {
-    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.workspaceRef.id === findedRetroBoard.workspaceId);
+    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.workspace.id === findedRetroBoard.workspaceId);
     if (!isUsertInRetroBoardWorkspace) {
       this.userIsNotInCurrentRetroBoardWorkspace = true;
 

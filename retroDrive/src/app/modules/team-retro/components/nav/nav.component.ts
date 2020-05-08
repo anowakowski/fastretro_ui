@@ -35,7 +35,7 @@ export class NavComponent implements OnInit {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+        const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
         this.currentUserWorkspaceName = currentWorkspace.name;
       }
     }

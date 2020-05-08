@@ -16,6 +16,8 @@ import { WorkspaceInfoDialogOptions } from 'src/app/models/workspaceInfoDialogOp
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
+import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -302,7 +304,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   private createUserWorkspaces(findedUsr: User, workspaceId: string) {
-    const workspacesToAddToUserWorkspace = {
+    const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
       workspace: this.firestoreRbService.addWorkspaceAsRef(workspaceId),
       isCurrent: true
     };

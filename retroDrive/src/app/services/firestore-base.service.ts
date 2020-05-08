@@ -62,7 +62,7 @@ export class FirestoreBaseService {
   updateUserData(user: User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
     userRef.set(user, {merge: true});
-    //return userRef.get().toPromise();
+    // return userRef.get().toPromise();
   }
 }
 

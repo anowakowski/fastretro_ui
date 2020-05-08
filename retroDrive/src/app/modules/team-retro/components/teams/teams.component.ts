@@ -43,7 +43,7 @@ export class TeamsComponent implements OnInit {
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspaceRef;
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
       } else {
         this.router.navigate(['/']);
       }

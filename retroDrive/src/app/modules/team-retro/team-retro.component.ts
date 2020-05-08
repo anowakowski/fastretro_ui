@@ -9,6 +9,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { User } from 'firebase';
 import { Workspace } from 'src/app/models/workspace';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 
 @Component({
   selector: 'app-team-retro',
@@ -49,13 +50,13 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
         userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
           const findedUserWorkspaceToSave = userWorkspaceDoc.data();
           userWorkspace.id = userWorkspaceDoc.id;
-          findedUserWorkspaceToSave.workspaces.forEach(worskspace => {
-            worskspace.workspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
               userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
-              const userWorkspacesDataToAdd = {
-                workspaceRef: userWorkspacesData,
-                isCurrent: worskspace.isCurrent
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
@@ -72,7 +73,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
     return {
       id: '',
       user: currentUser,
-      workspaces: new Array<Workspace>()
+      workspaces: new Array<UserWorkspaceData>()
     };
   }
 
