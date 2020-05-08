@@ -1,6 +1,9 @@
 <div class="root">
   <app-nav></app-nav>
   <div *ngIf="!userIsNotInCurrentRetroBoardWorkspace">
+  <div *ngIf="!userIsNotInCurrentRetroBoardTeam">
+
+  
 
   
   <div *ngIf="isRetroBoardIsReady" class="board">
@@ -156,5 +159,6 @@
       </div>
     </div>
   </div>
+ </div>
  </div>
 </div>

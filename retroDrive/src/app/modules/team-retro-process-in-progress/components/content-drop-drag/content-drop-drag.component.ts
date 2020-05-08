@@ -35,6 +35,8 @@ import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../tea
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -52,7 +54,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   retroBoardData: any;
   private retroBoardParamIdSubscription: any;
   private timerIsFinsihedSubscriptions: any;
-  userIsNotInCurrentRetroBoardWorkspace: boolean;
+  userIsNotInCurrentRetroBoardWorkspace = false;
+  userIsNotInCurrentRetroBoardTeam = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -497,6 +500,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (!this.userIsNotInCurrentRetroBoardWorkspace) {
       findedRetroBoard.team.get().then(teamSnapshot => {
         const findedTeamId = teamSnapshot.id as string;
+        const teamName = (teamSnapshot.data() as Team).name;
         this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
           userTeamsSnapshot.docs.forEach(userTeamDoc => {
             const findedUserTeamData = userTeamDoc.data();
@@ -511,9 +515,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 }
                 if (currentLenghtIndex === findedUserTeamData.teams.length) {
                   if (!isUserInCurrentRetroBoardTeam) {
-                    if (findedUserTeam.workspaceId !== findedRetroBoard.workspaceId) {
-                      // show dialog wih join to team
-                    }
+                    this.userIsNotInCurrentRetroBoardTeam = true;
+                    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbTeamDialogComponent, {
+                      width: '750px',
+                      data: { teamName }
+                    });
+                    dialogRef.afterClosed().subscribe(result => {
+                      const isUserJoinToRetroBoardWorkspace = result;
+                      if (isUserJoinToRetroBoardWorkspace) {
+                        this.userIsNotInCurrentRetroBoardTeam = false;
+                      } else {
+                        this.router.navigate(['/']);
+                      }
+                    });
                   }
                 }
                 currentLenghtIndex++;
