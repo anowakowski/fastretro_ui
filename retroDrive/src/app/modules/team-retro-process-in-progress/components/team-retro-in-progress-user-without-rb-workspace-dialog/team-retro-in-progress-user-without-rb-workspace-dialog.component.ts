@@ -10,7 +10,7 @@ export class TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent implements
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataName: string) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
   }

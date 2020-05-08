@@ -617,18 +617,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.workspace.id === findedRetroBoard.workspaceId);
     if (!isUsertInRetroBoardWorkspace) {
       this.userIsNotInCurrentRetroBoardWorkspace = true;
-
       this.firestoreRetroInProgressService.findWorkspaceById(findedRetroBoard.workspaceId).then(workspacesSnapshot => {
-        const findedWorkspace = workspacesSnapshot.data() as Workspace;
-        this.openDialogAboutUserWorkspaces(findedWorkspace, findedRetroBoard);
+        findedRetroBoard.team.get().then(teamSnapshot => {
+          const findedUserTeam = teamSnapshot.data() as Team;
+          const findedWorkspace = workspacesSnapshot.data() as Workspace;
+          this.openDialogAboutUserWorkspaces(findedWorkspace, findedRetroBoard, findedUserTeam);
+        });
       });
     }
   }
 
-  private openDialogAboutUserWorkspaces(findedWorkspace: Workspace, findedRetroBoard: RetroBoardToSave) {
+  private openDialogAboutUserWorkspaces(findedWorkspace: Workspace, findedRetroBoard: RetroBoardToSave, retroBoardTeam: Team) {
     const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
-      width: '700px',
-      data: findedWorkspace.name
+      width: '750px',
+      data: {workspaceName: findedWorkspace.name, teamName: retroBoardTeam.name}
     });
     dialogRef.afterClosed().subscribe(result => {
       const isUserJoinToRetroBoardWorkspace = result;
@@ -643,13 +645,30 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private addUserWorkspaces(workspaceId: string) {
     this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
-      const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+      if (!this.userIsNotInCurrentRetroBoardWorkspace) {
+        this.retroBoardToProcess.team.get().then(teamSnapshot => {
+          this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+            userTeamsSnapshot.docs.forEach(userTeamDoc => {
+              const findedUserTeamData = userTeamDoc.data();
+              findedUserTeamData.teams.forEach(teamRef => {
+                teamRef.get().then(teamDoc => {
+                  const findedUserTeam = teamDoc.data() as Team;
+                  findedUserTeam.id = teamDoc.id as string;
 
-      this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
-      this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+                  const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+
+                  this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+                  this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+
+                  this.prepareUserWorkspace(findedUserWorkspace);
+                });
+              });
+            });
+          });
+        });
+      }
 
 
-      this.prepareUserWorkspace(findedUserWorkspace);
     });
   }
 
