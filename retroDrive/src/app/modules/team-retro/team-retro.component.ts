@@ -49,8 +49,8 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
         userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
           const findedUserWorkspaceToSave = userWorkspaceDoc.data();
           userWorkspace.id = userWorkspaceDoc.id;
-          findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
-            worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
+          findedUserWorkspaceToSave.workspaces.forEach(worskspace => {
+            worskspace.workspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
               userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
               userWorkspace.workspaces.push(userWorkspacesData);
