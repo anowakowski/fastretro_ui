@@ -37,6 +37,7 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -487,9 +488,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.subscribeEvents();
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
 
-              
-              
-              this.firestoreRetroInProgressService.addToCurrentUserInRetroBoard(this.currentUser);
+
+              this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+                .then(currentUserInRetroBoardSnapshot => {
+                  const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+                  const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+                  findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+                  this.firestoreRetroInProgressService
+                    .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+                });
           });
 
         } else {

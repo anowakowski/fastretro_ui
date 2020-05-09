@@ -49,6 +49,10 @@ export class FiresrtoreRetroProcessInProgressService {
     this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
   }
 
+  updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard: CurrentUsersInRetroBoardToSave, docId) {
+    this.firestoreBase.updateItem('/currentUserInRetroBoard/', docId, findedCurrentUserInRetroBoard);
+  }
+
   deleteRetroBoardCardAction(actionId) {
     this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
   }
@@ -75,6 +79,16 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
+  getCurrentUserInRetroBoard(id: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: id
+    };
+
+    return this.firestoreBase.getFiltered('/currentUserInRetroBoard/', condition);
   }
 
   getUserWorkspace(uid: string) {
