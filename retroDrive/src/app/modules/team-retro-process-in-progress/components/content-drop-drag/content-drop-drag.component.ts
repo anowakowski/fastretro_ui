@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener} from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
@@ -97,6 +97,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
   public retroBoardSubscriptions: any;
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    this.removeCurrentUserToRetroBoardProcess();
+  }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -549,6 +554,23 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
         if (!findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
           findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+          this.firestoreRetroInProgressService
+            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+        }
+      });
+  }
+
+  private removeCurrentUserToRetroBoardProcess() {
+    this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+      .then(currentUserInRetroBoardSnapshot => {
+        const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+        const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+
+        if (findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
+          const findToRemove = findedCurrentUserInRetroBoard.usersIds.find(usr => usr === this.currentUser.uid);
+          const indexToRemove = findedCurrentUserInRetroBoard.usersIds.indexOf(findToRemove);
+          findedCurrentUserInRetroBoard.usersIds.splice(indexToRemove, 1);
+
           this.firestoreRetroInProgressService
             .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
         }
