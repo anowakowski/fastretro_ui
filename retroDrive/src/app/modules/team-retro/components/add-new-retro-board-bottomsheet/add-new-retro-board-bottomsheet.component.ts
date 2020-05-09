@@ -11,6 +11,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -71,10 +72,21 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   createNewRetroBoard() {
     const retroBoardToSave = this.prepareRetroBoardToSave();
-    this.frbs.addNewRetroBoard(retroBoardToSave);
+    this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
+      const newRetroBoardId = newRetroBoardSnapshot.id;
+      this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
+    });
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();
+  }
+
+  private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
+    const currentUserInRetroBoardToSave: CurrentUsersInRetroBoardToSave = {
+      retroBoardId: newRetroBoardId,
+      usersIds: new Array<string>()
+    };
+    this.frbs.addToCurrentUserInRetroBoard(currentUserInRetroBoardToSave);
   }
 
   private prepareRetroBoardToSave() {
@@ -109,5 +121,6 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       });
     });
   }
+
 
 }

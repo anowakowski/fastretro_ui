@@ -3,6 +3,7 @@ import { FirestoreBaseService } from 'src/app/services/firestore-base.service';
 import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { TimerOption } from 'src/app/models/timerOption';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 
 @Injectable({
   providedIn: 'root'

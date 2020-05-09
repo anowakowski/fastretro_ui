@@ -486,6 +486,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.createAddNewRetroBoardCardForm();
               this.subscribeEvents();
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+
+              
+              
+              this.firestoreRetroInProgressService.addToCurrentUserInRetroBoard(this.currentUser);
           });
 
         } else {
