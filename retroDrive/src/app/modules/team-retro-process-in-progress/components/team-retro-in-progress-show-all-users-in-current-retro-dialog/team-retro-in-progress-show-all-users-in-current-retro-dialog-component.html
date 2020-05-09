@@ -8,7 +8,8 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <div fxFlex></div>
-  <button mat-button [mat-dialog-close]="selectTimer.value" cdkFocusInitial>Start New Timer</button>
+  <div mat-dialog-actions style="margin-top: 10px; margin-bottom: -15px;">
+    <button mat-raised-button color="warn" (click)="closeClick()">Close</button>
+
+  </div>
 </div>
