@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TimerOption } from 'src/app/models/timerOption';
+import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
 
 @Component({
-  selector: 'app-team-retro-in-progress-set-time-dialog-component',
+  selector: 'app-team-retro-in-progress-show-all-users-in-current-retro-dialog-component',
   templateUrl: './team-retro-in-progress-show-all-users-in-current-retro-dialog-component.html',
   styleUrls: ['./team-retro-in-progress-show-all-users-in-current-retro-dialog-component.css']
 })
@@ -12,12 +12,12 @@ export class TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent implem
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataTimerOptions: TimerOption[]) { }
+    @Inject(MAT_DIALOG_DATA) public dataCurrentUsersInRetroBoard: CurrentUsersInRetroBoard) { }
 
   ngOnInit() {
   }
 
-  onNoClick(): void {
+  closeClick(): void {
     this.dialogRef.close();
   }
 }

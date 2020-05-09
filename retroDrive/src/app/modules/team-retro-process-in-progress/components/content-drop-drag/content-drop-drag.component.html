@@ -23,7 +23,8 @@
         mat-icon matBadge="{{currentUsersInRetroBoard?.users?.length}}"
         matBadgePosition="before below"
         matBadgeColor="warn"       
-        style="margin-right: 10px;">
+        style="margin-right: 10px;"
+        (click)="onOpenShowAllCurrentUsersInRetro()">
           <mat-icon>people</mat-icon>
       </button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>

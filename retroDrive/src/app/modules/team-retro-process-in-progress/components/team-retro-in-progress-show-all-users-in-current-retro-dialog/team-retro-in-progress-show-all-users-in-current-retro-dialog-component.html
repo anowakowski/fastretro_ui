@@ -1,15 +1,12 @@
-<h1 mat-dialog-title>Set new timer value</h1>
+<h1 mat-dialog-title>All users in current retro</h1>
 <div mat-dialog-content>
-  <mat-form-field style="width: 100%;" class="example-full-width">
-    <mat-label>Choose New Timer time</mat-label>
-    <mat-select #selectTimer>
-    <mat-option *ngFor="let dataTimerOption of dataTimerOptions" [value]="dataTimerOption">{{dataTimerOption.viewValue}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <mat-list *ngFor="let user of dataCurrentUsersInRetroBoard.users">
+    <mat-list-item>
+      {{user.displayName}}
+    </mat-list-item>
+
+   </mat-list>
 </div>
 <div mat-dialog-actions>
-  <div mat-dialog-actions style="margin-top: 10px; margin-bottom: -15px;">
-    <button mat-raised-button color="warn" (click)="closeClick()">Close</button>
-
-  </div>
+  <button mat-raised-button color="warn" (click)="closeClick()">Close</button>
 </div>

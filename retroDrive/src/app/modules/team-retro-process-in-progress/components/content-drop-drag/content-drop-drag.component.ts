@@ -39,6 +39,7 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
+import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '../team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -319,6 +320,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     bottomSheetRef.afterDismissed().subscribe(() => {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
+    });
+  }
+
+  onOpenShowAllCurrentUsersInRetro() {
+    this.openShowAllCurrentUsersInRetroDialog();
+  }
+
+  private openShowAllCurrentUsersInRetroDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent, {
+      width: '500px',
+      data: this.currentUsersInRetroBoard
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+      }
     });
   }
 
