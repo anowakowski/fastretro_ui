@@ -30,6 +30,8 @@ import { JoinToExistingTeamDialogComponent } from '../team-retro/components/join
 import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from './components/team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './components/team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from './components/team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog';
 
 
 @NgModule({
@@ -56,7 +58,8 @@ import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './component
     TeamRetroInProgressShowAllActionsDialogComponent,
     JoinToExistingTeamDialogComponent,
     TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
-    TeamRetroInProgressUserWithoutRbTeamDialogComponent
+    TeamRetroInProgressUserWithoutRbTeamDialogComponent,
+    TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -67,7 +70,8 @@ import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './component
     TeamRetroInProgressShowActionDialogComponent,
     JoinToExistingTeamDialogComponent,
     TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
-    TeamRetroInProgressUserWithoutRbTeamDialogComponent
+    TeamRetroInProgressUserWithoutRbTeamDialogComponent,
+    TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService
