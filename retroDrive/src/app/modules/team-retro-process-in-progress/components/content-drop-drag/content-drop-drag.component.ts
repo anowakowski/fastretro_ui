@@ -453,7 +453,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-
   private prepareBaseRetroBoardData() {
     // tslint:disable-next-line:no-string-literal
     if (this.route.snapshot.data['retroBoardData']) {
