@@ -489,14 +489,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
 
 
-              this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
-                .then(currentUserInRetroBoardSnapshot => {
-                  const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
-                  const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
-                  findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
-                  this.firestoreRetroInProgressService
-                    .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
-                });
+              this.addCurrentUserToRetroBoardProcess();
           });
 
         } else {
@@ -504,6 +497,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+
+  private addCurrentUserToRetroBoardProcess() {
+    this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+      .then(currentUserInRetroBoardSnapshot => {
+        const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+        const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+
+        if (!findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)){
+          findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+          this.firestoreRetroInProgressService
+            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+        }
+      });
   }
 
   private checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
@@ -649,6 +656,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.subscribeEvents();
             this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+            this.addCurrentUserToRetroBoardProcess();
         });
       } else {
         // if url not exisis
