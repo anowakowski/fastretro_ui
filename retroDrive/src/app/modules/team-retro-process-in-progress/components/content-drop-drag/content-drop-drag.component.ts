@@ -516,18 +516,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 if (currentLenghtIndex === findedUserTeamData.teams.length) {
                   if (!isUserInCurrentRetroBoardTeam) {
                     this.userIsNotInCurrentRetroBoardTeam = true;
-                    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbTeamDialogComponent, {
-                      width: '750px',
-                      data: { teamName }
-                    });
-                    dialogRef.afterClosed().subscribe(result => {
-                      const isUserJoinToRetroBoardWorkspace = result;
-                      if (isUserJoinToRetroBoardWorkspace) {
-                        this.userIsNotInCurrentRetroBoardTeam = false;
-                      } else {
-                        this.router.navigate(['/']);
-                      }
-                    });
+                    this.openDialogForJoinToExistingTeam(teamName);
                   }
                 }
                 currentLenghtIndex++;
@@ -537,6 +526,36 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         });
       });
     }
+  }
+
+  private openDialogForJoinToExistingTeam(teamName: string) {
+    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbTeamDialogComponent, {
+      width: '750px',
+      data: { teamName }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      const isUserWantToJoinToRetroBoardTeam = result;
+      if (isUserWantToJoinToRetroBoardTeam) {
+        this.addUserToExistingTeam();
+        this.userIsNotInCurrentRetroBoardTeam = false;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  private addUserToExistingTeam() {
+    this.retroBoardToProcess.team.get().then(teamSnapshot => {
+      const currentRetroBoardTeamId = teamSnapshot.id as string;
+      this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+        userTeamsSnapshot.docs.forEach(userTeamDoc => {
+          const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+          const findedUserTeamId = userTeamDoc.id;
+          findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(currentRetroBoardTeamId));
+          this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+        });
+      });
+    });
   }
 
   private setUpTimerBaseSetting(retroBoardId: string) {
