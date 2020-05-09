@@ -329,7 +329,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private openShowAllCurrentUsersInRetroDialog() {
     const dialogRef = this.dialog.open(TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent, {
-      width: '500px',
+      width: '400px',
       data: this.currentUsersInRetroBoard
     });
     dialogRef.afterClosed().subscribe(result => {
