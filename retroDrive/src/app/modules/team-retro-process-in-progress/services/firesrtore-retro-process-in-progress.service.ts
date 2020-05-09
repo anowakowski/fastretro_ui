@@ -111,6 +111,16 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
+  findCurrentUserInRetroBoardIdSnapshotChanges(id: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: id
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/currentUserInRetroBoard/', condition);
+  }
+
   findRetroBoardCardById(docId: string) {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
@@ -149,6 +159,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   getFilteredTimerSettingByIdSnapshotChanges(timerSettingId: string) {
     return this.firestoreBase.getFilteredByIdSnapshotChanges('/timerSettings/', timerSettingId);
+  }
+
+  getUserById(docId: string) {
+    return this.firestoreBase.getFilteredById('users', docId);
   }
 
   addRetroBoardAsRef(retroBoardId: string) {

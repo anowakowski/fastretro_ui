@@ -1,4 +1,7 @@
+import { User } from './user';
+
+
 export class CurrentUsersInRetroBoard {
-    usersIds: Array<string>;
+    users: Array<User>;
     retroBoardId: string;
 }

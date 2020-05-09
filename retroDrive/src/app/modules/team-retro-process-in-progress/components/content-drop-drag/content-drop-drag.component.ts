@@ -38,6 +38,7 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -57,6 +58,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private timerIsFinsihedSubscriptions: any;
   userIsNotInCurrentRetroBoardWorkspace = false;
   userIsNotInCurrentRetroBoardTeam = false;
+
+  currentUsersInRetroBoard: CurrentUsersInRetroBoard;
+  curentUserInRetroBoardSubscription: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -106,6 +110,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
     if (this.retroBoardParamIdSubscription !== undefined) {
       this.retroBoardParamIdSubscription.unsubscribe();
+    }
+    if (this.curentUserInRetroBoardSubscription !== undefined) {
+      this.curentUserInRetroBoardSubscription.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
@@ -488,8 +495,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.subscribeEvents();
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
 
-
               this.addCurrentUserToRetroBoardProcess();
+              this.setCurrentUserInRetroBoardSubscription();
           });
 
         } else {
@@ -499,13 +506,31 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
+  private setCurrentUserInRetroBoardSubscription() {
+    this.curentUserInRetroBoardSubscription =
+      this.firestoreRetroInProgressService.findCurrentUserInRetroBoardIdSnapshotChanges(this.retroBoardToProcess.id)
+        .subscribe(currentUsersInRetroBoardSnapshot => {
+          const findedCurrentUserInRetroBoard = currentUsersInRetroBoardSnapshot[0].payload.doc.data() as CurrentUsersInRetroBoardToSave;
+          this.currentUsersInRetroBoard = {
+            retroBoardId: this.retroBoardToProcess.id,
+            users: new Array<User>()
+          };
+          findedCurrentUserInRetroBoard.usersIds.forEach(userId => {
+            this.firestoreRetroInProgressService.getUserById(userId).then(usersSnapshot => {
+              const findedUser = usersSnapshot.data() as User;
+              this.currentUsersInRetroBoard.users.push(findedUser);
+            });
+          });
+      });
+  }
+
   private addCurrentUserToRetroBoardProcess() {
     this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
       .then(currentUserInRetroBoardSnapshot => {
         const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
         const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
 
-        if (!findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)){
+        if (!findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
           findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
           this.firestoreRetroInProgressService
             .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
@@ -657,6 +682,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
             this.addCurrentUserToRetroBoardProcess();
+            this.setCurrentUserInRetroBoardSubscription();
         });
       } else {
         // if url not exisis
