@@ -39,6 +39,7 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '../team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
 
 const WENT_WELL = 'Went Well';
