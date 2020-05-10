@@ -42,6 +42,7 @@ import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoar
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '../team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
+import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -101,6 +102,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public retroBoardCardsSubscriptions: any;
   public retroBoardSubscriptions: any;
 
+  /*
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (true) {
@@ -109,6 +111,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
+  */
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -129,7 +132,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.curentUserInRetroBoardSubscription.unsubscribe();
     }
     if (this.tickSubscription !== undefined) {
-      this.tickSubscription.undefined();
+      this.tickSubscription.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
@@ -465,19 +468,37 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     let currentValue = 0;
     this.tickSubscription =
       this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
-        currentValue = interval;
+        currentValue++;
         if (currentValue === maxTimmerValue) {
           this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
           .then(currentUserInRetroBoardSnapshot => {
             const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
             const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+            const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
 
-            if (findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
-              findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+            if (findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
+              const findedUsrInRetroBoardData =
+                findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === this.currentUser.uid);
+
+              const arrayIndex = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(findedUsrInRetroBoardData);
+              findedUsrInRetroBoardData.dateOfExistingCheck = currentDate.toString();
+              findedCurrentUserInRetroBoard.usersInRetroBoardData[arrayIndex] = findedUsrInRetroBoardData;
+
               this.firestoreRetroInProgressService
                 .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
             }
+
+            findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(usrInRetroBoard => {
+              const dateDiff = Date.parse(currentDate) - Date.parse(usrInRetroBoard.dateOfExistingCheck);
+              if (dateDiff > 0) {
+                const dateDiffinSec = (dateDiff / 1000);
+                if (dateDiffinSec > 15) {
+                  this.removeCurrentUserToRetroBoardProcess(usrInRetroBoard.userId);
+                }
+              }
+            });
           });
+          currentValue = 0;
         }
       });
   }
@@ -551,6 +572,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
               this.addCurrentUserToRetroBoardProcess();
               this.setCurrentUserInRetroBoardSubscription();
+              this.spinnerTick();
           });
 
         } else {
@@ -569,8 +591,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             retroBoardId: this.retroBoardToProcess.id,
             users: new Array<User>()
           };
-          findedCurrentUserInRetroBoard.usersIds.forEach(userId => {
-            this.firestoreRetroInProgressService.getUserById(userId).then(usersSnapshot => {
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
+            this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
               const findedUser = usersSnapshot.data() as User;
               this.currentUsersInRetroBoard.users.push(findedUser);
             });
@@ -584,28 +606,43 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
         const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
 
-        if (!findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
-          findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+        if (findedCurrentUserInRetroBoard.usersInRetroBoardData.length === 0) {
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const userDataToAdd: UserInRetroBoardData = {
+            userId: this.currentUser.uid,
+            dateOfExistingCheck: currentDate.toString()
+          };
+
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.push(userDataToAdd);
+          this.firestoreRetroInProgressService
+            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+        } else if (!findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const userDataToAdd: UserInRetroBoardData = {
+            userId: this.currentUser.uid,
+            dateOfExistingCheck: currentDate.toString()
+          };
+
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.push(userDataToAdd);
           this.firestoreRetroInProgressService
             .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
         }
       });
   }
 
-  private removeCurrentUserToRetroBoardProcess($event) {
+  private removeCurrentUserToRetroBoardProcess(userInRetroBoardId: string) {
+
     this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
       .then(currentUserInRetroBoardSnapshot => {
         const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
         const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
 
-        if (findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
-          const findToRemove = findedCurrentUserInRetroBoard.usersIds.find(usr => usr === this.currentUser.uid);
-          const indexToRemove = findedCurrentUserInRetroBoard.usersIds.indexOf(findToRemove);
-          findedCurrentUserInRetroBoard.usersIds.splice(indexToRemove, 1);
+        const userToRemove = findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === userInRetroBoardId);
+        const indexToRemove = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(userToRemove);
+        findedCurrentUserInRetroBoard.usersInRetroBoardData.splice(indexToRemove, 1);
 
-          this.firestoreRetroInProgressService
-            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
-        }
+        this.firestoreRetroInProgressService
+          .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
       });
   }
 
@@ -754,6 +791,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
             this.addCurrentUserToRetroBoardProcess();
             this.setCurrentUserInRetroBoardSubscription();
+
+            this.spinnerTick();
         });
       } else {
         // if url not exisis

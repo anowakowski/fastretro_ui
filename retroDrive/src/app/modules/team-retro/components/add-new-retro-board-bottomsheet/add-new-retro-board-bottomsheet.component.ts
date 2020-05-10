@@ -12,6 +12,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -82,10 +83,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   }
 
   private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
-
     const currentUserInRetroBoardToSave: CurrentUsersInRetroBoardToSave = {
       retroBoardId: newRetroBoardId,
-      usersIds: new Array<any>()
+      usersInRetroBoardData: new Array<UserInRetroBoardData>()
     };
     this.frbs.addToCurrentUserInRetroBoard(currentUserInRetroBoardToSave);
   }

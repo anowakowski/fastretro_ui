@@ -1,4 +1,6 @@
+import { UserInRetroBoardData } from './userInRetroBoardData';
+
 export interface CurrentUsersInRetroBoardToSave {
-    usersIds: Array<string>;
+    usersInRetroBoardData: Array<UserInRetroBoardData>;
     retroBoardId: string;
 }
