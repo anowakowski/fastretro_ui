@@ -41,6 +41,7 @@ import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRet
 import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '../team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
+import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -63,6 +64,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   currentUsersInRetroBoard: CurrentUsersInRetroBoard;
   curentUserInRetroBoardSubscription: any;
+  tickSubscription: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -73,7 +75,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
-    private bottomSheetRef: MatBottomSheet) {}
+    private bottomSheetRef: MatBottomSheet,
+    private spinnerTickService: SpinnerTickService) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -99,8 +102,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public retroBoardSubscriptions: any;
 
   @HostListener('window:beforeunload', ['$event'])
-  beforeunloadHandler(event) {
-    this.removeCurrentUserToRetroBoardProcess();
+  unloadNotification($event: any) {
+    if (true) {
+      // this.firestoreRetroInProgressService.removeCurrentUserToRetroBoard('Gg5WXSoDrcsQPpmwmhQu');
+      this.removeCurrentUserToRetroBoardProcess($event);
+      $event.returnValue = true;
+    }
   }
 
   ngOnInit() {
@@ -120,6 +127,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
     if (this.curentUserInRetroBoardSubscription !== undefined) {
       this.curentUserInRetroBoardSubscription.unsubscribe();
+    }
+    if (this.tickSubscription !== undefined) {
+      this.tickSubscription.undefined();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
@@ -450,6 +460,28 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.newCardContentFormControl.setValue(value);
   }
 
+  private spinnerTick() {
+    const maxTimmerValue = 10;
+    let currentValue = 0;
+    this.tickSubscription =
+      this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
+        currentValue = interval;
+        if (currentValue === maxTimmerValue) {
+          this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+          .then(currentUserInRetroBoardSnapshot => {
+            const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+            const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+
+            if (findedCurrentUserInRetroBoard.usersIds.some(usr => usr === this.currentUser.uid)) {
+              findedCurrentUserInRetroBoard.usersIds.push(this.currentUser.uid);
+              this.firestoreRetroInProgressService
+                .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+            }
+          });
+        }
+      });
+  }
+
   private createPersistentTimerOptions() {
     const timerOptionsToSave: TimerOption[] = [
       { value: 3, viewValue: '3 min' },
@@ -560,7 +592,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       });
   }
 
-  private removeCurrentUserToRetroBoardProcess() {
+  private removeCurrentUserToRetroBoardProcess($event) {
     this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
       .then(currentUserInRetroBoardSnapshot => {
         const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;

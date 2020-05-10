@@ -82,9 +82,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   }
 
   private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
+
     const currentUserInRetroBoardToSave: CurrentUsersInRetroBoardToSave = {
       retroBoardId: newRetroBoardId,
-      usersIds: new Array<string>()
+      usersIds: new Array<any>()
     };
     this.frbs.addToCurrentUserInRetroBoard(currentUserInRetroBoardToSave);
   }

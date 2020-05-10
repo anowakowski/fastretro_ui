@@ -10,7 +10,6 @@ import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRet
 })
 export class FiresrtoreRetroProcessInProgressService {
 
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -56,6 +55,11 @@ export class FiresrtoreRetroProcessInProgressService {
   deleteRetroBoardCardAction(actionId) {
     this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
   }
+
+  removeCurrentUserToRetroBoard(id: string) {
+    this.firestoreBase.deleteItem('/currentUserInRetroBoard/', id);
+  }
+
 
   updateRetroBoardCard(cardToUpdate: any, id: string) {
     this.firestoreBase.updateItem('/retroBoardCards/', id, cardToUpdate);
