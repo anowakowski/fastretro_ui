@@ -64,6 +64,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   userIsNotInCurrentRetroBoardTeam = false;
 
   currentUsersInRetroBoard: CurrentUsersInRetroBoard;
+  currentUsersInRetroBoardCount = 0;
   curentUserInRetroBoardSubscription: any;
   tickSubscription: any;
 
@@ -476,31 +477,39 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
             const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
 
-            if (findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
-              const findedUsrInRetroBoardData =
-                findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === this.currentUser.uid);
-
-              const arrayIndex = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(findedUsrInRetroBoardData);
-              findedUsrInRetroBoardData.dateOfExistingCheck = currentDate.toString();
-              findedCurrentUserInRetroBoard.usersInRetroBoardData[arrayIndex] = findedUsrInRetroBoardData;
-
-              this.firestoreRetroInProgressService
-                .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
-            }
-
-            findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(usrInRetroBoard => {
-              const dateDiff = Date.parse(currentDate) - Date.parse(usrInRetroBoard.dateOfExistingCheck);
-              if (dateDiff > 0) {
-                const dateDiffinSec = (dateDiff / 1000);
-                if (dateDiffinSec > 15) {
-                  this.removeCurrentUserToRetroBoardProcess(usrInRetroBoard.userId);
-                }
-              }
-            });
+            this.addCurrentTickDateToUserInRetro(findedCurrentUserInRetroBoard, currentDate, findedCurrentUserInRetroBoardId);
+            this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
           });
           currentValue = 0;
         }
       });
+  }
+
+  private removeExpiredUserProcess(findedCurrentUserInRetroBoard: CurrentUsersInRetroBoardToSave, currentDate: string) {
+    findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(usrInRetroBoard => {
+      const dateDiff = Date.parse(currentDate) - Date.parse(usrInRetroBoard.dateOfExistingCheck);
+      if (dateDiff > 0) {
+        const dateDiffinSec = (dateDiff / 1000);
+        if (dateDiffinSec > 15) {
+          this.removeCurrentUserToRetroBoardProcess(usrInRetroBoard.userId);
+        }
+      }
+    });
+  }
+
+  private addCurrentTickDateToUserInRetro(
+    findedCurrentUserInRetroBoard: CurrentUsersInRetroBoardToSave,
+    currentDate: string,
+    findedCurrentUserInRetroBoardId: string) {
+      if (findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
+        const findedUsrInRetroBoardData =
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === this.currentUser.uid);
+        const arrayIndex = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(findedUsrInRetroBoardData);
+        findedUsrInRetroBoardData.dateOfExistingCheck = currentDate.toString();
+        findedCurrentUserInRetroBoard.usersInRetroBoardData[arrayIndex] = findedUsrInRetroBoardData;
+        this.firestoreRetroInProgressService
+          .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+      }
   }
 
   private createPersistentTimerOptions() {
@@ -591,6 +600,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             retroBoardId: this.retroBoardToProcess.id,
             users: new Array<User>()
           };
+          this.currentUsersInRetroBoardCount = findedCurrentUserInRetroBoard.usersInRetroBoardData.length;
           findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
             this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
               const findedUser = usersSnapshot.data() as User;
