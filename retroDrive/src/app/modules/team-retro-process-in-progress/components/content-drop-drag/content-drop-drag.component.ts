@@ -582,6 +582,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.addCurrentUserToRetroBoardProcess();
               this.setCurrentUserInRetroBoardSubscription();
               this.spinnerTick();
+
+              this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
+                const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
+              });
           });
 
         } else {

@@ -125,6 +125,17 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredSnapshotChanges('/currentUserInRetroBoard/', condition);
   }
 
+  findCurrentUserVoutes(uid: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: uid
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/usersVotes/', condition);
+  }
+
+
   findRetroBoardCardById(docId: string) {
     return this.firestoreBase.getFilteredById('/retroBoardCards/', docId);
   }
