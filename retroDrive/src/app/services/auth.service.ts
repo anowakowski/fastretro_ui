@@ -11,6 +11,7 @@ import { switchMap, first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { User } from 'src/app/models/user';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private localStorageService: LocalStorageService
     ) {
       this.user$ = afAuth.authState.pipe(
         switchMap(user => {
@@ -43,6 +45,12 @@ export class AuthService {
   get authenticated(): boolean {
     // return this.user$ !== null;
     return this.authState !== null;
+  }
+
+  getToken() {
+    this.afAuth.idToken.subscribe(token => {
+      this.localStorageService.setItem('token', token);
+    });
   }
 
   async googleSignin() {

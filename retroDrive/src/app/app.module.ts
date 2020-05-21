@@ -19,6 +19,7 @@ import { EventsService } from './services/events.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LocalStorageService } from './services/local-storage.service';
 import { SpinnerTickService } from './services/spinner-tick.service';
+import { CurrentUserApiService } from './services/current-user-api.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { SpinnerTickService } from './services/spinner-tick.service';
     EventsService,
     LocalStorageService,
     SpinnerTickService,
+    CurrentUserApiService,
     AuthGuard,
     LoginRegisterGuard
   ],
