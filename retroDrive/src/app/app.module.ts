@@ -20,6 +20,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { LocalStorageService } from './services/local-storage.service';
 import { SpinnerTickService } from './services/spinner-tick.service';
 import { CurrentUserApiService } from './services/current-user-api.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { CurrentUserApiService } from './services/current-user-api.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    HttpClientModule
   ],
   providers: [
     AuthService,

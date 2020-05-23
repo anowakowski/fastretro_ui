@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { auth } from 'firebase/app';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
@@ -56,6 +57,9 @@ export class AuthService {
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     return await this.afAuth.auth.signInWithPopup(provider);
+  }
+
+  AuthLogin() {
   }
 
   async facebookSignin() {

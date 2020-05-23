@@ -15,6 +15,7 @@ import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-retro-process',
@@ -40,7 +41,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -59,6 +61,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
       }
     }
+
+    this.currentUserApiService.getCurrentUser();
 
     this.prepareRetroBoard();
   }
