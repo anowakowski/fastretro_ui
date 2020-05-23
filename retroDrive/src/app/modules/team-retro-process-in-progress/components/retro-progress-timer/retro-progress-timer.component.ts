@@ -61,10 +61,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubscribeTimer();
-    this.stopRetroInProgressProcessSubscriptions.unsubscribe();
-    this.stopTimerSubscriptions.unsubscribe();
-    this.timerOptionsSubscriptions.unsubscribe();
+    this.unsubscribeEvents();
   }
 
   doSomethingWithCurrentValue(progressBarValue) {
@@ -193,4 +190,18 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  private unsubscribeEvents() {
+    this.unsubscribeTimer();
+    if (this.stopRetroInProgressProcessSubscriptions !== undefined) {
+      this.stopRetroInProgressProcessSubscriptions.unsubscribe();
+    }
+    if (this.stopTimerSubscriptions !== undefined) {
+      this.stopTimerSubscriptions.unsubscribe();
+    }
+    if (this.timerOptionsSubscriptions !== undefined) {
+      this.timerOptionsSubscriptions.unsubscribe();
+    }
+  }
+
 }

@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { TimerOption } from '../models/timerOption';
+import { Workspace } from '../models/workspace';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,8 @@ constructor() { }
   private setReciveGoOutFromAllRetroBoardListEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
+
+  private setNewCurrentWorkspaceEmiter: EventEmitter<Workspace> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -106,6 +109,14 @@ constructor() { }
 
   getSetAllRetroBoardBackgroudnNoMoreHigherEmiter() {
     return this.setAllRetroBoardBackgroudnNoMoreHigherEmiter;
+  }
+
+  emitSetNewCurrentWorkspaceEmiter(currentWorkspace: Workspace) {
+    this.setNewCurrentWorkspaceEmiter.emit(currentWorkspace);
+  }
+
+  getSetNewCurrentWorkspaceEmiterEmiter() {
+    return this.setNewCurrentWorkspaceEmiter;
   }
 }
 

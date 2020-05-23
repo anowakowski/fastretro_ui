@@ -26,6 +26,13 @@ import { TeamRetroInProgressShowActionDialogComponent } from './components/team-
 import { TeamRetroInProgressShowAllActionsDialogComponent } from './components/team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { JoinToExistingTeamDialogComponent } from '../team-retro/components/join-to-existing-team-dialog/join-to-existing-team-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from './components/team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './components/team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from './components/team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
+
 
 
 @NgModule({
@@ -50,7 +57,10 @@ import { JoinToExistingTeamDialogComponent } from '../team-retro/components/join
     AddNewActionBottomsheetComponent,
     TeamRetroInProgressShowActionDialogComponent,
     TeamRetroInProgressShowAllActionsDialogComponent,
-    JoinToExistingTeamDialogComponent
+    JoinToExistingTeamDialogComponent,
+    TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
+    TeamRetroInProgressUserWithoutRbTeamDialogComponent,
+    TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -59,7 +69,10 @@ import { JoinToExistingTeamDialogComponent } from '../team-retro/components/join
     TeamRetroInProgressShowAllActionsDialogComponent,
     AddNewActionBottomsheetComponent,
     TeamRetroInProgressShowActionDialogComponent,
-    JoinToExistingTeamDialogComponent
+    JoinToExistingTeamDialogComponent,
+    TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
+    TeamRetroInProgressUserWithoutRbTeamDialogComponent,
+    TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService

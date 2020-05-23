@@ -8,6 +8,7 @@ import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -20,7 +21,7 @@ export class FirestoreRetroBoardService {
 
   addNewRetroBoard(newRetroBoard) {
     const retroBoardToSave = this.prepareRetroBoardToSave(newRetroBoard);
-    this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
+    return this.firestoreBase.addNewItem(RETRO_BOARD_COLLECTION, retroBoardToSave);
   }
 
   addNewTeam(teamToSave: any) {
@@ -29,6 +30,10 @@ export class FirestoreRetroBoardService {
 
   addNewUserTeams(userTeamsToSave: UserTeamsToSave) {
     this.firestoreBase.addNewItem('/userTeams/', userTeamsToSave);
+  }
+
+  addToCurrentUserInRetroBoard(currentUserInRetroBoard: CurrentUsersInRetroBoardToSave) {
+    this.firestoreBase.addNewItem('/currentUserInRetroBoard/', currentUserInRetroBoard);
   }
 
   updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {

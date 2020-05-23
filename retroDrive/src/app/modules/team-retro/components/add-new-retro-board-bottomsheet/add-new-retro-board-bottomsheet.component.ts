@@ -11,6 +11,8 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -43,7 +45,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
-    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent);
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
     this.createAddNewRetroBoardForm();
     this.prepareTeams();
@@ -71,10 +73,21 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   createNewRetroBoard() {
     const retroBoardToSave = this.prepareRetroBoardToSave();
-    this.frbs.addNewRetroBoard(retroBoardToSave);
+    this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
+      const newRetroBoardId = newRetroBoardSnapshot.id;
+      this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
+    });
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();
+  }
+
+  private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
+    const currentUserInRetroBoardToSave: CurrentUsersInRetroBoardToSave = {
+      retroBoardId: newRetroBoardId,
+      usersInRetroBoardData: new Array<UserInRetroBoardData>()
+    };
+    this.frbs.addToCurrentUserInRetroBoard(currentUserInRetroBoardToSave);
   }
 
   private prepareRetroBoardToSave() {
@@ -109,5 +122,6 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       });
     });
   }
+
 
 }

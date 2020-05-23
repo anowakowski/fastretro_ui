@@ -164,7 +164,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnMoreHigherEmiter()
       .subscribe(() => this.shouldShowMoreHigherOnAllRetroBoardList = true);
     this.setNoMoreHigherForBackgroundSubscription = this.eventService.getSetAllRetroBoardBackgroudnNoMoreHigherEmiter()
-      .subscribe(() => { 
+      .subscribe(() => {
         if (this.shouldShowMoreHigherOnAllRetroBoardList) {
           this.shouldShowMoreHigherOnAllRetroBoardList = false;
         }

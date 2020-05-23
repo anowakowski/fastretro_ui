@@ -9,6 +9,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { User } from 'firebase';
 import { Workspace } from 'src/app/models/workspace';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 
 @Component({
   selector: 'app-team-retro',
@@ -25,6 +26,7 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   shouldShowContent = false;
   private spinnerTickSubscription: any;
+  private userSubscritpion: any;
 
   ngOnInit() {
     this.spinnerTick();
@@ -33,10 +35,11 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribeTickService();
+    this.userSubscritpion.unsubscribe();
   }
 
   private setupCurrentUserWithUserWorkspace() {
-    this.authService.user$.subscribe(currentUser => {
+    this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setItem('currentUser', currentUser);
       this.prepareUserWorkspace(currentUser);
     });
@@ -48,11 +51,17 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
       if (userWorksapcesSnapshot.docs.length > 0) {
         userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
           const findedUserWorkspaceToSave = userWorkspaceDoc.data();
-          findedUserWorkspaceToSave.workspaces.forEach(worskspaceRef => {
-            worskspaceRef.get().then(findedUserWorkspaceToSaveDoc => {
+          userWorkspace.id = userWorkspaceDoc.id;
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
               const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
               userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
-              userWorkspace.workspaces.push(userWorkspacesData);
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
             });
@@ -64,8 +73,9 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private createUserWorkspace(currentUser): UserWorkspace {
     return {
+      id: '',
       user: currentUser,
-      workspaces: new Array<Workspace>()
+      workspaces: new Array<UserWorkspaceData>()
     };
   }
 

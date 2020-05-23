@@ -71,7 +71,7 @@ export class LoginRegisterFormComponent implements OnInit {
   }
 
   loginByEmailAndPass() {
-    if (this.addNewEmailPassLoginForm.valid) {
+    if (true) {
       const emailVaule = this.addNewEmailPassLoginForm.value.emailFormControl;
       const passValue = this.addNewEmailPassLoginForm.value.passFormControl;
 

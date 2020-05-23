@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener} from '@angular/core';
 import { moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Board } from 'src/app/models/board';
 import { Column } from 'src/app/models/column';
@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TeamRetroInProgressSetTimeDialogComponent } from '../team-retro-in-progress-set-time-dialog/team-retro-in-progress-set-time-dialog.component';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -26,6 +26,23 @@ import { TeamRetroInProgressShowActionDialogComponent } from '../team-retro-in-p
 import { TeamRetroInProgressShowAllActionsDialogComponent } from '../team-retro-in-progress-show-all-actions-dialog/team-retro-in-progress-show-all-actions-dialog.component';
 import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
 import { formatDate } from '@angular/common';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { Team } from 'src/app/models/team';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
+import { Workspace } from 'src/app/models/workspace';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent } from '../team-retro-in-progress-user-without-rb-workspace-dialog/team-retro-in-progress-user-without-rb-workspace-dialog.component';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from '../team-retro-in-progress-user-without-rb-team-dialog/team-retro-in-progress-user-without-rb-team-dialog.component';
+import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { CurrentUsersInRetroBoard } from 'src/app/models/currentUsersInRetroBoard';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '../team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
+import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
+import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -43,6 +60,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   retroBoardData: any;
   private retroBoardParamIdSubscription: any;
   private timerIsFinsihedSubscriptions: any;
+  userIsNotInCurrentRetroBoardWorkspace = false;
+  userIsNotInCurrentRetroBoardTeam = false;
+
+  currentUsersInRetroBoard: CurrentUsersInRetroBoard;
+  currentUsersInRetroBoardCount = 0;
+  curentUserInRetroBoardSubscription: any;
+  tickSubscription: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,8 +75,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog,
-    private bottomSheetRef: MatBottomSheet) {}
+    private bottomSheetRef: MatBottomSheet,
+    private spinnerTickService: SpinnerTickService) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -63,6 +89,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public isExistingSomeRetroBoardCardAction = false;
 
   currentUser: User;
+  userWorkspace: UserWorkspace;
+  currentWorkspace: Workspace;
 
   timerOptions: TimerOption[];
 
@@ -75,8 +103,22 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public retroBoardCardsSubscriptions: any;
   public retroBoardSubscriptions: any;
 
+  /*
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (true) {
+      // this.firestoreRetroInProgressService.removeCurrentUserToRetroBoard('Gg5WXSoDrcsQPpmwmhQu');
+      this.removeCurrentUserToRetroBoardProcess($event);
+      $event.returnValue = true;
+    }
+  }
+  */
+
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
+    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
     // this.createPersistentTimerOptions();
@@ -84,7 +126,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
-    this.retroBoardParamIdSubscription.unsubscribe();
+    if (this.retroBoardParamIdSubscription !== undefined) {
+      this.retroBoardParamIdSubscription.unsubscribe();
+    }
+    if (this.curentUserInRetroBoardSubscription !== undefined) {
+      this.curentUserInRetroBoardSubscription.unsubscribe();
+    }
+    if (this.tickSubscription !== undefined) {
+      this.tickSubscription.unsubscribe();
+    }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
 
@@ -293,6 +343,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
+  onOpenShowAllCurrentUsersInRetro() {
+    this.openShowAllCurrentUsersInRetroDialog();
+  }
+
+  private openShowAllCurrentUsersInRetroDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent, {
+      width: '400px',
+      data: this.currentUsersInRetroBoard
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+      }
+    });
+  }
+
   checkIfRetroBoardIsExists() {
     return this.wnetWellRetroBoardCol.retroBoardCards.length > 0 || this.toImproveRetroBoardCol.retroBoardCards.length > 0;
   }
@@ -399,6 +464,54 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.newCardContentFormControl.setValue(value);
   }
 
+  private spinnerTick() {
+    const maxTimmerValue = 10;
+    let currentValue = 0;
+    this.tickSubscription =
+      this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
+        currentValue++;
+        if (currentValue === maxTimmerValue) {
+          this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+          .then(currentUserInRetroBoardSnapshot => {
+            const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+            const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+            const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+
+            this.addCurrentTickDateToUserInRetro(findedCurrentUserInRetroBoard, currentDate, findedCurrentUserInRetroBoardId);
+            this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
+          });
+          currentValue = 0;
+        }
+      });
+  }
+
+  private removeExpiredUserProcess(findedCurrentUserInRetroBoard: CurrentUsersInRetroBoardToSave, currentDate: string) {
+    findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(usrInRetroBoard => {
+      const dateDiff = Date.parse(currentDate) - Date.parse(usrInRetroBoard.dateOfExistingCheck);
+      if (dateDiff > 0) {
+        const dateDiffinSec = (dateDiff / 1000);
+        if (dateDiffinSec > 15) {
+          this.removeCurrentUserToRetroBoardProcess(usrInRetroBoard.userId);
+        }
+      }
+    });
+  }
+
+  private addCurrentTickDateToUserInRetro(
+    findedCurrentUserInRetroBoard: CurrentUsersInRetroBoardToSave,
+    currentDate: string,
+    findedCurrentUserInRetroBoardId: string) {
+      if (findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
+        const findedUsrInRetroBoardData =
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === this.currentUser.uid);
+        const arrayIndex = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(findedUsrInRetroBoardData);
+        findedUsrInRetroBoardData.dateOfExistingCheck = currentDate.toString();
+        findedCurrentUserInRetroBoard.usersInRetroBoardData[arrayIndex] = findedUsrInRetroBoardData;
+        this.firestoreRetroInProgressService
+          .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+      }
+  }
+
   private createPersistentTimerOptions() {
     const timerOptionsToSave: TimerOption[] = [
       { value: 3, viewValue: '3 min' },
@@ -432,7 +545,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
   }
 
-
   private prepareBaseRetroBoardData() {
     // tslint:disable-next-line:no-string-literal
     if (this.route.snapshot.data['retroBoardData']) {
@@ -446,6 +558,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardParamIdSubscription = this.route.params.subscribe(params => {
       // tslint:disable-next-line:no-string-literal
       const retroBoardParamId: string = params['id'];
+
       this.firestoreRetroInProgressService.findRetroBoardByUrlParamId(retroBoardParamId).then(filteredRetroBoardsSnapshot => {
         if (filteredRetroBoardsSnapshot.docs.length > 0) {
 
@@ -458,16 +571,153 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.isRetroBoardIsReady = true;
               this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
+              this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
+              this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
               this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
               this.setRetroBoardColumnCards();
               this.createAddNewRetroBoardCardForm();
               this.subscribeEvents();
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+
+              this.addCurrentUserToRetroBoardProcess();
+              this.setCurrentUserInRetroBoardSubscription();
+              this.spinnerTick();
+
+              this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
+                const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
+              });
           });
 
         } else {
           // not finded any retro board
         }
+      });
+    });
+  }
+
+  private setCurrentUserInRetroBoardSubscription() {
+    this.curentUserInRetroBoardSubscription =
+      this.firestoreRetroInProgressService.findCurrentUserInRetroBoardIdSnapshotChanges(this.retroBoardToProcess.id)
+        .subscribe(currentUsersInRetroBoardSnapshot => {
+          const findedCurrentUserInRetroBoard = currentUsersInRetroBoardSnapshot[0].payload.doc.data() as CurrentUsersInRetroBoardToSave;
+          this.currentUsersInRetroBoard = {
+            retroBoardId: this.retroBoardToProcess.id,
+            users: new Array<User>()
+          };
+          this.currentUsersInRetroBoardCount = findedCurrentUserInRetroBoard.usersInRetroBoardData.length;
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
+            this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
+              const findedUser = usersSnapshot.data() as User;
+              this.currentUsersInRetroBoard.users.push(findedUser);
+            });
+          });
+      });
+  }
+
+  private addCurrentUserToRetroBoardProcess() {
+    this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+      .then(currentUserInRetroBoardSnapshot => {
+        const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+        const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+
+        if (findedCurrentUserInRetroBoard.usersInRetroBoardData.length === 0) {
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const userDataToAdd: UserInRetroBoardData = {
+            userId: this.currentUser.uid,
+            dateOfExistingCheck: currentDate.toString()
+          };
+
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.push(userDataToAdd);
+          this.firestoreRetroInProgressService
+            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+        } else if (!findedCurrentUserInRetroBoard.usersInRetroBoardData.some(usr => usr.userId === this.currentUser.uid)) {
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const userDataToAdd: UserInRetroBoardData = {
+            userId: this.currentUser.uid,
+            dateOfExistingCheck: currentDate.toString()
+          };
+
+          findedCurrentUserInRetroBoard.usersInRetroBoardData.push(userDataToAdd);
+          this.firestoreRetroInProgressService
+            .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+        }
+      });
+  }
+
+  private removeCurrentUserToRetroBoardProcess(userInRetroBoardId: string) {
+
+    this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+      .then(currentUserInRetroBoardSnapshot => {
+        const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+        const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+
+        const userToRemove = findedCurrentUserInRetroBoard.usersInRetroBoardData.find(usr => usr.userId === userInRetroBoardId);
+        const indexToRemove = findedCurrentUserInRetroBoard.usersInRetroBoardData.indexOf(userToRemove);
+        findedCurrentUserInRetroBoard.usersInRetroBoardData.splice(indexToRemove, 1);
+
+        this.firestoreRetroInProgressService
+          .updateCurrentUserInRetroBoard(findedCurrentUserInRetroBoard, findedCurrentUserInRetroBoardId);
+      });
+  }
+
+  private checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
+    if (!this.userIsNotInCurrentRetroBoardWorkspace) {
+      findedRetroBoard.team.get().then(teamSnapshot => {
+        const findedTeamId = teamSnapshot.id as string;
+        const teamName = (teamSnapshot.data() as Team).name;
+        this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+          userTeamsSnapshot.docs.forEach(userTeamDoc => {
+            const findedUserTeamData = userTeamDoc.data();
+            let currentLenghtIndex = 1;
+            let isUserInCurrentRetroBoardTeam = false;
+            findedUserTeamData.teams.forEach(teamRef => {
+              teamRef.get().then(teamDoc => {
+                const findedUserTeam = teamDoc.data() as Team;
+                findedUserTeam.id = teamDoc.id as string;
+                if (findedUserTeam.id === findedTeamId) {
+                  isUserInCurrentRetroBoardTeam = true;
+                }
+                if (currentLenghtIndex === findedUserTeamData.teams.length) {
+                  if (!isUserInCurrentRetroBoardTeam) {
+                    this.userIsNotInCurrentRetroBoardTeam = true;
+                    this.openDialogForJoinToExistingTeam(teamName);
+                  }
+                }
+                currentLenghtIndex++;
+              });
+             });
+          });
+        });
+      });
+    }
+  }
+
+  private openDialogForJoinToExistingTeam(teamName: string) {
+    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbTeamDialogComponent, {
+      width: '750px',
+      data: { teamName }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      const isUserWantToJoinToRetroBoardTeam = result;
+      if (isUserWantToJoinToRetroBoardTeam) {
+        this.addUserToExistingTeam();
+        this.userIsNotInCurrentRetroBoardTeam = false;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  private addUserToExistingTeam() {
+    this.retroBoardToProcess.team.get().then(teamSnapshot => {
+      const currentRetroBoardTeamId = teamSnapshot.id as string;
+      this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+        userTeamsSnapshot.docs.forEach(userTeamDoc => {
+          const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+          const findedUserTeamId = userTeamDoc.id;
+          findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(currentRetroBoardTeamId));
+          this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+        });
       });
     });
   }
@@ -553,11 +803,127 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.subscribeEvents();
             this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+            this.addCurrentUserToRetroBoardProcess();
+            this.setCurrentUserInRetroBoardSubscription();
+
+            this.spinnerTick();
         });
       } else {
         // if url not exisis
       }
     });
+  }
+
+  private checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard: RetroBoardToSave) {
+    const isUsertInRetroBoardWorkspace = this.userWorkspace.workspaces.some(x => x.workspace.id === findedRetroBoard.workspaceId);
+    if (!isUsertInRetroBoardWorkspace) {
+      this.userIsNotInCurrentRetroBoardWorkspace = true;
+      this.firestoreRetroInProgressService.findWorkspaceById(findedRetroBoard.workspaceId).then(workspacesSnapshot => {
+        findedRetroBoard.team.get().then(teamSnapshot => {
+          const findedUserTeam = teamSnapshot.data() as Team;
+          const findedWorkspace = workspacesSnapshot.data() as Workspace;
+          this.openDialogAboutUserWorkspaces(findedWorkspace, findedRetroBoard, findedUserTeam);
+        });
+      });
+    }
+  }
+
+  private openDialogAboutUserWorkspaces(findedWorkspace: Workspace, findedRetroBoard: RetroBoardToSave, retroBoardTeam: Team) {
+    const dialogRef = this.dialog.open(TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent, {
+      width: '750px',
+      data: {workspaceName: findedWorkspace.name, teamName: retroBoardTeam.name}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      const isUserJoinToRetroBoardWorkspace = result;
+      if (isUserJoinToRetroBoardWorkspace) {
+        this.addUserWorkspacesWithTeam(findedRetroBoard.workspaceId);
+        this.userIsNotInCurrentRetroBoardWorkspace = false;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  private addUserWorkspacesWithTeam(workspaceId: string) {
+    this.firestoreRetroInProgressService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
+      if (!this.userIsNotInCurrentRetroBoardWorkspace) {
+        this.retroBoardToProcess.team.get().then(teamSnapshot => {
+          const retroBoardTeamId = teamSnapshot.id as string;
+
+          this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
+            userTeamsSnapshot.docs.forEach(userTeamDoc => {
+              const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+              const findedUserTeamId = userTeamDoc.id;
+              findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
+              this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+
+              const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+              this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+              this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+              this.prepareUserWorkspace(findedUserWorkspace);
+            });
+          });
+        });
+      }
+
+
+    });
+  }
+
+  private prepareUserWorkspace(findedUserWorkspace) {
+    const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
+    this.firestoreRetroInProgressService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
+      if (userWorksapcesSnapshot.docs.length > 0) {
+        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
+          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          userWorkspace.id = userWorkspaceDoc.id;
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+              this.localStorageService.removeItem('userWorkspace');
+              this.localStorageService.setItem('userWorkspace', userWorkspace);
+
+              findedUserWorkspace.workspaces.find(uw => uw.isCurrent).workspace.get().then(currWokrspaceSnapshot => {
+                const currentWorkspaceToAdd = currWokrspaceSnapshot.data() as Workspace;
+                this.currentWorkspace = currentWorkspaceToAdd;
+                this.eventsService.emitSetNewCurrentWorkspaceEmiter(this.currentWorkspace);
+              });
+            });
+          });
+        });
+      }
+    });
+  }
+
+  private createUserWorkspace(currentUser): UserWorkspace {
+    return {
+      id: '',
+      user: currentUser,
+      workspaces: new Array<UserWorkspaceData>()
+    };
+  }
+
+
+  private addNewUserWorkspaceAsCurrent(workspaceId: string, findedUserWorkspace: UserWorkspaceToSave) {
+    const userWorkspaceDataToSave: UserWorkspaceDataToSave = {
+      isCurrent: true,
+      workspace: this.firestoreRetroInProgressService.addWorkspaceAsRef(workspaceId)
+    };
+    findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
+    this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
+  }
+
+  private changeUserWorkspaceIsCurrentState(findedUserWorkspace: UserWorkspaceToSave) {
+    const findedCurrentWorkspaceDataToChange = findedUserWorkspace.workspaces.find(uw => uw.isCurrent);
+    findedCurrentWorkspaceDataToChange.isCurrent = false;
+    this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {

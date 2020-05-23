@@ -1,10 +1,32 @@
 <div class="root">
   <app-nav></app-nav>
+  <div *ngIf="!userIsNotInCurrentRetroBoardWorkspace">
+  <div *ngIf="!userIsNotInCurrentRetroBoardTeam">
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p class="board-name">{{ board.name }}</p>
       <button mat-raised-button color="primary" style="margin-left: 10px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
       <div fxFlex></div>
+      <mat-icon
+        style="font-size: 40px; margin-right: 30px;"
+        matTooltip="votes: 80/50"
+        matTooltipPosition="below"
+        color="primary">
+          remove_red_eye
+      </mat-icon>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="!retroProcessIsStoped"
+        matTooltip="show all users in current retro"
+        matTooltipPosition="below"
+        mat-icon matBadge="{{currentUsersInRetroBoardCount}}"
+        matBadgePosition="before below"
+        matBadgeColor="warn"       
+        style="margin-right: 10px;"
+        (click)="onOpenShowAllCurrentUsersInRetro()">
+          <mat-icon>people</mat-icon>
+      </button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
       <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped" (click)="openRetroProcess()" style="margin-right: 18px;"><mat-icon >power_settings_new</mat-icon>&nbsp; Open Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()" *ngIf="!retroProcessIsStoped">
@@ -60,11 +82,10 @@
                 <button 
                   [disabled]="retroProcessIsStoped"
                   *ngIf="!item.isInMerge"
-                  style="margin-right: 15px;"
+                  style="margin-right: 15px; color: #363c42;"
                   matTooltip="click and merge with oder card"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="primary"
                   [ngClass]="{'current-card-chosen-for-merge': item.isInMerge === true}"
                   (click)="onClickMergeCard(item, column.name)">
                   <mat-icon style=" font-size: 35px; width: 35px; height: 35px;">flip_to_front</mat-icon>
@@ -82,10 +103,9 @@
                 <button
                   [disabled]="retroProcessIsStoped"
                   *ngIf="item.isMerged"
-                  style="margin-right: 15px;"
+                  style="margin-right: 15px; color: #363c42;"
                   matTooltip="unmerge all of merged cards"
                   matTooltipPosition="after"
-                  color="primary"
                   (click)="onClickUnmergeCard(item, column.name)"
                   mat-icon-button >
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">sync_alt</mat-icon>
@@ -94,9 +114,9 @@
                 <button
                   *ngIf="shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
-                  [matBadge]="item.voteCount" matBadgeColor="accent" 
+                  [matBadge]="item.voteCount" matBadgeColor="primary" 
                   mat-icon-button 
-                  color="primary" 
+                  style="color: #363c42;" 
                   (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>                
@@ -104,28 +124,26 @@
                   *ngIf="!shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
                   mat-icon-button
-                  color="primary"
+                  style="color: #363c42;"
                   (click)="onClickVoteOnCart(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>
                 <button
                   [disabled]="!shouldEnableVoteBtns"
-                  style="margin-left: 15px;"
+                  style="margin-left: 10px; color: #363c42;"
                   matTooltip="click to add action to this card"
                   matTooltipPosition="after"
                   mat-icon-button 
-                  color="primary"
                   (click)="onAddActionToCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">add</mat-icon>
                 </button>
                 <button
                   *ngIf="item.actions.length > 0"
-                  style="margin-left: 10px;"
+                  style="margin-left: 10px; color: #363c42;"
                   matTooltip="click and show actions for this card"
                   matTooltipPosition="after"
                   mat-icon-button
-                  [matBadge]="item.actions.length" matBadgeColor="accent"
-                  color="primary"
+                  [matBadge]="item.actions.length" matBadgeColor="priamry"
                   (click)="openCardActionDialog(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">description</mat-icon>
                 </button>
@@ -157,4 +175,6 @@
       </div>
     </div>
   </div>
+ </div>
+ </div>
 </div>
