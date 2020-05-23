@@ -43,7 +43,6 @@ export class LoginRegisterFormComponent implements OnInit {
             }
           })
           .finally(() => {
-            this.auth.getToken();
             this.router.navigate(['/']);
           });
     }).catch(error => {
@@ -79,9 +78,6 @@ export class LoginRegisterFormComponent implements OnInit {
       this.auth.emailSigIn(emailVaule, passValue)
         .then((userCredentials) => {
           const logedUser = userCredentials.user;
-          logedUser.getIdToken().then(tok => {
-            let tt = tok;
-          });
           this.fls
             .findUsers(logedUser.email)
             .then((snapshotFindedUsr) => {
