@@ -6,6 +6,7 @@ import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snackbar.component';
+import { FbTokenService } from 'src/app/services/fb-token.service';
 
 @Component({
   selector: 'app-login-register-form',
@@ -22,6 +23,7 @@ export class LoginRegisterFormComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private fls: FirestoreLoginRegisterService,
+    private fbTokenService: FbTokenService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
   ) {}
@@ -78,6 +80,7 @@ export class LoginRegisterFormComponent implements OnInit {
       this.auth.emailSigIn(emailVaule, passValue)
         .then((userCredentials) => {
           const logedUser = userCredentials.user;
+          this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
           this.fls
             .findUsers(logedUser.email)
             .then((snapshotFindedUsr) => {
