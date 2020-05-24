@@ -14,11 +14,14 @@ export class FbTokenService {
     this.httpClient.post(urlForToken, {
       grant_type: 'refresh_token',
       refresh_token: tokenToRefresh
-    }).toPromise().then(respone => {
-      const respo = respone;
-    }).catch(error => {
-      const errors = error;
-    });
+    })
+    .toPromise()
+      .then(respone => {
+        this.setupTokenInLocalStorage(respone);
+    }).catch(error => {});
   }
 
+  private setupTokenInLocalStorage(respone: any) {
+    this.localStorageService.setItem('token', respone.access_token);
+  }
 }
