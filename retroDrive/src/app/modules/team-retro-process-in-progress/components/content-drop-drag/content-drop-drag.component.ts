@@ -606,7 +606,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             retroBoardId: this.retroBoardToProcess.id,
             users: new Array<User>()
           };
-          this.currentUsersInRetroBoardCount = findedCurrentUserInRetroBoard.usersInRetroBoardData.length;
+          // this.currentUsersInRetroBoardCount = findedCurrentUserInRetroBoard.usersInRetroBoardData.length;
           findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
             this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
               const findedUser = usersSnapshot.data() as User;
@@ -619,6 +619,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private setAllCurrentUsersInRetroBoardProcess() {
     this.currentUserInRetroBoardApiService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id).then(response => {
       const currentUsers = response;
+
+      this.currentUsersInRetroBoardCount = response.length;
     });
   }
 
