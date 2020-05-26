@@ -330,6 +330,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       findedRetroBoardCard.voteCount++;
       const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
       this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+
+      this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
     });
   }
 
