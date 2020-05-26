@@ -48,7 +48,7 @@ export class FbTokenService {
 
     const fbToken: FbToken = {
       token: respone.access_token,
-      refreshToken: respone.refreshToken,
+      refreshToken: respone.refresh_token,
       tokenExpirationInSec,
       tokenExpirationInMin,
       generateDate: currentDate
