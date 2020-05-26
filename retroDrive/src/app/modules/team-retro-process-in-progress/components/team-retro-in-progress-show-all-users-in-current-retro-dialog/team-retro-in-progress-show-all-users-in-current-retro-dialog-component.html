@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>All users in current retro</h1>
 <div mat-dialog-content>
-  <mat-list *ngFor="let user of dataCurrentUsersInRetroBoard.users">
+  <mat-list *ngFor="let user of dataCurrentUsersInRetroBoard">
     <mat-list-item>
       <img  [src]="user.chosenAvatarUrl" width="40" height="40" alt="logo" style="border: 1px solid; border-radius: 50%; border-color: #c7c7c7;">
       <span style="margin-left: 15px;">{{user.displayName}}</span>      

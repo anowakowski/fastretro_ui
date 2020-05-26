@@ -44,6 +44,7 @@ import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from '..
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -64,7 +65,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   userIsNotInCurrentRetroBoardWorkspace = false;
   userIsNotInCurrentRetroBoardTeam = false;
 
-  currentUsersInRetroBoard: CurrentUsersInRetroBoard;
+  currentUsersInRetroBoard: CurrentUserInRetroBoardDataToDisplay[];
   currentUsersInRetroBoardCount = 0;
   curentUserInRetroBoardSubscription: any;
   tickSubscription: any;
@@ -602,15 +603,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.firestoreRetroInProgressService.findCurrentUserInRetroBoardIdSnapshotChanges(this.retroBoardToProcess.id)
         .subscribe(currentUsersInRetroBoardSnapshot => {
           const findedCurrentUserInRetroBoard = currentUsersInRetroBoardSnapshot[0].payload.doc.data() as CurrentUsersInRetroBoardToSave;
-          this.currentUsersInRetroBoard = {
-            retroBoardId: this.retroBoardToProcess.id,
-            users: new Array<User>()
-          };
+          // this.currentUsersInRetroBoard = {
+          //   retroBoardId: this.retroBoardToProcess.id,
+          //   users: new Array<User>()
+          // };
           // this.currentUsersInRetroBoardCount = findedCurrentUserInRetroBoard.usersInRetroBoardData.length;
           findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
             this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
               const findedUser = usersSnapshot.data() as User;
-              this.currentUsersInRetroBoard.users.push(findedUser);
+              //this.currentUsersInRetroBoard.users.push(findedUser);
             });
           });
       });
@@ -618,16 +619,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private setAllCurrentUsersInRetroBoardProcess() {
     this.currentUserInRetroBoardApiService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id).then(response => {
-      const currentUsers = response;
-
+      const currentUsersInRetroBoardToDisplay = response;
+      this.currentUsersInRetroBoard = currentUsersInRetroBoardToDisplay;
       this.currentUsersInRetroBoardCount = response.length;
     }).catch(error => {
-      
+
     });
   }
 
   private addCurrentUserToRetroBoardProcess() {
-    this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser.uid, this.retroBoardToProcess.id)
+    this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser, this.retroBoardToProcess.id)
       .then(response => {
         this.setAllCurrentUsersInRetroBoardProcess();
       });

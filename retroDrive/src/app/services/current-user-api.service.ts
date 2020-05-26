@@ -4,6 +4,8 @@ import { LocalStorageService } from './local-storage.service';
 import { FbTokenService } from './fb-token.service';
 import { FbToken } from '../models/fbToken';
 import { environment } from 'src/environments/environment';
+import { User } from '../models/user';
+import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRetroBoardDataToDisplay';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +29,10 @@ export class CurrentUserApiService {
     };
 
     const url = this.baseUrl + '/getCurrentUserInRetroBoard/' + retroBoardId;
-    return this.httpClient.get<any>(url, httpOptions).toPromise();
+    return this.httpClient.get<CurrentUserInRetroBoardDataToDisplay[]>(url, httpOptions).toPromise();
   }
 
-  addCurrentUserToRetroBoardProcess(currentUserId, currentRetroBoardId) {
+  addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
     if (this.fbTokenService.prepareRefreshToken(fbToken)) {
       fbToken = this.localStorageService.getItem('token') as FbToken;
@@ -45,7 +47,8 @@ export class CurrentUserApiService {
     const url = this.baseUrl + '/setCurrentUser/';
     const postData = {
       retroBoardId: currentRetroBoardId,
-      userId: currentUserId
+      userId: currentUser.uid,
+      chosenAvatarUrl: currentUser.chosenAvatarUrl
     };
     return this.httpClient.post(url, postData, httpOptions).toPromise();
   }
