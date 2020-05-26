@@ -484,14 +484,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           //   this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
           // });
 
-          this.currentUserInRetroBoardApiService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id).then(response => {
-            const currentUsersInRetroBoard = response;
-            this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser, this.retroBoardToProcess.id)
-              .then(afterAddedUsrResponse => {
-                // prepare fresh list of current usrs
-              });
-            // this.addCurrentTickDateToUserInRetro()
-          });
+          this.currentUserInRetroBoardApiService.prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
+            .then(response => {
+
+            });
           currentValue = 0;
         }
       });

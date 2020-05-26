@@ -32,6 +32,26 @@ export class CurrentUserApiService {
     return this.httpClient.get<CurrentUserInRetroBoardDataToDisplay[]>(url, httpOptions).toPromise();
   }
 
+  prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
+    let fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+      fbToken = this.localStorageService.getItem('token') as FbToken;
+    }
+
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/prepareFreshListOfCurrentUsers/';
+    const postData = {
+      retroBoardId: currentRetroBoardId,
+      currentLoggedUserId: currentUserId,
+    };
+    return this.httpClient.post(url, postData, httpOptions).toPromise();
+  }
+
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
     if (this.fbTokenService.prepareRefreshToken(fbToken)) {
