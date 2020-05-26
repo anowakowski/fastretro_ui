@@ -21,6 +21,7 @@ import { LocalStorageService } from './services/local-storage.service';
 import { SpinnerTickService } from './services/spinner-tick.service';
 import { CurrentUserApiService } from './services/current-user-api.service';
 import { HttpClientModule } from '@angular/common/http';
+import { FbTokenService } from './services/fb-token.service';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { HttpClientModule } from '@angular/common/http';
     LocalStorageService,
     SpinnerTickService,
     CurrentUserApiService,
+    FbTokenService,
     AuthGuard,
     LoginRegisterGuard
   ],

@@ -41,8 +41,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private authService: AuthService,
-    private currentUserApiService: CurrentUserApiService) { }
+    private authService: AuthService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -61,8 +60,6 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
       }
     }
-
-    this.currentUserApiService.getCurrentUser();
 
     this.prepareRetroBoard();
   }
