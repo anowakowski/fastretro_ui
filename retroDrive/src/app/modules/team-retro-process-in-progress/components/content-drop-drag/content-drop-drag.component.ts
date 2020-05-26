@@ -585,9 +585,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setCurrentUserInRetroBoardSubscription();
               this.spinnerTick();
 
-              this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
-                const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
-              });
+              // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
+              //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
+              // });
           });
 
         } else {
@@ -621,6 +621,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const currentUsers = response;
 
       this.currentUsersInRetroBoardCount = response.length;
+    }).catch(error => {
+      
     });
   }
 

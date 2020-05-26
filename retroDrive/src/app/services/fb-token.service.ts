@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from './local-storage.service';
+import { FbToken } from '../models/fbToken';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,18 @@ export class FbTokenService {
   }
 
   private setupTokenInLocalStorage(respone: any) {
-    this.localStorageService.setItem('token', respone.access_token);
+    const tokenExpirationInSec = respone.expires_in;
+    const tokenExpirationInMin = (tokenExpirationInSec / 60).toString();
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+
+    const fbToken: FbToken = {
+      token: respone.access_token,
+      refreshToken: respone.refreshToken,
+      tokenExpirationInSec,
+      tokenExpirationInMin,
+      generateDate: currentDate
+    };
+
+    this.localStorageService.setItem('token', fbToken);
   }
 }
