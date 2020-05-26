@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from './local-storage.service';
 import { FbTokenService } from './fb-token.service';
 import { FbToken } from '../models/fbToken';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,35 +11,16 @@ import { FbToken } from '../models/fbToken';
 export class CurrentUserApiService {
 
   constructor(private httpClient: HttpClient, private localStorageService: LocalStorageService, private fbTokenService: FbTokenService) { }
-  baseUrl = 'https://localhost:44376/api/CurrentUsersInRetroBoard';
 
-  getCurrentUser() {
-    let token = this.localStorageService.getItem('token');
-    if (this.fbTokenService.prepareRefreshToken(token)) {
-      token = this.localStorageService.getItem('token');
-    }
-
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-
-    const httpOptions = {
-      headers
-    };
-
-    const url = this.baseUrl;
-    return this.httpClient.get<any>(url, httpOptions).toPromise().then(response => {
-      const resp = response;
-    }).catch(error => {
-      const err = error;
-    });
-  }
+  baseUrl = environment.apiUrl + 'api/CurrentUsersInRetroBoard';
 
   getCurrentUserInRetroBoard(retroBoardId) {
-    let token = this.localStorageService.getItem('token');
-    if (this.fbTokenService.prepareRefreshToken(token)) {
-      token = this.localStorageService.getItem('token');
+    let fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+      fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
       headers
@@ -49,18 +31,18 @@ export class CurrentUserApiService {
   }
 
   addCurrentUserToRetroBoardProcess(currentUserId, currentRetroBoardId) {
-    let token = this.localStorageService.getItem('token');
-    if (this.fbTokenService.prepareRefreshToken(token)) {
-      token = this.localStorageService.getItem('token');
+    let fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+      fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
       headers
     };
 
-    const url = 'https://localhost:44376/api/CurrentUsersInRetroBoard/setCurrentUser/';
+    const url = this.baseUrl + '/setCurrentUser/';
     const postData = {
       retroBoardId: currentRetroBoardId,
       userId: currentUserId
