@@ -36,6 +36,7 @@ export class LoginRegisterFormComponent implements OnInit {
     this.auth.googleSignin()
       .then((userCredentials) => {
         const logedUser = userCredentials.user;
+        this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
         this.fls
           .findUsers(logedUser.email)
           .then((snapshotFindedUsr) => {
@@ -56,6 +57,7 @@ export class LoginRegisterFormComponent implements OnInit {
     this.auth.facebookSignin()
       .then((userCredentials) => {
         const logedUser = userCredentials.user;
+        this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
         this.fls
           .findUsers(logedUser.email)
           .then((snapshotFindedUsr) => {
