@@ -484,10 +484,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           //   this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
           // });
 
-          this.currentUserInRetroBoardApiService.prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
-            .then(response => {
+          this.currentUserInRetroBoardApiService
+            .prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
+              .then(response => {
+                this.setAllCurrentUsersInRetroBoardProcess();
+              })
+              .catch(error => {
 
-            });
+              });
           currentValue = 0;
         }
       });
@@ -588,7 +592,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
 
               this.addCurrentUserToRetroBoardProcess();
-              //this.setCurrentUserInRetroBoardSubscription();
+              // this.setCurrentUserInRetroBoardSubscription();
               this.spinnerTick();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
@@ -616,7 +620,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           findedCurrentUserInRetroBoard.usersInRetroBoardData.forEach(userInRetroBoardData => {
             this.firestoreRetroInProgressService.getUserById(userInRetroBoardData.userId).then(usersSnapshot => {
               const findedUser = usersSnapshot.data() as User;
-              //this.currentUsersInRetroBoard.users.push(findedUser);
+              // this.currentUsersInRetroBoard.users.push(findedUser);
             });
           });
       });

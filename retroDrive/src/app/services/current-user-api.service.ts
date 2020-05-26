@@ -39,7 +39,6 @@ export class CurrentUserApiService {
     }
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
-
     const httpOptions = {
       headers
     };
@@ -47,7 +46,7 @@ export class CurrentUserApiService {
     const url = this.baseUrl + '/prepareFreshListOfCurrentUsers/';
     const postData = {
       retroBoardId: currentRetroBoardId,
-      currentLoggedUserId: currentUserId,
+      userId: currentUserId,
     };
     return this.httpClient.post(url, postData, httpOptions).toPromise();
   }
