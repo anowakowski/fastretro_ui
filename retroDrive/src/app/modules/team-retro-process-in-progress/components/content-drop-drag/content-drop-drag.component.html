@@ -147,9 +147,13 @@
                   (click)="openCardActionDialog(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">description</mat-icon>
                 </button>
-                <span style="margin-left: 25px;">
-                  <i style="opacity: 0.6; color: #363c42; margin-top: -10px; position: absolute; margin-top: 5.3px;" class="fa fa-circle" aria-hidden="true"></i>
-                  <i style="opacity: 0.6; color: #363c42; margin-top: -10px; margin-left: 18px; position: absolute; margin-top: 5.3px;" class="fa fa-circle" aria-hidden="true"></i>
+                <span style="margin-left: 25px;" >
+                  <i 
+                    *ngFor="let currentUserVote of prepareCurrentVoteList(item)" 
+                    style="opacity: 0.6; color: #363c42; margin-top: -10px; margin-left: {{currentUserVote.positionForMargin}}px; position: absolute; margin-top: 6.7px;"
+                    class="fa fa-circle"
+                    aria-hidden="true">
+                  </i>
                 </span> 
                </div> 
                

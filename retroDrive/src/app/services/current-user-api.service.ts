@@ -6,6 +6,7 @@ import { FbToken } from '../models/fbToken';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRetroBoardDataToDisplay';
+import { CurrentUserVotes } from '../models/currentUserVotes';
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +75,7 @@ export class CurrentUserApiService {
   }
 
   addUserVoteOnCard(userId: string, retroBoardId: string, retroBoardCardId: string) {
-    const url = this.baseUrl + '/setCurrentUserVote/';
+    const url = this.baseUrl + '/setUserVote/';
 
     const postData = {
       retroBoardId,
@@ -83,6 +84,11 @@ export class CurrentUserApiService {
     };
 
     return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  getUsersVote(retroBoardId: string) {
+    const url = this.baseUrl + '/getUsersVote/' + retroBoardId;
+    return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();
   }
 
   private prepareCurrentHttpOptions() {

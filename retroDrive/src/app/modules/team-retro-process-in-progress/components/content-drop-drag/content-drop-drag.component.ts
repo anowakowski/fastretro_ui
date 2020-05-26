@@ -45,6 +45,7 @@ import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
+import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -90,6 +91,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
   public isExistingSomeRetroBoardCardAction = false;
+
+  public currentUserVotes: CurrentUserVotes[];
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -332,7 +335,35 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
 
       this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
+        .then(() => {
+          this.getUsersVotes();
+        })
+        .catch(error => {
+
+        });
     });
+  }
+
+  prepareCurrentVoteList(currentCard: RetroBoardCard) {
+    const filteredUsersVotes = this.currentUserVotes.filter(x => x.retroBoardCardId === currentCard.id);
+    const usersVotesToReturn = new Array<CurrentUserVotes>();
+    let positionForMargin = 10;
+    filteredUsersVotes.forEach(usrVote => {
+      usrVote.positionForMargin = positionForMargin;
+      positionForMargin = positionForMargin + 17;
+      usersVotesToReturn.push(usrVote);
+    });
+    return usersVotesToReturn;
+  }
+
+  private getUsersVotes() {
+    this.currentUserInRetroBoardApiService.getUsersVote(this.retroBoardToProcess.id)
+      .then(response => {
+        this.currentUserVotes = response;
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   onAddActionToCard(currentCard: RetroBoardCard) {
@@ -558,6 +589,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
               this.addCurrentUserToRetroBoardProcess();
               this.spinnerTick();
+              this.getUsersVotes();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -733,6 +765,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
             this.addCurrentUserToRetroBoardProcess();
             this.spinnerTick();
+            this.getUsersVotes();
         });
       } else {
         // if url not exisis
