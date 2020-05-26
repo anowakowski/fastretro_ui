@@ -474,14 +474,23 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
         currentValue++;
         if (currentValue === maxTimmerValue) {
-          this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
-          .then(currentUserInRetroBoardSnapshot => {
-            const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
-            const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
-            const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          // this.firestoreRetroInProgressService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id)
+          // .then(currentUserInRetroBoardSnapshot => {
+          //   const findedCurrentUserInRetroBoard = currentUserInRetroBoardSnapshot.docs[0].data() as CurrentUsersInRetroBoardToSave;
+          //   const findedCurrentUserInRetroBoardId = currentUserInRetroBoardSnapshot.docs[0].id as string;
+          //   const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
 
-            this.addCurrentTickDateToUserInRetro(findedCurrentUserInRetroBoard, currentDate, findedCurrentUserInRetroBoardId);
-            this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
+          //   this.addCurrentTickDateToUserInRetro(findedCurrentUserInRetroBoard, currentDate, findedCurrentUserInRetroBoardId);
+          //   this.removeExpiredUserProcess(findedCurrentUserInRetroBoard, currentDate);
+          // });
+
+          this.currentUserInRetroBoardApiService.getCurrentUserInRetroBoard(this.retroBoardToProcess.id).then(response => {
+            const currentUsersInRetroBoard = response;
+            this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser, this.retroBoardToProcess.id)
+              .then(afterAddedUsrResponse => {
+                // prepare fresh list of current usrs
+              });
+            // this.addCurrentTickDateToUserInRetro()
           });
           currentValue = 0;
         }
@@ -583,7 +592,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
 
               this.addCurrentUserToRetroBoardProcess();
-              this.setCurrentUserInRetroBoardSubscription();
+              //this.setCurrentUserInRetroBoardSubscription();
               this.spinnerTick();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
