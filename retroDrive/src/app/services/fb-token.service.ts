@@ -23,6 +23,24 @@ export class FbTokenService {
     }).catch(error => {});
   }
 
+  prepareRefreshToken(fbToken: FbToken): boolean {
+    let result = false;
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const dateDiff = Date.parse(currentDate) - Date.parse(fbToken.generateDate);
+
+    if (dateDiff > 0) {
+      const dateDiffinSec = (dateDiff / 1000);
+      const dateDiffinMin = (dateDiffinSec / 60);
+      const tokenExpirationInMin = +fbToken.tokenExpirationInMin;
+      if (dateDiffinMin >= tokenExpirationInMin) {
+        this.prepareToken(fbToken.refreshToken);
+        result = true;
+      }
+    }
+
+    return result;
+  }
+
   private setupTokenInLocalStorage(respone: any) {
     const tokenExpirationInSec = respone.expires_in;
     const tokenExpirationInMin = (tokenExpirationInSec / 60).toString();
