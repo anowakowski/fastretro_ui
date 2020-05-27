@@ -330,20 +330,22 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUserInRetroBoardApiService.getUserVoteCount(this.currentUser.uid, this.retroBoardToProcess.id).then(response => {
       const userVoteCount = response;
       if (userVoteCount >= 6) {
-
+        this.openSnackBar('you are currently used all 6 votes');
+      } else {
+        this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+          findedRetroBoardCard.voteCount++;
+          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
+            .then(() => {
+              this.getUsersVotes();
+            })
+            .catch(error => {});
+        });
       }
-      this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
-        const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
-        const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
-        findedRetroBoardCard.voteCount++;
-        const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
-        this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
-        this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
-          .then(() => {
-            this.getUsersVotes();
-          })
-          .catch(error => {});
-      });
+
     }).catch(error => {
       const err = error;
     });
