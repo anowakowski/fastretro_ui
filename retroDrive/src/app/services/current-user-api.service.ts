@@ -91,6 +91,11 @@ export class CurrentUserApiService {
     return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();
   }
 
+  getUserVoteCount(userId: string, retroBoardId: string) {
+    const url = this.baseUrl + '/getUserVoteCount/' + retroBoardId + '/' + userId;
+    return this.httpClient.get<number>(url, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
   private prepareCurrentHttpOptions() {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
     if (this.fbTokenService.prepareRefreshToken(fbToken)) {

@@ -327,33 +327,43 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onVoteCard(currentCard: RetroBoardCard) {
     currentCard.isClickedFromVoteBtn = true;
-    this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
-      const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
-      const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
-      findedRetroBoardCard.voteCount++;
-      const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
-      this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+    this.currentUserInRetroBoardApiService.getUserVoteCount(this.currentUser.uid, this.retroBoardToProcess.id).then(response => {
+      const userVoteCount = response;
+      if (userVoteCount >= 6) {
 
-      this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
-        .then(() => {
-          this.getUsersVotes();
-        })
-        .catch(error => {
-
-        });
+      }
+      this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+        const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+        const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+        findedRetroBoardCard.voteCount++;
+        const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+        this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+        this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
+          .then(() => {
+            this.getUsersVotes();
+          })
+          .catch(error => {});
+      });
+    }).catch(error => {
+      const err = error;
     });
+
   }
 
   prepareCurrentVoteList(currentCard: RetroBoardCard) {
-    const filteredUsersVotes = this.currentUserVotes.filter(x => x.retroBoardCardId === currentCard.id);
-    const usersVotesToReturn = new Array<CurrentUserVotes>();
-    let positionForMargin = 10;
-    filteredUsersVotes.forEach(usrVote => {
-      usrVote.positionForMargin = positionForMargin;
-      positionForMargin = positionForMargin + 17;
-      usersVotesToReturn.push(usrVote);
-    });
-    return usersVotesToReturn;
+    if (this.currentUserVotes !== undefined) {
+      const filteredUsersVotes =
+      this.currentUserVotes.filter(x => x.retroBoardCardId === currentCard.id && x.userId === this.currentUser.uid);
+
+      const usersVotesToReturn = new Array<CurrentUserVotes>();
+      let positionForMargin = 10;
+      filteredUsersVotes.forEach(usrVote => {
+        usrVote.positionForMargin = positionForMargin;
+        positionForMargin = positionForMargin + 17;
+        usersVotesToReturn.push(usrVote);
+      });
+      return usersVotesToReturn;
+    }
   }
 
   private getUsersVotes() {
