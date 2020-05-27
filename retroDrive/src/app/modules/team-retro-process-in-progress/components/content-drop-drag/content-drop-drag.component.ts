@@ -70,6 +70,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   currentUsersInRetroBoardCount = 0;
   curentUserInRetroBoardSubscription: any;
   tickSubscription: any;
+  actualMaxRetroBoardVotes = 0;
+  actualCountOfUserVotes = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -92,7 +94,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public isRetroBoardIsReady = false;
   public isExistingSomeRetroBoardCardAction = false;
 
-  public currentUserVotes: CurrentUserVotes[];
+  public usersVotesInRetroBoard: CurrentUserVotes[];
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -353,9 +355,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   prepareCurrentVoteList(currentCard: RetroBoardCard) {
-    if (this.currentUserVotes !== undefined) {
+    if (this.usersVotesInRetroBoard !== undefined) {
       const filteredUsersVotes =
-      this.currentUserVotes.filter(x => x.retroBoardCardId === currentCard.id && x.userId === this.currentUser.uid);
+      this.usersVotesInRetroBoard.filter(x => x.retroBoardCardId === currentCard.id && x.userId === this.currentUser.uid);
 
       const usersVotesToReturn = new Array<CurrentUserVotes>();
       let positionForMargin = 10;
@@ -371,11 +373,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private getUsersVotes() {
     this.currentUserInRetroBoardApiService.getUsersVote(this.retroBoardToProcess.id)
       .then(response => {
-        this.currentUserVotes = response;
+        this.usersVotesInRetroBoard = response;
+        this.prepareActualUserVoteCount();
       })
       .catch(error => {
         const err = error;
       });
+  }
+
+  prepareActualUserVoteCount() {
+    const actualMaxRetroBoardVotes = this.currentUsersInRetroBoardCount * 6;
+    const actualCountOfUserVotes = this.usersVotesInRetroBoard.length;
+
+    this.actualMaxRetroBoardVotes = actualMaxRetroBoardVotes;
+    this.actualCountOfUserVotes = actualCountOfUserVotes;
   }
 
   onAddActionToCard(currentCard: RetroBoardCard) {
