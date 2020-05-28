@@ -612,6 +612,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
               this.addCurrentUserToRetroBoardProcess();
               this.spinnerTick();
+              this.setAllCurrentUsersInRetroBoardProcess();
               this.getUsersVotes();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
@@ -631,6 +632,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const currentUsersInRetroBoardToDisplay = response;
       this.currentUsersInRetroBoard = currentUsersInRetroBoardToDisplay;
       this.currentUsersInRetroBoardCount = response.length;
+      this.prepareActualUserVoteCount()
     }).catch(error => {
 
     });
@@ -788,6 +790,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
             this.addCurrentUserToRetroBoardProcess();
             this.spinnerTick();
+            this.setAllCurrentUsersInRetroBoardProcess();
             this.getUsersVotes();
         });
       } else {
