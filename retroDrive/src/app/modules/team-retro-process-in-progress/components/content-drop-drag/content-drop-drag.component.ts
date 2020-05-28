@@ -358,12 +358,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard.isClickedFromExistingVoteBtn = true;
     this.currentUserInRetroBoardApiService.removeCurrentUserVote(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id)
       .then(() => {
-        this.getUsersVotes();
+        this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+          findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
+          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          this.getUsersVotes();
+        });
       })
       .catch(error => {
         const err = error;
-      })
-      .finally(() => {});
+      });
   }
 
   prepareCurrentVoteList(currentCard: RetroBoardCard) {
