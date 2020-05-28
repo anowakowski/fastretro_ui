@@ -86,6 +86,18 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
   }
 
+  removeCurrentUserVote(retroBoardCardId: string, userId: string, retroBoardId: string) {
+    const url = this.baseUrl + '/removeUserVote/';
+
+    const postData = {
+      retroBoardId,
+      userId,
+      retroBoardCardId
+    };
+
+    return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
   getUsersVote(retroBoardId: string) {
     const url = this.baseUrl + '/getUsersVote/' + retroBoardId;
     return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();

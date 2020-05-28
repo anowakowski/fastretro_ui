@@ -354,6 +354,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   }
 
+  onRemoveCurrentUserVote(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromExistingVoteBtn = true;
+    this.currentUserInRetroBoardApiService.removeCurrentUserVote(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id)
+      .then(() => {
+        this.getUsersVotes();
+      })
+      .catch(error => {
+        const err = error;
+      })
+      .finally(() => {});
+  }
+
   prepareCurrentVoteList(currentCard: RetroBoardCard) {
     if (this.usersVotesInRetroBoard !== undefined) {
       const filteredUsersVotes =
@@ -443,11 +455,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       currentCard.isClickedFromVoteBtn ||
       currentCard.isClickedFromMergeBtn ||
       currentCard.isClickedFromAddActionBtn ||
-      currentCard.isClickedFromShowActionBtn) {
+      currentCard.isClickedFromShowActionBtn ||
+      currentCard.isClickedFromExistingVoteBtn) {
         currentCard.isClickedFromVoteBtn = false;
         currentCard.isClickedFromMergeBtn = false;
         currentCard.isClickedFromAddActionBtn = false;
         currentCard.isClickedFromShowActionBtn = false;
+        currentCard.isClickedFromExistingVoteBtn = false;
         return;
     }
     if (!currentCard.isNewItem) {
@@ -632,7 +646,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const currentUsersInRetroBoardToDisplay = response;
       this.currentUsersInRetroBoard = currentUsersInRetroBoardToDisplay;
       this.currentUsersInRetroBoardCount = response.length;
-      this.prepareActualUserVoteCount()
+      this.prepareActualUserVoteCount();
     }).catch(error => {
 
     });
@@ -969,6 +983,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isClickedFromCloseEdit: false,
       isClickedFromMergeBtn: false,
       isClickedFromVoteBtn: false,
+      isClickedFromExistingVoteBtn: false,
       isClickedFromAddActionBtn: false,
       isInAddedToAction: false,
       isClickedFromShowActionBtn: false,
