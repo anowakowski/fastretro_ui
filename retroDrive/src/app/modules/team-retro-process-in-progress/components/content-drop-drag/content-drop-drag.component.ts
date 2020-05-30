@@ -45,6 +45,7 @@ import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
+import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -69,6 +70,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   currentUsersInRetroBoardCount = 0;
   curentUserInRetroBoardSubscription: any;
   tickSubscription: any;
+  actualMaxRetroBoardVotes = 0;
+  actualCountOfUserVotes = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -90,6 +93,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
   public isExistingSomeRetroBoardCardAction = false;
+
+  public usersVotesInRetroBoard: CurrentUserVotes[];
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -324,13 +329,82 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onVoteCard(currentCard: RetroBoardCard) {
     currentCard.isClickedFromVoteBtn = true;
-    this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
-      const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
-      const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
-      findedRetroBoardCard.voteCount++;
-      const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
-      this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+    this.currentUserInRetroBoardApiService.getUserVoteCount(this.currentUser.uid, this.retroBoardToProcess.id).then(response => {
+      const userVoteCount = response;
+      if (userVoteCount >= 6) {
+        this.openSnackBar('you are currently used all 6 votes');
+      } else {
+        this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+          findedRetroBoardCard.voteCount++;
+          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          this.currentUserInRetroBoardApiService.addUserVoteOnCard(this.currentUser.uid, this.retroBoardToProcess.id, currentCard.id)
+            .then(() => {
+              this.getUsersVotes();
+            })
+            .catch(error => {});
+        });
+      }
+
+    }).catch(error => {
+      const err = error;
     });
+
+  }
+
+  onRemoveCurrentUserVote(currentCard: RetroBoardCard) {
+    currentCard.isClickedFromExistingVoteBtn = true;
+    this.currentUserInRetroBoardApiService.removeCurrentUserVote(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id)
+      .then(() => {
+        this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
+          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+          findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
+          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          this.getUsersVotes();
+        });
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  prepareCurrentVoteList(currentCard: RetroBoardCard) {
+    if (this.usersVotesInRetroBoard !== undefined) {
+      const filteredUsersVotes =
+      this.usersVotesInRetroBoard.filter(x => x.retroBoardCardId === currentCard.id && x.userId === this.currentUser.uid);
+
+      const usersVotesToReturn = new Array<CurrentUserVotes>();
+      let positionForMargin = 10;
+      filteredUsersVotes.forEach(usrVote => {
+        usrVote.positionForMargin = positionForMargin;
+        positionForMargin = positionForMargin + 17;
+        usersVotesToReturn.push(usrVote);
+      });
+      return usersVotesToReturn;
+    }
+  }
+
+  private getUsersVotes() {
+    this.currentUserInRetroBoardApiService.getUsersVote(this.retroBoardToProcess.id)
+      .then(response => {
+        this.usersVotesInRetroBoard = response;
+        this.prepareActualUserVoteCount();
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  prepareActualUserVoteCount() {
+    const actualMaxRetroBoardVotes = this.currentUsersInRetroBoardCount * 6;
+    const actualCountOfUserVotes = this.usersVotesInRetroBoard.length;
+
+    this.actualMaxRetroBoardVotes = actualMaxRetroBoardVotes;
+    this.actualCountOfUserVotes = actualCountOfUserVotes;
   }
 
   onAddActionToCard(currentCard: RetroBoardCard) {
@@ -387,11 +461,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       currentCard.isClickedFromVoteBtn ||
       currentCard.isClickedFromMergeBtn ||
       currentCard.isClickedFromAddActionBtn ||
-      currentCard.isClickedFromShowActionBtn) {
+      currentCard.isClickedFromShowActionBtn ||
+      currentCard.isClickedFromExistingVoteBtn) {
         currentCard.isClickedFromVoteBtn = false;
         currentCard.isClickedFromMergeBtn = false;
         currentCard.isClickedFromAddActionBtn = false;
         currentCard.isClickedFromShowActionBtn = false;
+        currentCard.isClickedFromExistingVoteBtn = false;
         return;
     }
     if (!currentCard.isNewItem) {
@@ -556,6 +632,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
               this.addCurrentUserToRetroBoardProcess();
               this.spinnerTick();
+              this.setAllCurrentUsersInRetroBoardProcess();
+              this.getUsersVotes();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -574,6 +652,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const currentUsersInRetroBoardToDisplay = response;
       this.currentUsersInRetroBoard = currentUsersInRetroBoardToDisplay;
       this.currentUsersInRetroBoardCount = response.length;
+      this.prepareActualUserVoteCount();
     }).catch(error => {
 
     });
@@ -731,6 +810,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
             this.addCurrentUserToRetroBoardProcess();
             this.spinnerTick();
+            this.setAllCurrentUsersInRetroBoardProcess();
+            this.getUsersVotes();
         });
       } else {
         // if url not exisis
@@ -908,6 +989,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isClickedFromCloseEdit: false,
       isClickedFromMergeBtn: false,
       isClickedFromVoteBtn: false,
+      isClickedFromExistingVoteBtn: false,
       isClickedFromAddActionBtn: false,
       isInAddedToAction: false,
       isClickedFromShowActionBtn: false,

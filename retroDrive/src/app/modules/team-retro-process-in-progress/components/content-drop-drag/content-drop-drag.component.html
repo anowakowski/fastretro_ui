@@ -9,7 +9,7 @@
       <div fxFlex></div>
       <mat-icon
         style="font-size: 40px; margin-right: 30px;"
-        matTooltip="votes: 80/50"
+        matTooltip="votes (actual/max): {{actualCountOfUserVotes}}/{{actualMaxRetroBoardVotes}}"
         matTooltipPosition="below"
         color="primary">
           remove_red_eye
@@ -147,7 +147,20 @@
                   (click)="openCardActionDialog(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">description</mat-icon>
                 </button>
-               </div>   
+                <span 
+                  style="margin-left: 25px;" 
+                  matTooltip="click to remove your vote"
+                  matTooltipPosition="below"
+                  (click)="onRemoveCurrentUserVote(item)">
+                  <i 
+                    *ngFor="let currentUserVote of prepareCurrentVoteList(item)" 
+                    style="opacity: 0.6; color: #363c42; margin-top: -10px; margin-left: {{currentUserVote.positionForMargin}}px; position: absolute; margin-top: 6.7px;"
+                    class="fa fa-circle"
+                    aria-hidden="true">
+                  </i>
+                </span> 
+               </div> 
+               
               </div>
               <div *ngIf="item.isEdit">
 

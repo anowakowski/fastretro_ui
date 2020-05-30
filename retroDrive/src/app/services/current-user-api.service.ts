@@ -6,6 +6,7 @@ import { FbToken } from '../models/fbToken';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRetroBoardDataToDisplay';
+import { CurrentUserVotes } from '../models/currentUserVotes';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,54 @@ export class CurrentUserApiService {
       displayName: currentUser.displayName
     };
     return this.httpClient.post(url, postData, httpOptions).toPromise();
+  }
+
+  addUserVoteOnCard(userId: string, retroBoardId: string, retroBoardCardId: string) {
+    const url = this.baseUrl + '/setUserVote/';
+
+    const postData = {
+      retroBoardId,
+      userId,
+      retroBoardCardId
+    };
+
+    return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  removeCurrentUserVote(retroBoardCardId: string, userId: string, retroBoardId: string) {
+    const url = this.baseUrl + '/removeUserVote/';
+
+    const postData = {
+      retroBoardId,
+      userId,
+      retroBoardCardId
+    };
+
+    return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  getUsersVote(retroBoardId: string) {
+    const url = this.baseUrl + '/getUsersVote/' + retroBoardId;
+    return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  getUserVoteCount(userId: string, retroBoardId: string) {
+    const url = this.baseUrl + '/getUserVoteCount/' + retroBoardId + '/' + userId;
+    return this.httpClient.get<number>(url, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  private prepareCurrentHttpOptions() {
+    let fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+      fbToken = this.localStorageService.getItem('token') as FbToken;
+    }
+
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    return httpOptions;
   }
 }
