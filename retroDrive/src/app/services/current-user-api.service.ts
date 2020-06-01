@@ -34,10 +34,7 @@ export class CurrentUserApiService {
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.isTokenExpired(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {

@@ -561,17 +561,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
         currentValue++;
         if (currentValue === maxTimmerValue) {
-          this.currentUserInRetroBoardApiService
-            .prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
-              .then(response => {
-                this.setAllCurrentUsersInRetroBoardProcess();
-              })
-              .catch(error => {
-
+          if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+            this.currentUserInRetroBoardApiService.regeneraTokenPromise()
+              .then(refreshedTokenResponse => {
+                this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+                this.prepareFreshListOfCurrentUserVote();
               });
+          } else {
+            this.prepareFreshListOfCurrentUserVote();
+          }
           currentValue = 0;
         }
       });
+  }
+
+  private prepareFreshListOfCurrentUserVote() {
+    this.currentUserInRetroBoardApiService
+      .prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
+      .then(response => {
+        this.setAllCurrentUsersInRetroBoardProcess();
+      })
+      .catch(error => { });
   }
 
   private createPersistentTimerOptions() {
