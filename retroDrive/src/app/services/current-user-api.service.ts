@@ -95,6 +95,19 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
   }
 
+  removeCurrentUserVoteForMerge(retroBoardCardId: string, userId: string, retroBoardId: string, voutCountToRemove: number) {
+    const url = this.baseUrl + '/removeUserVoteWhenMergedCard/';
+
+    const postData = {
+      retroBoardCardId,
+      retroBoardId,
+      userId,
+      voutCountToRemove
+    };
+
+    return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
   getUsersVote(retroBoardId: string) {
     const url = this.baseUrl + '/getUsersVote/' + retroBoardId;
     return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();

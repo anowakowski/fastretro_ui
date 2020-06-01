@@ -323,12 +323,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.prepareRetroBoardCardToSaveFromMerged(content, currentCard.isWentWellRetroBoradCol, currentCard.index);
          this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard);
       });
-      let vouteCountIndex = 1;
-      while (currentCard.voteCount >= vouteCountIndex) {
-        this.removeUserVoteOnCardForMerge(currentCard);
-        vouteCountIndex++;
-      }
-
+      this.removeUserVoteOnCardForMerge(currentCard);
       this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
     }
   }
@@ -1094,13 +1089,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
         this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
-        this.removeUserVoteOnCardForMerge(currentCard);
+        this.removeUserVoteOnCardForMerge(findedFromMergedCart);
+        this.removeUserVoteOnCardForMerge(findedCurrentRetroBoardCard);
       }
   }
 
   private removeUserVoteOnCardForMerge(currentCard: RetroBoardCard) {
     if (currentCard.voteCount > 0) {
-      this.removeCurrentUserVote(currentCard);
+      this.currentUserInRetroBoardApiService
+        .removeCurrentUserVoteForMerge(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id, currentCard.voteCount)
+          .then(() => {
+            this.getUsersVotes();
+          })
+          .catch(error => {
+            const err = error;
+          });
     }
   }
 
