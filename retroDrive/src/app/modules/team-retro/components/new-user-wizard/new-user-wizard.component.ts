@@ -196,7 +196,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
       const workspaceName = this.workspaceNameFormControl.value;
       this.dataIsLoading = true;
       const shouldGoToNextStep = true;
-  
+
       this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
     }
   }
