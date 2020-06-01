@@ -53,31 +53,22 @@ export class CurrentUserApiService {
   }
 
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.isTokenExpired(fbToken)) {
-
-      this.fbTokenService.prepareTokenPromise(fbToken.refreshToken).then(refreshedTokenResponse => {
-        this.fbTokenService.setupTokenInLocalStorage(refreshedTokenResponse);
-        fbToken = this.localStorageService.getItem('token') as FbToken;
-        return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
-      });
-    }
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
     return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
   }
 
-  private GetAddCurrentUserResponse(fbToken: FbToken, currentRetroBoardId: any, currentUser: User) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
-    const httpOptions = {
-      headers
-    };
-    const url = this.baseUrl + '/setCurrentUser/';
-    const postData = {
-      retroBoardId: currentRetroBoardId,
-      userId: currentUser.uid,
-      chosenAvatarUrl: currentUser.chosenAvatarUrl,
-      displayName: currentUser.displayName
-    };
-    return this.httpClient.post(url, postData, httpOptions).toPromise();
+  isTokenExpired() {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    return this.fbTokenService.isTokenExpired(fbToken);
+  }
+
+  regeneraTokenPromise() {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    return this.fbTokenService.prepareTokenPromise(fbToken.refreshToken);
+  }
+
+  setRegeneratedToken(refreshedTokenResponse) {
+    this.fbTokenService.setupTokenInLocalStorage(refreshedTokenResponse);
   }
 
   addUserVoteOnCard(userId: string, retroBoardId: string, retroBoardCardId: string) {
@@ -112,6 +103,21 @@ export class CurrentUserApiService {
   getUserVoteCount(userId: string, retroBoardId: string) {
     const url = this.baseUrl + '/getUserVoteCount/' + retroBoardId + '/' + userId;
     return this.httpClient.get<number>(url, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
+  private GetAddCurrentUserResponse(fbToken: FbToken, currentRetroBoardId: any, currentUser: User) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setCurrentUser/';
+    const postData = {
+      retroBoardId: currentRetroBoardId,
+      userId: currentUser.uid,
+      chosenAvatarUrl: currentUser.chosenAvatarUrl,
+      displayName: currentUser.displayName
+    };
+    return this.httpClient.post(url, postData, httpOptions).toPromise();
   }
 
   private prepareCurrentHttpOptions() {

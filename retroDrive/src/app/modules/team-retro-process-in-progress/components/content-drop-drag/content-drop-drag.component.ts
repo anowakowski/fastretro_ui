@@ -659,6 +659,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private addCurrentUserToRetroBoardProcess() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.addCurrentUserAfterInitInPage();
+      });
+    } else {
+      this.addCurrentUserAfterInitInPage();
+    }
+  }
+
+  private addCurrentUserAfterInitInPage() {
     this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser, this.retroBoardToProcess.id)
       .then(response => {
         this.setAllCurrentUsersInRetroBoardProcess();
