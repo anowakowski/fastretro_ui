@@ -888,7 +888,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const retroBoardTeamId = teamSnapshot.id as string;
 
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-            if (userTeamsSnapshot.docs.length > 0){
+            if (userTeamsSnapshot.docs.length > 0) {
               userTeamsSnapshot.docs.forEach(userTeamDoc => {
                 const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
                 const findedUserTeamId = userTeamDoc.id;
