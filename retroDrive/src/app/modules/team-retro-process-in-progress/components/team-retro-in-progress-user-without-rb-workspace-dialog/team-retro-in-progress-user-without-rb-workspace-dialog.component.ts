@@ -18,6 +18,4 @@ export class TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent implements
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-
 }
