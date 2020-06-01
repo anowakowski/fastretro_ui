@@ -19,7 +19,7 @@ export class CurrentUserApiService {
 
   getCurrentUserInRetroBoard(retroBoardId) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
       fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
@@ -35,7 +35,7 @@ export class CurrentUserApiService {
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
       fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
@@ -54,16 +54,22 @@ export class CurrentUserApiService {
 
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
+
+      this.fbTokenService.prepareTokenPromise(fbToken.refreshToken).then(refreshedTokenResponse => {
+        this.fbTokenService.setupTokenInLocalStorage(refreshedTokenResponse);
+        fbToken = this.localStorageService.getItem('token') as FbToken;
+        return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
+      });
     }
+    return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
+  }
 
+  private GetAddCurrentUserResponse(fbToken: FbToken, currentRetroBoardId: any, currentUser: User) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
-
     const httpOptions = {
       headers
     };
-
     const url = this.baseUrl + '/setCurrentUser/';
     const postData = {
       retroBoardId: currentRetroBoardId,
@@ -110,7 +116,8 @@ export class CurrentUserApiService {
 
   private prepareCurrentHttpOptions() {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
+      this.fbTokenService.prepareToken(fbToken.refreshToken);
       fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
