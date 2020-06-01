@@ -201,12 +201,16 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   nextStepFromAvatarToSummary() {
-    this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
-      workspaceSnapshot.docs.forEach(workspaceDoc => {
-        const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
-        this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
-      });
-    });
+    // this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
+    //   workspaceSnapshot.docs.forEach(workspaceDoc => {
+    //     const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
+    //     this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
+    //   });
+    // });
+
+    if (this.avatarsFormGroup.valid) {
+      this.stepper.next();
+    }
   }
 
   private workspaceNameValidationProcess(workspaceName: any, shouldGoToNextStep: boolean) {
