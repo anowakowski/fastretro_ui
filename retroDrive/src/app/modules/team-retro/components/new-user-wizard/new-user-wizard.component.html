@@ -35,6 +35,9 @@
         <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceNotExist') && shouldValidateWorkspaceName">
           This workspace name is not exists
         </mat-error>
+        <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
+          This workspace name is required
+        </mat-error>        
       </mat-form-field>
       <div *ngIf="!dataIsLoading">
         <!--matStepperNext -->

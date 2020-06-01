@@ -191,13 +191,14 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   nextStepFromWorkspaceNameToAvatar() {
-    this.shouldValidateWorkspaceName = true;
-    const workspaceName = this.workspaceNameFormControl.value;
-
-    this.dataIsLoading = true;
-    const shouldGoToNextStep = true;
-
-    this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+    if (this.workspaceFormGroup.valid || this.workspaceNameFormControl.value !== '') {
+      this.shouldValidateWorkspaceName = true;
+      const workspaceName = this.workspaceNameFormControl.value;
+      this.dataIsLoading = true;
+      const shouldGoToNextStep = true;
+  
+      this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+    }
   }
 
   nextStepFromAvatarToSummary() {
