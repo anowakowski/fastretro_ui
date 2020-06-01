@@ -323,6 +323,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.prepareRetroBoardCardToSaveFromMerged(content, currentCard.isWentWellRetroBoradCol, currentCard.index);
          this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard);
       });
+      let vouteCountIndex = 1;
+      while (currentCard.voteCount >= vouteCountIndex) {
+        this.removeUserVoteOnCardForMerge(currentCard);
+        vouteCountIndex++;
+      }
 
       this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
     }
@@ -357,14 +362,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onRemoveCurrentUserVote(currentCard: RetroBoardCard) {
     currentCard.isClickedFromExistingVoteBtn = true;
+    this.removeCurrentUserVote(currentCard);
+  }
+
+  private removeCurrentUserVote(currentCard: RetroBoardCard) {
     this.currentUserInRetroBoardApiService.removeCurrentUserVote(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id)
       .then(() => {
         this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
-          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
-          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
-          findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
-          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
-          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          if (findedRetroBoardCardDoc.exists) {
+            const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+            const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+            findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
+            const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+            this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          }
           this.getUsersVotes();
         });
       })
@@ -525,6 +536,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
 
     this.addNewRetroBoardCardForm.reset();
+  }
+
+  removeRetroBoardCard(currentCard: RetroBoardCard) {
+    this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -896,8 +911,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           });
         });
       }
-
-
     });
   }
 
@@ -1081,7 +1094,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
         this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
+        this.removeUserVoteOnCardForMerge(currentCard);
       }
+  }
+
+  private removeUserVoteOnCardForMerge(currentCard: RetroBoardCard) {
+    if (currentCard.voteCount > 0) {
+      this.removeCurrentUserVote(currentCard);
+    }
   }
 
   private saveNewMergeRetroBoardCard(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
