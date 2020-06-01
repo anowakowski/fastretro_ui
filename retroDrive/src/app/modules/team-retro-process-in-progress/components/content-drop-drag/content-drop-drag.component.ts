@@ -46,6 +46,7 @@ import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
+import { UserTeams } from 'src/app/models/userTeams';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -867,17 +868,31 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const retroBoardTeamId = teamSnapshot.id as string;
 
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-            userTeamsSnapshot.docs.forEach(userTeamDoc => {
-              const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
-              const findedUserTeamId = userTeamDoc.id;
-              findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
-              this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+            if (userTeamsSnapshot.docs.length > 0){
+              userTeamsSnapshot.docs.forEach(userTeamDoc => {
+                const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+                const findedUserTeamId = userTeamDoc.id;
+                findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
+                this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
 
+                const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+                this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+                this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+                this.prepareUserWorkspace(findedUserWorkspace);
+              });
+            } else {
               const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
               this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
               this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
               this.prepareUserWorkspace(findedUserWorkspace);
-            });
+
+              const userTeamsToSave: UserTeamsToSave = {
+                userId: this.currentUser.uid,
+                teams: [this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId)]
+              };
+
+              this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
+            }
           });
         });
       }
