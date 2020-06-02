@@ -33,6 +33,8 @@ import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-
 import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
 // tslint:disable-next-line:max-line-length
 import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 
 @NgModule({
   imports: [
@@ -64,7 +66,8 @@ import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-exi
     ValueDataValidator,
     CreateNewTeamBottomsheetComponent,
     AllRetroboardListComponent,
-    JoinToExistingWorkspaceDialogComponent
+    JoinToExistingWorkspaceDialogComponent,
+    ChangeCurrentUserWorksapceDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -72,7 +75,8 @@ import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-exi
     WelcomeInfoNewUsersDashboardDialogComponent,
     NewUserWiazrdInfoDialogComponent,
     CreateNewTeamBottomsheetComponent,
-    JoinToExistingWorkspaceDialogComponent
+    JoinToExistingWorkspaceDialogComponent,
+    ChangeCurrentUserWorksapceDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
