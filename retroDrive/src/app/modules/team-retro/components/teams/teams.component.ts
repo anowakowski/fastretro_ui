@@ -124,7 +124,8 @@ export class TeamsComponent implements OnInit {
       width: '600px',
       data: {
         currentWorkspace: this.currentWorkspace,
-        currentUser: this.currentUser
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
       }
     });
 

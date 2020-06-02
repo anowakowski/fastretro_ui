@@ -46,7 +46,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           const findedWorkspace = workspaceSnapshot.docs[0];
           const workspaceId = findedWorkspace.id;
           // this.createUserWorkspaces(this.data.currentUser, workspaceId);
-          this.addToUserWorkspaces(this.data.currentUser, workspaceId);
+          this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
         }
       });
     }
@@ -65,8 +65,8 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
   }
 
 
-  private addToUserWorkspaces(findedUsr: User, workspaceId: string) {
-    this.firestoreService.findUserWorkspacesById(workspaceId).then(userWorkspaceSnapshot => {
+  private addToUserWorkspaces(findedUsr: User, workspaceId: string, userWorkspace: UserWorkspace) {
+    this.firestoreService.findUserWorkspacesById(userWorkspace.id).then(userWorkspaceSnapshot => {
       const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
       const userWorkspaceId = userWorkspaceSnapshot.id;
       this.changeUserWorkspaceIsCurrentState(findedUserWorkspace, userWorkspaceId);
