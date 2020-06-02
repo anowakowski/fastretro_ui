@@ -31,6 +31,8 @@ import { NewUserWiazrdInfoDialogComponent } from './components/new-user-wiazrd-i
 import { ValueDataValidator } from './components/new-user-wizard/valueDataValidator';
 import { CreateNewTeamBottomsheetComponent } from './components/create-new-team-bottomsheet/create-new-team-bottomsheet.component';
 import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
+// tslint:disable-next-line:max-line-length
+import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
 
 @NgModule({
   imports: [
@@ -61,14 +63,16 @@ import { AllRetroboardListComponent } from './components/all-retroboard-list/all
     NewUserWiazrdInfoDialogComponent,
     ValueDataValidator,
     CreateNewTeamBottomsheetComponent,
-    AllRetroboardListComponent
+    AllRetroboardListComponent,
+    JoinToExistingWorkspaceDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
     RetroBoardSnackbarComponent,
     WelcomeInfoNewUsersDashboardDialogComponent,
     NewUserWiazrdInfoDialogComponent,
-    CreateNewTeamBottomsheetComponent
+    CreateNewTeamBottomsheetComponent,
+    JoinToExistingWorkspaceDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
