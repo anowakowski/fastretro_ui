@@ -138,7 +138,6 @@ export class TeamsComponent implements OnInit {
     });
   }
 
-
   private prepareUserWorkspace() {
     const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
     this.firestoreService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
