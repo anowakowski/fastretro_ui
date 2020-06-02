@@ -25,7 +25,7 @@
     <div mat-dialog-actions>
       <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
       <div fxFlex></div>
-      <button mat-raised-button type="submit" color="primary" *ngIf="teams.length > 0">Joint to existing team<mat-icon>get_app</mat-icon></button>
+      <button mat-raised-button type="submit" color="primary" *ngIf="teams.length > 0 && !dataIsLoading">Joint to existing team<mat-icon>get_app</mat-icon></button>
     </div>
   </form>
 </div>
