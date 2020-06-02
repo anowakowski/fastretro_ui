@@ -17,6 +17,8 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
   joinToExisitngTeamForm: FormGroup;
   existingTeamIdFormControl = new FormControl('');
 
+  dataIsLoading = true;
+
   constructor(
     public dialogRef: MatDialogRef<JoinToExistingTeamDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -92,6 +94,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
       const teamArrayIndex = this.getTeamsArrayIndex(findedTeamOnLocal);
       this.removeFromLocalTeams(teamArrayIndex);
     }
+    this.dataIsLoading = false;
   }
 
   private removeFromLocalTeams(teamArrayIndex: number) {
