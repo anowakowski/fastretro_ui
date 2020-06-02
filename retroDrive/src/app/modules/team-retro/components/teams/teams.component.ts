@@ -16,6 +16,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { JoinToExistingWorkspaceDialogComponent } from '../join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { EventsService } from 'src/app/services/events.service';
+// tslint:disable-next-line:max-line-length
+import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -122,7 +124,6 @@ export class TeamsComponent implements OnInit {
     });
   }
 
-
   jointToExisitngWorkspaceDialog() {
     const dialogRef = this.dialog.open(JoinToExistingWorkspaceDialogComponent, {
       width: '600px',
@@ -135,6 +136,20 @@ export class TeamsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.prepareUserWorkspace();
+    });
+  }
+
+  changeCurrentUserWorksapceDialog() {
+    const dialogRef = this.dialog.open(ChangeCurrentUserWorksapceDialogComponent, {
+      width: '600px',
+      data: {
+        currentUser: this.currentUser,
+        userWorkspaces: this.userWorkspace
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      
     });
   }
 
@@ -155,6 +170,7 @@ export class TeamsComponent implements OnInit {
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
 

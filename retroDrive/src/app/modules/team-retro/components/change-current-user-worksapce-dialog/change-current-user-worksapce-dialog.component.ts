@@ -6,6 +6,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { UserWorkspace } from 'src/app/models/userWorkspace';
 
 @Component({
   selector: 'app-change-current-user-worksapce-dialog',
@@ -14,10 +15,11 @@ import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 })
 export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
 
-  joinToExisitngTeamForm: FormGroup;
-  existingTeamIdFormControl = new FormControl('');
+  changeCurrentUserWorkspaceForm: FormGroup;
+  changeCurrentUserWorkspaceFormControl = new FormControl('');
 
   dataIsLoading = true;
+  userWorkspace: UserWorkspace;
 
   constructor(
     public dialogRef: MatDialogRef<ChangeCurrentUserWorksapceDialogComponent>,
@@ -26,95 +28,39 @@ export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {}
 
-  teams: Team[];
-
   ngOnInit() {
-    this.prepareTeamsForCurrentWorkspace();
     this.createActionForRetroBoardForm();
+    this.userWorkspace = this.data.userWorkspaces;
   }
 
-  prepareTeamsForCurrentWorkspace() {
-    this.teams = new Array<Team>();
-    this.firestoreService.findTeamsInCurrentWorkspace(this.data.currentWorkspace.id).then(teamsSnapshot => {
-      teamsSnapshot.forEach(teamSnapshot => {
-        const team = teamSnapshot.data() as Team;
-        const teamId = teamSnapshot.id as string;
-        team.id = teamId;
-        this.teams.push(team);
-        this.getUserTeamsForRemovingCurrentlyJoinedTeam();
-      });
+  changeUserWorkspace() {
+    const chosenWorkspaceId = this.changeCurrentUserWorkspaceForm.value.changeCurrentUserWorkspaceFormControl;
+
+    this.firestoreService.findUserWorkspacesById(this.userWorkspace.id).then(userWorkspaceSnapshot => {
+      const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+      const userWorkspaceId = userWorkspaceSnapshot.id;
+
+      this.changeUserWorkspaceIsCurrentState(findedUserWorkspace, userWorkspaceId);
+      const findedUserWorkspaceToUpdate = findedUserWorkspace.workspaces.find(uw => uw.workspace.id === chosenWorkspaceId);
+
+      findedUserWorkspaceToUpdate.isCurrent = true;
+      this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId);
     });
   }
 
-  joinToExisitngTeam() {
-    const chosenTeamId = this.joinToExisitngTeamForm.value.existingTeamIdFormControl;
-
-    this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
-      const isExistngUserTeams = userTeamsSnapshot.docs.length > 0;
-      if (isExistngUserTeams) {
-        const exisitngUserTeam = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-        const exisitngUserTeamId = userTeamsSnapshot.docs[0].id;
-        exisitngUserTeam.teams.push(this.firestoreService.addTeamAsRef(chosenTeamId));
-        this.firestoreService.updateUserTeams(exisitngUserTeam, exisitngUserTeamId);
-      } else {
-        const userTeamsToSave: UserTeamsToSave = {
-          userId: this.data.currentUser.uid,
-          teams: [this.firestoreService.addTeamAsRef(chosenTeamId)]
-        };
-        this.firestoreService.addNewUserTeams(userTeamsToSave);
-      }
-
-      this.dialogRef.close();
-    });
+  private changeUserWorkspaceIsCurrentState(findedUserWorkspace: UserWorkspaceToSave, userWorkspaceId: string) {
+    const findedCurrentWorkspaceDataToChange = findedUserWorkspace.workspaces.find(uw => uw.isCurrent);
+    findedCurrentWorkspaceDataToChange.isCurrent = false;
+    this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId);
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  private getUserTeamsForRemovingCurrentlyJoinedTeam() {
-    this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
-      userTeamsSnapshot.docs.forEach(userTeamDoc => {
-        const findedUserTeamData = userTeamDoc.data();
-        findedUserTeamData.teams.forEach(teamRef => {
-         teamRef.get().then(teamDoc => {
-           const findedUserTeam = teamDoc.data() as Team;
-           findedUserTeam.id = teamDoc.id as string;
-
-           this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
-         });
-        });
-      });
-   });
-  }
-
-  private removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam: Team) {
-    if (this.isExistingTeam(findedUserTeam)) {
-      const findedTeamOnLocal = this.teams.find(t => t.id === findedUserTeam.id);
-      const teamArrayIndex = this.getTeamsArrayIndex(findedTeamOnLocal);
-      this.removeFromLocalTeams(teamArrayIndex);
-    }
-    this.dataIsLoading = false;
-  }
-
-  private removeFromLocalTeams(teamArrayIndex: number) {
-    this.teams.splice(teamArrayIndex, 1);
-  }
-
-  private isExistingTeam(findedUserTeam: Team) {
-    return this.teams.some(t => t.id === findedUserTeam.id);
-  }
-
-
-
   private createActionForRetroBoardForm() {
-    this.joinToExisitngTeamForm = this.formBuilder.group({
-      existingTeamIdFormControl: this.existingTeamIdFormControl,
+    this.changeCurrentUserWorkspaceForm = this.formBuilder.group({
+      changeCurrentUserWorkspaceFormControl: this.changeCurrentUserWorkspaceFormControl,
     });
   }
-
-  private getTeamsArrayIndex(findedTeamOnLocal: Team) {
-    return this.teams.indexOf(findedTeamOnLocal);
-  }
-
 }
