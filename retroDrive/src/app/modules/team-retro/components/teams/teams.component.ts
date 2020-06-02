@@ -147,8 +147,11 @@ export class TeamsComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe(result => {
+      const chosenWorkspaceId = result.chosenWorkspaceId;
       this.prepareFreshUserWorkspace();
+      this.teamsSubscriptions.unsubscribe();
+      this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
     });
   }
 
@@ -164,7 +167,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       const chosenWorkspaceId = result.chosenWorkspaceId;
-      //this.currentWorkspaceId = chosenWorkspaceId;
       this.prepareFreshUserWorkspace();
       this.teamsSubscriptions.unsubscribe();
       this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);

@@ -89,7 +89,9 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     };
     findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
     this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId).then(() => {
-      this.dialogRef.close();
+      this.dialogRef.close({
+        workspaceId
+      });
     });
   }
 
