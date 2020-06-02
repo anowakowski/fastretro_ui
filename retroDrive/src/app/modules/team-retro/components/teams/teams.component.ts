@@ -79,6 +79,10 @@ export class TeamsComponent implements OnInit {
     });
   }
 
+  isExistingTeams() {
+    return this.teams.length > 0;
+  }
+
   createNewTeamBottomShet() {
     const bottomSheetRef = this.bottomSheetRef.open(CreateNewTeamBottomsheetComponent, {
       data: {
