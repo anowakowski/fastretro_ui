@@ -31,6 +31,7 @@ export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
   ngOnInit() {
     this.createActionForRetroBoardForm();
     this.userWorkspace = this.data.userWorkspaces;
+    this.changeCurrentUserWorkspaceFormControl.setValue(this.data.currentWorkspace.id);
   }
 
   changeUserWorkspace() {
