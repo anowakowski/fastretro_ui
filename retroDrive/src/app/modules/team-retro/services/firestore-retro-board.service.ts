@@ -44,6 +44,10 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.updateItem('/retroBoards/', id, retroBoardToUpdate);
   }
 
+  updateUserWorkspaces(findedUserWorkspace: UserWorkspaceToSave, userWorkspaceId: string) {
+    this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
+  }
+
   prepareTeam(team: Teams) {
     return this.firestoreBase.addAsRef('/teams/', team.id);
   }
@@ -176,6 +180,10 @@ export class FirestoreRetroBoardService {
     };
 
     return this.firestoreBase.getFilteredSnapshotChanges('/userTeams/', condition);
+  }
+
+  findUserWorkspacesById(id: string) {
+    return this.firestoreBase.getFilteredById('/userworkspaces/', id);
   }
 
   findUserTeams(userId: string) {
