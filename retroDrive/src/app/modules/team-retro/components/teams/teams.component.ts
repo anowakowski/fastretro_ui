@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -24,11 +24,13 @@ import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-use
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css']
 })
-export class TeamsComponent implements OnInit {
+export class TeamsComponent implements OnInit, OnDestroy {
 
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
   currentUser: User;
+  teamsSubscriptions: any;
+  //currentWorkspaceId: string;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -39,11 +41,15 @@ export class TeamsComponent implements OnInit {
     private authService: AuthService,
     private eventsService: EventsService) { }
 
-  teams: Team[];
+    teams: Team[];
 
   ngOnInit() {
     this.setItemFromLocalStorage();
     this.prepareTeamsForCurrentWorkspace();
+  }
+
+  ngOnDestroy(): void {
+    this.teamsSubscriptions.unsubscribe();
   }
 
   private setItemFromLocalStorage() {
@@ -54,14 +60,15 @@ export class TeamsComponent implements OnInit {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+        //this.currentWorkspaceId = this.currentWorkspace.id;
       } else {
         this.router.navigate(['/']);
       }
     }
   }
 
-  prepareTeamsForCurrentWorkspace() {
-    this.firestoreService.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
+  prepareTeamsForCurrentWorkspace(currentWorkspaceIdAfterChanage: string = null) {
+    this.teamsSubscriptions = this.firestoreService.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
       this.teams = new Array<Team>();
       userTeamsSnapshot.forEach(userTeamSnapshot => {
         const userTeams = userTeamSnapshot.payload.doc.data() as UserTeamsToSave;
@@ -75,8 +82,14 @@ export class TeamsComponent implements OnInit {
               findedWorkspace.id = workspaceSnapshot.id;
               userTeamToAdd.workspace = findedWorkspace;
 
-              if (findedWorkspace.id === this.currentWorkspace.id) {
-                this.teams.push(findedUserTeam);
+              if (currentWorkspaceIdAfterChanage !== null) {
+                if (findedWorkspace.id === currentWorkspaceIdAfterChanage) {
+                  this.teams.push(findedUserTeam);
+                }
+              } else if (currentWorkspaceIdAfterChanage === null) {
+                if (findedWorkspace.id === this.currentWorkspace.id) {
+                  this.teams.push(findedUserTeam);
+                }
               }
             });
           });
@@ -149,8 +162,12 @@ export class TeamsComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe(result => {
+      const chosenWorkspaceId = result.chosenWorkspaceId;
+      //this.currentWorkspaceId = chosenWorkspaceId;
       this.prepareFreshUserWorkspace();
+      this.teamsSubscriptions.unsubscribe();
+      this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
     });
   }
 
