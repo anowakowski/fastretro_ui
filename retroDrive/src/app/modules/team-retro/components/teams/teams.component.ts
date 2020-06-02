@@ -148,10 +148,14 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      const chosenWorkspaceId = result.workspaceId;
-      this.prepareFreshUserWorkspace();
-      this.teamsSubscriptions.unsubscribe();
-      this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+      if (result !== undefined) {
+        if (result.shouldRefreshTeams) {
+          const chosenWorkspaceId = result.workspaceId;
+          this.prepareFreshUserWorkspace();
+          this.teamsSubscriptions.unsubscribe();
+          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        }
+      }
     });
   }
 
@@ -166,10 +170,14 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      const chosenWorkspaceId = result.chosenWorkspaceId;
-      this.prepareFreshUserWorkspace();
-      this.teamsSubscriptions.unsubscribe();
-      this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+      if (result !== undefined) {
+        if (result.shouldRefreshTeams) {
+          const chosenWorkspaceId = result.chosenWorkspaceId;
+          this.prepareFreshUserWorkspace();
+          this.teamsSubscriptions.unsubscribe();
+          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        }
+      }
     });
   }
 

@@ -47,7 +47,8 @@ export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
       findedUserWorkspaceToUpdate.isCurrent = true;
       this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId).then(() => {
         this.dialogRef.close({
-          chosenWorkspaceId
+          chosenWorkspaceId,
+          shouldRefreshTeams: true
         });
       });
     });
@@ -60,7 +61,7 @@ export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({shouldRefreshTeams: false});
   }
 
   private createActionForRetroBoardForm() {
