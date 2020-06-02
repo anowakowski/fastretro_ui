@@ -44,7 +44,9 @@ export class ChangeCurrentUserWorksapceDialogComponent implements OnInit {
       const findedUserWorkspaceToUpdate = findedUserWorkspace.workspaces.find(uw => uw.workspace.id === chosenWorkspaceId);
 
       findedUserWorkspaceToUpdate.isCurrent = true;
-      this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId);
+      this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId).then(() => {
+        this.dialogRef.close();
+      });
     });
   }
 

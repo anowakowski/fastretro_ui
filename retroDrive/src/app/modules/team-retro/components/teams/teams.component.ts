@@ -135,7 +135,7 @@ export class TeamsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.prepareUserWorkspace();
+      this.prepareFreshUserWorkspace();
     });
   }
 
@@ -149,11 +149,11 @@ export class TeamsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-
+      this.prepareFreshUserWorkspace();
     });
   }
 
-  private prepareUserWorkspace() {
+  private prepareFreshUserWorkspace() {
     const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
     this.firestoreService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
       if (userWorksapcesSnapshot.docs.length > 0) {
