@@ -12,9 +12,13 @@
           </mat-select>
         </mat-form-field>
 
-        <div style="margin-bottom: 16px; font-size: 15px;" *ngIf="teams.length === 0 && !dataIsLoading">
+        <div style="margin-bottom: 16px; font-size: 15px;" *ngIf="teams.length === 0 && !dataIsLoading && !thisWorkspaceHasAnyTeams">
           <span>You arleady join to all team in current workspace</span>
         </div>
+
+        <div style="margin-bottom: 16px; font-size: 15px;" *ngIf="thisWorkspaceHasAnyTeams && !dataIsLoading">
+          <span>This workspace dosen't have any teams</span>
+        </div>        
 
         <div style="margin-bottom: 16px;" *ngIf="dataIsLoading">
           <mat-progress-bar mode="buffer"></mat-progress-bar>

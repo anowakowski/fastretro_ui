@@ -18,6 +18,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
   existingTeamIdFormControl = new FormControl('');
 
   dataIsLoading = true;
+  thisWorkspaceHasAnyTeams = false;
 
   constructor(
     public dialogRef: MatDialogRef<JoinToExistingTeamDialogComponent>,
@@ -36,13 +37,18 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
   prepareTeamsForCurrentWorkspace() {
     this.teams = new Array<Team>();
     this.firestoreService.findTeamsInCurrentWorkspace(this.data.currentWorkspace.id).then(teamsSnapshot => {
-      teamsSnapshot.forEach(teamSnapshot => {
-        const team = teamSnapshot.data() as Team;
-        const teamId = teamSnapshot.id as string;
-        team.id = teamId;
-        this.teams.push(team);
-        this.getUserTeamsForRemovingCurrentlyJoinedTeam();
-      });
+      if (teamsSnapshot.docs.length > 0) {
+        teamsSnapshot.forEach(teamSnapshot => {
+          const team = teamSnapshot.data() as Team;
+          const teamId = teamSnapshot.id as string;
+          team.id = teamId;
+          this.teams.push(team);
+          this.getUserTeamsForRemovingCurrentlyJoinedTeam();
+        });
+      } else {
+        this.thisWorkspaceHasAnyTeams = true;
+        this.dataIsLoading = false;
+      }
     });
   }
 
