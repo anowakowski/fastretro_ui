@@ -45,7 +45,7 @@ export class FirestoreRetroBoardService {
   }
 
   updateUserWorkspaces(findedUserWorkspace: UserWorkspaceToSave, userWorkspaceId: string) {
-    this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
+    return this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
   }
 
   prepareTeam(team: Teams) {

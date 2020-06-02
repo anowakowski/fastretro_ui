@@ -54,6 +54,10 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     }
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
   private addToUserWorkspaces(findedUsr: User, workspaceIdToAdd: string, userWorkspace: UserWorkspace) {
     this.firestoreService.findUserWorkspacesById(userWorkspace.id).then(userWorkspaceSnapshot => {
       const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
@@ -68,7 +72,6 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
       } else {
         this.changeUserWorkspaceIsCurrentState(findedUserWorkspace, userWorkspaceId);
         this.addNewUserWorkspaceAsCurrent(workspaceIdToAdd, findedUserWorkspace, userWorkspaceId);
-        this.dialogRef.close();
       }
     });
   }
@@ -85,11 +88,9 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
       workspace: this.firestoreService.addWorkspaceAsRef(workspaceId)
     };
     findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
-    this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId);
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+    this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId).then(() => {
+      this.dialogRef.close();
+    });
   }
 
   private createActionForRetroBoardForm() {

@@ -149,7 +149,7 @@ export class TeamsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      
+
     });
   }
 
@@ -170,6 +170,7 @@ export class TeamsComponent implements OnInit {
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+              this.userWorkspace.workspaces = userWorkspace.workspaces;
 
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
