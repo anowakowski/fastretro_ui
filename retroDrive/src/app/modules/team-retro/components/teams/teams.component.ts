@@ -13,6 +13,7 @@ import { UserTeams } from 'src/app/models/userTeams';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { JoinToExistingWorkspaceDialogComponent } from '../join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -104,6 +105,22 @@ export class TeamsComponent implements OnInit {
 
   jointToExisitngTeamDialog() {
     const dialogRef = this.dialog.open(JoinToExistingTeamDialogComponent, {
+      width: '600px',
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+      }
+    });
+  }
+
+
+  jointToExisitngWorkspaceDialog() {
+    const dialogRef = this.dialog.open(JoinToExistingWorkspaceDialogComponent, {
       width: '600px',
       data: {
         currentWorkspace: this.currentWorkspace,
