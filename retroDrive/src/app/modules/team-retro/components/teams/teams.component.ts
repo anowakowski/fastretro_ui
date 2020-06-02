@@ -14,6 +14,8 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { JoinToExistingWorkspaceDialogComponent } from '../join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-teams',
@@ -32,13 +34,18 @@ export class TeamsComponent implements OnInit {
     private firestoreService: FirestoreRetroBoardService,
     public dialog: MatDialog,
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private eventsService: EventsService) { }
 
   teams: Team[];
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.setItemFromLocalStorage();
+    this.prepareTeamsForCurrentWorkspace();
+  }
 
+  private setItemFromLocalStorage() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
     if (this.currentUser === undefined) {
       this.authService.signOut();
     } else {
@@ -49,9 +56,6 @@ export class TeamsComponent implements OnInit {
         this.router.navigate(['/']);
       }
     }
-
-
-    this.prepareTeamsForCurrentWorkspace();
   }
 
   prepareTeamsForCurrentWorkspace() {
@@ -129,9 +133,50 @@ export class TeamsComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
+    dialogRef.afterClosed().subscribe(() => {
+      this.prepareUserWorkspace();
+    });
+  }
+
+
+  private prepareUserWorkspace() {
+    const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
+    this.firestoreService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
+      if (userWorksapcesSnapshot.docs.length > 0) {
+        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
+          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          userWorkspace.id = userWorkspaceDoc.id;
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+              this.localStorageService.removeItem('userWorkspace');
+              this.localStorageService.setItem('userWorkspace', userWorkspace);
+
+              findedUserWorkspaceToSave.workspaces.find(uw => uw.isCurrent).workspace.get().then(currWokrspaceSnapshot => {
+                const currentWorkspaceToAdd = currWokrspaceSnapshot.data() as Workspace;
+                currentWorkspaceToAdd.id = currWokrspaceSnapshot.id as string;
+                this.currentWorkspace = currentWorkspaceToAdd;
+                this.eventsService.emitSetNewCurrentWorkspaceEmiter(this.currentWorkspace);
+              });
+            });
+          });
+        });
       }
     });
+  }
+
+  private createUserWorkspace(currentUser): UserWorkspace {
+    return {
+      id: '',
+      user: currentUser,
+      workspaces: new Array<UserWorkspaceData>()
+    };
   }
 }

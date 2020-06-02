@@ -11,8 +11,8 @@
 
       <mat-card-content>
           <mat-list>
-              <mat-list-item *ngFor="let workspace of userWorkspace.workspaces">
-                <span style="font-size: 20px; font-weight: bold; color: #585858;">{{workspace.workspace.name}}</span>
+              <mat-list-item>
+                <span style="font-size: 20px; font-weight: bold; color: #585858;">{{this.currentWorkspace.name}}</span>
               </mat-list-item>
           </mat-list>
       </mat-card-content>

@@ -14,6 +14,8 @@ import { EventsService } from 'src/app/services/events.service';
 })
 export class NavComponent implements OnInit {
 
+  public setCurrentWorkspaceSubscriptions: any;
+
   constructor(
     public auth: AuthService,
     private router: Router,
@@ -39,6 +41,8 @@ export class NavComponent implements OnInit {
         this.currentUserWorkspaceName = currentWorkspace.name;
       }
     }
+
+    this.subscribeEvents();
   }
 
   backToDashboard() {
@@ -53,6 +57,13 @@ export class NavComponent implements OnInit {
 
   emitMenu() {
     this.toggleSidenav.emit();
+  }
+
+  private subscribeEvents() {
+    this.setCurrentWorkspaceSubscriptions =
+      this.eventsService.getSetNewCurrentWorkspaceEmiterEmiter().subscribe(currentWorkspace => {
+        this.currentUserWorkspaceName = currentWorkspace.name;
+      });
   }
 
 }
