@@ -54,26 +54,22 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     }
   }
 
-  private createUserWorkspaces(findedUsr: User, workspaceId: string) {
-    const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
-      workspace: this.firestoreService.addWorkspaceAsRef(workspaceId),
-      isCurrent: true
-    };
-    const userWorkspace: UserWorkspaceToSave = {
-      userId: findedUsr.uid,
-      workspaces: [workspacesToAddToUserWorkspace]
-    };
-    this.firestoreService.addNewUserWorkspace(userWorkspace);
-  }
-
-  private addToUserWorkspaces(findedUsr: User, workspaceId: string, userWorkspace: UserWorkspace) {
+  private addToUserWorkspaces(findedUsr: User, workspaceIdToAdd: string, userWorkspace: UserWorkspace) {
     this.firestoreService.findUserWorkspacesById(userWorkspace.id).then(userWorkspaceSnapshot => {
       const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
       const userWorkspaceId = userWorkspaceSnapshot.id;
-      this.changeUserWorkspaceIsCurrentState(findedUserWorkspace, userWorkspaceId);
-      this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace, userWorkspaceId);
-      this.dialogRef.close();
-      // this.prepareUserWorkspace(findedUserWorkspace);
+
+      const workspaces = findedUserWorkspace.workspaces;
+      const checkIfUserIsJoinedToWorkspace = workspaces.some(x => x.workspace.id === workspaceIdToAdd);
+
+      if (checkIfUserIsJoinedToWorkspace) {
+        // tslint:disable-next-line:object-literal-key-quotes
+        this.existingWorkspaceNameFormControl.setErrors({'userisjoinedtoworkspace': true});
+      } else {
+        this.changeUserWorkspaceIsCurrentState(findedUserWorkspace, userWorkspaceId);
+        this.addNewUserWorkspaceAsCurrent(workspaceIdToAdd, findedUserWorkspace, userWorkspaceId);
+        this.dialogRef.close();
+      }
     });
   }
 
