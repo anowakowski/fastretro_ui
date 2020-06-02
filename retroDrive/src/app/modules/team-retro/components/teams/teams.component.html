@@ -20,12 +20,12 @@
 
     <mat-card class="example-card" style="margin-top: 5px;">
       <mat-card-actions style="margin-top: -14px;">
-        <button mat-raised-button color="primary" (click)="createNewTeamBottomShet()">Change your current workspace &nbsp;<mat-icon>add</mat-icon></button>
-        <button mat-raised-button color="accent">Join to existing workspace &nbsp;<mat-icon>nature_people</mat-icon></button>
+        <button mat-raised-button color="primary">Change your current workspace &nbsp;<mat-icon>compare_arrows</mat-icon></button>
+        <button mat-raised-button style="width: 242px;" color="accent">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
       </mat-card-actions>
     </mat-card>
 </div>
-<div style="margin-top: 20px;">
+<div style="margin-top: 25px;">
   <mat-card class="example-card" style="opacity: 0.97;" *ngIf="isExistingTeams()">
     <mat-card-header >
       <div mat-card-avatar class="example-header-image"></div>
@@ -55,7 +55,7 @@
 
   <mat-card class="example-card" style="margin-top: 5px;">
     <mat-card-actions style="margin-top: -14px;">
-      <button mat-raised-button color="primary" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
+      <button mat-raised-button color="primary" style="width: 260px;" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
       <button mat-raised-button color="accent" (click)="jointToExisitngTeamDialog()">Join to another existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
     </mat-card-actions>
   </mat-card>

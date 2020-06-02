@@ -80,7 +80,15 @@ export class TeamsComponent implements OnInit {
   }
 
   isExistingTeams() {
-    return this.teams.length > 0;
+    let result = false;
+
+    if (this.teams !== undefined) {
+      if (this.teams.length !== undefined) {
+        result = this.teams.length > 0;
+      }
+    }
+
+    return result;
   }
 
   createNewTeamBottomShet() {
