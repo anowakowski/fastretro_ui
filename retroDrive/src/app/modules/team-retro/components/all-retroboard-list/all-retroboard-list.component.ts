@@ -105,6 +105,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   showOnlyOpenedRetro() {
     this.dataIsLoading = true;
+    this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
@@ -118,6 +119,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   showOnlyFinishedRetro() {
     this.dataIsLoading = true;
+    this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
     if (this.showOnlyFinishedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
@@ -196,6 +198,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   filterByCreateDate() {
     if (!this.shouldDisabledWhenCreateDateFilterValueNotExisit()) {
+      this.dataIsLoading = true;
+      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
       const dateFromValue = this.createDateFromFormControl.value;
       const dateToValue = this.createDateToFormControl.value;
 
@@ -222,6 +226,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
       this.retroBoards = new Array<RetroBoard>();
 
       let currentLenghtIndex = 1;
+
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
         const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
         retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
@@ -298,7 +303,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   private emitSetMoreHigherForBackground() {
     if (this.retroBoards.length > 0 && this.retroBoards.length < 3) {
       this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
-    } else if (this.retroBoards.length > 3) {
+    } else if (this.retroBoards.length >= 3) {
       this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
     }
   }
@@ -357,7 +362,6 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     const filteredRetroBoards = this.retroBoards.filter(rb => this.formatCreationDate(rb.creationDate) >= this.formatedDateFrom
       && this.formatCreationDate(rb.creationDate) <= this.formatedDateTo);
     this.retroBoards = filteredRetroBoards;
-    this.shouldFilterByCreateDate = false;
   }
 
   private prepareCorrectValueForChartPieData(value: number) {
