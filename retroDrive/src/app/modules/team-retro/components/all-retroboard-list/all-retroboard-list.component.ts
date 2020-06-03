@@ -25,7 +25,6 @@ import { Team } from 'src/app/models/team';
 })
 export class AllRetroboardListComponent implements OnInit, OnDestroy {
   chosenTeamsFiltered: Teams[];
-  sortByValue: string;
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -132,13 +131,32 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   onChangeSort(eventValue) {
     if (eventValue !== null) {
-      this.sortByValue = eventValue as string;
-      this.prepreRetroBoardForCurrentWorkspace(
-        this.showOnlyOpenedIsFiltered,
-        this.showOnlyFinishedIsFiltered,
-        this.chosenTeamsFiltered,
-        this.sortByValue);
+      const sortByValue = eventValue as string;
+
+      if (sortByValue !== null) {
+        if (sortByValue === 'name') {
+          this.sortByAsc();
+        }
+      } else {}
     }
+  }
+
+  sortByDesc() {
+    this.retroBoards.sort((leftSide, rightSide): number => {
+      if (leftSide.retroName > rightSide.retroName) { return -1; }
+      if (leftSide.retroName < rightSide.retroName) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByAsc() {
+    this.retroBoards.sort((leftSide, rightSide): number => {
+      if (leftSide.retroName < rightSide.retroName) { return -1; }
+      if (leftSide.retroName > rightSide.retroName) { return 1; }
+
+      return 0;
+    });
   }
 
   private prepreRetroBoardForCurrentWorkspace(
@@ -174,19 +192,10 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
               this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
             }
 
-            if (sortByValue !== null) {
-              if (this.sortByValue === 'name') {
-                this.retroBoards.sort((a, b) => {
-                  // tslint:disable-next-line:no-angle-bracket-type-assertion
-                  return <any> a.retroName - <any> b.retroName;
-                });
-              }
-            } else {}
-
-            // this.retroBoards.sort((a, b) => {
-            //   // tslint:disable-next-line:no-angle-bracket-type-assertion
-            //   return <any> a.isFinished - <any> b.isFinished;
-            // });
+            this.retroBoards.sort((a, b) => {
+              // tslint:disable-next-line:no-angle-bracket-type-assertion
+              return <any> a.isFinished - <any> b.isFinished;
+            });
 
             if (currentLenghtIndex === retroBoardsSnapshot.length) {
               const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);
