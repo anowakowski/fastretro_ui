@@ -25,6 +25,7 @@ import { Team } from 'src/app/models/team';
 })
 export class AllRetroboardListComponent implements OnInit, OnDestroy {
   chosenTeamsFiltered: Teams[];
+  sortByValue: string;
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -43,6 +44,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
 
   teams: Teams[];
+  sortByData = new Array<string>();
 
   showOnlyOpenedIsFiltered = false;
   showOnlyFinishedIsFiltered = false;
@@ -75,6 +77,8 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
         this.prepreRetroBoardForCurrentWorkspace();
         this.prepareTeams();
+        this.sortByData.push('name');
+        this.sortByData.push('creation date');
       }
     }
   }
@@ -126,7 +130,22 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false, chosenTeams: Teams[] = null) {
+  onChangeSort(eventValue) {
+    if (eventValue !== null) {
+      this.sortByValue = eventValue as string;
+      this.prepreRetroBoardForCurrentWorkspace(
+        this.showOnlyOpenedIsFiltered,
+        this.showOnlyFinishedIsFiltered,
+        this.chosenTeamsFiltered,
+        this.sortByValue);
+    }
+  }
+
+  private prepreRetroBoardForCurrentWorkspace(
+    showOnlyOpenedRetro = false,
+    showOnlyFinishedRetro = false,
+    chosenTeams: Teams[] = null,
+    sortByValue: string = null) {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
@@ -155,10 +174,19 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
               this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
             }
 
-            this.retroBoards.sort((a, b) => {
-              // tslint:disable-next-line:no-angle-bracket-type-assertion
-              return <any> a.isFinished - <any> b.isFinished;
-            });
+            if (sortByValue !== null) {
+              if (this.sortByValue === 'name') {
+                this.retroBoards.sort((a, b) => {
+                  // tslint:disable-next-line:no-angle-bracket-type-assertion
+                  return <any> a.retroName - <any> b.retroName;
+                });
+              }
+            } else {}
+
+            // this.retroBoards.sort((a, b) => {
+            //   // tslint:disable-next-line:no-angle-bracket-type-assertion
+            //   return <any> a.isFinished - <any> b.isFinished;
+            // });
 
             if (currentLenghtIndex === retroBoardsSnapshot.length) {
               const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);

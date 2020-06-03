@@ -41,7 +41,11 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
   private setupCurrentUserWithUserWorkspace() {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setItem('currentUser', currentUser);
-      this.prepareUserWorkspace(currentUser);
+      if (currentUser !== undefined) {
+        if (!currentUser.isNewUser) {
+          this.prepareUserWorkspace(currentUser);
+        }
+      }
     });
   }
 
