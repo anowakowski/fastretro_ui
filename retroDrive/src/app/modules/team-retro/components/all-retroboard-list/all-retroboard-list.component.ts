@@ -16,6 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { Teams } from 'src/app/models/teams';
 import { EventsService } from 'src/app/services/events.service';
+import { Team } from 'src/app/models/team';
 
 @Component({
   selector: 'app-all-retroboard-list',
@@ -23,6 +24,7 @@ import { EventsService } from 'src/app/services/events.service';
   styleUrls: ['./all-retroboard-list.component.css']
 })
 export class AllRetroboardListComponent implements OnInit, OnDestroy {
+  chosenTeamsFiltered: Teams[];
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -95,11 +97,11 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace();
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     } else {
       this.showOnlyOpenedIsFiltered = true;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace(true, false);
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     }
   }
 
@@ -108,22 +110,23 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     if (this.showOnlyFinishedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace();
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     } else {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = true;
-      this.prepreRetroBoardForCurrentWorkspace(false, true);
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     }
   }
 
 
   onChangeTeams(eventValue) {
     if (eventValue !== null) {
-      // this.shouldDisableMembersControl = false;
+      this.chosenTeamsFiltered = eventValue as Teams[];
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     }
   }
 
-  private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false) {
+  private prepreRetroBoardForCurrentWorkspace(showOnlyOpenedRetro = false, showOnlyFinishedRetro = false, chosenTeams: Teams[] = null) {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
@@ -135,19 +138,21 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
         retroBoardData.team.get().then(teamSnapshot => {
           const team = teamSnapshot.data();
+          const teamId = teamSnapshot.id;
           retroBoardData.team = team;
+          retroBoardData.team.id = teamId;
           if (retroBoardData.isStarted) {
 
             if (showOnlyOpenedRetro) {
               if (!retroBoardData.isFinished) {
-                this.addToRetroBoards(retroBoardData);
+                this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
               }
             } else if (showOnlyFinishedRetro) {
               if (retroBoardData.isFinished) {
-                this.addToRetroBoards(retroBoardData);
+                this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
               }
             } else {
-              this.addToRetroBoards(retroBoardData);
+              this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
             }
 
             this.retroBoards.sort((a, b) => {
@@ -168,6 +173,33 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
       });
 
     });
+  }
+
+  private filterRertroBoardDataWithRules(chosenTeams: Teams[], retroBoardData: RetroBoardToSave) {
+    if (this.shouldUseChosenTeamsParam(chosenTeams)) {
+      if (this.teamIsInChosenTeamsParam(chosenTeams, retroBoardData)) {
+        this.addToRetroBoards(retroBoardData);
+      }
+    } else {
+      this.addToRetroBoards(retroBoardData);
+    }
+  }
+
+  private teamIsInChosenTeamsParam(chosenTeams: Teams[], retroBoardData: RetroBoardToSave): boolean {
+    if (chosenTeams.some(t => t.id === retroBoardData.team.id)) {
+      return true;
+    }
+    return false;
+  }
+
+  private shouldUseChosenTeamsParam(chosenTeams: Teams[]): boolean {
+    let result = false;
+    if (chosenTeams !== undefined && chosenTeams !== null) {
+      if (chosenTeams.length > 0) {
+        result = true;
+      }
+    }
+    return result;
   }
 
   private emitSetMoreHigherForBackground() {
