@@ -151,6 +151,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/retro/process']);
   }
 
+  goToAllRetroBoardsList() {
+    this.eventServices.emitSetAllRetroBoardAsDefaultSectionEmiter();
+    this.router.navigate(['/retro/all-retroboard-list']);
+  }
+
   private addToRetroBoards(finishedRetroBoards: RetroBoardToSave[], openRetroBoards: RetroBoardToSave[]) {
     const finishedRetroBoardToDisplay = finishedRetroBoards[0];
     const openRetroBoardToDisplay = openRetroBoards[0];

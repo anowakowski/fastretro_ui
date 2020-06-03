@@ -1,16 +1,13 @@
 <div *ngIf="!currentUser.isNewUser">
   <div *ngIf="retroBoards.length > 0">
 
-
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
       <span>Your last retro boards </span>
       <div fxFlex></div>
-      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" [routerLink]="['/retro/all-retroboard-list']">
+      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
         <mat-icon>assignment</mat-icon>&nbsp; All retro boards in {{currentWorkspace.name}} workspace
       </button>
     </mat-card>
-
-
 
     <div *ngFor="let retroBoard of retroBoards">
       <mat-card class="example-card" style="opacity: 0.985;">
