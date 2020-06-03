@@ -4,7 +4,7 @@
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
       <span style="margin-right:10px;">Your last retro boards </span>
       <mat-divider [vertical]="true"></mat-divider>
-      <span style="margin-left:10px;">you have 3 open and 5 finished retro board</span>
+      <span style="margin-left:10px;">you have {{openRetroBoards.length}} open and {{finishedRetroBoards.length}} finished retro board</span>
       <div fxFlex></div>
       
       <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
