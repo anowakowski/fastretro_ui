@@ -54,12 +54,20 @@
         </mat-form-field>
         <button
           mat-raised-button 
-          color="accent"
+          color="primary"
           style="margin-left: 18px; height: 35px;"
           (click)="filterByCreateDate()"
           [disabled]="shouldDisabledWhenCreateDateFilterValueNotExisit()">
-            Filter by create date
-        </button>        
+            <mat-icon>filter_list</mat-icon>
+        </button>
+        <button
+          *ngIf="shouldFilterByCreateDate"
+          mat-raised-button 
+          color="warn"
+          style="margin-left: 10px; height: 35px;"
+          (click)="clearFilteredByCreateDate()">
+            <mat-icon>clear</mat-icon>
+        </button>                
     </mat-card>
     <div *ngIf="retroBoards.length > 0">
       <div *ngFor="let retroBoard of retroBoards">

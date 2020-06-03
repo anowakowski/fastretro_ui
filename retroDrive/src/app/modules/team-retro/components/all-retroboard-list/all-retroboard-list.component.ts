@@ -214,6 +214,15 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearFilteredByCreateDate() {
+    this.dataIsLoading = true;
+    this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
+    this.createDateFromFormControl.reset();
+    this.createDateToFormControl.reset();
+    this.shouldFilterByCreateDate = false;
+    this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+  }
+
   private formatCreationDate(dateFromValue: any) {
     return formatDate(dateFromValue, 'yyyy/MM/dd', 'en');
   }
