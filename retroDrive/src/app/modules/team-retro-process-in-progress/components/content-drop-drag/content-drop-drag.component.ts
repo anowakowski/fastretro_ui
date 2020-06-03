@@ -835,6 +835,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.isRetroBoardIsReady = true;
             this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
+            this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
+            this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
             this.subscribeEvents();
