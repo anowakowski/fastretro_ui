@@ -17,6 +17,8 @@ import { SpinnerTickService } from 'src/app/services/spinner-tick.service';
 import { Teams } from 'src/app/models/teams';
 import { EventsService } from 'src/app/services/events.service';
 import { Team } from 'src/app/models/team';
+import { FormControl } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-all-retroboard-list',
@@ -44,6 +46,9 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   teams: Teams[];
   sortByData = new Array<string>();
+
+  createDateFromFormControl = new FormControl();
+  createDateToFormControl = new FormControl();
 
   showOnlyOpenedIsFiltered = false;
   showOnlyFinishedIsFiltered = false;
@@ -179,11 +184,29 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     });
   }
 
+  shouldDisabledWhenCreateDateFilterValueNotExisit() {
+    if (this.createDateFromFormControl.value !== null && this.createDateToFormControl.value !== null) {
+      return false;
+    }
+    return true;
+  }
+
+  filterByCreateDate() {
+    if (!this.shouldDisabledWhenCreateDateFilterValueNotExisit()) {
+      const dateFromValue = this.createDateFromFormControl.value;
+      const dateToValue = this.createDateToFormControl.value;
+
+      const formated = formatDate(dateFromValue, 'yyyy/MM/dd', 'en');
+
+      const isCorrectDate = Date.parse(dateFromValue);
+    }
+  }
+
   private prepreRetroBoardForCurrentWorkspace(
     showOnlyOpenedRetro = false,
     showOnlyFinishedRetro = false,
     chosenTeams: Teams[] = null,
-    sortByValue: string = null) {
+) {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
