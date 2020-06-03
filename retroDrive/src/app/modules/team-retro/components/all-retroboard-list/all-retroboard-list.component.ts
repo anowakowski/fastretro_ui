@@ -27,6 +27,9 @@ import { formatDate } from '@angular/common';
 })
 export class AllRetroboardListComponent implements OnInit, OnDestroy {
   chosenTeamsFiltered: Teams[];
+  formatedDateFrom: string;
+  formatedDateTo: string;
+  shouldFilterByCreateDate: boolean;
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -196,17 +199,24 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
       const dateFromValue = this.createDateFromFormControl.value;
       const dateToValue = this.createDateToFormControl.value;
 
-      const formated = formatDate(dateFromValue, 'yyyy/MM/dd', 'en');
+      this.formatedDateFrom = this.formatCreationDate(dateFromValue);
+      this.formatedDateTo = this.formatCreationDate(dateToValue);
 
-      const isCorrectDate = Date.parse(dateFromValue);
+      this.shouldFilterByCreateDate = true;
+
+      // tslint:disable-next-line:max-line-length
+      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
     }
+  }
+
+  private formatCreationDate(dateFromValue: any) {
+    return formatDate(dateFromValue, 'yyyy/MM/dd', 'en');
   }
 
   private prepreRetroBoardForCurrentWorkspace(
     showOnlyOpenedRetro = false,
     showOnlyFinishedRetro = false,
-    chosenTeams: Teams[] = null,
-) {
+    chosenTeams: Teams[] = null) {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
@@ -243,6 +253,9 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
                 this.dataIsLoading = false;
                 this.emitSetMoreHigherForBackground();
               }
+              if (this.shouldFilterByCreateDate && !isFinishedIsExisting) {
+                this.filteredByCreatedDate();
+              }
             }
           }
           currentLenghtIndex++;
@@ -252,7 +265,9 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private filterRertroBoardDataWithRules(chosenTeams: Teams[], retroBoardData: RetroBoardToSave) {
+  private filterRertroBoardDataWithRules(
+    chosenTeams: Teams[],
+    retroBoardData: RetroBoardToSave) {
     if (this.shouldUseChosenTeamsParam(chosenTeams)) {
       if (this.teamIsInChosenTeamsParam(chosenTeams, retroBoardData)) {
         this.addToRetroBoards(retroBoardData);
@@ -328,9 +343,20 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     const pieChartDataToAdd: SingleDataSet = [toImproveActionsCount, wentWellActionsCount, 0];
     finishedRetroBoard.chartData = pieChartDataToAdd;
     this.retroBoards.push(finishedRetroBoard);
+    if (this.shouldFilterByCreateDate) {
+      // tslint:disable-next-line:max-line-length
+      this.filteredByCreatedDate();
+    }
     this.dataIsLoading = false;
     this.emitSetMoreHigherForBackground();
     // this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
+  }
+
+  private filteredByCreatedDate() {
+    const filteredRetroBoards = this.retroBoards.filter(rb => this.formatCreationDate(rb.creationDate) >= this.formatedDateFrom
+      && this.formatCreationDate(rb.creationDate) <= this.formatedDateTo);
+    this.retroBoards = filteredRetroBoards;
+    this.shouldFilterByCreateDate = false;
   }
 
   private prepareCorrectValueForChartPieData(value: number) {
