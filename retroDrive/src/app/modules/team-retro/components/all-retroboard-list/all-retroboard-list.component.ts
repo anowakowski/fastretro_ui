@@ -250,6 +250,9 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
             if (currentLenghtIndex === retroBoardsSnapshot.length) {
               const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);
               if (showOnlyOpenedRetro || !isFinishedIsExisting) {
+                if (this.shouldFilterByCreateDate) {
+                  this.filteredByCreatedDate();
+                }
                 this.dataIsLoading = false;
                 this.emitSetMoreHigherForBackground();
               }
