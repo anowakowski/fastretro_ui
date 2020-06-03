@@ -130,14 +130,18 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   onChangeSort(eventValue) {
-    if (eventValue !== null) {
+    if (eventValue !== undefined && eventValue !== null) {
       const sortByValue = eventValue as string;
 
       if (sortByValue !== null) {
         if (sortByValue === 'name') {
           this.sortByAsc();
+        } else if (sortByValue === 'creation date') {
+          this.sortByCreationDateAsc();
         }
-      } else {}
+      }
+    } else {
+      this.sortByIsFinishedValue();
     }
   }
 
@@ -156,6 +160,22 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
       if (leftSide.retroName > rightSide.retroName) { return 1; }
 
       return 0;
+    });
+  }
+
+  sortByCreationDateAsc() {
+    this.retroBoards.sort((leftSide, rightSide): number => {
+      if (leftSide.creationDate < rightSide.creationDate) { return -1; }
+      if (leftSide.creationDate > rightSide.creationDate) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByIsFinishedValue() {
+    this.retroBoards.sort((a, b) => {
+      // tslint:disable-next-line:no-angle-bracket-type-assertion
+      return <any> a.isFinished - <any> b.isFinished;
     });
   }
 
@@ -192,10 +212,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
               this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
             }
 
-            this.retroBoards.sort((a, b) => {
-              // tslint:disable-next-line:no-angle-bracket-type-assertion
-              return <any> a.isFinished - <any> b.isFinished;
-            });
+            this.sortByIsFinishedValue();
 
             if (currentLenghtIndex === retroBoardsSnapshot.length) {
               const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);

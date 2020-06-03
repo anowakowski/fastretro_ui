@@ -6,7 +6,9 @@
         <mat-form-field style="width: 100px; margin-top: -15px; margin-left: 20px; margin-bottom: -20px;">
           <mat-label>Sort by</mat-label>
           <mat-select (selectionChange)="onChangeSort($event.value)">
-          <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
+            <mat-option>none</mat-option>
+            <mat-divider></mat-divider>
+            <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
           </mat-select>
         </mat-form-field>
         <div fxFlex></div>
