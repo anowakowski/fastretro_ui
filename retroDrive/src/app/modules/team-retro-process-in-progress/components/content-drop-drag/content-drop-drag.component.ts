@@ -90,6 +90,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
 
+  sortByData = new Array<string>();
+
   public board: Board;
   private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
@@ -127,6 +129,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+    this.sortByData.push('name');
+    this.sortByData.push('voute count');
 
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
@@ -440,6 +444,75 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
       }
     });
+  }
+
+  onChangeSort(eventValue) {
+    if (eventValue !== undefined && eventValue !== null) {
+      const sortByValue = eventValue as string;
+
+      if (sortByValue !== null) {
+        if (sortByValue === 'name') {
+          this.sortByAsc();
+        } else if (sortByValue === 'voute count') {
+          this.sortByVoteCountDesc();
+        }
+      }
+    } else {
+      this.sortByIndexValue();
+    }
+  }
+
+  sortByDesc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name > rightSide.name) { return -1; }
+      if (leftSide.name < rightSide.name) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name > rightSide.name) { return -1; }
+      if (leftSide.name < rightSide.name) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByAsc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name < rightSide.name) { return -1; }
+      if (leftSide.name > rightSide.name) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name < rightSide.name) { return -1; }
+      if (leftSide.name > rightSide.name) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByVoteCountDesc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.voteCount > rightSide.voteCount) { return -1; }
+      if (leftSide.voteCount < rightSide.voteCount) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.voteCount > rightSide.voteCount) { return -1; }
+      if (leftSide.voteCount < rightSide.voteCount) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByIndexValue() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
+    this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
   }
 
   checkIfRetroBoardIsExists() {
