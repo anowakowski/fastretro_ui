@@ -815,8 +815,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
     if (retroBoardCard.isWentWellRetroBoradCol) {
       this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
+      this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     } else {
       this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
+      this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     }
   }
 
