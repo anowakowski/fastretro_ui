@@ -73,7 +73,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataIsLoading = true;
-    //this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
+    
     this.currentUser = this.localStorageService.getItem('currentUser');
 
     if (this.currentUser === undefined) {
@@ -233,6 +233,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
     chosenTeams: Teams[] = null) {
     this.retroBoardSubscriptions =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
+      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
       this.retroBoards = new Array<RetroBoard>();
 
       let currentLenghtIndex = 1;
