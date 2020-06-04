@@ -1,16 +1,16 @@
 <div *ngIf="!currentUser.isNewUser">
   <div *ngIf="retroBoards.length > 0">
 
-
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
-      <span>Your last retro boards </span>
+      <span style="margin-right:10px;">Your last retro boards </span>
+      <mat-divider [vertical]="true"></mat-divider>
+      <span style="margin-left:10px;">you have {{openRetroBoards.length}} open and {{finishedRetroBoards.length}} finished retro board</span>
       <div fxFlex></div>
-      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
+      
+      <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
         <mat-icon>assignment</mat-icon>&nbsp; All retro boards in {{currentWorkspace.name}} workspace
       </button>
     </mat-card>
-
-
 
     <div *ngFor="let retroBoard of retroBoards">
       <mat-card class="example-card" style="opacity: 0.985;">
@@ -21,14 +21,14 @@
             - #team <b>{{retroBoard.team.name}}</b> Board
           </mat-card-title>
           <mat-card-subtitle>
-            <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
-            <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
+            <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+            <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
             <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
             <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
           </mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content *ngIf="retroBoard.isFinished">
+        <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
           <div class="chart-wrapper">
             <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
               [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">

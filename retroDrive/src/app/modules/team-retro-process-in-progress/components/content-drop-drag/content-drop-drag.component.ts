@@ -46,6 +46,7 @@ import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
+import { UserTeams } from 'src/app/models/userTeams';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -89,6 +90,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
 
+  sortByData = new Array<string>();
+
   public board: Board;
   private retroBoardToProcess: RetroBoardToSave;
   public isRetroBoardIsReady = false;
@@ -126,6 +129,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getItem('currentUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+    this.sortByData.push('name');
+    this.sortByData.push('voute count');
 
     this.prepareBaseRetroBoardData();
     this.getTimerOptions();
@@ -322,7 +327,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.prepareRetroBoardCardToSaveFromMerged(content, currentCard.isWentWellRetroBoradCol, currentCard.index);
          this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard);
       });
-
+      this.removeUserVoteOnCardForMerge(currentCard);
       this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
     }
   }
@@ -356,14 +361,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onRemoveCurrentUserVote(currentCard: RetroBoardCard) {
     currentCard.isClickedFromExistingVoteBtn = true;
+    this.removeCurrentUserVote(currentCard);
+  }
+
+  private removeCurrentUserVote(currentCard: RetroBoardCard) {
     this.currentUserInRetroBoardApiService.removeCurrentUserVote(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id)
       .then(() => {
         this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {
-          const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
-          const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
-          findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
-          const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
-          this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          if (findedRetroBoardCardDoc.exists) {
+            const findedRetroBoardCard = findedRetroBoardCardDoc.data() as RetroBoardCard;
+            const findedRetroBoardCardDocId = findedRetroBoardCardDoc.id;
+            findedRetroBoardCard.voteCount = findedRetroBoardCard.voteCount - 1;
+            const cardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCard);
+            this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, findedRetroBoardCardDocId);
+          }
           this.getUsersVotes();
         });
       })
@@ -433,6 +444,75 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
       }
     });
+  }
+
+  onChangeSort(eventValue) {
+    if (eventValue !== undefined && eventValue !== null) {
+      const sortByValue = eventValue as string;
+
+      if (sortByValue !== null) {
+        if (sortByValue === 'name') {
+          this.sortByAsc();
+        } else if (sortByValue === 'voute count') {
+          this.sortByVoteCountDesc();
+        }
+      }
+    } else {
+      this.sortByIndexValue();
+    }
+  }
+
+  sortByDesc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name > rightSide.name) { return -1; }
+      if (leftSide.name < rightSide.name) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name > rightSide.name) { return -1; }
+      if (leftSide.name < rightSide.name) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByAsc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name < rightSide.name) { return -1; }
+      if (leftSide.name > rightSide.name) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.name < rightSide.name) { return -1; }
+      if (leftSide.name > rightSide.name) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByVoteCountDesc() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.voteCount > rightSide.voteCount) { return -1; }
+      if (leftSide.voteCount < rightSide.voteCount) { return 1; }
+
+      return 0;
+    });
+
+    this.toImproveRetroBoardCol.retroBoardCards.sort((leftSide, rightSide): number => {
+      if (leftSide.voteCount > rightSide.voteCount) { return -1; }
+      if (leftSide.voteCount < rightSide.voteCount) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortByIndexValue() {
+    this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
+    this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
   }
 
   checkIfRetroBoardIsExists() {
@@ -526,6 +606,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.addNewRetroBoardCardForm.reset();
   }
 
+  removeRetroBoardCard(currentCard: RetroBoardCard) {
+    this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     if (!this.retroProcessIsStoped) {
       if (event.previousContainer === event.container) {
@@ -550,17 +634,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.spinnerTickService.runNewTimer(1000).subscribe((interval) => {
         currentValue++;
         if (currentValue === maxTimmerValue) {
-          this.currentUserInRetroBoardApiService
-            .prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
-              .then(response => {
-                this.setAllCurrentUsersInRetroBoardProcess();
-              })
-              .catch(error => {
-
+          if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+            this.currentUserInRetroBoardApiService.regeneraTokenPromise()
+              .then(refreshedTokenResponse => {
+                this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+                this.prepareFreshListOfCurrentUserVote();
               });
+          } else {
+            this.prepareFreshListOfCurrentUserVote();
+          }
           currentValue = 0;
         }
       });
+  }
+
+  private prepareFreshListOfCurrentUserVote() {
+    this.currentUserInRetroBoardApiService
+      .prepareFreshListOfCurrentUsersInRetroBoard(this.retroBoardToProcess.id, this.currentUser.uid)
+      .then(response => {
+        this.setAllCurrentUsersInRetroBoardProcess();
+      })
+      .catch(error => { });
   }
 
   private createPersistentTimerOptions() {
@@ -659,6 +753,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private addCurrentUserToRetroBoardProcess() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.addCurrentUserAfterInitInPage();
+      });
+    } else {
+      this.addCurrentUserAfterInitInPage();
+    }
+  }
+
+  private addCurrentUserAfterInitInPage() {
     this.currentUserInRetroBoardApiService.addCurrentUserToRetroBoardProcess(this.currentUser, this.retroBoardToProcess.id)
       .then(response => {
         this.setAllCurrentUsersInRetroBoardProcess();
@@ -783,8 +888,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
     if (retroBoardCard.isWentWellRetroBoradCol) {
       this.wnetWellRetroBoardCol.retroBoardCards.push(retroBoardCard);
+      this.wnetWellRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     } else {
       this.toImproveRetroBoardCol.retroBoardCards.push(retroBoardCard);
+      this.toImproveRetroBoardCol.retroBoardCards.sort((a, b ) => b.index - a.index);
     }
   }
 
@@ -803,6 +910,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.isRetroBoardIsReady = true;
             this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
+            this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
+            this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
             this.setRetroBoardColumnCards();
             this.createAddNewRetroBoardCardForm();
             this.subscribeEvents();
@@ -856,22 +965,34 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const retroBoardTeamId = teamSnapshot.id as string;
 
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-            userTeamsSnapshot.docs.forEach(userTeamDoc => {
-              const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
-              const findedUserTeamId = userTeamDoc.id;
-              findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
-              this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+            if (userTeamsSnapshot.docs.length > 0) {
+              userTeamsSnapshot.docs.forEach(userTeamDoc => {
+                const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+                const findedUserTeamId = userTeamDoc.id;
+                findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId));
+                this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
 
+                const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+                this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
+                this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
+                this.prepareUserWorkspace(findedUserWorkspace);
+              });
+            } else {
               const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
               this.changeUserWorkspaceIsCurrentState(findedUserWorkspace);
               this.addNewUserWorkspaceAsCurrent(workspaceId, findedUserWorkspace);
               this.prepareUserWorkspace(findedUserWorkspace);
-            });
+
+              const userTeamsToSave: UserTeamsToSave = {
+                userId: this.currentUser.uid,
+                teams: [this.firestoreRetroInProgressService.addTeamAsRef(retroBoardTeamId)]
+              };
+
+              this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
+            }
           });
         });
       }
-
-
     });
   }
 
@@ -962,7 +1083,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: isWentWellRetroBoradCol,
       mergedContent: new Array<MergedRetroBoardCard>(),
       voteCount: 0,
-      actions: new Array<any>()
+      actions: new Array<any>(),
+      retroBoardId: this.retroBoardToProcess.id
     };
   }
 
@@ -1054,7 +1176,22 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
         this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
+        this.removeUserVoteOnCardForMerge(findedFromMergedCart);
+        this.removeUserVoteOnCardForMerge(findedCurrentRetroBoardCard);
       }
+  }
+
+  private removeUserVoteOnCardForMerge(currentCard: RetroBoardCard) {
+    if (currentCard.voteCount > 0) {
+      this.currentUserInRetroBoardApiService
+        .removeCurrentUserVoteForMerge(currentCard.id, this.currentUser.uid, this.retroBoardToProcess.id, currentCard.voteCount)
+          .then(() => {
+            this.getUsersVotes();
+          })
+          .catch(error => {
+            const err = error;
+          });
+    }
   }
 
   private saveNewMergeRetroBoardCard(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {

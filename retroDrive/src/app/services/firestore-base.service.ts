@@ -21,7 +21,7 @@ export class FirestoreBaseService {
   }
 
   updateItem(collectionName: string, docId: any, itemToUpdate: any) {
-    this.afs.collection(collectionName).doc(docId).update(itemToUpdate);
+    return this.afs.collection(collectionName).doc(docId).update(itemToUpdate);
   }
 
   deleteItem(collectionName: string, docId: any) {

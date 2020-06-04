@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
 import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FbTokenService } from 'src/app/services/fb-token.service';
 
 @Component({
   selector: 'app-register-form',
@@ -21,7 +22,8 @@ export class RegisterFormComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private fls: FirestoreLoginRegisterService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private fbTokenService: FbTokenService) { }
 
   ngOnInit() {
     this.createNewEmailPassRegisterForm();
@@ -41,6 +43,7 @@ export class RegisterFormComponent implements OnInit {
         .then(snapshotFindedUsr => {
           if (snapshotFindedUsr.docs.length === 0) {
             const logedUserModel: User = this.prepareUserModel(logedUser);
+            this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
             this.fls.updateUsr(logedUserModel);
           }
         }).finally(() => {

@@ -27,6 +27,8 @@ import { EventsService } from 'src/app/services/events.service';
 })
 export class DashboardComponent implements OnInit {
   simpleRetroBoardCards: any[];
+  finishedRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
+  openRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -92,11 +94,14 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
   }
 
+  checkIfChartDataExists(chartData: any[]) {
+    return chartData.some(x => x > 0);
+  }
   private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();
-      const finishedRetroBoards = new Array<RetroBoardToSave>();
-      const openRetroBoards = new Array<RetroBoardToSave>();
+      this.finishedRetroBoards = new Array<RetroBoardToSave>();
+      this.openRetroBoards = new Array<RetroBoardToSave>();
 
       let currentLenghtIndex = 1;
       retroBoardsSnapshot.forEach(retroBoardSnapshot => {
@@ -110,24 +115,24 @@ export class DashboardComponent implements OnInit {
 
           if (retroBoardData.isStarted) {
             if (retroBoardData.isFinished) {
-              finishedRetroBoards.push(retroBoardData);
+              this.finishedRetroBoards.push(retroBoardData);
 
             } else {
-              openRetroBoards.push(retroBoardData);
+              this.openRetroBoards.push(retroBoardData);
             }
 
             if (currentLenghtIndex === retroBoardsSnapshot.length) {
-              finishedRetroBoards.sort((a, b) => {
+              this.finishedRetroBoards.sort((a, b) => {
                 // tslint:disable-next-line:no-angle-bracket-type-assertion
                 return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
               });
 
-              openRetroBoards.sort((a, b) => {
+              this.openRetroBoards.sort((a, b) => {
                 // tslint:disable-next-line:no-angle-bracket-type-assertion
                 return <any> new Date(b.creationDate) - <any> new Date(a.creationDate);
               });
 
-              this.addToRetroBoards(finishedRetroBoards, openRetroBoards);
+              this.addToRetroBoards(this.finishedRetroBoards, this.openRetroBoards);
 
               this.retroBoards.sort((a, b) => {
                 // tslint:disable-next-line:no-angle-bracket-type-assertion
@@ -149,6 +154,11 @@ export class DashboardComponent implements OnInit {
   goToRetroProcess() {
     this.eventServices.emitSetRetroProcessAsDefaultSectionEmiter();
     this.router.navigate(['/retro/process']);
+  }
+
+  goToAllRetroBoardsList() {
+    this.eventServices.emitSetAllRetroBoardAsDefaultSectionEmiter();
+    this.router.navigate(['/retro/all-retroboard-list']);
   }
 
   private addToRetroBoards(finishedRetroBoards: RetroBoardToSave[], openRetroBoards: RetroBoardToSave[]) {

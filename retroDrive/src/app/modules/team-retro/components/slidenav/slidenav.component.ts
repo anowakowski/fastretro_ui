@@ -51,6 +51,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   setMoreHigherForBackgroundSubscription: any;
   setNoMoreHigherForBackgroundSubscription: any;
 
+  setAllRetroBoardsListSubscription: any;
+
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
 
@@ -169,6 +171,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
           this.shouldShowMoreHigherOnAllRetroBoardList = false;
         }
       });
+    this.setAllRetroBoardsListSubscription = this.eventService.getSetAllRetroBoardAsDefaultSectionEmiter()
+      .subscribe(() => this.setBtnColor(All_RETROBOARDS_LIST_SECTION));
   }
-
 }

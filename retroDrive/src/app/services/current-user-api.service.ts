@@ -19,7 +19,7 @@ export class CurrentUserApiService {
 
   getCurrentUserInRetroBoard(retroBoardId) {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
       fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 
@@ -34,10 +34,7 @@ export class CurrentUserApiService {
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -53,25 +50,22 @@ export class CurrentUserApiService {
   }
 
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
+  }
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+  isTokenExpired() {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    return this.fbTokenService.isTokenExpired(fbToken);
+  }
 
-    const httpOptions = {
-      headers
-    };
+  regeneraTokenPromise() {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    return this.fbTokenService.prepareTokenPromise(fbToken.refreshToken);
+  }
 
-    const url = this.baseUrl + '/setCurrentUser/';
-    const postData = {
-      retroBoardId: currentRetroBoardId,
-      userId: currentUser.uid,
-      chosenAvatarUrl: currentUser.chosenAvatarUrl,
-      displayName: currentUser.displayName
-    };
-    return this.httpClient.post(url, postData, httpOptions).toPromise();
+  setRegeneratedToken(refreshedTokenResponse) {
+    this.fbTokenService.setupTokenInLocalStorage(refreshedTokenResponse);
   }
 
   addUserVoteOnCard(userId: string, retroBoardId: string, retroBoardCardId: string) {
@@ -98,6 +92,19 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
   }
 
+  removeCurrentUserVoteForMerge(retroBoardCardId: string, userId: string, retroBoardId: string, voutCountToRemove: number) {
+    const url = this.baseUrl + '/removeUserVoteWhenMergedCard/';
+
+    const postData = {
+      retroBoardCardId,
+      retroBoardId,
+      userId,
+      voutCountToRemove
+    };
+
+    return this.httpClient.post(url, postData, this.prepareCurrentHttpOptions()).toPromise();
+  }
+
   getUsersVote(retroBoardId: string) {
     const url = this.baseUrl + '/getUsersVote/' + retroBoardId;
     return this.httpClient.get<CurrentUserVotes[]>(url, this.prepareCurrentHttpOptions()).toPromise();
@@ -108,9 +115,25 @@ export class CurrentUserApiService {
     return this.httpClient.get<number>(url, this.prepareCurrentHttpOptions()).toPromise();
   }
 
+  private GetAddCurrentUserResponse(fbToken: FbToken, currentRetroBoardId: any, currentUser: User) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setCurrentUser/';
+    const postData = {
+      retroBoardId: currentRetroBoardId,
+      userId: currentUser.uid,
+      chosenAvatarUrl: currentUser.chosenAvatarUrl,
+      displayName: currentUser.displayName
+    };
+    return this.httpClient.post(url, postData, httpOptions).toPromise();
+  }
+
   private prepareCurrentHttpOptions() {
     let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.prepareRefreshToken(fbToken)) {
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
+      this.fbTokenService.prepareToken(fbToken.refreshToken);
       fbToken = this.localStorageService.getItem('token') as FbToken;
     }
 

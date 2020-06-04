@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -13,17 +13,24 @@ import { UserTeams } from 'src/app/models/userTeams';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { JoinToExistingWorkspaceDialogComponent } from '../join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
+import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
+import { EventsService } from 'src/app/services/events.service';
+// tslint:disable-next-line:max-line-length
+import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css']
 })
-export class TeamsComponent implements OnInit {
+export class TeamsComponent implements OnInit, OnDestroy {
 
   userWorkspace: UserWorkspace;
   currentWorkspace: Workspace;
   currentUser: User;
+  teamsSubscriptions: any;
+  //currentWorkspaceId: string;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -31,30 +38,37 @@ export class TeamsComponent implements OnInit {
     private firestoreService: FirestoreRetroBoardService,
     public dialog: MatDialog,
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private eventsService: EventsService) { }
 
-  teams: Team[];
+    teams: Team[];
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.setItemFromLocalStorage();
+    this.prepareTeamsForCurrentWorkspace();
+  }
 
+  ngOnDestroy(): void {
+    this.teamsSubscriptions.unsubscribe();
+  }
+
+  private setItemFromLocalStorage() {
+    this.currentUser = this.localStorageService.getItem('currentUser');
     if (this.currentUser === undefined) {
       this.authService.signOut();
     } else {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+        //this.currentWorkspaceId = this.currentWorkspace.id;
       } else {
         this.router.navigate(['/']);
       }
     }
-
-
-    this.prepareTeamsForCurrentWorkspace();
   }
 
-  prepareTeamsForCurrentWorkspace() {
-    this.firestoreService.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
+  prepareTeamsForCurrentWorkspace(currentWorkspaceIdAfterChanage: string = null) {
+    this.teamsSubscriptions = this.firestoreService.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
       this.teams = new Array<Team>();
       userTeamsSnapshot.forEach(userTeamSnapshot => {
         const userTeams = userTeamSnapshot.payload.doc.data() as UserTeamsToSave;
@@ -68,8 +82,14 @@ export class TeamsComponent implements OnInit {
               findedWorkspace.id = workspaceSnapshot.id;
               userTeamToAdd.workspace = findedWorkspace;
 
-              if (findedWorkspace.id === this.currentWorkspace.id) {
-                this.teams.push(findedUserTeam);
+              if (currentWorkspaceIdAfterChanage !== null) {
+                if (findedWorkspace.id === currentWorkspaceIdAfterChanage) {
+                  this.teams.push(findedUserTeam);
+                }
+              } else if (currentWorkspaceIdAfterChanage === null) {
+                if (findedWorkspace.id === this.currentWorkspace.id) {
+                  this.teams.push(findedUserTeam);
+                }
               }
             });
           });
@@ -77,6 +97,18 @@ export class TeamsComponent implements OnInit {
 
       });
     });
+  }
+
+  isExistingTeams() {
+    let result = false;
+
+    if (this.teams !== undefined) {
+      if (this.teams.length !== undefined) {
+        result = this.teams.length > 0;
+      }
+    }
+
+    return result;
   }
 
   createNewTeamBottomShet() {
@@ -103,5 +135,92 @@ export class TeamsComponent implements OnInit {
       if (result !== undefined) {
       }
     });
+  }
+
+  jointToExisitngWorkspaceDialog() {
+    const dialogRef = this.dialog.open(JoinToExistingWorkspaceDialogComponent, {
+      width: '600px',
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        if (result.shouldRefreshTeams) {
+          const chosenWorkspaceId = result.workspaceId;
+          this.prepareFreshUserWorkspace();
+          this.teamsSubscriptions.unsubscribe();
+          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        }
+      }
+    });
+  }
+
+  changeCurrentUserWorksapceDialog() {
+    const dialogRef = this.dialog.open(ChangeCurrentUserWorksapceDialogComponent, {
+      width: '600px',
+      data: {
+        currentUser: this.currentUser,
+        userWorkspaces: this.userWorkspace,
+        currentWorkspace: this.currentWorkspace
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        if (result.shouldRefreshTeams) {
+          const chosenWorkspaceId = result.chosenWorkspaceId;
+          this.prepareFreshUserWorkspace();
+          this.teamsSubscriptions.unsubscribe();
+          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        }
+      }
+    });
+  }
+
+  private prepareFreshUserWorkspace() {
+    const userWorkspace: UserWorkspace = this.createUserWorkspace(this.currentUser);
+    this.firestoreService.getUserWorkspace(this.currentUser.uid).then(userWorksapcesSnapshot => {
+      if (userWorksapcesSnapshot.docs.length > 0) {
+        userWorksapcesSnapshot.docs.forEach(userWorkspaceDoc => {
+          const findedUserWorkspaceToSave = userWorkspaceDoc.data();
+          userWorkspace.id = userWorkspaceDoc.id;
+          findedUserWorkspaceToSave.workspaces.forEach(worskspaceData => {
+            worskspaceData.workspace.get().then(findedUserWorkspaceToSaveDoc => {
+              const userWorkspacesData = findedUserWorkspaceToSaveDoc.data() as Workspace;
+              userWorkspacesData.id = findedUserWorkspaceToSaveDoc.id;
+              const userWorkspacesDataToAdd: UserWorkspaceData = {
+                workspace: userWorkspacesData,
+                isCurrent: worskspaceData.isCurrent
+              };
+
+              userWorkspace.workspaces.push(userWorkspacesDataToAdd);
+              this.userWorkspace.workspaces = userWorkspace.workspaces;
+
+              this.localStorageService.removeItem('userWorkspace');
+              this.localStorageService.setItem('userWorkspace', userWorkspace);
+
+              findedUserWorkspaceToSave.workspaces.find(uw => uw.isCurrent).workspace.get().then(currWokrspaceSnapshot => {
+                const currentWorkspaceToAdd = currWokrspaceSnapshot.data() as Workspace;
+                currentWorkspaceToAdd.id = currWokrspaceSnapshot.id as string;
+                this.currentWorkspace = currentWorkspaceToAdd;
+                this.eventsService.emitSetNewCurrentWorkspaceEmiter(this.currentWorkspace);
+              });
+            });
+          });
+        });
+      }
+    });
+  }
+
+  private createUserWorkspace(currentUser): UserWorkspace {
+    return {
+      id: '',
+      user: currentUser,
+      workspaces: new Array<UserWorkspaceData>()
+    };
   }
 }

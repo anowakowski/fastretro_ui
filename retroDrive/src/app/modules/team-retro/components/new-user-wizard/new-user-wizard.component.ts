@@ -74,9 +74,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
       {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false, id: 2},
       {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false, id: 3},
       {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false, id: 4},
-      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false, id: 5},
-      {avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6}
+      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false, id: 5}
     ];
+
+    if (this.currentUser.photoURL !== null) {
+      this.avatars.push({avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6});
+    }
 
     this.createFormsBuild();
 
@@ -188,22 +191,27 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   nextStepFromWorkspaceNameToAvatar() {
-    this.shouldValidateWorkspaceName = true;
-    const workspaceName = this.workspaceNameFormControl.value;
+    if (this.workspaceFormGroup.valid || this.workspaceNameFormControl.value !== '') {
+      this.shouldValidateWorkspaceName = true;
+      const workspaceName = this.workspaceNameFormControl.value;
+      this.dataIsLoading = true;
+      const shouldGoToNextStep = true;
 
-    this.dataIsLoading = true;
-    const shouldGoToNextStep = true;
-
-    this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+      this.workspaceNameValidationProcess(workspaceName, shouldGoToNextStep);
+    }
   }
 
   nextStepFromAvatarToSummary() {
-    this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
-      workspaceSnapshot.docs.forEach(workspaceDoc => {
-        const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
-        this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
-      });
-    });
+    // this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
+    //   workspaceSnapshot.docs.forEach(workspaceDoc => {
+    //     const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
+    //     this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
+    //   });
+    // });
+
+    if (this.avatarsFormGroup.valid) {
+      this.stepper.next();
+    }
   }
 
   private workspaceNameValidationProcess(workspaceName: any, shouldGoToNextStep: boolean) {

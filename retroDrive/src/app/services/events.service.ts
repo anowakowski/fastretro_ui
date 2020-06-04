@@ -20,8 +20,8 @@ constructor() { }
   private setReciveGoOutFromAllRetroBoardListEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
-
   private setNewCurrentWorkspaceEmiter: EventEmitter<Workspace> = new EventEmitter();
+  private setAllRetroBoardAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -117,6 +117,14 @@ constructor() { }
 
   getSetNewCurrentWorkspaceEmiterEmiter() {
     return this.setNewCurrentWorkspaceEmiter;
+  }
+
+  emitSetAllRetroBoardAsDefaultSectionEmiter() {
+    this.setAllRetroBoardAsDefaultSectionEmiter.emit();
+  }
+
+  getSetAllRetroBoardAsDefaultSectionEmiter() {
+    return this.setAllRetroBoardAsDefaultSectionEmiter;
   }
 }
 

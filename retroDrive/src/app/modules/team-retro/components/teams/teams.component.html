@@ -1,8 +1,33 @@
+<mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">Your Workspace. You can joint to team or create new and you can change your current workspace</mat-card>
 
-  <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">You can joint to team or create new</mat-card>
+  <div>
 
-  <mat-card class="example-card" style="opacity: 0.97;">
-    <mat-card-header>
+  
+    <mat-card class="example-card" style="opacity: 0.97;">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Your current workspace</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+          <mat-list>
+              <mat-list-item>
+                <span style="font-size: 20px; font-weight: bold; color: #585858;">{{this.currentWorkspace.name}}</span>
+              </mat-list-item>
+          </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="example-card" style="margin-top: 5px;">
+      <mat-card-actions style="margin-top: -14px;">
+        <button mat-raised-button color="primary" (click)="changeCurrentUserWorksapceDialog()">Change your current workspace &nbsp;<mat-icon>compare_arrows</mat-icon></button>
+        <button mat-raised-button color="accent" (click)="jointToExisitngWorkspaceDialog()">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
+</div>
+<div style="margin-top: 25px;">
+  <mat-card class="example-card" style="opacity: 0.97;" *ngIf="isExistingTeams()">
+    <mat-card-header >
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Teams you joined in <i><b>{{currentWorkspace.name}}</b></i> workspace</mat-card-title>
     </mat-card-header>
@@ -17,12 +42,21 @@
     </mat-card-content>
   </mat-card>
 
+  <mat-card class="example-card" style="opacity: 0.97;" *ngIf="!isExistingTeams()">
+    <mat-card-header >
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>You does't have any teams</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      Please join to existing team or create new.
+    </mat-card-content>
+  </mat-card>  
+
   <mat-card class="example-card" style="margin-top: 5px;">
     <mat-card-actions style="margin-top: -14px;">
-      <button mat-raised-button color="primary" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
-      <button mat-raised-button color="accent" (click)="jointToExisitngTeamDialog()">Join to another existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
-      <div fxFlex></div>
-      <button mat-raised-button color="warn">Remove</button>
+      <button mat-raised-button color="primary" style="width: 260px;" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
+      <button mat-raised-button color="accent" style="width: 233px;" (click)="jointToExisitngTeamDialog()">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
     </mat-card-actions>
   </mat-card>
-  
+</div>

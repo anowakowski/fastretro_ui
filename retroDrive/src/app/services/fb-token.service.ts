@@ -23,7 +23,7 @@ export class FbTokenService {
     }).catch(error => {});
   }
 
-  prepareRefreshToken(fbToken: FbToken): boolean {
+  isTokenExpired(fbToken: FbToken): boolean {
     let result = false;
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const dateDiff = Date.parse(currentDate) - Date.parse(fbToken.generateDate);
@@ -33,7 +33,6 @@ export class FbTokenService {
       const dateDiffinMin = (dateDiffinSec / 60);
       const tokenExpirationInMin = +fbToken.tokenExpirationInMin;
       if (dateDiffinMin >= tokenExpirationInMin) {
-        this.prepareToken(fbToken.refreshToken);
         result = true;
       }
     }
@@ -41,7 +40,15 @@ export class FbTokenService {
     return result;
   }
 
-  private setupTokenInLocalStorage(respone: any) {
+  prepareTokenPromise(tokenToRefresh) {
+    const urlForToken = 'https://securetoken.googleapis.com/v1/token?key=AIzaSyAeKbIb6hOaX8ee3GOFd5CJd9eBqpdWUZU';
+    return this.httpClient.post(urlForToken, {
+      grant_type: 'refresh_token',
+      refresh_token: tokenToRefresh
+    }).toPromise();
+  }
+
+  setupTokenInLocalStorage(respone: any) {
     const tokenExpirationInSec = respone.expires_in;
     const tokenExpirationInMin = (tokenExpirationInSec / 60).toString();
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');

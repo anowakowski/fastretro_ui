@@ -35,6 +35,9 @@
         <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceNotExist') && shouldValidateWorkspaceName">
           This workspace name is not exists
         </mat-error>
+        <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
+          This workspace name is required
+        </mat-error>        
       </mat-form-field>
       <div *ngIf="!dataIsLoading">
         <!--matStepperNext -->
@@ -48,6 +51,9 @@
       <mat-form-field>
         <mat-label>Choose your display name</mat-label>
         <input matInput placeholder="Put Project Name" [formControl]="avatarsNameFormControl" required>
+        <mat-error *ngIf="avatarsNameFormControl.hasError('required')">
+          this name is required
+        </mat-error>        
       </mat-form-field>
       <div class="container">
         <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
@@ -63,7 +69,7 @@
       </div>
       <div style="margin-top: 1px;">
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button (click)="nextStepFromAvatarToSummary()">Next</button>
       </div>
     </form>
   </mat-step>

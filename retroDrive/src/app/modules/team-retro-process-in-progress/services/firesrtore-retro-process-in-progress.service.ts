@@ -4,6 +4,7 @@ import { ConditionQueryData } from 'src/app/helpers/conditionQueryData';
 import { TimerOption } from 'src/app/models/timerOption';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class FiresrtoreRetroProcessInProgressService {
 
   addNewUserWorkspace(userWorkspace: UserWorkspaceToSave) {
     this.firestoreBase.addNewItem('/userworkspaces', userWorkspace);
+  }
+
+  addNewUserTeams(userTeamsToSave: UserTeamsToSave) {
+    this.firestoreBase.addNewItem('/userTeams/', userTeamsToSave);
   }
 
   updateRetroBoardCardAction(action: any, id: string) {
