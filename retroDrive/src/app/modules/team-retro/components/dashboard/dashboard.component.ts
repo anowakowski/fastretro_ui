@@ -94,6 +94,9 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
   }
 
+  checkIfChartDataExists(chartData: any[]) {
+    return chartData.some(x => x > 0);
+  }
   private prepreRetroBoardForCurrentWorkspace() {
     this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
       this.retroBoards = new Array<RetroBoard>();

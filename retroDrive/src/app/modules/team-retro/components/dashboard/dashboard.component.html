@@ -21,14 +21,14 @@
             - #team <b>{{retroBoard.team.name}}</b> Board
           </mat-card-title>
           <mat-card-subtitle>
-            <span style="font-size: 17px;">Retro for Sprint {{retroBoard.sprintNumber}}</span> <br />
-            <i>Retro Board Created <span> {{retroBoard.creationDate}}</span></i> <br />
+            <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+            <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
             <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
             <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
           </mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content *ngIf="retroBoard.isFinished">
+        <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
           <div class="chart-wrapper">
             <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
               [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
