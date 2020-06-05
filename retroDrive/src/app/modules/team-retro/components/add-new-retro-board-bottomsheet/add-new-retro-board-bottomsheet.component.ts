@@ -13,6 +13,8 @@ import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
+import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -40,7 +42,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
     private formBuilder: FormBuilder,
     private frbs: FirestoreRetroBoardService,
-    private localStorageService: LocalStorageService) { }
+    private localStorageService: LocalStorageService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -76,10 +79,24 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
       const newRetroBoardId = newRetroBoardSnapshot.id;
       this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
+      this.prepareBaseAdditionsalOptions(newRetroBoardId);
     });
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();
+  }
+
+  private prepareBaseAdditionsalOptions(newRetroBoardId: string) {
+    const retroBoardOptionsToSave: RetroBoardOptions = {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      maxVouteCount: 6,
+      shouldBlurRetroBoardCardText: false
+    };
+
+    this.currentUserApiService.AddNewRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
+    .catch(error => {
+      const err = error;
+    });
   }
 
   private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
