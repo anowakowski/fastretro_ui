@@ -51,10 +51,10 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
 
   saveNewChangesOfRetroBoardOptions() {
     const retroBoardOptionsToSave: RetroBoardOptions = {
-      maxVouteCount: 6,
+      maxVouteCount: this.selectedVouteCount,
       shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
       retroBoardFirebaseDocId: this.retroBoardOptions.retroBoardFirebaseDocId,
-      shouldHideVoutCountInRetroBoardCard: false
+      shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
 
     this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {
