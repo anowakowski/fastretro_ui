@@ -450,6 +450,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
+        if (result.freshRetroBoardOptions !== undefined && result.freshRetroBoardOptions !== null) {
+          this.retroBoardOptions = result.freshRetroBoardOptions;
+        }
       }
     });
   }

@@ -15,8 +15,9 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnInit {
 
   public dataIsLoading = true;
-  shouldBlurRetroBoardCard: boolean;
   retroBoardOptions: RetroBoardOptions;
+
+  shouldBlurRetroBoardCard: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressRetroBoardOptionsDialogComponent>,
@@ -26,11 +27,16 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
   ngOnInit() {
     this.currentUserApiService.getRetroBoardOptions(this.data.retroBoard.id).then(response => {
       this.retroBoardOptions = response;
+      this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
     })
     .catch(error => {
       const err = error;
       this.retroBoardOptions = this.data.retroBoardOptions as RetroBoardOptions;
     });
+  }
+
+  onChangeShouldBlurRetroBoardCard(event) {
+    this.shouldBlurRetroBoardCard = event.checked;
   }
 
   saveNewChangesOfRetroBoardOptions() {
