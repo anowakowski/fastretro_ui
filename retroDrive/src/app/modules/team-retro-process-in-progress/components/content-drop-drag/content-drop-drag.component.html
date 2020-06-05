@@ -81,7 +81,10 @@
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <div *ngIf="!item.isEdit">
                <div *ngIf="!item.isMerged">
-                 <span class="blurry-text">{{ item.name }}</span>
+                 <span 
+                  [ngClass]="{'blurry-text': retroBoardOptions.shouldBlurRetroBoardCardText}">
+                    {{ item.name }}
+                  </span>
                 </div>
                <div *ngIf="item.isMerged" >
                  <div *ngFor="let content of item.mergedContent">
