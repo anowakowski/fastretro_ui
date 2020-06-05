@@ -111,8 +111,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   private prepareBaseAdditionsalOptions(newRetroBoardId: string) {
     const retroBoardOptionsToSave: RetroBoardOptions = {
       retroBoardFirebaseDocId: newRetroBoardId,
-      maxVouteCount: 6,
-      shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard
+      maxVouteCount: this.selectedVouteCount,
+      shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
+      shouldHideVoutCountInretroBoardCard: this.hideVoutCountInretroBoardCard
     };
 
     this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
