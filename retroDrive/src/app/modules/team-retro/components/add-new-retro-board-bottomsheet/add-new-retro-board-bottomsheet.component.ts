@@ -25,9 +25,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
-  teamsFormControl = new FormControl('');
-  retroName = new FormControl('');
-  sprintNumber = new FormControl('');
+  teamsFormControl = new FormControl('', Validators.required);
+  retroName = new FormControl('', Validators.required);
+  sprintNumber = new FormControl('', Validators.required);
   shouldDisableMembersControl = true;
 
   userWorkspace: UserWorkspace;
@@ -83,15 +83,30 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   }
 
   createNewRetroBoard() {
-    const retroBoardToSave = this.prepareRetroBoardToSave();
-    this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
-      const newRetroBoardId = newRetroBoardSnapshot.id;
-      this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
-      this.prepareBaseAdditionsalOptions(newRetroBoardId);
-    });
+    this.tryParseSprintNumber();
 
-    this.bottomSheetRef.dismiss();
-    event.preventDefault();
+    if (this.addNewRetroBoardForm.valid) {
+      const retroBoardToSave = this.prepareRetroBoardToSave();
+      this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
+        const newRetroBoardId = newRetroBoardSnapshot.id;
+        this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
+        this.prepareBaseAdditionsalOptions(newRetroBoardId);
+      });
+
+      this.bottomSheetRef.dismiss();
+      event.preventDefault();
+    }
+  }
+
+  private tryParseSprintNumber() {
+    const sprintNumber = this.sprintNumber.value;
+    // tslint:disable-next-line:radix
+    const parsedNumber = parseInt(sprintNumber, 10);
+
+    if (isNaN(parsedNumber)) {
+      // tslint:disable-next-line:object-literal-key-quotes
+      this.sprintNumber.setErrors({'sprintnumberisnotnumber': true});
+    }
   }
 
   onChangeShouldBlurRetroBoardCard(event) {

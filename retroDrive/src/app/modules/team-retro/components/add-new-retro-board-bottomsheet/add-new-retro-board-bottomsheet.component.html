@@ -5,9 +5,18 @@
     <form [formGroup]="addNewRetroBoardForm" (ngSubmit)="createNewRetroBoard()" class="example-form">
         <mat-form-field class="example-full-width">
           <input [formControl]="retroName" matInput placeholder="Retro Board Name"/>
+          <mat-error *ngIf="retroName.hasError('required')">
+            Retro board name is required
+          </mat-error>             
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input [formControl]="sprintNumber" matInput placeholder="Sprint Number"/>
+          <mat-error *ngIf="sprintNumber.hasError('required')">
+            Sprint number is required
+          </mat-error> 
+          <mat-error *ngIf="sprintNumber.hasError('sprintnumberisnotnumber')">
+            The value of the Sprint Number field is not a number
+          </mat-error>           
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
@@ -15,6 +24,9 @@
           <mat-select [formControl]="teamsFormControl" (selectionChange)="onChangeTeams($event.value)">
           <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="teamsFormControl.hasError('required')">
+            teams is required
+          </mat-error>           
         </mat-form-field>
 
         <div style="margin-top: 10px;">
