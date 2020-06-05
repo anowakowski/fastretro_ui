@@ -48,6 +48,7 @@ import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUser
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 import { UserTeams } from 'src/app/models/userTeams';
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
+import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -114,6 +115,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
   public retroBoardSubscriptions: any;
+
+  public retroBoardOptions: RetroBoardOptions;
 
   /*
   @HostListener('window:beforeunload', ['$event'])
@@ -744,6 +747,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.spinnerTick();
               this.setAllCurrentUsersInRetroBoardProcess();
               this.getUsersVotes();
+              this.getRetroBoardOptions();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -754,6 +758,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           // not finded any retro board
         }
       });
+    });
+  }
+
+  private getRetroBoardOptions() {
+    this.currentUserInRetroBoardApiService.getRetroBoardOptions(this.retroBoardToProcess.id).then(rboResponse => {
+      this.retroBoardOptions = rboResponse;
+    })
+    .catch(error => {
+      const err = error;
     });
   }
 
