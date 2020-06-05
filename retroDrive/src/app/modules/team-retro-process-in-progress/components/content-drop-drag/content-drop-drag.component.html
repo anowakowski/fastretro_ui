@@ -82,7 +82,7 @@
               <div *ngIf="!item.isEdit">
                <div *ngIf="!item.isMerged">
                  <span 
-                  [ngClass]="{'blurry-text': retroBoardOptions.shouldBlurRetroBoardCardText}">
+                  [ngClass]="{'blurry-text': ShouldBlurRetroBoardCardText(item)}">
                     {{ item.name }}
                   </span>
                 </div>

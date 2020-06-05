@@ -217,7 +217,8 @@ export class FirestoreRetroBoardService {
       isFinished: newRetroBoard.isFinished,
       isStarted: false,
       urlParamId: newRetroBoard.urlParamId,
-      workspaceId: newRetroBoard.workspaceId
+      workspaceId: newRetroBoard.workspaceId,
+      retroBoardOptionsChangeDate: newRetroBoard.retroBoardOptionsChangeDate
     };
   }
 }

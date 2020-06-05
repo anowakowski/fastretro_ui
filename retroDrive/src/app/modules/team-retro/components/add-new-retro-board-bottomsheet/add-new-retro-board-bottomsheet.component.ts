@@ -121,7 +121,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       creationDate: currentDate,
       lastModifiedDate: currentDate,
       urlParamId: guid.toString(),
-      workspaceId: this.currentWorkspace.id
+      workspaceId: this.currentWorkspace.id,
+      retroBoardOptionsChangeDate: currentDate
     };
 
     return retroBoard;

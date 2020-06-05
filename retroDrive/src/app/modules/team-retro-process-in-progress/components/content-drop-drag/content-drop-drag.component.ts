@@ -443,6 +443,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.openRetroBoardOptionsDialog();
   }
 
+  ShouldBlurRetroBoardCardText(currentRetroBoardCard: RetroBoardCard) {
+    if (this.retroBoardOptions !== undefined) {
+      if (currentRetroBoardCard.userId !== this.currentUser.uid && this.retroBoardOptions.shouldBlurRetroBoardCardText) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private openRetroBoardOptionsDialog() {
     const dialogRef = this.dialog.open(TeamRetroInProgressRetroBoardOptionsDialogComponent, {
       width: '600px',
