@@ -46,7 +46,7 @@
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
       <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning && !retroProcessIsStoped" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>&nbsp; Stop Current Timer</button>
 
-      <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;"><mat-icon>settings</mat-icon></button>
+      <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
 
       <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
       <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->

@@ -47,6 +47,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 import { UserTeams } from 'src/app/models/userTeams';
+import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -433,6 +434,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   onOpenShowAllCurrentUsersInRetro() {
     this.openShowAllCurrentUsersInRetroDialog();
+  }
+
+  onOpenRetroBoardOptions() {
+    this.openRetroBoardOptionsDialog();
+  }
+
+  private openRetroBoardOptionsDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressRetroBoardOptionsDialogComponent, {
+      width: '600px',
+      data: this.retroBoardToProcess
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+      }
+    });
   }
 
   private openShowAllCurrentUsersInRetroDialog() {
