@@ -454,6 +454,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  shouldHideUserVouteCountOnRetroBoardCard(currentRetroBoardCard: RetroBoardCard) {
+    if (this.retroBoardOptions !== undefined) {
+      if (this.shouldEnableVoteBtns && this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private openRetroBoardOptionsDialog() {
     const dialogRef = this.dialog.open(TeamRetroInProgressRetroBoardOptionsDialogComponent, {
       width: '600px',

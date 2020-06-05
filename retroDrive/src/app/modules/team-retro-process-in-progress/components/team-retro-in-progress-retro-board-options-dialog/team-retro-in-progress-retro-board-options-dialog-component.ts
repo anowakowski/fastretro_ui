@@ -30,6 +30,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
     this.currentUserApiService.getRetroBoardOptions(this.data.retroBoard.id).then(response => {
       this.retroBoardOptions = response;
       this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
+      this.hideVoutCountInretroBoardCard = this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard;
     })
     .catch(error => {
       const err = error;

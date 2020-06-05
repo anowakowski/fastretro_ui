@@ -127,14 +127,22 @@
                 </button>                  
                 <!--Vote btns-->
                 <button
-                  *ngIf="shouldEnableVoteBtns"
+                  *ngIf="!shouldHideUserVouteCountOnRetroBoardCard(item)"
                   [disabled]="!shouldEnableVoteBtns" 
                   [matBadge]="item.voteCount" matBadgeColor="primary" 
                   mat-icon-button 
                   style="color: #363c42;" 
                   (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
-                </button>                
+                </button>
+                <button
+                  *ngIf="shouldHideUserVouteCountOnRetroBoardCard(item)"
+                  [disabled]="!shouldEnableVoteBtns"
+                  mat-icon-button 
+                  style="color: #363c42;" 
+                  (click)="onVoteCard(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
+                </button>                                  
                 <button
                   *ngIf="!shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 
