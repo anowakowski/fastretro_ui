@@ -39,6 +39,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   shouldBlurRetroBoardCard: boolean;
+  hideVoutCountInretroBoardCard: boolean;
+  selectedVouteCount = 6;
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
@@ -76,6 +78,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     }
   }
 
+  onChangeSlider(eventValue) {
+    this.selectedVouteCount = eventValue as number;
+  }
+
   createNewRetroBoard() {
     const retroBoardToSave = this.prepareRetroBoardToSave();
     this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
@@ -90,6 +96,16 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   onChangeShouldBlurRetroBoardCard(event) {
     this.shouldBlurRetroBoardCard = event.checked;
+  }
+
+  onChangeHideVouteCountRetroBoardCard(event) {
+    this.hideVoutCountInretroBoardCard = event.checked;
+  }
+
+  formatLabel(value: number) {
+    this.selectedVouteCount = value;
+    console.log(this.selectedVouteCount);
+    return this.selectedVouteCount;
   }
 
   private prepareBaseAdditionsalOptions(newRetroBoardId: string) {
