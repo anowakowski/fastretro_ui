@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Retro Board Options</h1>
+<div mat-dialog-content>
+  <mat-checkbox
+    [checked]="shouldBlurRetroBoardCard"
+    (change)="onChangeShouldBlurRetroBoardCard($event)">
+      Blur retro board cards text
+    </mat-checkbox>
+
+    <div style="margin-top: 5px;">
+      <mat-checkbox
+      [checked]="hideVoutCountInretroBoardCard"
+      (change)="onChangeHideVouteCountRetroBoardCard($event)">
+        <span>Hide voute count on retro board card</span>
+    </mat-checkbox>   
+    </div>          
+    <div style="margin-top: -9px;">
+      <span style="margin-right: 5px;">Set user Voute Count </span><mat-slider min="3" max="12" step="1" [value]="selectedVouteCount" (change)="onChangeSlider($event.value)"></mat-slider><span> {{selectedVouteCount}}</span> 
+    </div>
+
+</div>
+<div mat-dialog-actions style="margin-top: 17px;">
+  <button mat-raised-button color="warn" (click)="closeClick()">Close&nbsp;<mat-icon>clear</mat-icon></button>
+  <div fxFlex></div>
+  <button mat-raised-button color="primary" (click)="saveNewChangesOfRetroBoardOptions()">Save your options&nbsp;<mat-icon>save</mat-icon></button>  
+</div>

@@ -47,6 +47,9 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 import { UserTeams } from 'src/app/models/userTeams';
+// tslint:disable-next-line:max-line-length
+import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
+import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -113,6 +116,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   public stopRetroInProgressProcessSubscriptions: any;
   public retroBoardCardsSubscriptions: any;
   public retroBoardSubscriptions: any;
+
+  public retroBoardOptions: RetroBoardOptions;
 
   /*
   @HostListener('window:beforeunload', ['$event'])
@@ -435,6 +440,47 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.openShowAllCurrentUsersInRetroDialog();
   }
 
+  onOpenRetroBoardOptions() {
+    this.openRetroBoardOptionsDialog();
+  }
+
+  ShouldBlurRetroBoardCardText(currentRetroBoardCard: RetroBoardCard) {
+    if (this.retroBoardOptions !== undefined) {
+      if (currentRetroBoardCard.userId !== this.currentUser.uid && this.retroBoardOptions.shouldBlurRetroBoardCardText) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  shouldHideUserVouteCountOnRetroBoardCard(currentRetroBoardCard: RetroBoardCard) {
+    if (this.retroBoardOptions !== undefined) {
+      if (this.shouldEnableVoteBtns && this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private openRetroBoardOptionsDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressRetroBoardOptionsDialogComponent, {
+      width: '600px',
+      data: {retroBoard: this.retroBoardToProcess, retroBoardOptions: this.retroBoardOptions}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        if (result.freshRetroBoardOptions !== undefined && result.freshRetroBoardOptions !== null) {
+          this.retroBoardOptions = result.freshRetroBoardOptions;
+
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const retroBoardToUpdate = {retroBoardOptionsChangeDate: currentDate, lastModifiedDate: currentDate};
+          this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
+        }
+      }
+    });
+  }
+
   private openShowAllCurrentUsersInRetroDialog() {
     const dialogRef = this.dialog.open(TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent, {
       width: '400px',
@@ -728,6 +774,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.spinnerTick();
               this.setAllCurrentUsersInRetroBoardProcess();
               this.getUsersVotes();
+              this.getRetroBoardOptions();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -738,6 +785,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           // not finded any retro board
         }
       });
+    });
+  }
+
+  private getRetroBoardOptions() {
+    this.currentUserInRetroBoardApiService.getRetroBoardOptions(this.retroBoardToProcess.id).then(rboResponse => {
+      this.retroBoardOptions = rboResponse;
+    })
+    .catch(error => {
+      const err = error;
     });
   }
 
@@ -921,6 +977,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.spinnerTick();
             this.setAllCurrentUsersInRetroBoardProcess();
             this.getUsersVotes();
+            this.getRetroBoardOptions();
         });
       } else {
         // if url not exisis

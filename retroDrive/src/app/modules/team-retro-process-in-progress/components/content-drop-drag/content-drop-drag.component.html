@@ -4,7 +4,7 @@
   <div *ngIf="!userIsNotInCurrentRetroBoardTeam">
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
-      <p class="board-name">{{ board.name }}</p>
+      <p class="board-name" style="margin-left: 35px;">{{ board.name }}</p>
       <mat-form-field style="width: 100px; margin-top: -6px; margin-left: 20px; margin-bottom: -20px;">
         <mat-label>Sort by</mat-label>
         <mat-select (selectionChange)="onChangeSort($event.value)">
@@ -46,6 +46,8 @@
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
       <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning && !retroProcessIsStoped" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>&nbsp; Stop Current Timer</button>
 
+      <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
+
       <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
       <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->
     </div>
@@ -78,7 +80,12 @@
               (click)="editCard(item, column.name)">
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <div *ngIf="!item.isEdit">
-               <div *ngIf="!item.isMerged">{{ item.name }}</div>
+               <div *ngIf="!item.isMerged">
+                 <span 
+                  [ngClass]="{'blurry-text': ShouldBlurRetroBoardCardText(item)}">
+                    {{ item.name }}
+                  </span>
+                </div>
                <div *ngIf="item.isMerged" >
                  <div *ngFor="let content of item.mergedContent">
                   <p style="margin-bottom: -3px;">{{content.name}}</p>
@@ -120,14 +127,22 @@
                 </button>                  
                 <!--Vote btns-->
                 <button
-                  *ngIf="shouldEnableVoteBtns"
+                  *ngIf="!shouldHideUserVouteCountOnRetroBoardCard(item)"
                   [disabled]="!shouldEnableVoteBtns" 
                   [matBadge]="item.voteCount" matBadgeColor="primary" 
                   mat-icon-button 
                   style="color: #363c42;" 
                   (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
-                </button>                
+                </button>
+                <button
+                  *ngIf="shouldHideUserVouteCountOnRetroBoardCard(item)"
+                  [disabled]="!shouldEnableVoteBtns"
+                  mat-icon-button 
+                  style="color: #363c42;" 
+                  (click)="onVoteCard(item)">
+                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
+                </button>                                  
                 <button
                   *ngIf="!shouldEnableVoteBtns"
                   [disabled]="!shouldEnableVoteBtns" 

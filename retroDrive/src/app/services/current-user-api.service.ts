@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from '../models/currentUserVotes';
+import { RetroBoardOptions } from '../models/retroBoardOptions';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,22 @@ export class CurrentUserApiService {
     return this.httpClient.get<CurrentUserInRetroBoardDataToDisplay[]>(url, httpOptions).toPromise();
   }
 
+  getRetroBoardOptions(retroBoardId: string) {
+    let fbToken = this.localStorageService.getItem('token') as FbToken;
+    if (this.fbTokenService.isTokenExpired(fbToken)) {
+      fbToken = this.localStorageService.getItem('token') as FbToken;
+    }
+
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getRetroBoardOptions/' + retroBoardId;
+    return this.httpClient.get<RetroBoardOptions>(url, httpOptions).toPromise();
+  }
+
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
 
@@ -52,6 +69,17 @@ export class CurrentUserApiService {
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
+  }
+
+  SetRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardOptions/';
+
+    return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
   }
 
   isTokenExpired() {

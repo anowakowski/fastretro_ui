@@ -1,12 +1,22 @@
 <mat-nav-list>
 
-  <div >
+  <div>
+    
     <form [formGroup]="addNewRetroBoardForm" (ngSubmit)="createNewRetroBoard()" class="example-form">
         <mat-form-field class="example-full-width">
           <input [formControl]="retroName" matInput placeholder="Retro Board Name"/>
+          <mat-error *ngIf="retroName.hasError('required')">
+            Retro board name is required
+          </mat-error>             
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input [formControl]="sprintNumber" matInput placeholder="Sprint Number"/>
+          <mat-error *ngIf="sprintNumber.hasError('required')">
+            Sprint number is required
+          </mat-error> 
+          <mat-error *ngIf="sprintNumber.hasError('sprintnumberisnotnumber')">
+            The value of the Sprint Number field is not a number
+          </mat-error>           
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
@@ -14,15 +24,31 @@
           <mat-select [formControl]="teamsFormControl" (selectionChange)="onChangeTeams($event.value)">
           <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="teamsFormControl.hasError('required')">
+            teams is required
+          </mat-error>           
         </mat-form-field>
 
-        <!-- <mat-form-field class="example-full-width">
-          <mat-label>Members</mat-label>
-          <mat-select [formControl]="membersFormControl" [disabled]="shouldDisableMembersControl" multiple>
-          <mat-option *ngFor="let member of membersList" [value]="member">{{member}}</mat-option>
-          </mat-select>
-        </mat-form-field> -->
-
+        <div style="margin-top: 10px;">
+          <span style="font-size: 14px; color: #676767;">Additional Retro Board Options</span>
+          <div style="margin-left: 5px; margin-top: 15px;">
+            <mat-checkbox
+            [checked]="shouldBlurRetroBoardCard"
+            (change)="onChangeShouldBlurRetroBoardCard($event)">
+              <span style="color: #676767;">Blur retro board cards text</span>
+          </mat-checkbox>   
+          </div>
+          <div style="margin-left: 5px; margin-top: 5px;">
+            <mat-checkbox
+            [checked]="hideVoutCountInretroBoardCard"
+            (change)="onChangeHideVouteCountRetroBoardCard($event)">
+              <span style="color: #676767;">Hide voute count on retro board card</span>
+          </mat-checkbox>   
+          </div>          
+          <div style="margin-left: 5px; margin-top: -9px; margin-bottom: 10px;">
+            <span style="color: #676767; margin-right: 5px;">Set user Voute Count </span><mat-slider min="3" max="12" step="1" [value]="selectedVouteCount" (change)="onChangeSlider($event.value)"></mat-slider><span> {{selectedVouteCount}}</span> 
+          </div>
+        </div>
         <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
     </form>
   </div>

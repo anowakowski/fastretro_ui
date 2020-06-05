@@ -13,6 +13,8 @@ import { User } from 'src/app/models/user';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
+import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -23,9 +25,9 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
-  teamsFormControl = new FormControl('');
-  retroName = new FormControl('');
-  sprintNumber = new FormControl('');
+  teamsFormControl = new FormControl('', Validators.required);
+  retroName = new FormControl('', Validators.required);
+  sprintNumber = new FormControl('', Validators.required);
   shouldDisableMembersControl = true;
 
   userWorkspace: UserWorkspace;
@@ -36,11 +38,16 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
+  shouldBlurRetroBoardCard: boolean;
+  hideVoutCountInretroBoardCard: boolean;
+  selectedVouteCount = 6;
+
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
     private formBuilder: FormBuilder,
     private frbs: FirestoreRetroBoardService,
-    private localStorageService: LocalStorageService) { }
+    private localStorageService: LocalStorageService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -71,15 +78,63 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     }
   }
 
-  createNewRetroBoard() {
-    const retroBoardToSave = this.prepareRetroBoardToSave();
-    this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
-      const newRetroBoardId = newRetroBoardSnapshot.id;
-      this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
-    });
+  onChangeSlider(eventValue) {
+    this.selectedVouteCount = eventValue as number;
+  }
 
-    this.bottomSheetRef.dismiss();
-    event.preventDefault();
+  createNewRetroBoard() {
+    this.tryParseSprintNumber();
+
+    if (this.addNewRetroBoardForm.valid) {
+      const retroBoardToSave = this.prepareRetroBoardToSave();
+      this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
+        const newRetroBoardId = newRetroBoardSnapshot.id;
+        this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
+        this.prepareBaseAdditionsalOptions(newRetroBoardId);
+      });
+
+      this.bottomSheetRef.dismiss();
+      event.preventDefault();
+    }
+  }
+
+  private tryParseSprintNumber() {
+    const sprintNumber = this.sprintNumber.value;
+    // tslint:disable-next-line:radix
+    const parsedNumber = parseInt(sprintNumber, 10);
+
+    if (isNaN(parsedNumber)) {
+      // tslint:disable-next-line:object-literal-key-quotes
+      this.sprintNumber.setErrors({'sprintnumberisnotnumber': true});
+    }
+  }
+
+  onChangeShouldBlurRetroBoardCard(event) {
+    this.shouldBlurRetroBoardCard = event.checked;
+  }
+
+  onChangeHideVouteCountRetroBoardCard(event) {
+    this.hideVoutCountInretroBoardCard = event.checked;
+  }
+
+  formatLabel(value: number) {
+    this.selectedVouteCount = value;
+    console.log(this.selectedVouteCount);
+    return this.selectedVouteCount;
+  }
+
+  private prepareBaseAdditionsalOptions(newRetroBoardId: string) {
+    const retroBoardOptionsToSave: RetroBoardOptions = {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      maxVouteCount: this.selectedVouteCount,
+      shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
+      shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
+    };
+
+    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
+    .catch(error => {
+      const err = error;
+    });
   }
 
   private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {
@@ -104,7 +159,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       creationDate: currentDate,
       lastModifiedDate: currentDate,
       urlParamId: guid.toString(),
-      workspaceId: this.currentWorkspace.id
+      workspaceId: this.currentWorkspace.id,
+      retroBoardOptionsChangeDate: currentDate
     };
 
     return retroBoard;

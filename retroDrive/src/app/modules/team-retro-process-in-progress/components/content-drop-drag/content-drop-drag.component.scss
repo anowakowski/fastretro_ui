@@ -168,3 +168,8 @@
 .mat-tooltip {
   font-size: 20px !important;
 }
+
+.blurry-text {
+  color: transparent;
+  text-shadow: 0 0 4.5px rgb(255, 255, 255);
+}
