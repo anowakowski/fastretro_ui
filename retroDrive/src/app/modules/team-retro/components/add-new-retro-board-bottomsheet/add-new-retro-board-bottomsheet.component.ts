@@ -38,6 +38,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
   membersList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
+  shouldBlurRetroBoardCard: boolean;
+
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
     private formBuilder: FormBuilder,
@@ -84,6 +86,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
     this.bottomSheetRef.dismiss();
     event.preventDefault();
+  }
+
+  onChangeShouldBlurRetroBoardCard(event) {
+    this.shouldBlurRetroBoardCard = event.checked;
   }
 
   private prepareBaseAdditionsalOptions(newRetroBoardId: string) {

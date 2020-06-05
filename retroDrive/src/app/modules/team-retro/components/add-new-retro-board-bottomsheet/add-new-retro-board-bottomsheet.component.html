@@ -1,6 +1,7 @@
 <mat-nav-list>
 
-  <div >
+  <div>
+    
     <form [formGroup]="addNewRetroBoardForm" (ngSubmit)="createNewRetroBoard()" class="example-form">
         <mat-form-field class="example-full-width">
           <input [formControl]="retroName" matInput placeholder="Retro Board Name"/>
@@ -16,13 +17,16 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- <mat-form-field class="example-full-width">
-          <mat-label>Members</mat-label>
-          <mat-select [formControl]="membersFormControl" [disabled]="shouldDisableMembersControl" multiple>
-          <mat-option *ngFor="let member of membersList" [value]="member">{{member}}</mat-option>
-          </mat-select>
-        </mat-form-field> -->
-
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+          <span style="font-size: 14px; color: #676767;">Additional Retro Board Options</span>
+          <div style="margin-left: 5px; margin-top: 5px;">
+            <mat-checkbox
+            [checked]="shouldBlurRetroBoardCard"
+            (change)="onChangeShouldBlurRetroBoardCard($event)">
+              <span style="color: #676767;">Blur retro board cards text</span>
+          </mat-checkbox>                      
+          </div>
+        </div>
         <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
     </form>
   </div>
