@@ -47,6 +47,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { CurrentUserInRetroBoardDataToDisplay } from 'src/app/models/CurrentUserInRetroBoardDataToDisplay';
 import { CurrentUserVotes } from 'src/app/models/currentUserVotes';
 import { UserTeams } from 'src/app/models/userTeams';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 
@@ -462,6 +463,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {
         if (result.freshRetroBoardOptions !== undefined && result.freshRetroBoardOptions !== null) {
           this.retroBoardOptions = result.freshRetroBoardOptions;
+
+          const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+          const retroBoardToUpdate = {retroBoardOptionsChangeDate: currentDate, lastModifiedDate: currentDate};
+          this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
         }
       }
     });

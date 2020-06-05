@@ -12,4 +12,5 @@ export class RetroBoard {
     urlParamId: string;
     workspaceId: string;
     actions: Array<RetroBoardCardActions>;
+    retroBoardOptionsChangeDate: Date;
 }
