@@ -18,6 +18,8 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
   retroBoardOptions: RetroBoardOptions;
 
   shouldBlurRetroBoardCard: boolean;
+  hideVoutCountInretroBoardCard: boolean;
+  selectedVouteCount = 6;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressRetroBoardOptionsDialogComponent>,
@@ -37,6 +39,14 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
 
   onChangeShouldBlurRetroBoardCard(event) {
     this.shouldBlurRetroBoardCard = event.checked;
+  }
+
+  onChangeHideVouteCountRetroBoardCard(event) {
+    this.hideVoutCountInretroBoardCard = event.checked;
+  }
+
+  onChangeSlider(eventValue) {
+    this.selectedVouteCount = eventValue as number;
   }
 
   saveNewChangesOfRetroBoardOptions() {

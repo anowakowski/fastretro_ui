@@ -5,6 +5,18 @@
     (change)="onChangeShouldBlurRetroBoardCard($event)">
       Blur retro board cards text
     </mat-checkbox>
+
+    <div style="margin-top: 5px;">
+      <mat-checkbox
+      [checked]="hideVoutCountInretroBoardCard"
+      (change)="onChangeHideVouteCountRetroBoardCard($event)">
+        <span style="color: #676767;">Hide voute count on retro board card</span>
+    </mat-checkbox>   
+    </div>          
+    <div style="margin-top: -9px;">
+      <span style="color: #676767; margin-right: 5px;">Set user Voute Count </span><mat-slider min="3" max="12" step="1" [value]="selectedVouteCount" (change)="onChangeSlider($event.value)"></mat-slider><span> {{selectedVouteCount}}</span> 
+    </div>
+
 </div>
 <div mat-dialog-actions style="margin-top: 17px;">
   <button mat-raised-button color="warn" (click)="closeClick()">Close&nbsp;<mat-icon>clear</mat-icon></button>
