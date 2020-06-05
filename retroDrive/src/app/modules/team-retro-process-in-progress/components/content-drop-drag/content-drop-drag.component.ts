@@ -446,7 +446,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private openRetroBoardOptionsDialog() {
     const dialogRef = this.dialog.open(TeamRetroInProgressRetroBoardOptionsDialogComponent, {
       width: '600px',
-      data: this.retroBoardToProcess
+      data: {retroBoard: this.retroBoardToProcess, retroBoardOptions: this.retroBoardOptions}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
@@ -950,6 +950,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.spinnerTick();
             this.setAllCurrentUsersInRetroBoardProcess();
             this.getUsersVotes();
+            this.getRetroBoardOptions();
         });
       } else {
         // if url not exisis
