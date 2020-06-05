@@ -93,7 +93,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       shouldBlurRetroBoardCardText: false
     };
 
-    this.currentUserApiService.AddNewRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
+    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
     .catch(error => {
       const err = error;
     });

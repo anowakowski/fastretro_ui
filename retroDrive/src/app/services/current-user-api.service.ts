@@ -71,13 +71,13 @@ export class CurrentUserApiService {
     return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
   }
 
-  AddNewRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
+  SetRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
     };
-    const url = this.baseUrl + '/setNewRetroBoardOptions/';
+    const url = this.baseUrl + '/setRetroBoardOptions/';
 
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
   }

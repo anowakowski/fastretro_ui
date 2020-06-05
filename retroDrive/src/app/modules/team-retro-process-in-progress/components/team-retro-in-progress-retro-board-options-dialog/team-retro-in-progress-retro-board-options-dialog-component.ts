@@ -33,6 +33,21 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
     });
   }
 
+  saveNewChangesOfRetroBoardOptions() {
+    const retroBoardOptionsToSave: RetroBoardOptions = {
+      maxVouteCount: 6,
+      shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
+      retroBoardFirebaseDocId: this.retroBoardOptions.retroBoardFirebaseDocId
+    };
+
+    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {
+      this.dialogRef.close({freshRetroBoardOptions: retroBoardOptionsToSave});
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
   closeClick(): void {
     this.dialogRef.close();
   }
