@@ -113,7 +113,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       retroBoardFirebaseDocId: newRetroBoardId,
       maxVouteCount: this.selectedVouteCount,
       shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
-      shouldHideVoutCountInretroBoardCard: this.hideVoutCountInretroBoardCard
+      shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
 
     this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
