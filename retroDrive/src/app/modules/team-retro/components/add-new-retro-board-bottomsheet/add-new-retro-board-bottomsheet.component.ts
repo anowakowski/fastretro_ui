@@ -130,11 +130,21 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
       shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
+    if (this.currentUserApiService.isTokenExpired()) {
+      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.setRetroBoardOptions(retroBoardOptionsToSave);
+      });
+    } else {
+      this.setRetroBoardOptions(retroBoardOptionsToSave);
+    }
+  }
 
-    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {})
-    .catch(error => {
-      const err = error;
-    });
+  private setRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
+    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => { })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   private prepareAddToCurrentUserInRetroBoard(newRetroBoardId: string) {

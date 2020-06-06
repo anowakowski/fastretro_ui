@@ -27,15 +27,14 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
     private currentUserApiService: CurrentUserApiService) { }
 
   ngOnInit() {
-    this.currentUserApiService.getRetroBoardOptions(this.data.retroBoard.id).then(response => {
-      this.retroBoardOptions = response;
-      this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
-      this.hideVoutCountInretroBoardCard = this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard;
-    })
-    .catch(error => {
-      const err = error;
-      this.retroBoardOptions = this.data.retroBoardOptions as RetroBoardOptions;
-    });
+    if (this.currentUserApiService.isTokenExpired()) { 
+      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getRetroBoardOptions();
+      });
+    } else {
+      this.getRetroBoardOptions();
+    }
   }
 
   onChangeShouldBlurRetroBoardCard(event) {
@@ -68,5 +67,17 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
 
   closeClick(): void {
     this.dialogRef.close();
+  }
+
+  private getRetroBoardOptions() {
+    this.currentUserApiService.getRetroBoardOptions(this.data.retroBoard.id).then(response => {
+      this.retroBoardOptions = response;
+      this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
+      this.hideVoutCountInretroBoardCard = this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard;
+    })
+    .catch(error => {
+      const err = error;
+      this.retroBoardOptions = this.data.retroBoardOptions as RetroBoardOptions;
+    });
   }
 }
