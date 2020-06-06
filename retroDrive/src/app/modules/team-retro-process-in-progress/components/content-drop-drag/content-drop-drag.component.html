@@ -13,7 +13,15 @@
           <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button color="primary" style="margin-left: 20px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
+      <button
+        *ngIf="isExistingSomeRetroBoardCardAction" 
+        mat-raised-button color="primary"
+        style="margin-left: 20px;" 
+        matTooltip="Show actions in current retro board"
+        matTooltipPosition="below" 
+        (click)="openAllCardActionDialog()">
+          <mat-icon>description</mat-icon>
+        </button>
       <button 
         mat-raised-button 
         color="accent"
