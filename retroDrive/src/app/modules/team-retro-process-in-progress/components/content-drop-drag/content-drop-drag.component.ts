@@ -789,6 +789,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private getRetroBoardOptions() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getRetroBoardOptionsForInitPage();
+      });
+    } else {
+      this.getRetroBoardOptionsForInitPage();
+    }
+  }
+
+  private getRetroBoardOptionsForInitPage() {
     this.currentUserInRetroBoardApiService.getRetroBoardOptions(this.retroBoardToProcess.id).then(rboResponse => {
       this.retroBoardOptions = rboResponse;
     })
