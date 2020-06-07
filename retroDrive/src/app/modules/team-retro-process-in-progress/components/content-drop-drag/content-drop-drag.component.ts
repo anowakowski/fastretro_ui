@@ -50,6 +50,7 @@ import { UserTeams } from 'src/app/models/userTeams';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
+import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -252,7 +253,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (result !== undefined) {}
     });
   }
-
 
   addNewCardToColumn(colName: string) {
     if (this.chcekIfAnyCardIsInEditMode()) {
@@ -775,6 +775,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setAllCurrentUsersInRetroBoardProcess();
               this.getUsersVotes();
               this.getRetroBoardOptions();
+              this.getPreviousRetroBoardDocId();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -841,20 +842,33 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
       this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
-        this.getPreviousRetroBoardId();
+        this.getPreviousRetroBoardIdInitInPage();
       });
     } else {
-      this.getPreviousRetroBoardId();
+      this.getPreviousRetroBoardIdInitInPage();
     }
   }
 
-  private getPreviousRetroBoardId() {
+  private getPreviousRetroBoardIdInitInPage() {
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const currentRetroBoardTeamId = teamSnapshot.id as string;
       this.currentUserInRetroBoardApiService
       .getPreviousRetroBoardId(this.retroBoardToProcess.id, this.currentWorkspace.id, currentRetroBoardTeamId)
         .then(responsePreviousRbId => {
           const resp = responsePreviousRbId;
+          if (responsePreviousRbId !== null && responsePreviousRbId !== '') {
+            this.firestoreRetroInProgressService.retroBoardCardActionsFilteredByRetroBoardId(responsePreviousRbId)
+              .then(retroBoardCardActionsSnapshot => {
+                const previousRetroBoardActions = new Array<RetroBoardCardActions>();
+                if (retroBoardCardActionsSnapshot.docs.length > 0) {
+                  retroBoardCardActionsSnapshot.docs.forEach(retroBoardCardSnapshot => {
+                    const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
+                    dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
+                    previousRetroBoardActions.push(dataRetroBoardCardAction);
+                  });
+                }
+              });
+          }
         })
         .catch(error => {
           const err = error;

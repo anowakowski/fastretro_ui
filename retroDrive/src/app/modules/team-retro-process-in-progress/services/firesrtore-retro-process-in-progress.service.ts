@@ -11,6 +11,7 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 })
 export class FiresrtoreRetroProcessInProgressService {
 
+
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -108,6 +109,16 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFiltered('/userworkspaces/', condition);
+  }
+
+  retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCardActions/', condition);
   }
 
   findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {
