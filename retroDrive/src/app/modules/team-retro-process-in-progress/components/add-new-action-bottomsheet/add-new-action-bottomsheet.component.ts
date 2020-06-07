@@ -53,11 +53,8 @@ export class AddNewActionBottomsheetComponent implements OnInit {
         const retroBoardCardActionId = retroBoardCardActionDoc.id;
         const retroBoardCardToUpdate = this.prepareRetroBoardCardToUpdate(this.currentCard, retroBoardCardActionId);
         this.firestoreService.updateRetroBoardCard(retroBoardCardToUpdate, this.currentCard.id);
-        const actionsCount = retroBoardCardToUpdate.actions.length;
-        this.currentUserApiService.addRetroBoardAdditionalInfoWithActionCount(actionsCount, this.currentCard.retroBoardId)
 
         this.bottomSheetRef.dismiss();
-        // event.preventDefault();
       });
     });
   }

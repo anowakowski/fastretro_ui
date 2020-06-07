@@ -51,6 +51,7 @@ import { UserTeams } from 'src/app/models/userTeams';
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
+import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -434,6 +435,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     bottomSheetRef.afterDismissed().subscribe(() => {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
+
+      this.firestoreRetroInProgressService.retroBoardCardActionsFilteredByRetroBoardId(this.retroBoardToProcess.id)
+        .then(retroBoardActionSnapshot => {
+          const countOfRetroBoardActions = retroBoardActionSnapshot.docs.length;
+
+          const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = {
+            retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+            teamFirebaseDocId: '',
+            workspaceFirebaseDocId: this.currentWorkspace.id
+          };
+
+          this.currentUserInRetroBoardApiService
+          .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
+            .then(() => {
+              this.bottomSheetRef.dismiss();
+              event.preventDefault();
+            })
+            .catch(error => {
+              const err = error;
+            });
+        });
     });
   }
 
