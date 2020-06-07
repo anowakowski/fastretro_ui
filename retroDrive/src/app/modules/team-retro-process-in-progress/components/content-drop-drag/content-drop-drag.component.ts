@@ -432,22 +432,29 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       data: currentCard
     });
 
-    bottomSheetRef.afterDismissed().subscribe(() => {
+    bottomSheetRef.afterDismissed().subscribe(result => {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
 
+      if (result.addedNewActionSuccessfully) {
+        this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+      }
+    });
+  }
+
+  private addedAdditionalInfoWithCurrentActionCountInRetroBoard() {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
       this.firestoreRetroInProgressService.retroBoardCardActionsFilteredByRetroBoardId(this.retroBoardToProcess.id)
         .then(retroBoardActionSnapshot => {
           const countOfRetroBoardActions = retroBoardActionSnapshot.docs.length;
-
           const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = {
             retroBoardFirebaseDocId: this.retroBoardToProcess.id,
-            teamFirebaseDocId: '',
+            teamFirebaseDocId: teamId,
             workspaceFirebaseDocId: this.currentWorkspace.id
           };
-
           this.currentUserInRetroBoardApiService
-          .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
+            .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
             .then(() => {
               this.bottomSheetRef.dismiss();
               event.preventDefault();

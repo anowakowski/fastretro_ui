@@ -119,9 +119,9 @@ export class CurrentUserApiService {
 
       const dataToPost = {
         actionsCount,
-        RetroBoardFirebaseDocId: retroBoardAdditionalInfo.retroBoardFirebaseDocId,
-        TeamFirebaseDocId: retroBoardAdditionalInfo.teamFirebaseDocId,
-        WorkspaceFirebaseDocId: retroBoardAdditionalInfo.workspaceFirebaseDocId
+        retroBoardFirebaseDocId: retroBoardAdditionalInfo.retroBoardFirebaseDocId,
+        teamFirebaseDocId: retroBoardAdditionalInfo.teamFirebaseDocId,
+        workspaceFirebaseDocId: retroBoardAdditionalInfo.workspaceFirebaseDocId
       };
 
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
