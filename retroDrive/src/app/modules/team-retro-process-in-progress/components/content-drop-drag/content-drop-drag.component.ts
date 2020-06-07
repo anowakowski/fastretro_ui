@@ -837,6 +837,35 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       });
   }
 
+  private getPreviousRetroBoardDocId() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getPreviousRetroBoardId();
+      });
+    } else {
+      this.getPreviousRetroBoardId();
+    }
+  }
+
+  private getPreviousRetroBoardId() {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const currentRetroBoardTeamId = teamSnapshot.id as string;
+      this.currentUserInRetroBoardApiService
+      .getPreviousRetroBoardId(this.retroBoardToProcess.id, this.currentWorkspace.id, currentRetroBoardTeamId)
+        .then(responsePreviousRbId => {
+          const resp = responsePreviousRbId;
+        })
+        .catch(error => {
+          const err = error;
+        });
+    });
+  }
+
+  private getCurrentRetroBoardTeamPromise() {
+    return this.retroBoardToProcess.team.get();
+  }
+
   private checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
     if (!this.userIsNotInCurrentRetroBoardWorkspace) {
       findedRetroBoard.team.get().then(teamSnapshot => {
