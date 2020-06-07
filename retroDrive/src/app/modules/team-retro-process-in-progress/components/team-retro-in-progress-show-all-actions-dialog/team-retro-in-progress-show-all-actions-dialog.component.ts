@@ -5,6 +5,8 @@ import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-all-actions-dialog',
@@ -20,7 +22,8 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     public dialogRef: MatDialogRef<TeamRetroInProgressShowAllActionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private currentUserInRetroBoardApiService: CurrentUserApiService
   ) { }
 
   simpleRetroBoardCards: any[];
@@ -30,6 +33,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
   ngOnInit() {
     this.dataRetroBoardCards = this.data.retroBoardCardToShow;
     this.prepareSimpleCartAndActionsActions();
+    this.prepareActions();
     this.createActionForRetroBoardForm();
   }
 
@@ -42,15 +46,25 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     action.isEdit = true;
   }
 
-  deleteAction(action: any) {
-    const findedAction = this.actions.find(x => x.id === action.id);
-    const indexOfArray = this.actions.indexOf(findedAction);
-    this.actions.splice(indexOfArray, 1);
-    const actionIds = this.actions.map(x => this.firestoreService.addRetroBoardCardActionAsRef(x.id));
+  deleteAction(action: any,  simpleRetroBoardCard: any) {
+    const findedRetroBoardCardToUpdate = this.dataRetroBoardCards.find(rb => rb.id === simpleRetroBoardCard.id);
+    const findedAction = findedRetroBoardCardToUpdate.actions.find(x => x.id === action.id);
+    const indexOfArray = findedRetroBoardCardToUpdate.actions.indexOf(findedAction);
+    findedRetroBoardCardToUpdate.actions.splice(indexOfArray, 1);
 
-    this.firestoreService.deleteRetroBoardCardAction(action.id);
-    // const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
-    // this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
+    const findedSimpleRetroBoardCardToUpdate = this.simpleRetroBoardCards.find(rb => rb.id === findedRetroBoardCardToUpdate.id);
+    const findedSimpleAction = findedSimpleRetroBoardCardToUpdate.actions.find(x => x.id === action.id);
+    const indexOfArrayForSimpleActions = findedSimpleRetroBoardCardToUpdate.actions.indexOf(findedSimpleAction);
+    findedSimpleRetroBoardCardToUpdate.actions.splice(indexOfArrayForSimpleActions, 1);
+
+    const actionIds = findedRetroBoardCardToUpdate.actions.map(x => this.firestoreService.addRetroBoardCardActionAsRef(x.id));
+
+    this.firestoreService.deleteRetroBoardCardAction(action.id).then(() => {
+      const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(findedRetroBoardCardToUpdate, actionIds);
+      this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, simpleRetroBoardCard.id);
+
+      this.addFreshActualCountOfRetroBoardActions();
+    });
   }
 
   closeEditAction(action: any) {
@@ -86,6 +100,24 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     };
   }
 
+  private addFreshActualCountOfRetroBoardActions() {
+    this.firestoreService.retroBoardCardActionsFilteredByRetroBoardId(this.data.retroBoardId)
+      .then(retroBoardActionSnapshot => {
+        const countOfRetroBoardActions = retroBoardActionSnapshot.docs.length;
+        const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = {
+          retroBoardFirebaseDocId: this.data.retroBoardId,
+          teamFirebaseDocId: this.data.teamId,
+          workspaceFirebaseDocId: this.data.workspaceId
+        };
+        this.currentUserInRetroBoardApiService
+          .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
+          .then(() => { })
+          .catch(error => {
+            const err = error;
+          });
+      });
+  }
+
   private createActionForRetroBoardForm() {
     this.addNewActionForRetroBoardCardForm = this.formBuilder.group({
       actionTextAreaFormControl: this.actionTextAreaFormControl,
@@ -97,6 +129,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     this.dataRetroBoardCards.forEach(dataRetroBoardCard => {
       const simpleCardToAdd: any = {};
       simpleCardToAdd.name = dataRetroBoardCard.name;
+      simpleCardToAdd.id = dataRetroBoardCard.id;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       dataRetroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
@@ -112,5 +145,19 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
   }
 
   private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
+  }
+
+  private prepareActions() {
+    this.actions = new Array<RetroBoardCardActions>();
+    this.dataRetroBoardCards.forEach(dataRetroBoardCard => {
+      dataRetroBoardCard.actions.forEach(action => {
+        action.get().then(actionSnapshot => {
+          const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
+          const docId = actionSnapshot.id;
+          retroBoardCardAction.id = docId;
+          this.actions.push(retroBoardCardAction);
+        });
+      });
+    });
   }
 }
