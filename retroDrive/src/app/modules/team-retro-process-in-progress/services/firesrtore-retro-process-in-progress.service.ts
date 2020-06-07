@@ -59,7 +59,7 @@ export class FiresrtoreRetroProcessInProgressService {
   }
 
   deleteRetroBoardCardAction(actionId) {
-    this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
+    return this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
   }
 
   removeCurrentUserToRetroBoard(id: string) {

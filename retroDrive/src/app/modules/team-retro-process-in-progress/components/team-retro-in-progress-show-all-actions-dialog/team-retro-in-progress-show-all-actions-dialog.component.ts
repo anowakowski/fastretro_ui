@@ -14,10 +14,11 @@ import { formatDate } from '@angular/common';
 export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit {
   addNewActionForRetroBoardCardForm: FormGroup;
   actionTextAreaFormControl = new FormControl('');
+  dataRetroBoardCards: RetroBoardCard[];
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowAllActionsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataRetroBoardCards: RetroBoardCard[],
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
     private formBuilder: FormBuilder
   ) { }
@@ -27,6 +28,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
   actions: RetroBoardCardActions[];
 
   ngOnInit() {
+    this.dataRetroBoardCards = this.data.retroBoardCardToShow;
     this.prepareSimpleCartAndActionsActions();
     this.createActionForRetroBoardForm();
   }

@@ -25,7 +25,7 @@ export class FirestoreBaseService {
   }
 
   deleteItem(collectionName: string, docId: any) {
-    this.afs.collection(collectionName).doc(docId).delete();
+    return this.afs.collection(collectionName).doc(docId).delete();
   }
 
   addAsRef(collectionName: string, docId: string): DocumentReference {

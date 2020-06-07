@@ -229,14 +229,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   openCardActionDialog(currentCard: RetroBoardCard) {
     currentCard.isClickedFromAddActionBtn = true;
-    const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
-      width: '1100px',
-      data: currentCard
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {}
-    });
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+
+      const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
+        width: '1100px',
+        data: {currentCard, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {}
+      });
+    })
+
   }
 
   openAllCardActionDialog() {
@@ -246,14 +252,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     retroBoardCardToShow.concat(this.toImproveRetroBoardCol.retroBoardCards);
 
-    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
-      width: '1100px',
-      data: retroBoardCardToShow
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+      const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
+        width: '1100px',
+        data: {retroBoardCardToShow, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {}
+      });
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {}
-    });
+
   }
 
   addNewCardToColumn(colName: string) {
@@ -455,10 +466,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           };
           this.currentUserInRetroBoardApiService
             .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
-            .then(() => {
-              this.bottomSheetRef.dismiss();
-              event.preventDefault();
-            })
+            .then(() => {})
             .catch(error => {
               const err = error;
             });
