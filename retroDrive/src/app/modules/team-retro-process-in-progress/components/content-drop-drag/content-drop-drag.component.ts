@@ -77,6 +77,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   tickSubscription: any;
   actualMaxRetroBoardVotes = 0;
   actualCountOfUserVotes = 0;
+  previousRetroBoardToShowActionsDocId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -857,17 +858,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         .then(responsePreviousRbId => {
           const resp = responsePreviousRbId;
           if (responsePreviousRbId !== null && responsePreviousRbId !== '') {
-            this.firestoreRetroInProgressService.retroBoardCardActionsFilteredByRetroBoardId(responsePreviousRbId)
-              .then(retroBoardCardActionsSnapshot => {
-                const previousRetroBoardActions = new Array<RetroBoardCardActions>();
-                if (retroBoardCardActionsSnapshot.docs.length > 0) {
-                  retroBoardCardActionsSnapshot.docs.forEach(retroBoardCardSnapshot => {
-                    const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
-                    dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
-                    previousRetroBoardActions.push(dataRetroBoardCardAction);
-                  });
-                }
-              });
+            this.previousRetroBoardToShowActionsDocId = responsePreviousRbId;
           }
         })
         .catch(error => {

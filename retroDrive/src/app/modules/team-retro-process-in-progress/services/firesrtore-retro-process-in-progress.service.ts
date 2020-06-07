@@ -234,6 +234,16 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoardCards/', condition);
   }
 
+  retroBoardCardsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCards/', condition);
+  }
+
   findRetroBoardByIdSnapshotChanges(id: string) {
     return this.firestoreBase.getFilteredByIdSnapshotChanges('retroBoards', id);
   }
