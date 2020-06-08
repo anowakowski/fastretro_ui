@@ -13,25 +13,25 @@
           <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
         </mat-select>
       </mat-form-field>
+      <button 
+      *ngIf="shouldShowPreviousActionBtn"
+        mat-raised-button 
+        color="primary"
+        style="margin-left: 20px;"
+        matTooltip="Show actions from previous retro board"
+        matTooltipPosition="below"
+        (click)="openPreviousCardActionDialog()">
+        <mat-icon>description</mat-icon>
+      </button>
       <button
         *ngIf="isExistingSomeRetroBoardCardAction" 
-        mat-raised-button color="primary"
-        style="margin-left: 20px;" 
+        mat-raised-button color="accent"
+        style="margin-left: 10px;" 
         matTooltip="Show actions in current retro board"
         matTooltipPosition="below" 
         (click)="openAllCardActionDialog()">
           <mat-icon>description</mat-icon>
         </button>
-      <button 
-      *ngIf="shouldShowPreviousActionBtn"
-        mat-raised-button 
-        color="accent"
-        style="margin-left: 10px;"
-        matTooltip="Show actions from previous retro board"
-        matTooltipPosition="below">
-        <mat-icon>article</mat-icon>
-      </button>
-
       <div fxFlex></div>
       <mat-icon
         style="font-size: 40px; margin-right: 30px;"

@@ -52,6 +52,7 @@ import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-ret
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -242,7 +243,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined) {}
       });
-    })
+    });
 
   }
 
@@ -264,8 +265,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         if (result !== undefined) {}
       });
     });
+  }
 
+  openPreviousCardActionDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowPreviousActionsDialogComponent, {
+      width: '1100px',
+      data: this.previousRetroBoardToShowActionsDocId
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {}
+    });
   }
 
   addNewCardToColumn(colName: string) {

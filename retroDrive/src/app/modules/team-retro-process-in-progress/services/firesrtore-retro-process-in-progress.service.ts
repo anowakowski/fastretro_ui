@@ -11,7 +11,6 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 })
 export class FiresrtoreRetroProcessInProgressService {
 
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoardCard(newRetroBoardCard) {
@@ -119,6 +118,10 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFiltered('/retroBoardCardActions/', condition);
+  }
+
+  getActionByid(actionId: string) {
+    return this.firestoreBase.getFilteredById('/retroBoardCardActions/', actionId);
   }
 
   findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {

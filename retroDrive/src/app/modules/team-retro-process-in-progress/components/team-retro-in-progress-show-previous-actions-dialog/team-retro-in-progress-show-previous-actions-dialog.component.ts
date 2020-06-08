@@ -14,10 +14,11 @@ import { formatDate } from '@angular/common';
 export class TeamRetroInProgressShowPreviousActionsDialogComponent implements OnInit {
   addNewActionForRetroBoardCardForm: FormGroup;
   actionTextAreaFormControl = new FormControl('');
+  retroBoardCardsWithActions = new Array<RetroBoardCard>();
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowPreviousActionsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataPreviousRetroBoardId: string,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
     private formBuilder: FormBuilder
   ) { }
@@ -29,21 +30,27 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   retroBoardCards = new Array<RetroBoardCard>();
 
   ngOnInit() {
-    if (this.dataPreviousRetroBoardId != null) {
+    if (this.data != null) {
+      if (this.data.previousRetroBoardDocId != null) {
+        this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardDocId).then(retroBoardCardsSnapshot => {
+          if (retroBoardCardsSnapshot.docs.length > 0) {
+            retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
+              const findedRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
+              findedRetroBoardCard.id = retroBoardCardSnapshot.id as string;
+              this.retroBoardCards.push(findedRetroBoardCard);
+            });
 
-      this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.dataPreviousRetroBoardId).then(retroBoardCardsSnapshot => {
-        if (retroBoardCardsSnapshot.docs.length > 0) {
-          retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
-            const findedRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
-            findedRetroBoardCard.id = retroBoardCardSnapshot.id as string;
-            this.retroBoardCards.push(findedRetroBoardCard);
-          });
-
-          if (this.retroBoardCards.length > 0) {
-            this.prepareSimpleCartAndActionsActions();
+            if (this.retroBoardCards.length > 0) {
+              this.prepareRetroBoardWithAction();
+              if (this.retroBoardCardsWithActions.length > 0) {
+                this.prepareSimpleCartAndActionsActions();
+              }
+            }
           }
-        }
-      });
+        });
+
+      }
+
 
       // this.firestoreService.retroBoardCardActionsFilteredByRetroBoardId(this.dataPreviousRetroBoardId)
       // .then(retroBoardCardActionsSnapshot => {
@@ -60,6 +67,13 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
     // this.prepareSimpleCartAndActionsActions();
     this.createActionForRetroBoardForm();
+  }
+
+  private prepareRetroBoardWithAction() {
+    const fliteredRetroBoardCard = this.retroBoardCards.filter(rtb => rtb.actions.some(a => a));
+    fliteredRetroBoardCard.forEach(retroBoardCard => {
+      this.retroBoardCardsWithActions.push(retroBoardCard);
+    });
   }
 
   closeClick(): void {
@@ -123,17 +137,20 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   private prepareSimpleCartAndActionsActions() {
     this.simpleRetroBoardCards = new Array<any>();
-    this.retroBoardCards.forEach(retroBoardCard => {
+    this.retroBoardCardsWithActions.forEach(retroBoardCard => {
       const simpleCardToAdd: any = {};
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
+
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
           const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
-          const docId = actionSnapshot.id;
-          retroBoardCardAction.isEdit = false;
-          retroBoardCardAction.id = docId;
-          simpleCardToAdd.actions.push(retroBoardCardAction);
+          if (retroBoardCardAction !== undefined) {
+            const docId = actionSnapshot.id;
+            retroBoardCardAction.isEdit = false;
+            retroBoardCardAction.id = docId;
+            simpleCardToAdd.actions.push(retroBoardCardAction);
+          }
         });
       });
       this.simpleRetroBoardCards.push(simpleCardToAdd);
