@@ -907,7 +907,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           if (response !== null && response !== '') {
             if (response.previousRetroBoardDocId !== undefined &&
                 response.previousRetroBoardDocId !== null &&
-                response.previousRetroBoardDocId !== '') {
+                response.previousRetroBoardDocId !== '' &&
+                response.shouldShowPreviousActionsButton) {
                   this.previousRetroBoardToShowActionsDocId = response;
                   this.shouldShowPreviousActionBtn = true;
             }
@@ -1075,6 +1076,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setAllCurrentUsersInRetroBoardProcess();
             this.getUsersVotes();
             this.getRetroBoardOptions();
+            this.getPreviousRetroBoardDocId();
         });
       } else {
         // if url not exisis
