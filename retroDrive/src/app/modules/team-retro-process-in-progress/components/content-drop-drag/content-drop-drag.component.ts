@@ -79,6 +79,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   actualMaxRetroBoardVotes = 0;
   actualCountOfUserVotes = 0;
   previousRetroBoardToShowActionsDocId: string;
+  shouldShowPreviousActionBtn: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -892,10 +893,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       const currentRetroBoardTeamId = teamSnapshot.id as string;
       this.currentUserInRetroBoardApiService
       .getPreviousRetroBoardId(this.retroBoardToProcess.id, this.currentWorkspace.id, currentRetroBoardTeamId)
-        .then(responsePreviousRbId => {
-          const resp = responsePreviousRbId;
-          if (responsePreviousRbId !== null && responsePreviousRbId !== '') {
-            this.previousRetroBoardToShowActionsDocId = responsePreviousRbId;
+        .then(response => {
+          if (response !== null && response !== '') {
+            if (response.previousRetroBoardDocId !== undefined &&
+                response.previousRetroBoardDocId !== null &&
+                response.previousRetroBoardDocId !== '') {
+                  this.previousRetroBoardToShowActionsDocId = response;
+                  this.shouldShowPreviousActionBtn = true;
+            }
           }
         })
         .catch(error => {

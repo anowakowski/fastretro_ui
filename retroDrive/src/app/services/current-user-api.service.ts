@@ -61,7 +61,7 @@ export class CurrentUserApiService {
     };
 
     const url = this.baseUrl + '/getPreviousIdOfRetroBoard/' + retroBoardId + '/' + workspaceId + '/' + teamId;
-    return this.httpClient.get<string>(url, httpOptions).toPromise();
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
