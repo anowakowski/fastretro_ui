@@ -80,17 +80,21 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
 
   private getUserTeamsForRemovingCurrentlyJoinedTeam() {
     this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
-      userTeamsSnapshot.docs.forEach(userTeamDoc => {
-        const findedUserTeamData = userTeamDoc.data();
-        findedUserTeamData.teams.forEach(teamRef => {
-         teamRef.get().then(teamDoc => {
-           const findedUserTeam = teamDoc.data() as Team;
-           findedUserTeam.id = teamDoc.id as string;
+      if (userTeamsSnapshot.docs.length > 0) {
+        userTeamsSnapshot.docs.forEach(userTeamDoc => {
+          const findedUserTeamData = userTeamDoc.data();
+          findedUserTeamData.teams.forEach(teamRef => {
+           teamRef.get().then(teamDoc => {
+             const findedUserTeam = teamDoc.data() as Team;
+             findedUserTeam.id = teamDoc.id as string;
 
-           this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
-         });
+             this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
+           });
+          });
         });
-      });
+      } else {
+        this.dataIsLoading = false;
+      }
    });
   }
 
