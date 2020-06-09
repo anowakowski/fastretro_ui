@@ -57,7 +57,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
       shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
 
-    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => {
+    this.currentUserApiService.setRetroBoardOptions(retroBoardOptionsToSave).then(() => {
       this.dialogRef.close({freshRetroBoardOptions: retroBoardOptionsToSave});
     })
     .catch(error => {

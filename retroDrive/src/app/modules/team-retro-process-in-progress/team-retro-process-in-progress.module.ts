@@ -33,6 +33,7 @@ import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './component
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from './components/team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './components/team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
+import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './components/team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 
 
 
@@ -62,7 +63,8 @@ import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './component
     TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
     TeamRetroInProgressUserWithoutRbTeamDialogComponent,
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
-    TeamRetroInProgressRetroBoardOptionsDialogComponent
+    TeamRetroInProgressRetroBoardOptionsDialogComponent,
+    TeamRetroInProgressShowPreviousActionsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -75,7 +77,8 @@ import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './component
     TeamRetroInProgressUserWithoutRbWorkspaceDialogComponent,
     TeamRetroInProgressUserWithoutRbTeamDialogComponent,
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
-    TeamRetroInProgressRetroBoardOptionsDialogComponent
+    TeamRetroInProgressRetroBoardOptionsDialogComponent,
+    TeamRetroInProgressShowPreviousActionsDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService

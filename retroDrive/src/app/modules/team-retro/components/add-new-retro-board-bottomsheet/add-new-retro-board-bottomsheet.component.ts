@@ -15,6 +15,7 @@ import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRet
 import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -90,7 +91,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       this.frbs.addNewRetroBoard(retroBoardToSave).then(newRetroBoardSnapshot => {
         const newRetroBoardId = newRetroBoardSnapshot.id;
         this.prepareAddToCurrentUserInRetroBoard(newRetroBoardId);
-        this.prepareBaseAdditionsalOptions(newRetroBoardId);
+        this.prepareBaseRetroBoardOptionsAndAdditionalInfo(newRetroBoardId);
       });
 
       this.bottomSheetRef.dismiss();
@@ -123,25 +124,46 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     return this.selectedVouteCount;
   }
 
-  private prepareBaseAdditionsalOptions(newRetroBoardId: string) {
-    const retroBoardOptionsToSave: RetroBoardOptions = {
+  private prepareBaseRetroBoardOptionsAndAdditionalInfo(newRetroBoardId: string) {
+    const retroBoardOptionsToSave: RetroBoardOptions = this.prepareRetroBoardOptionsToSave(newRetroBoardId);
+    const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = this.prepareRetroBoardAdditionalInfo(newRetroBoardId);
+    if (this.currentUserApiService.isTokenExpired()) {
+      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.setRetroBoardOptions(retroBoardOptionsToSave);
+        this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
+      });
+    } else {
+      this.setRetroBoardOptions(retroBoardOptionsToSave);
+      this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
+    }
+  }
+  private setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
+    this.currentUserApiService.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo).then(() => {})
+    .catch(error => {
+      const err = error;
+    });
+  }
+
+  private prepareRetroBoardAdditionalInfo(newRetroBoardId: string): RetroBoardAdditionalInfoToSave {
+    return {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      teamFirebaseDocId: this.addNewRetroBoardForm.value.teamsFormControl.id,
+      workspaceFirebaseDocId: this.currentWorkspace.id
+    };
+  }
+
+  private prepareRetroBoardOptionsToSave(newRetroBoardId: string): RetroBoardOptions {
+    return {
       retroBoardFirebaseDocId: newRetroBoardId,
       maxVouteCount: this.selectedVouteCount,
       shouldBlurRetroBoardCardText: this.shouldBlurRetroBoardCard,
       shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
-    if (this.currentUserApiService.isTokenExpired()) {
-      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
-        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
-        this.setRetroBoardOptions(retroBoardOptionsToSave);
-      });
-    } else {
-      this.setRetroBoardOptions(retroBoardOptionsToSave);
-    }
   }
 
   private setRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
-    this.currentUserApiService.SetRetroBoardOptions(retroBoardOptionsToSave).then(() => { })
+    this.currentUserApiService.setRetroBoardOptions(retroBoardOptionsToSave).then(() => { })
       .catch(error => {
         const err = error;
       });

@@ -58,7 +58,7 @@ export class FiresrtoreRetroProcessInProgressService {
   }
 
   deleteRetroBoardCardAction(actionId) {
-    this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
+    return this.firestoreBase.deleteItem('/retroBoardCardActions/', actionId);
   }
 
   removeCurrentUserToRetroBoard(id: string) {
@@ -108,6 +108,20 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFiltered('/userworkspaces/', condition);
+  }
+
+  retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCardActions/', condition);
+  }
+
+  getActionByid(actionId: string) {
+    return this.firestoreBase.getFilteredById('/retroBoardCardActions/', actionId);
   }
 
   findRetroBoardByUrlParamIdSnapshotChanges(urlParamId: string) {
@@ -221,6 +235,16 @@ export class FiresrtoreRetroProcessInProgressService {
     };
 
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoardCards/', condition);
+  }
+
+  retroBoardCardsFilteredByRetroBoardId(retroBoardId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'retroBoardId',
+      conditionOperator: '==',
+      value: retroBoardId
+    };
+
+    return this.firestoreBase.getFiltered('/retroBoardCards/', condition);
   }
 
   findRetroBoardByIdSnapshotChanges(id: string) {

@@ -50,6 +50,9 @@ import { UserTeams } from 'src/app/models/userTeams';
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
+import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
+import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -76,6 +79,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   tickSubscription: any;
   actualMaxRetroBoardVotes = 0;
   actualCountOfUserVotes = 0;
+  previousRetroBoardToShowActionsDocId: string;
+  shouldShowPreviousActionBtn: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -226,14 +231,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   openCardActionDialog(currentCard: RetroBoardCard) {
     currentCard.isClickedFromAddActionBtn = true;
-    const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
-      width: '1100px',
-      data: currentCard
+
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+
+      const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
+        width: '1100px',
+        data: {currentCard, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {}
+      });
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {}
-    });
   }
 
   openAllCardActionDialog() {
@@ -243,16 +254,29 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     retroBoardCardToShow.concat(this.toImproveRetroBoardCol.retroBoardCards);
 
-    const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+      const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
+        width: '1100px',
+        data: {retroBoardCardToShow, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {}
+      });
+    });
+  }
+
+  openPreviousCardActionDialog() {
+    const dialogRef = this.dialog.open(TeamRetroInProgressShowPreviousActionsDialogComponent, {
       width: '1100px',
-      data: retroBoardCardToShow
+      data: this.previousRetroBoardToShowActionsDocId
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {}
     });
   }
-
 
   addNewCardToColumn(colName: string) {
     if (this.chcekIfAnyCardIsInEditMode()) {
@@ -430,9 +454,34 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       data: currentCard
     });
 
-    bottomSheetRef.afterDismissed().subscribe(() => {
+    bottomSheetRef.afterDismissed().subscribe(result => {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
+
+      if (result.addedNewActionSuccessfully) {
+        this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+      }
+    });
+  }
+
+  private addedAdditionalInfoWithCurrentActionCountInRetroBoard() {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+      this.firestoreRetroInProgressService.retroBoardCardActionsFilteredByRetroBoardId(this.retroBoardToProcess.id)
+        .then(retroBoardActionSnapshot => {
+          const countOfRetroBoardActions = retroBoardActionSnapshot.docs.length;
+          const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = {
+            retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+            teamFirebaseDocId: teamId,
+            workspaceFirebaseDocId: this.currentWorkspace.id
+          };
+          this.currentUserInRetroBoardApiService
+            .addRetroBoardAdditionalInfoWithActionCount(countOfRetroBoardActions, retroBoardAdditionalInfo)
+            .then(() => {})
+            .catch(error => {
+              const err = error;
+            });
+        });
     });
   }
 
@@ -775,6 +824,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.setAllCurrentUsersInRetroBoardProcess();
               this.getUsersVotes();
               this.getRetroBoardOptions();
+              this.getPreviousRetroBoardDocId();
 
               // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
               //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
@@ -835,6 +885,43 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       .then(response => {
         this.setAllCurrentUsersInRetroBoardProcess();
       });
+  }
+
+  private getPreviousRetroBoardDocId() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getPreviousRetroBoardIdInitInPage();
+      });
+    } else {
+      this.getPreviousRetroBoardIdInitInPage();
+    }
+  }
+
+  private getPreviousRetroBoardIdInitInPage() {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const currentRetroBoardTeamId = teamSnapshot.id as string;
+      this.currentUserInRetroBoardApiService
+      .getPreviousRetroBoardId(this.retroBoardToProcess.id, this.currentWorkspace.id, currentRetroBoardTeamId)
+        .then(response => {
+          if (response !== null && response !== '') {
+            if (response.previousRetroBoardDocId !== undefined &&
+                response.previousRetroBoardDocId !== null &&
+                response.previousRetroBoardDocId !== '' &&
+                response.shouldShowPreviousActionsButton) {
+                  this.previousRetroBoardToShowActionsDocId = response;
+                  this.shouldShowPreviousActionBtn = true;
+            }
+          }
+        })
+        .catch(error => {
+          const err = error;
+        });
+    });
+  }
+
+  private getCurrentRetroBoardTeamPromise() {
+    return this.retroBoardToProcess.team.get();
   }
 
   private checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard: RetroBoardToSave) {
@@ -989,6 +1076,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.setAllCurrentUsersInRetroBoardProcess();
             this.getUsersVotes();
             this.getRetroBoardOptions();
+            this.getPreviousRetroBoardDocId();
         });
       } else {
         // if url not exisis

@@ -4,6 +4,8 @@ import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { formatDate } from '@angular/common';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 
 @Component({
   selector: 'app-add-new-action-bottomsheet',
@@ -19,7 +21,8 @@ export class AddNewActionBottomsheetComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<AddNewActionBottomsheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private formBuilder: FormBuilder,
-    private firestoreService: FiresrtoreRetroProcessInProgressService) { }
+    private firestoreService: FiresrtoreRetroProcessInProgressService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   currentCard: RetroBoardCard;
 
@@ -51,8 +54,7 @@ export class AddNewActionBottomsheetComponent implements OnInit {
         const retroBoardCardToUpdate = this.prepareRetroBoardCardToUpdate(this.currentCard, retroBoardCardActionId);
         this.firestoreService.updateRetroBoardCard(retroBoardCardToUpdate, this.currentCard.id);
 
-        this.bottomSheetRef.dismiss();
-        // event.preventDefault();
+        this.bottomSheetRef.dismiss({addedNewActionSuccessfully: true});
       });
     });
   }

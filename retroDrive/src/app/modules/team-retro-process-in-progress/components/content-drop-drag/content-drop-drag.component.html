@@ -13,12 +13,30 @@
           <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button color="primary" style="margin-left: 20px;" *ngIf="isExistingSomeRetroBoardCardAction" (click)="openAllCardActionDialog()"><mat-icon>description</mat-icon>&nbsp; Show all retro actions</button>
+      <button 
+      *ngIf="shouldShowPreviousActionBtn"
+        mat-raised-button 
+        color="accent"
+        style="margin-left: 20px;"
+        matTooltip="Show actions from previous retro board"
+        matTooltipPosition="below"
+        (click)="openPreviousCardActionDialog()">
+        <mat-icon>description</mat-icon>
+      </button>
+      <button
+        *ngIf="isExistingSomeRetroBoardCardAction" 
+        mat-raised-button color="primary"
+        style="margin-left: 10px;" 
+        matTooltip="Show actions in current retro board"
+        matTooltipPosition="below" 
+        (click)="openAllCardActionDialog()">
+          <mat-icon>description</mat-icon>
+        </button>
       <div fxFlex></div>
       <mat-icon
         style="font-size: 40px; margin-right: 30px;"
         matTooltip="votes (actual/max): {{actualCountOfUserVotes}}/{{actualMaxRetroBoardVotes}}"
-        matTooltipPosition="below"
+        matTooltipPosition="left"
         color="primary">
           remove_red_eye
       </mat-icon>
@@ -143,14 +161,6 @@
                   (click)="onVoteCard(item)">
                   <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
                 </button>                                  
-                <button
-                  *ngIf="!shouldEnableVoteBtns"
-                  [disabled]="!shouldEnableVoteBtns" 
-                  mat-icon-button
-                  style="color: #363c42;"
-                  (click)="onClickVoteOnCart(item)">
-                  <mat-icon style="font-size: 35px; width: 35px; height: 35px;">favorite</mat-icon>
-                </button>
                 <button
                   [disabled]="!shouldEnableVoteBtns"
                   style="margin-left: 10px; color: #363c42;"
