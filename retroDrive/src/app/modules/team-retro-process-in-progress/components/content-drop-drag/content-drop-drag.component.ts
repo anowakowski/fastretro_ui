@@ -930,27 +930,33 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const findedTeamId = teamSnapshot.id as string;
         const teamName = (teamSnapshot.data() as Team).name;
         this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-          userTeamsSnapshot.docs.forEach(userTeamDoc => {
-            const findedUserTeamData = userTeamDoc.data();
-            let currentLenghtIndex = 1;
-            let isUserInCurrentRetroBoardTeam = false;
-            findedUserTeamData.teams.forEach(teamRef => {
-              teamRef.get().then(teamDoc => {
-                const findedUserTeam = teamDoc.data() as Team;
-                findedUserTeam.id = teamDoc.id as string;
-                if (findedUserTeam.id === findedTeamId) {
-                  isUserInCurrentRetroBoardTeam = true;
-                }
-                if (currentLenghtIndex === findedUserTeamData.teams.length) {
-                  if (!isUserInCurrentRetroBoardTeam) {
-                    this.userIsNotInCurrentRetroBoardTeam = true;
-                    this.openDialogForJoinToExistingTeam(teamName);
+          if (userTeamsSnapshot.docs.length > 0) {
+            userTeamsSnapshot.docs.forEach(userTeamDoc => {
+              const findedUserTeamData = userTeamDoc.data();
+              let currentLenghtIndex = 1;
+              let isUserInCurrentRetroBoardTeam = false;
+              findedUserTeamData.teams.forEach(teamRef => {
+                teamRef.get().then(teamDoc => {
+                  const findedUserTeam = teamDoc.data() as Team;
+                  findedUserTeam.id = teamDoc.id as string;
+                  if (findedUserTeam.id === findedTeamId) {
+                    isUserInCurrentRetroBoardTeam = true;
                   }
-                }
-                currentLenghtIndex++;
-              });
-             });
-          });
+                  if (currentLenghtIndex === findedUserTeamData.teams.length) {
+                    if (!isUserInCurrentRetroBoardTeam) {
+                      this.userIsNotInCurrentRetroBoardTeam = true;
+                      this.openDialogForJoinToExistingTeam(teamName);
+                    }
+                  }
+                  currentLenghtIndex++;
+                });
+               });
+            });
+          } else {
+            this.userIsNotInCurrentRetroBoardTeam = true;
+            this.openDialogForJoinToExistingTeam(teamName);
+          }
+
         });
       });
     }
@@ -976,12 +982,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardToProcess.team.get().then(teamSnapshot => {
       const currentRetroBoardTeamId = teamSnapshot.id as string;
       this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
-        userTeamsSnapshot.docs.forEach(userTeamDoc => {
-          const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
-          const findedUserTeamId = userTeamDoc.id;
-          findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(currentRetroBoardTeamId));
-          this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
-        });
+        if (userTeamsSnapshot.docs.length > 0) {
+          userTeamsSnapshot.docs.forEach(userTeamDoc => {
+            const findedUserTeamData = userTeamDoc.data() as UserTeamsToSave;
+            const findedUserTeamId = userTeamDoc.id;
+            findedUserTeamData.teams.push(this.firestoreRetroInProgressService.addTeamAsRef(currentRetroBoardTeamId));
+            this.firestoreRetroInProgressService.updateUserTeams(findedUserTeamData, findedUserTeamId);
+          });
+        } else {
+          const userTeamsToSave: UserTeamsToSave = {
+            userId: this.currentUser.uid,
+            teams: [this.firestoreRetroInProgressService.addTeamAsRef(currentRetroBoardTeamId)]
+          };
+          this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
+        }
       });
     });
   }
