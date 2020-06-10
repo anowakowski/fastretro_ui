@@ -16,6 +16,7 @@ import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalIn
 export class CurrentUserApiService {
 
 
+
   constructor(private httpClient: HttpClient, private localStorageService: LocalStorageService, private fbTokenService: FbTokenService) { }
 
   baseUrl = environment.apiUrl + 'api/CurrentUsersInRetroBoard';
@@ -94,6 +95,23 @@ export class CurrentUserApiService {
     const url = this.baseUrl + '/setRetroBoardOptions/';
 
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
+  }
+
+  setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardOptions/';
+
+    const dataToPost = {
+      userFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
   setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
