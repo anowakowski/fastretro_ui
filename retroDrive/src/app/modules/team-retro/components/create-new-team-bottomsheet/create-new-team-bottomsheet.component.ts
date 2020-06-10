@@ -64,15 +64,22 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
             this.firestoreService.addNewUserTeams(userTeamsToSave);
           }
 
-          this.currentUserApiService.setUserInTeam(this.data.currentUser.uid, newTeamId, this.data.currentWorkspace.id).then(() => {
-            this.bottomSheetRef.dismiss();
-          });
+          if (this.currentUserApiService.isTokenExpired()) {
+            this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+              this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+              this.setUserInTeamInApi(newTeamId);
+            });
+          } else {
+            this.setUserInTeamInApi(newTeamId);
+          }
         });
-
       });
     });
-
   }
 
-
+  private setUserInTeamInApi(newTeamId: string) {
+    this.currentUserApiService.setUserInTeam(this.data.currentUser.uid, newTeamId, this.data.currentWorkspace.id).then(() => {
+      this.bottomSheetRef.dismiss();
+    });
+  }
 }

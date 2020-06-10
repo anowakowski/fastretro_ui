@@ -103,7 +103,7 @@ export class CurrentUserApiService {
     const httpOptions = {
       headers
     };
-    const url = this.baseUrl + '/setRetroBoardOptions/';
+    const url = this.baseUrl + '/setUserInTeam/';
 
     const dataToPost = {
       userFirebaseDocId,
