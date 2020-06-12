@@ -268,13 +268,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   openPreviousCardActionDialog() {
-    const dialogRef = this.dialog.open(TeamRetroInProgressShowPreviousActionsDialogComponent, {
-      width: '1100px',
-      data: this.previousRetroBoardToShowActionsDocId
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {}
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+      const dialogRef = this.dialog.open(TeamRetroInProgressShowPreviousActionsDialogComponent, {
+        width: '1100px',
+        data: {
+          previousRetroBoardToShowActionsDocId: this.previousRetroBoardToShowActionsDocId,
+          workspaceId: this.currentWorkspace.id,
+          teamId
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {}
+      });
     });
   }
 

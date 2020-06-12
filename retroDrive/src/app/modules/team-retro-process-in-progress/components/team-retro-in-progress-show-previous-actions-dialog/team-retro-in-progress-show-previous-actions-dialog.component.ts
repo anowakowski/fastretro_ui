@@ -5,6 +5,7 @@ import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-previous-actions-dialog',
@@ -20,12 +21,14 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     public dialogRef: MatDialogRef<TeamRetroInProgressShowPreviousActionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private currentUserApiService: CurrentUserApiService
   ) { }
 
   simpleRetroBoardCards: any[];
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   actions: RetroBoardCardActions[];
+  usersInTeams: any[] = new Array<any>();
 
   retroBoardCards = new Array<RetroBoardCard>();
 
@@ -46,6 +49,13 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                 this.prepareSimpleCartAndActionsActions();
               }
             }
+
+            this.currentUserApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
+              
+              if (response !== undefined && response !== null) {
+                
+              }
+            });
           }
         });
 
