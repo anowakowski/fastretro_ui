@@ -78,8 +78,14 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
   }
 
   private setUserInTeamInApi(newTeamId: string) {
-    this.currentUserApiService.setUserInTeam(this.data.currentUser.uid, newTeamId, this.data.currentWorkspace.id).then(() => {
-      this.bottomSheetRef.dismiss();
-    });
+    this.currentUserApiService.setUserInTeam(
+        this.data.currentUser.uid,
+        newTeamId,
+        this.data.currentWorkspace.id,
+        this.data.currentUser.chosenAvatarUrl,
+        this.data.currentUser.displayName)
+          .then(() => {
+            this.bottomSheetRef.dismiss();
+          });
   }
 }

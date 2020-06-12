@@ -915,7 +915,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 response.previousRetroBoardDocId !== null &&
                 response.previousRetroBoardDocId !== '' &&
                 response.shouldShowPreviousActionsButton) {
-                  this.previousRetroBoardToShowActionsDocId = response;
+                  this.previousRetroBoardToShowActionsDocId = response.previousRetroBoardDocId;
                   this.shouldShowPreviousActionBtn = true;
             }
           }

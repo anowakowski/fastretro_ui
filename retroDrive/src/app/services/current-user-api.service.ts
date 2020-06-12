@@ -109,7 +109,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
   }
 
-  setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+  setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -120,7 +120,9 @@ export class CurrentUserApiService {
     const dataToPost = {
       userFirebaseDocId,
       teamFirebaseDocId,
-      workspaceFirebaseDocId
+      workspaceFirebaseDocId,
+      chosenAvatarUrl,
+      displayName
     };
 
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();

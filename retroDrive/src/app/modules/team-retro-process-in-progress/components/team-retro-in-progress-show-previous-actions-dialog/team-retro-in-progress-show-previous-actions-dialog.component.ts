@@ -6,6 +6,7 @@ import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrto
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UsersInTeams } from 'src/app/models/usersInTeams';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-previous-actions-dialog',
@@ -28,33 +29,44 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   simpleRetroBoardCards: any[];
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   actions: RetroBoardCardActions[];
-  usersInTeams: any[] = new Array<any>();
+  usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
 
   retroBoardCards = new Array<RetroBoardCard>();
 
   ngOnInit() {
     if (this.data != null) {
-      if (this.data.previousRetroBoardDocId != null) {
-        this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardDocId).then(retroBoardCardsSnapshot => {
-          if (retroBoardCardsSnapshot.docs.length > 0) {
-            retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
-              const findedRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
-              findedRetroBoardCard.id = retroBoardCardSnapshot.id as string;
-              this.retroBoardCards.push(findedRetroBoardCard);
-            });
+      if (this.data.previousRetroBoardToShowActionsDocId != null) {
+        this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardToShowActionsDocId)
+          .then(retroBoardCardsSnapshot => {
+            if (retroBoardCardsSnapshot.docs.length > 0) {
+              retroBoardCardsSnapshot.docs.forEach(retroBoardCardSnapshot => {
+                const findedRetroBoardCard = retroBoardCardSnapshot.data() as RetroBoardCard;
+                findedRetroBoardCard.id = retroBoardCardSnapshot.id as string;
+                this.retroBoardCards.push(findedRetroBoardCard);
+              });
 
-            if (this.retroBoardCards.length > 0) {
-              this.prepareRetroBoardWithAction();
-              if (this.retroBoardCardsWithActions.length > 0) {
-                this.prepareSimpleCartAndActionsActions();
+              if (this.retroBoardCards.length > 0) {
+                this.prepareRetroBoardWithAction();
+                if (this.retroBoardCardsWithActions.length > 0) {
+                  this.prepareSimpleCartAndActionsActions();
+                }
               }
-            }
 
-            this.currentUserApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
-              
-              if (response !== undefined && response !== null) {
-                
-              }
+              this.currentUserApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
+                if (response !== undefined && response !== null) {
+                  const usersInTeamsResponse = response;
+
+                  usersInTeamsResponse.forEach(usrsInTeam => {
+                    const usersInTeam: UsersInTeams = {
+                      userFirebaseDocId: usrsInTeam.userFirebaseDocId,
+                      displayName: usrsInTeam.chosenAvatarUrl,
+                      chosenAvatarUrl: usrsInTeam.displayName,
+                      teamFirebaseDocId: usrsInTeam.teamFirebaseDocId,
+                      workspaceFirebaseDocId: usrsInTeam.workspaceFirebaseDocId
+                    };
+                    this.usersInTeams.push(usrsInTeam);
+                  });
+                }
             });
           }
         });
