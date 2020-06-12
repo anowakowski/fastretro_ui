@@ -22,13 +22,21 @@
           </button>
           <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;" (click)="deleteAction(action)">
             <mat-icon>delete</mat-icon>
-          </button>             
-          <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
-            <mat-label>Add people to action</mat-label>
-            <mat-select multiple>
-              <mat-option *ngFor="let usersInTeam of usersInTeams" [value]="usersInTeam.userFirebaseDocId">{{usersInTeam.displayName}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          </button>  
+          <form [formGroup]="addUserToActionForm">
+            <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+              <mat-label>Add people to action</mat-label>
+              <mat-select (openedChange)="usersInTeamsChange($event)"
+              [formControl]="usersInTeamFormControl" multiple>
+                <mat-option 
+                  *ngFor="let usersInTeam of usersInTeams"
+                  [value]="usersInTeam.userFirebaseDocId">
+                    {{usersInTeam.displayName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>           
+
           <mat-slide-toggle
           color="primary"  
           style="margin-top: -20px; margin-left: 10px; margin-right: -10px; font-size: 13px;">Action is solved</mat-slide-toggle>

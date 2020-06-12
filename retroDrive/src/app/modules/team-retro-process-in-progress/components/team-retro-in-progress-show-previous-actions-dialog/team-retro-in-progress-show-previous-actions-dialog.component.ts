@@ -18,6 +18,9 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   actionTextAreaFormControl = new FormControl('');
   retroBoardCardsWithActions = new Array<RetroBoardCard>();
 
+  addUserToActionForm: FormGroup;
+  usersInTeamFormControl = new FormControl();
+
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowPreviousActionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,7 +32,9 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   simpleRetroBoardCards: any[];
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   actions: RetroBoardCardActions[];
+
   usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
+  usersInTeamValueSelected: any;
 
   retroBoardCards = new Array<RetroBoardCard>();
 
@@ -72,23 +77,9 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
         });
 
       }
-
-
-      // this.firestoreService.retroBoardCardActionsFilteredByRetroBoardId(this.dataPreviousRetroBoardId)
-      // .then(retroBoardCardActionsSnapshot => {
-      //   const previousRetroBoardActions = new Array<RetroBoardCardActions>();
-      //   if (retroBoardCardActionsSnapshot.docs.length > 0) {
-      //     retroBoardCardActionsSnapshot.docs.forEach(retroBoardCardSnapshot => {
-      //       const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
-      //       dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
-      //       previousRetroBoardActions.push(dataRetroBoardCardAction);
-      //     });
-      //   }
-      // });
     }
-
-    // this.prepareSimpleCartAndActionsActions();
     this.createActionForRetroBoardForm();
+    this.createAddUserToActionForm();
   }
 
   private prepareRetroBoardWithAction() {
@@ -96,6 +87,13 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     fliteredRetroBoardCard.forEach(retroBoardCard => {
       this.retroBoardCardsWithActions.push(retroBoardCard);
     });
+  }
+
+  usersInTeamsChange(event) {
+    const isChosenUsersInTeam = !event;
+    if (isChosenUsersInTeam) {
+      this.usersInTeamValueSelected = this.usersInTeamFormControl.value;
+    }
   }
 
   closeClick(): void {
@@ -154,6 +152,12 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   private createActionForRetroBoardForm() {
     this.addNewActionForRetroBoardCardForm = this.formBuilder.group({
       actionTextAreaFormControl: this.actionTextAreaFormControl,
+    });
+  }
+
+  private createAddUserToActionForm() {
+    this.addUserToActionForm = this.formBuilder.group({
+      usersInTeamFormControl: this.usersInTeamFormControl
     });
   }
 
