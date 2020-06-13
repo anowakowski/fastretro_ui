@@ -116,6 +116,10 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     // this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
   }
 
+  copyCardWithActionToCurrentRetroBoardFromPrevious(retroBoardCad, action) {
+
+  }
+
   closeEditAction(action: any) {
     this.actionTextAreaFormControl.reset();
     action.isEdit = false;

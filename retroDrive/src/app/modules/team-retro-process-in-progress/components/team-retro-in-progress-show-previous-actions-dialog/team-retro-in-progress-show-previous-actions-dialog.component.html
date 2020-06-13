@@ -17,6 +17,13 @@
             mat-icon-button
             color="primary"
             style="margin-top: -20px;"
+            (click)="copyCardWithActionToCurrentRetroBoardFromPrevious(retroBoardCard, action)">
+            <mat-icon>file_copy</mat-icon>
+            </button>
+          <button
+            mat-icon-button
+            color="primary"
+            style="margin-top: -20px;"
             (click)="editAction(action)">
             <mat-icon>edit</mat-icon>
           </button>
