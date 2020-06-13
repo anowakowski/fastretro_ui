@@ -33,7 +33,7 @@
           <form [formGroup]="addUserToActionForm">
             <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
               <mat-label>Add people to action</mat-label>
-              <mat-select (openedChange)="usersInTeamsChange($event)"
+              <mat-select (openedChange)="usersInTeamsChange($event, retroBoardCard, action)"
               [formControl]="usersInTeamFormControl" multiple>
                 <mat-option 
                   *ngFor="let usersInTeam of usersInTeams"

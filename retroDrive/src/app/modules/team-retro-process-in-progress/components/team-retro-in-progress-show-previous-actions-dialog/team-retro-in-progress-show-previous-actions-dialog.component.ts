@@ -89,10 +89,22 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     });
   }
 
-  usersInTeamsChange(event) {
+  usersInTeamsChange(event, simpleRetroBoardCard: any, action: any) {
     const isChosenUsersInTeam = !event;
     if (isChosenUsersInTeam) {
       this.usersInTeamValueSelected = this.usersInTeamFormControl.value;
+      this.currentUserApiService.setUsersInAction(
+        this.usersInTeamValueSelected,
+        this.data.teamId,
+        this.data.workspaceId,
+        simpleRetroBoardCard.id,
+        action.id)
+          .then(() => {
+
+          })
+          .catch(error => {
+            const err = error;
+          });
     }
   }
 
@@ -112,8 +124,6 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     const actionIds = this.actions.map(x => this.firestoreService.addRetroBoardCardActionAsRef(x.id));
 
     this.firestoreService.deleteRetroBoardCardAction(action.id);
-    // const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
-    // this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
   }
 
   copyCardWithActionToCurrentRetroBoardFromPrevious(retroBoardCad, action) {
@@ -171,7 +181,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       const simpleCardToAdd: any = {};
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
-
+      simpleCardToAdd.id = retroBoardCard.id;
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
           const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
