@@ -93,19 +93,23 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     const isChosenUsersInTeam = !event;
     if (isChosenUsersInTeam) {
       this.usersInTeamValueSelected = this.usersInTeamFormControl.value;
-      this.currentUserApiService.setUsersInAction(
-        this.usersInTeamValueSelected,
-        this.data.teamId,
-        this.data.workspaceId,
-        simpleRetroBoardCard.id,
-        action.id)
-          .then(() => {
-
-          })
-          .catch(error => {
-            const err = error;
-          });
+      this.setUserInActionInApi(simpleRetroBoardCard, action);
     }
+  }
+
+  private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
+    this.currentUserApiService.setUsersInAction(
+      this.usersInTeamValueSelected,
+      this.data.teamId,
+      this.data.workspaceId,
+      simpleRetroBoardCard.id,
+      action.id)
+      .then(() => {
+        
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   closeClick(): void {
