@@ -32,17 +32,23 @@
           </button>  
           <form [formGroup]="addUserToActionForm">
             <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
-              <mat-label>Add people to action</mat-label>
-              <mat-select (openedChange)="usersInTeamsChange($event, retroBoardCard, action)"
-              [formControl]="usersInTeamFormControl" multiple>
-                <mat-option 
-                  *ngFor="let usersInTeam of usersInTeams"
-                  [value]="usersInTeam.userFirebaseDocId">
+              <mat-select (openedChange)="usersInTeamsChange($event, retroBoardCard, action)" placeholder="Add people to action" formControlName="{{action.actionNameForFormControl}}" multiple>
+                <mat-option *ngFor="let usersInTeam of usersInTeams" [value]="usersInTeam">
                     {{usersInTeam.displayName}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-          </form>           
+          </form>  
+          
+          <form [formGroup]="patientCategory">
+            <mat-form-field  style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+              <mat-select placeholder="Category" formControlName="patientCategory" multiple>
+                <mat-option *ngFor="let category of patientCategories" [value]="category">
+                  {{category.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
 
           <mat-slide-toggle
           color="primary"  

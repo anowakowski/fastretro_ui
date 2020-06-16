@@ -75,6 +75,18 @@ export class CurrentUserApiService {
     return this.httpClient.get<any>(url, httpOptions).toPromise();
   }
 
+  getUsersInActionInTeam(workspaceFirebaseDocId: any, teamFirebaseDocId: any, ) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUsersInAction/' + workspaceFirebaseDocId + '/' + teamFirebaseDocId;
+    return this.httpClient.get<any[]>(url, httpOptions).toPromise();
+  }
+
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
 

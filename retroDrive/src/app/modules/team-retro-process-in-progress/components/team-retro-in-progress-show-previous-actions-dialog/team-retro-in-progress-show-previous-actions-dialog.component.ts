@@ -20,6 +20,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   addUserToActionForm: FormGroup;
   usersInTeamFormControl = new FormControl();
+  usersInAction: any[];
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowPreviousActionsDialogComponent>,
@@ -34,12 +35,31 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   actions: RetroBoardCardActions[];
 
   usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
+  usersInActionsIds: string[] = new Array<string>();
   usersInTeamValueSelected: any;
 
   retroBoardCards = new Array<RetroBoardCard>();
 
+  patientCategory: FormGroup;
+
+  patientCategories=[{
+    id:1,
+    name:'name 1',
+    description:'description 1'
+  },{
+    id:2,
+    name:'name 2',
+    description:'description 2'
+  },{
+    id:3,
+    name:'name 3',
+    description:'description 3'
+  }]  
+
   ngOnInit() {
     if (this.data != null) {
+      this.createActionForRetroBoardForm();
+      this.createAddUserToActionForm();
       if (this.data.previousRetroBoardToShowActionsDocId != null) {
         this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardToShowActionsDocId)
           .then(retroBoardCardsSnapshot => {
@@ -71,15 +91,48 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                     };
                     this.usersInTeams.push(usrsInTeam);
                   });
-                }
+
+
+
+                  this.currentUserApiService.getUsersInActionInTeam(this.data.workspaceId, this.data.teamId)
+                    .then(userInActionResponse => {
+                      if (userInActionResponse !== null && userInActionResponse !== undefined) {
+                        if (userInActionResponse.length > 0) {
+
+                          this.usersInAction = userInActionResponse;
+                          // const toUsers = this.usersInTeams.filter(x => x.userFirebaseDocId === '3GMTY13RlNNFXwBqbjmOCjE2vgw2');
+                          // this.addUserToActionForm.get('action0').setValue(toUsers);
+                        }
+                      }
+                    })
+                    .catch(error => {
+                      const err = error;
+                    });
+                  }
+
+                const userInTeamsAsDefault = [this.usersInTeams[0]];
+                this.usersInTeamFormControl.setValue(userInTeamsAsDefault);
             });
           }
         });
-
       }
+
+      this.patientCategory = this.formBuilder.group({
+        patientCategory: [null]
+      });
+
+      const toSelect = this.patientCategories.filter(c => c.id === 3);
+      this.patientCategory.get('patientCategory').setValue(toSelect);
     }
-    this.createActionForRetroBoardForm();
-    this.createAddUserToActionForm();
+  }
+
+  private setCurrentUsersInActions(actionName, retroBoardCardActionId) {
+    const filteredUsersInAction = this.usersInAction.filter(x => x.retroBoardActionCardFirebaseDocId === retroBoardCardActionId);
+    const filteredUserInTeamsToAdd = new Array<UsersInTeams>();
+
+    filteredUsersInAction
+      .forEach(ua => filteredUserInTeamsToAdd.push(this.usersInTeams.find(ut => ut.userFirebaseDocId === ua.userFirebaseDocId)));
+    this.addUserToActionForm.get(actionName).setValue(filteredUserInTeamsToAdd);
   }
 
   private prepareRetroBoardWithAction() {
@@ -92,7 +145,12 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   usersInTeamsChange(event, simpleRetroBoardCard: any, action: any) {
     const isChosenUsersInTeam = !event;
     if (isChosenUsersInTeam) {
-      this.usersInTeamValueSelected = this.usersInTeamFormControl.value;
+      const actionName = action.actionNameForFormControl;
+      const selectedUserInTeams = this.addUserToActionForm.get(actionName).value as UsersInTeams[];
+      const selectedUsersInTeamsIds = new Array<string>();
+      selectedUserInTeams.forEach(usr => selectedUsersInTeamsIds.push(usr.userFirebaseDocId));
+
+      this.usersInTeamValueSelected = selectedUsersInTeamsIds;
       this.setUserInActionInApi(simpleRetroBoardCard, action);
     }
   }
@@ -104,9 +162,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       this.data.workspaceId,
       simpleRetroBoardCard.id,
       action.id)
-      .then(() => {
-        
-      })
+      .then(() => {})
       .catch(error => {
         const err = error;
       });
@@ -175,30 +231,44 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   private createAddUserToActionForm() {
     this.addUserToActionForm = this.formBuilder.group({
-      usersInTeamFormControl: this.usersInTeamFormControl
+      usersInTeamFormControl: [null]
     });
   }
 
   private prepareSimpleCartAndActionsActions() {
     this.simpleRetroBoardCards = new Array<any>();
+    const actionBaseNameForFormControl = 'action';
+    let actionIndex = 0;
     this.retroBoardCardsWithActions.forEach(retroBoardCard => {
       const simpleCardToAdd: any = {};
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       simpleCardToAdd.id = retroBoardCard.id;
+
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
-          const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
+          const retroBoardCardAction = actionSnapshot.data();
           if (retroBoardCardAction !== undefined) {
             const docId = actionSnapshot.id;
             retroBoardCardAction.isEdit = false;
             retroBoardCardAction.id = docId;
+            const actionName = actionBaseNameForFormControl + actionIndex.toString();
+            retroBoardCardAction.actionNameForFormControl = actionName;
+
+            this.prepareDyncamicFormControl(actionName);
             simpleCardToAdd.actions.push(retroBoardCardAction);
+
+            this.setCurrentUsersInActions(actionName, retroBoardCardAction.id);
+            actionIndex++;
           }
         });
       });
       this.simpleRetroBoardCards.push(simpleCardToAdd);
     });
+  }
+
+  private prepareDyncamicFormControl(actionName: string) {
+    this.addUserToActionForm.setControl(actionName, new FormControl());
   }
 
   private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
