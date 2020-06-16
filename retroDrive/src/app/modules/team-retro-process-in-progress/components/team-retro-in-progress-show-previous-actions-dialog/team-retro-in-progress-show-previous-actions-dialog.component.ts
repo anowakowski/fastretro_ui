@@ -86,20 +86,10 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                       const err = error;
                     });
                   }
-
-                const userInTeamsAsDefault = [this.usersInTeams[0]];
-                this.usersInTeamFormControl.setValue(userInTeamsAsDefault);
             });
           }
         });
       }
-
-      this.patientCategory = this.formBuilder.group({
-        patientCategory: [null]
-      });
-
-      const toSelect = this.patientCategories.filter(c => c.id === 3);
-      this.patientCategory.get('patientCategory').setValue(toSelect);
     }
   }
 
@@ -235,7 +225,9 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
             this.prepareDyncamicFormControl(actionName);
             simpleCardToAdd.actions.push(retroBoardCardAction);
 
-            this.setCurrentUsersInActions(actionName, retroBoardCardAction.id);
+            if (this.usersInAction !== undefined) {
+              this.setCurrentUsersInActions(actionName, retroBoardCardAction.id);
+            }
             actionIndex++;
           }
         });
