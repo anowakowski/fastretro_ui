@@ -39,16 +39,6 @@
               </mat-select>
             </mat-form-field>
           </form>  
-          
-          <form [formGroup]="patientCategory">
-            <mat-form-field  style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
-              <mat-select placeholder="Category" formControlName="patientCategory" multiple>
-                <mat-option *ngFor="let category of patientCategories" [value]="category">
-                  {{category.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </form>
 
           <mat-slide-toggle
           color="primary"  

@@ -31,7 +31,6 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   ) { }
 
   simpleRetroBoardCards: any[];
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   actions: RetroBoardCardActions[];
 
   usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
@@ -39,22 +38,6 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   usersInTeamValueSelected: any;
 
   retroBoardCards = new Array<RetroBoardCard>();
-
-  patientCategory: FormGroup;
-
-  patientCategories=[{
-    id:1,
-    name:'name 1',
-    description:'description 1'
-  },{
-    id:2,
-    name:'name 2',
-    description:'description 2'
-  },{
-    id:3,
-    name:'name 3',
-    description:'description 3'
-  }]  
 
   ngOnInit() {
     if (this.data != null) {
@@ -80,7 +63,6 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
               this.currentUserApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
                 if (response !== undefined && response !== null) {
                   const usersInTeamsResponse = response;
-
                   usersInTeamsResponse.forEach(usrsInTeam => {
                     const usersInTeam: UsersInTeams = {
                       userFirebaseDocId: usrsInTeam.userFirebaseDocId,
@@ -92,16 +74,11 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                     this.usersInTeams.push(usrsInTeam);
                   });
 
-
-
                   this.currentUserApiService.getUsersInActionInTeam(this.data.workspaceId, this.data.teamId)
                     .then(userInActionResponse => {
                       if (userInActionResponse !== null && userInActionResponse !== undefined) {
                         if (userInActionResponse.length > 0) {
-
                           this.usersInAction = userInActionResponse;
-                          // const toUsers = this.usersInTeams.filter(x => x.userFirebaseDocId === '3GMTY13RlNNFXwBqbjmOCjE2vgw2');
-                          // this.addUserToActionForm.get('action0').setValue(toUsers);
                         }
                       }
                     })
@@ -269,8 +246,5 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   private prepareDyncamicFormControl(actionName: string) {
     this.addUserToActionForm.setControl(actionName, new FormControl());
-  }
-
-  private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
   }
 }
