@@ -5,7 +5,7 @@
       <textarea [formControl]="actionTextAreaFormControl" matInput></textarea>
       <mat-error *ngIf="actionTextAreaFormControl.hasError('maxlength')">
         Your action text it's to long.
-    </mat-error>          
+      </mat-error>          
     </mat-form-field>
     <button style="width: 100%; margin-top: 5px;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
   </form>

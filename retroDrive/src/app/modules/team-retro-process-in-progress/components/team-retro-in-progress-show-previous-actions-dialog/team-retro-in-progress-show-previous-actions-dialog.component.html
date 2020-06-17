@@ -53,6 +53,9 @@
             <mat-form-field class="action-text-area">
               <mat-label>Add new action to card</mat-label>
               <input [formControl]="actionTextAreaFormControl" matInput/>
+              <mat-error *ngIf="actionTextAreaFormControl.hasError('maxlength')">
+                Your action text it's to long.
+              </mat-error>                
             </mat-form-field>
           </form>
         </span>
