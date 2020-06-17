@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-previous-actions-dialog',
@@ -80,6 +81,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                       if (userInActionResponse !== null && userInActionResponse !== undefined) {
                         if (userInActionResponse.length > 0) {
                           this.usersInAction = userInActionResponse;
+                          this.setCurrentUsersInActionsWithFormControl();
                         }
                       }
                     })
@@ -94,7 +96,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     }
   }
 
-  private setCurrentUsersInActionsWithFormControl(actionName, retroBoardCardActionId) {
+  private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
     if (this.usersInAction !== undefined) {
       const filteredUsersInAction = this.usersInAction.filter(x => x.retroBoardActionCardFirebaseDocId === retroBoardCardActionId);
       const filteredUserInTeamsToAdd = new Array<UsersInTeams>();
@@ -102,6 +104,35 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       filteredUsersInAction
         .forEach(ua => filteredUserInTeamsToAdd.push(this.usersInTeams.find(ut => ut.userFirebaseDocId === ua.userFirebaseDocId)));
       this.addUserToActionForm.get(actionName).setValue(filteredUserInTeamsToAdd);
+    }
+  }
+
+  private setCurrentUsersInActionsWithFormControl() {
+    if (this.isCreatedOneOfDyncamicActionForm) {
+      const mapedUserInActionsRBCardIds = this.usersInAction.map(ua => ua.retroBoardCardFirebaseDocId);
+      const setUsersInActionWithoutRepetsRBCardDocIds = new Set();
+      mapedUserInActionsRBCardIds.forEach(mua => setUsersInActionWithoutRepetsRBCardDocIds.add(mua));
+
+      setUsersInActionWithoutRepetsRBCardDocIds.forEach(rbCardId => {
+        const filteredUserInAction = this.usersInAction.filter(ua => ua.retroBoardCardFirebaseDocId === rbCardId);
+        const mappedUserInActionsRBActionsIds = filteredUserInAction.map(fua => fua.retroBoardActionCardFirebaseDocId);
+        const setUserInActionWithoutRepetsRBCActionDocIds = new Set();
+        mappedUserInActionsRBActionsIds.forEach(muaa => setUserInActionWithoutRepetsRBCActionDocIds.add(muaa));
+
+        setUserInActionWithoutRepetsRBCActionDocIds.forEach(rbActionId => {
+          const filteredUsersInAction = this.usersInAction.filter(ua => ua.retroBoardActionCardFirebaseDocId === rbActionId);
+          const findedSimpleCard = this.simpleRetroBoardCards.find(sc => sc.id === rbCardId);
+          const findedAction = findedSimpleCard.actions.find(a => a.id === rbActionId);
+
+          const actionName = findedAction.actionNameForFormControl;
+          const filteredUserInTeamsToAdd = new Array<UsersInTeams>();
+
+          filteredUsersInAction
+            .forEach(ua => filteredUserInTeamsToAdd.push(this.usersInTeams.find(ut => ut.userFirebaseDocId === ua.userFirebaseDocId)));
+
+          this.addUserToActionForm.get(actionName).setValue(filteredUserInTeamsToAdd);
+        });
+      });
     }
   }
 
@@ -228,7 +259,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
             this.prepareDyncamicFormControlForAction(actionName);
             simpleCardToAdd.actions.push(retroBoardCardAction);
 
-            this.setCurrentUsersInActionsWithFormControl(actionName, retroBoardCardAction.id);
+            this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
 
             actionForDynamicNameOfFormControlIndex++;
           }
