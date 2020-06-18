@@ -1,6 +1,6 @@
 <h1 mat-dialog-title><b>All retro actions from previous retro board</b></h1>
-<button mat-raised-button color="primary" (click)="onGoToPreviousRetroBoard()">Go to previous retro board detail</button>
 <div mat-dialog-content>
+  <button mat-raised-button color="primary" (click)="onGoToPreviousRetroBoard()">Go to previous retro board detail</button>
   <mat-list>
     <div *ngFor="let retroBoardCard of simpleRetroBoardCards">
       <h3 matSubheader style="margin-top: 10px;">Actions  of {{retroBoardCard.name}} card</h3>
