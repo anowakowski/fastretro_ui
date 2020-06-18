@@ -149,6 +149,18 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     }
   }
 
+  changeActionIsSolved(event, simpleRetroBoardCard: any, action: any) {
+    const actionIsSolved = event.checked;
+
+    const retroBoardCardActionToSave = {
+      actionIsSolved
+    };
+
+    if (actionIsSolved !== undefined) {
+      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+    }
+  }
+
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
     this.currentUserInRetroBoardApiService.setUsersInAction(
       this.usersInTeamValueSelected,
