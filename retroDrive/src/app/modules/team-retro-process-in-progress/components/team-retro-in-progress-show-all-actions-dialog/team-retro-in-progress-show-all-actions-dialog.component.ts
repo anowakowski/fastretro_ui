@@ -113,18 +113,20 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
   }
 
   updateActionFromEdit(action: RetroBoardCardActions) {
-    const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
-    action.isEdit = false;
-    action.text = textValue;
+    if (this.addNewActionForRetroBoardCardForm.valid) {
+      const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
+      action.isEdit = false;
+      action.text = textValue;
 
-    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
 
-    const retroBoardCardActionToSave = {
-      text: textValue,
-      creationDate: currentDate,
-    };
+      const retroBoardCardActionToSave = {
+        text: textValue,
+        creationDate: currentDate,
+      };
 
-    this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+    }
   }
 
   shouldShowDivider(currentRetroBoardCard) {
