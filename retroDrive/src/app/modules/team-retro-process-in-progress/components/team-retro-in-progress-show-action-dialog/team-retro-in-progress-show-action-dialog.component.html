@@ -6,7 +6,7 @@
     <div *ngFor="let action of actions">
       <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
         <mat-icon matListIcon>description</mat-icon>
-        <span matLine>
+        <span style="white-space: pre-wrap;" matLine>
           <span style="font-size: 14px;">{{action.text}}</span>
         </span>
         <span matLine > 
