@@ -99,7 +99,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
 
   }
 
-  changeActionIsSolved(event, simpleRetroBoardCard: any, action: any) {
+  changeActionIsSolved(event, action: any) {
     const actionIsSolved = event.checked;
 
     const retroBoardCardActionToSave = {
