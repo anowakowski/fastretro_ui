@@ -115,8 +115,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   onGoToPreviousRetroBoard() {
     this.dialogRef.close();
-    this.dataPassingService.setData(this.previousUrlParameterId, this.findedPreviousRetroBoard);
-    this.router.navigateByUrl('/retro-in-progress/' + this.previousUrlParameterId);
+    this.router.navigate(['/retro-in-progress/' + this.previousUrlParameterId]);
   }
 
   private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
