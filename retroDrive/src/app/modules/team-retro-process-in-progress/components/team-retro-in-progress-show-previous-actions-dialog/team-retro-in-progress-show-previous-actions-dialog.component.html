@@ -42,7 +42,9 @@
 
           <mat-slide-toggle
             color="primary"  
-            style="margin-top: -20px; margin-left: 10px; margin-right: -10px; font-size: 13px;">
+            style="margin-top: -20px; margin-left: 10px; margin-right: -10px; font-size: 13px;"
+            [checked]="action.actionIsSolved"
+            (change)="changeActionIsSolved($event, retroBoardCard, action)">
               Action is solved
           </mat-slide-toggle>
 

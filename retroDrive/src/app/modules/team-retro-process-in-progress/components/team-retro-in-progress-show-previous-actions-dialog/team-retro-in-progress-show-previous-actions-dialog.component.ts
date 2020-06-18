@@ -157,6 +157,18 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     }
   }
 
+  changeActionIsSolved(event, simpleRetroBoardCard: any, action: any) {
+    const actionIsSolved = event.checked;
+
+    const retroBoardCardActionToSave = {
+      actionIsSolved
+    };
+
+    if (actionIsSolved !== undefined) {
+      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+    }
+  }
+
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
     this.currentUserApiService.setUsersInAction(
       this.usersInTeamValueSelected,
