@@ -45,6 +45,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     if (this.data != null) {
       this.createActionForRetroBoardForm();
       this.createAddUserToActionForm();
+
       if (this.data.previousRetroBoardToShowActionsDocId != null) {
         this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardToShowActionsDocId)
           .then(retroBoardCardsSnapshot => {
