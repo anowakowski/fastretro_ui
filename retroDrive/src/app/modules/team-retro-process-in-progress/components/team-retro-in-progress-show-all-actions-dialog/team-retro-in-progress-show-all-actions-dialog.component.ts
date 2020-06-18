@@ -3,10 +3,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UsersInTeams } from 'src/app/models/usersInTeams';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-all-actions-dialog',
@@ -15,8 +16,13 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 })
 export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit {
   addNewActionForRetroBoardCardForm: FormGroup;
-  actionTextAreaFormControl = new FormControl('');
+  actionTextAreaFormControl = new FormControl('', Validators.maxLength(150));
   dataRetroBoardCards: RetroBoardCard[];
+
+  addUserToActionForm: FormGroup;
+  usersInTeamFormControl = new FormControl();
+  usersInAction: any[];
+  isCreatedOneOfDyncamicActionForm: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowAllActionsDialogComponent>,
@@ -27,14 +33,48 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
   ) { }
 
   simpleRetroBoardCards: any[];
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   actions: RetroBoardCardActions[];
+
+  usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
+  usersInActionsIds: string[] = new Array<string>();
+  usersInTeamValueSelected: any;
 
   ngOnInit() {
     this.dataRetroBoardCards = this.data.retroBoardCardToShow;
+
+    this.currentUserInRetroBoardApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
+      if (response !== undefined && response !== null) {
+        const usersInTeamsResponse = response;
+        usersInTeamsResponse.forEach(usrsInTeam => {
+          const usersInTeam: UsersInTeams = {
+            userFirebaseDocId: usrsInTeam.userFirebaseDocId,
+            displayName: usrsInTeam.chosenAvatarUrl,
+            chosenAvatarUrl: usrsInTeam.displayName,
+            teamFirebaseDocId: usrsInTeam.teamFirebaseDocId,
+            workspaceFirebaseDocId: usrsInTeam.workspaceFirebaseDocId
+          };
+          this.usersInTeams.push(usrsInTeam);
+        });
+
+        this.currentUserInRetroBoardApiService.getUsersInActionInTeam(this.data.workspaceId, this.data.teamId)
+          .then(userInActionResponse => {
+            if (userInActionResponse !== null && userInActionResponse !== undefined) {
+              if (userInActionResponse.length > 0) {
+                this.usersInAction = userInActionResponse;
+                this.setCurrentUsersInActionsWithFormControl();
+              }
+            }
+          })
+          .catch(error => {
+            const err = error;
+          });
+        }
+    });
+
     this.prepareSimpleCartAndActionsActions();
     this.prepareActions();
     this.createActionForRetroBoardForm();
+    this.createAddUserToActionForm();
   }
 
   closeClick(): void {
@@ -94,6 +134,32 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     if (currentRetroBoardIndex === retroBoardCardCount) {}
   }
 
+  usersInTeamsChange(event, simpleRetroBoardCard: any, action: any) {
+    const isChosenUsersInTeam = !event;
+    if (isChosenUsersInTeam) {
+      const actionName = action.actionNameForFormControl;
+      const selectedUserInTeams = this.addUserToActionForm.get(actionName).value as UsersInTeams[];
+      const selectedUsersInTeamsIds = new Array<string>();
+      selectedUserInTeams.forEach(usr => selectedUsersInTeamsIds.push(usr.userFirebaseDocId));
+
+      this.usersInTeamValueSelected = selectedUsersInTeamsIds;
+      this.setUserInActionInApi(simpleRetroBoardCard, action);
+    }
+  }
+
+  private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
+    this.currentUserInRetroBoardApiService.setUsersInAction(
+      this.usersInTeamValueSelected,
+      this.data.teamId,
+      this.data.workspaceId,
+      simpleRetroBoardCard.id,
+      action.id)
+      .then(() => {})
+      .catch(error => {
+        const err = error;
+      });
+  }
+
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionsToUpdate: any[]) {
     return {
       actions: actionsToUpdate
@@ -118,33 +184,94 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
       });
   }
 
+  private setCurrentUsersInActionsWithFormControl() {
+    if (this.isCreatedOneOfDyncamicActionForm) {
+      const mapedUserInActionsRBCardIds = this.usersInAction.map(ua => ua.retroBoardCardFirebaseDocId);
+      const setUsersInActionWithoutRepetsRBCardDocIds = new Set();
+      mapedUserInActionsRBCardIds.forEach(mua => setUsersInActionWithoutRepetsRBCardDocIds.add(mua));
+
+      setUsersInActionWithoutRepetsRBCardDocIds.forEach(rbCardId => {
+        const filteredUserInAction = this.usersInAction.filter(ua => ua.retroBoardCardFirebaseDocId === rbCardId);
+        const mappedUserInActionsRBActionsIds = filteredUserInAction.map(fua => fua.retroBoardActionCardFirebaseDocId);
+        const setUserInActionWithoutRepetsRBCActionDocIds = new Set();
+        mappedUserInActionsRBActionsIds.forEach(muaa => setUserInActionWithoutRepetsRBCActionDocIds.add(muaa));
+
+        setUserInActionWithoutRepetsRBCActionDocIds.forEach(rbActionId => {
+          const filteredUsersInAction = this.usersInAction.filter(ua => ua.retroBoardActionCardFirebaseDocId === rbActionId);
+          const findedSimpleCard = this.simpleRetroBoardCards.find(sc => sc.id === rbCardId);
+          const findedAction = findedSimpleCard.actions.find(a => a.id === rbActionId);
+
+          const actionName = findedAction.actionNameForFormControl;
+          const filteredUserInTeamsToAdd = new Array<UsersInTeams>();
+
+          filteredUsersInAction
+            .forEach(ua => filteredUserInTeamsToAdd.push(this.usersInTeams.find(ut => ut.userFirebaseDocId === ua.userFirebaseDocId)));
+
+          this.addUserToActionForm.get(actionName).setValue(filteredUserInTeamsToAdd);
+        });
+      });
+    }
+  }
+
   private createActionForRetroBoardForm() {
     this.addNewActionForRetroBoardCardForm = this.formBuilder.group({
       actionTextAreaFormControl: this.actionTextAreaFormControl,
     });
   }
 
+  private createAddUserToActionForm() {
+    this.addUserToActionForm = this.formBuilder.group({
+      usersInTeamFormControl: [null]
+    });
+  }
+
+  private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
+    if (this.usersInAction !== undefined) {
+      const filteredUsersInAction = this.usersInAction.filter(x => x.retroBoardActionCardFirebaseDocId === retroBoardCardActionId);
+      const filteredUserInTeamsToAdd = new Array<UsersInTeams>();
+
+      filteredUsersInAction
+        .forEach(ua => filteredUserInTeamsToAdd.push(this.usersInTeams.find(ut => ut.userFirebaseDocId === ua.userFirebaseDocId)));
+      this.addUserToActionForm.get(actionName).setValue(filteredUserInTeamsToAdd);
+    }
+  }
+
   private prepareSimpleCartAndActionsActions() {
     this.simpleRetroBoardCards = new Array<any>();
-    this.dataRetroBoardCards.forEach(dataRetroBoardCard => {
+    const actionBaseNameForFormControl = 'action';
+    let actionForDynamicNameOfFormControlIndex = 0;
+    this.dataRetroBoardCards.forEach(retroBoardCard => {
       const simpleCardToAdd: any = {};
-      simpleCardToAdd.name = dataRetroBoardCard.name;
-      simpleCardToAdd.id = dataRetroBoardCard.id;
+      simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
-      dataRetroBoardCard.actions.forEach(action => {
+      simpleCardToAdd.id = retroBoardCard.id;
+
+      retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
-          const retroBoardCardAction = actionSnapshot.data() as RetroBoardCardActions;
-          const docId = actionSnapshot.id;
-          retroBoardCardAction.isEdit = false;
-          retroBoardCardAction.id = docId;
-          simpleCardToAdd.actions.push(retroBoardCardAction);
+          const retroBoardCardAction = actionSnapshot.data();
+          if (retroBoardCardAction !== undefined) {
+            const docId = actionSnapshot.id;
+            retroBoardCardAction.isEdit = false;
+            retroBoardCardAction.id = docId;
+            const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
+            retroBoardCardAction.actionNameForFormControl = actionName;
+
+            this.prepareDyncamicFormControlForAction(actionName);
+            simpleCardToAdd.actions.push(retroBoardCardAction);
+
+            this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+
+            actionForDynamicNameOfFormControlIndex++;
+          }
         });
       });
       this.simpleRetroBoardCards.push(simpleCardToAdd);
     });
   }
 
-  private getArrayIndex(findedRetroBoardCard: RetroBoardCard, array: any[]) {
+  private prepareDyncamicFormControlForAction(actionName: string) {
+    this.addUserToActionForm.setControl(actionName, new FormControl());
+    this.isCreatedOneOfDyncamicActionForm = true;
   }
 
   private prepareActions() {
