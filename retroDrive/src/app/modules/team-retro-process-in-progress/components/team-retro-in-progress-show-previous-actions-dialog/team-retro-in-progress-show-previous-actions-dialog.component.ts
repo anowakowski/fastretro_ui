@@ -8,6 +8,9 @@ import { formatDate } from '@angular/common';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
 import { ThrowStmt } from '@angular/compiler';
+import { RetroBoard } from 'src/app/models/retroBoard';
+import { DataPassingService } from 'src/app/services/data-passing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-previous-actions-dialog',
@@ -23,13 +26,17 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
   usersInTeamFormControl = new FormControl();
   usersInAction: any[];
   isCreatedOneOfDyncamicActionForm: boolean;
+  previousUrlParameterId: string;
+  findedPreviousRetroBoard: RetroBoard;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowPreviousActionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
     private formBuilder: FormBuilder,
-    private currentUserApiService: CurrentUserApiService
+    private currentUserApiService: CurrentUserApiService,
+    private dataPassingService: DataPassingService,
+    private router: Router
   ) { }
 
   simpleRetroBoardCards: any[];
@@ -45,6 +52,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     if (this.data != null) {
       this.createActionForRetroBoardForm();
       this.createAddUserToActionForm();
+      this.preparePreviousRetroBoard();
 
       if (this.data.previousRetroBoardToShowActionsDocId != null) {
         this.firestoreService.retroBoardCardsFilteredByRetroBoardId(this.data.previousRetroBoardToShowActionsDocId)
@@ -90,11 +98,25 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                       const err = error;
                     });
                   }
-            });
-          }
-        });
+              });
+            }
+          });
       }
     }
+  }
+
+  preparePreviousRetroBoard() {
+    this.firestoreService.findRetroBoardById(this.data.previousRetroBoardToShowActionsDocId).then(retroBoardSnapshot => {
+      this.findedPreviousRetroBoard = retroBoardSnapshot.data() as RetroBoard;
+      this.findedPreviousRetroBoard.id = retroBoardSnapshot.id as string;
+      this.previousUrlParameterId = this.findedPreviousRetroBoard.urlParamId;
+    });
+  }
+
+  onGoToPreviousRetroBoard() {
+    this.dialogRef.close();
+    this.dataPassingService.setData(this.previousUrlParameterId, this.findedPreviousRetroBoard);
+    this.router.navigateByUrl('/retro-in-progress/' + this.previousUrlParameterId);
   }
 
   private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
