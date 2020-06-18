@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RetroBoardCard } from 'src/app/models/retroBoardCard';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
@@ -16,7 +16,7 @@ import { UsersInTeams } from 'src/app/models/usersInTeams';
 })
 export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   addNewActionForRetroBoardCardForm: FormGroup;
-  actionTextAreaFormControl = new FormControl('');
+  actionTextAreaFormControl = new FormControl('', Validators.maxLength(150));
   dataRetroBoardCard: RetroBoardCard;
 
   addUserToActionForm: FormGroup;
@@ -136,18 +136,20 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   }
 
   updateActionFromEdit(action: RetroBoardCardActions) {
-    const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
-    action.isEdit = false;
-    action.text = textValue;
+    if (this.addNewActionForRetroBoardCardForm.valid) {
+      const textValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
+      action.isEdit = false;
+      action.text = textValue;
 
-    const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
 
-    const retroBoardCardActionToSave = {
-      text: textValue,
-      creationDate: currentDate,
-    };
+      const retroBoardCardActionToSave = {
+        text: textValue,
+        creationDate: currentDate,
+      };
 
-    this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+    }
   }
 
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
