@@ -3,7 +3,10 @@
     <mat-form-field class="example-full-width">
       <mat-label>Add new action to card</mat-label>
       <textarea [formControl]="actionTextAreaFormControl" matInput></textarea>
+      <mat-error *ngIf="actionTextAreaFormControl.hasError('maxlength')">
+        Your action text it's to long.
+      </mat-error>          
     </mat-form-field>
-    <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
+    <button style="width: 100%; margin-top: 5px;" type="submit" mat-raised-button color="primary"> Create New Retro Board</button>
   </form>
 </mat-nav-list>

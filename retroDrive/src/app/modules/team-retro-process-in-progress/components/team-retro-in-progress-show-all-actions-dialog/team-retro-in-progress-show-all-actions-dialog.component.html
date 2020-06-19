@@ -6,7 +6,7 @@
       <div *ngFor="let action of retroBoardCard.actions">
         <mat-list-item *ngIf="!action.isEdit" style="margin-top: -18px;">
           <mat-icon matListIcon>description</mat-icon>
-          <span matLine>
+          <span style="white-space: pre-wrap;" matLine>
             <span style="font-size: 14px;">{{action.text}}</span>
           </span>
           <span matLine > 
@@ -23,12 +23,22 @@
           <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;" (click)="deleteAction(action, retroBoardCard)">
             <mat-icon>delete</mat-icon>
           </button>             
-          <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
-            <mat-label>Add people to action</mat-label>
-            <mat-select multiple>
-              <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <form [formGroup]="addUserToActionForm">
+            <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
+              <mat-select (openedChange)="usersInTeamsChange($event, retroBoardCard, action)" placeholder="Add people to action" formControlName="{{action.actionNameForFormControl}}" multiple>
+                <mat-option *ngFor="let usersInTeam of usersInTeams" [value]="usersInTeam">
+                    {{usersInTeam.displayName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>  
+          <mat-slide-toggle
+            color="primary"  
+            style="margin-top: -20px; margin-left: 10px; margin-right: -10px; font-size: 13px;"
+            [checked]="action.actionIsSolved"
+            (change)="changeActionIsSolved($event, retroBoardCard, action)">
+              Action is solved
+          </mat-slide-toggle>         
        </mat-list-item>
 
        <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
@@ -38,6 +48,9 @@
             <mat-form-field class="action-text-area">
               <mat-label>Add new action to card</mat-label>
               <input [formControl]="actionTextAreaFormControl" matInput/>
+              <mat-error *ngIf="actionTextAreaFormControl.hasError('maxlength')">
+                Your action text it's to long.
+              </mat-error>              
             </mat-form-field>
           </form>
         </span>

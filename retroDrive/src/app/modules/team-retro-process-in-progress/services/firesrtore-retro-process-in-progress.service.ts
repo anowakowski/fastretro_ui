@@ -251,6 +251,10 @@ export class FiresrtoreRetroProcessInProgressService {
     return this.firestoreBase.getFilteredByIdSnapshotChanges('retroBoards', id);
   }
 
+  findRetroBoardById(id: string) {
+    return this.firestoreBase.getFilteredById('retroBoards', id);
+  }
+
   removeRetroBoardCard(id: string) {
     this.firestoreBase.deleteItem('/retroBoardCards/', id);
   }

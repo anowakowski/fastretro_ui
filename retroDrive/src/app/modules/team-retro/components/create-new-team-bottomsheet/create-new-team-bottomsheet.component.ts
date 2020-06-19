@@ -5,6 +5,7 @@ import { formatDate } from '@angular/common';
 import { Workspace } from 'src/app/models/workspace';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-create-new-team-bottomsheet',
@@ -20,7 +21,8 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
     private bottomSheetRef: MatBottomSheetRef<CreateNewTeamBottomsheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private formBuilder: FormBuilder,
-    private firestoreService: FirestoreRetroBoardService) { }
+    private firestoreService: FirestoreRetroBoardService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   ngOnInit() {
     this.createNewTeamsForm();
@@ -62,13 +64,28 @@ export class CreateNewTeamBottomsheetComponent implements OnInit {
             this.firestoreService.addNewUserTeams(userTeamsToSave);
           }
 
-          this.bottomSheetRef.dismiss();
+          if (this.currentUserApiService.isTokenExpired()) {
+            this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+              this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+              this.setUserInTeamInApi(newTeamId);
+            });
+          } else {
+            this.setUserInTeamInApi(newTeamId);
+          }
         });
-
       });
     });
-
   }
 
-
+  private setUserInTeamInApi(newTeamId: string) {
+    this.currentUserApiService.setUserInTeam(
+        this.data.currentUser.uid,
+        newTeamId,
+        this.data.currentWorkspace.id,
+        this.data.currentUser.chosenAvatarUrl,
+        this.data.currentUser.displayName)
+          .then(() => {
+            this.bottomSheetRef.dismiss();
+          });
+  }
 }

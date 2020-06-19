@@ -6,6 +6,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-join-to-existing-team-dialog',
@@ -24,7 +25,8 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<JoinToExistingTeamDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private currentUserApiService: CurrentUserApiService
   ) {}
 
   teams: Team[];
@@ -70,12 +72,31 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
         this.firestoreService.addNewUserTeams(userTeamsToSave);
       }
 
-      this.dialogRef.close();
+      if (this.currentUserApiService.isTokenExpired()) {
+        this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+          this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+          this.setUserInTeamInApi(chosenTeamId);
+        });
+      } else {
+        this.setUserInTeamInApi(chosenTeamId);
+      }
     });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  private setUserInTeamInApi(newTeamId: string) {
+    this.currentUserApiService.setUserInTeam(
+        this.data.currentUser.uid,
+        newTeamId,
+        this.data.currentWorkspace.id,
+        this.data.currentUser.chosenAvatarUrl,
+        this.data.currentUser.displayName)
+          .then(() => {
+            this.dialogRef.close();
+          });
   }
 
   private getUserTeamsForRemovingCurrentlyJoinedTeam() {
