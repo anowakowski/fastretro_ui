@@ -1,14 +1,14 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyAS5hriE7f-4tDbhFAzEHVtNhAlbVUcAYw',
-    authDomain: 'fastretro-prod.firebaseapp.com',
-    databaseURL: 'https://fastretro-prod.firebaseio.com',
-    projectId: 'fastretro-prod',
-    storageBucket: 'fastretro-prod.appspot.com',
-    messagingSenderId: '1050425746761',
-    appId: '1:1050425746761:web:853e5d51383f59d14a2698',
-    measurementId: 'G-EWQY5NMMCB'
+    apiKey: 'AIzaSyAeKbIb6hOaX8ee3GOFd5CJd9eBqpdWUZU',
+    authDomain: 'fastretro-64ade.firebaseapp.com',
+    databaseURL: 'https://fastretro-64ade.firebaseio.com',
+    projectId: 'fastretro-64ade',
+    storageBucket: 'fastretro-64ade.appspot.com',
+    messagingSenderId: '118347139489',
+    appId: '1:118347139489:web:218a2165ed856771d663e0',
+    measurementId: 'G-0JRTWZ4K3L'
   },
   apiUrl: 'https://letsretro.org/'
 };
