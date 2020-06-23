@@ -97,12 +97,12 @@
               (click)="editCard(item, column.name)">
               <form [formGroup]="addNewRetroBoardCardForm" (ngSubmit)="saveRetroBoardCard(item, column.name)">
               <div *ngIf="!item.isEdit">
-               <div *ngIf="!item.isMerged">
-                 <span 
-                  [ngClass]="{'blurry-text': ShouldBlurRetroBoardCardText(item)}">
-                    {{ item.name }}
-                  </span>
-                </div>
+              <div *ngIf="!item.isMerged">
+                <span [ngClass]="{'blurry-text': ShouldBlurRetroBoardCardText(item)}" class="wrap-container-rbcard">
+                  {{ item.name }}
+                </span>
+              
+              </div>
                <div *ngIf="item.isMerged" >
                  <div *ngFor="let content of item.mergedContent">
                   <p style="margin-bottom: -3px;">{{content.name}}</p>
