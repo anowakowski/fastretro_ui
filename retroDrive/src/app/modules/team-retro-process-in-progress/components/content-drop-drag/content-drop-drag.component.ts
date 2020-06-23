@@ -64,7 +64,7 @@ const TO_IMPROVE = 'To Improve';
 export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardCardForm: FormGroup;
-  newCardContentFormControl = new FormControl('', Validators.required);
+  newCardContentFormControl = new FormControl('', [Validators.required, Validators.maxLength(500)]);
   isInMerge = true;
 
   retroBoardData: any;

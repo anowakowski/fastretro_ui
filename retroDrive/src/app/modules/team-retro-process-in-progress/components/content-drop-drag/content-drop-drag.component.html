@@ -205,9 +205,12 @@
                     [formControl]="newCardContentFormControl"
                     [ngClass]="{'is-invalid':addNewRetroBoardCardForm.get('newCardContentFormControl').touched && addNewRetroBoardCardForm.get('newCardContentFormControl').invalid}"
                     required/>
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" *ngIf="newCardContentFormControl.hasError('required')">
                       <div>your content in new card is required</div>
                     </div>
+                    <div class="invalid-feedback" *ngIf="newCardContentFormControl.hasError('maxlength')">
+                      <div>your content card is to long</div>
+                    </div>                    
                 </mat-form-field>
                 <button type="submit" mat-raised-button color="primary"><mat-icon>add</mat-icon></button>
                 <button mat-raised-button color="warn" style="margin-left: 5px;" (click)="closeEditCard(item, column.name)"><mat-icon>remove</mat-icon></button>
