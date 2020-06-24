@@ -16,6 +16,7 @@ import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -127,13 +128,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   private prepareBaseRetroBoardOptionsAndAdditionalInfo(newRetroBoardId: string) {
     const retroBoardOptionsToSave: RetroBoardOptions = this.prepareRetroBoardOptionsToSave(newRetroBoardId);
     const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = this.prepareRetroBoardAdditionalInfo(newRetroBoardId);
-    const retroBoardLastRetroBoard: any = {
-      retroBoardFirebaseDocId: newRetroBoardId,
-      teamFirebaseDocId: this.addNewRetroBoardForm.value.teamsFormControl.id,
-      workspaceFirebaseDocId: this.currentWorkspace.id,
-      isFinished: false,
-      isStarted: false
-    };
+    const retroBoardLastRetroBoard: RetroBoardStatus = this.prepareRetroBoardStatus(newRetroBoardId);
 
     if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
@@ -148,6 +143,16 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       this.setLastRetroBoard(retroBoardLastRetroBoard);
     }
   }
+  private prepareRetroBoardStatus(newRetroBoardId: string): RetroBoardStatus {
+    return {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      teamFirebaseDocId: this.addNewRetroBoardForm.value.teamsFormControl.id,
+      workspaceFirebaseDocId: this.currentWorkspace.id,
+      isFinished: false,
+      isStarted: false
+    };
+  }
+
   private setLastRetroBoard(retroBoardLastRetroBoard: any) {
     this.currentUserApiService
       .setLastRetroBoard(
