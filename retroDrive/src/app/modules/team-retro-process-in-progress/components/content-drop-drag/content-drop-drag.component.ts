@@ -64,7 +64,7 @@ const TO_IMPROVE = 'To Improve';
 export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardCardForm: FormGroup;
-  newCardContentFormControl = new FormControl('', Validators.required);
+  newCardContentFormControl = new FormControl('', [Validators.required, Validators.maxLength(500)]);
   isInMerge = true;
 
   retroBoardData: any;
@@ -708,6 +708,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   removeRetroBoardCard(currentCard: RetroBoardCard) {
+    currentCard.isInDeleting = true;
     this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
   }
 
@@ -1034,8 +1035,23 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardCardsSubscriptions =
       this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
         .subscribe(retroBoardCardsSnapshot => {
-          this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+
+          if (this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
+            const findedEditedRBCard = this.wnetWellRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
+            this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+            this.wnetWellRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
+          } else {
+            this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          }
+
+          if (this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
+            const findedEditedRBCard = this.toImproveRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
+            this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+            this.toImproveRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
+          } else {
+            this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          }
+
           retroBoardCardsSnapshot.forEach(retroBoardCardSnapshot => {
             const retroBoardCard = retroBoardCardSnapshot.payload.doc.data() as RetroBoardCard;
             const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
@@ -1294,6 +1310,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isInAddedToAction: false,
       isClickedFromShowActionBtn: false,
       isInMerge: false,
+      isInDeleting: false,
       isMerged: false,
       isWentWellRetroBoradCol: isWentWellRetroBoradColBln,
       mergedContent: new Array<MergedRetroBoardCard>(),

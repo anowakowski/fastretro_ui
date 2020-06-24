@@ -173,3 +173,22 @@
   color: transparent;
   text-shadow: 0 0 4.5px rgb(255, 255, 255);
 }
+
+
+.wrap-container-rbcard {
+  //width:300px;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  
+  word-break: break-word;
+
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+
+// @media all and (-ms-high-contrast:none) {
+// *::-ms-backdrop, textarea, span.wrap-container-rbcard { white-space: pre-wrap !important; color:#f00; } 
+// }
