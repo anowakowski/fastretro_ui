@@ -16,6 +16,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 
 @Component({
   selector: 'app-retro-process',
@@ -41,7 +42,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private currentUserApiService: CurrentUserApiService) { }
 
   ngOnDestroy(): void {
     this.retroBoardSubscriptions.unsubscribe();
@@ -97,14 +99,55 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   onStartRetroProcess(retroBoard: RetroBoard) {
+    const retroBoardLastRetroBoard: RetroBoardStatus = this.prepareRetroBoardStatus(retroBoard);
+
+    if (this.currentUserApiService.isTokenExpired()) {
+      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.setLastRetroBoard(retroBoardLastRetroBoard, retroBoard);
+      });
+    } else {
+      this.setLastRetroBoard(retroBoardLastRetroBoard, retroBoard);
+    }
+  }
+
+  private prepareRetroBoardStatus(retroBoard: RetroBoard): RetroBoardStatus {
+    return {
+      retroBoardFirebaseDocId: retroBoard.id,
+      teamFirebaseDocId: retroBoard.team.id,
+      workspaceFirebaseDocId: retroBoard.workspaceId,
+      isFinished: false,
+      isStarted: true
+    };
+  }
+
+  private setLastRetroBoard(retroBoardLastRetroBoard: RetroBoardStatus, retroBoard: RetroBoard) {
+    this.currentUserApiService
+      .setLastRetroBoard(
+        retroBoardLastRetroBoard.retroBoardFirebaseDocId,
+        retroBoardLastRetroBoard.teamFirebaseDocId,
+        retroBoardLastRetroBoard.workspaceFirebaseDocId,
+        retroBoardLastRetroBoard.isFinished,
+        retroBoardLastRetroBoard.isStarted)
+        .then(() => {
+          this.updateInFirebase(retroBoard);
+          this.processingToNewPage(retroBoard);
+        })
+        .catch(error => {
+          const err = error;
+        });
+  }
+
+  private processingToNewPage(retroBoard: RetroBoard) {
+    this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
+    this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
+  }
+
+  private updateInFirebase(retroBoard: RetroBoard) {
     const retroBoardToUpdate = {
       isStarted: true
     };
-
     this.frbs.updateRetroBoard(retroBoardToUpdate, retroBoard.id);
-
-    this.dataPassingService.setData(retroBoard.urlParamId, retroBoard);
-    this.router.navigateByUrl('/retro-in-progress/' + retroBoard.urlParamId);
   }
 
   private prepareRetroBoard() {
@@ -135,6 +178,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   private prepareTeams(team: any, retroBoard: RetroBoard) {
     team.then(teamSnap => {
       const teamToAdd = teamSnap.data() as Team;
+      teamToAdd.id = teamSnap.id as string;
+
       retroBoard.team = teamToAdd;
       this.addToRetroBoards(retroBoard);
     });

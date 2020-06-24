@@ -140,6 +140,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
         this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
         this.setRetroBoardOptions(retroBoardOptionsToSave);
         this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
+        this.setLastRetroBoard(retroBoardLastRetroBoard);
       });
     } else {
       this.setRetroBoardOptions(retroBoardOptionsToSave);
@@ -160,6 +161,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
           const err = error;
         });
   }
+
   private setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
     this.currentUserApiService.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo).then(() => {})
     .catch(error => {
