@@ -19,7 +19,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
 
   shouldBlurRetroBoardCard: boolean;
   hideVoutCountInretroBoardCard: boolean;
-  selectedVouteCount = 6;
+  selectedVouteCount = 3;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressRetroBoardOptionsDialogComponent>,
@@ -84,6 +84,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
       this.retroBoardOptions = response;
       this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
       this.hideVoutCountInretroBoardCard = this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard;
+      this.selectedVouteCount = this.retroBoardOptions.maxVouteCount;
     })
     .catch(error => {
       const err = error;
