@@ -382,7 +382,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private voteCardProcess(currentCard: RetroBoardCard) {
     this.currentUserInRetroBoardApiService.getUserVoteCount(this.currentUser.uid, this.retroBoardToProcess.id).then(response => {
       const userVoteCount = response;
-      if (userVoteCount >= 6) {
+      if (userVoteCount >= this.retroBoardOptions.maxVouteCount) {
         this.openSnackBar('you are currently used all 6 votes');
       } else {
         this.firestoreRetroInProgressService.findRetroBoardCardById(currentCard.id).then(findedRetroBoardCardDoc => {

@@ -116,7 +116,6 @@ export class DashboardComponent implements OnInit {
           if (retroBoardData.isStarted) {
             if (retroBoardData.isFinished) {
               this.finishedRetroBoards.push(retroBoardData);
-
             } else {
               this.openRetroBoards.push(retroBoardData);
             }
