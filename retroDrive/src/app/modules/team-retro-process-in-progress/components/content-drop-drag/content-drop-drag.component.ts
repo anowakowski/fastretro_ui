@@ -53,6 +53,7 @@ import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
+import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -173,11 +174,36 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   stopRetroProcess() {
-    this.timerIsRunning = false;
-    this.shouldEnableVoteBtns = false;
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.finishRetroBoard();
+      });
+    } else {
+      this.finishRetroBoard();
+    }
+  }
 
-    this.setIsFinishedInRetroBoard(true);
-    this.eventsService.emitStopRetroInProgressProcessEmiter(true);
+  private finishRetroBoard() {
+    this.currentUserInRetroBoardApiService
+      .setLastRetroBoardAsFinished(this.retroBoardToProcess.id, 'team', this.retroBoardToProcess.workspaceId)
+      .then(() => {
+        this.timerIsRunning = false;
+        this.shouldEnableVoteBtns = false;
+        this.setIsFinishedInRetroBoard(true);
+        this.eventsService.emitStopRetroInProgressProcessEmiter(true);
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private prepareRetroBoardStatus(): any {
+    return {
+      retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+      teamFirebaseDocId: this.retroBoardToProcess.team.id,
+      workspaceFirebaseDocId: this.retroBoardToProcess.workspaceId,
+    };
   }
 
   private setIsFinishedInRetroBoard(isFinished: boolean) {
@@ -188,11 +214,42 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.firestoreRetroInProgressService.updateRetroBoard(retroBoardToUpdate, this.retroBoardToProcess.id);
   }
 
-  openRetroProcess() {
-    this.shouldEnableVoteBtns = true;
+  private setLastRetroBoardAsFinished(retroBoardLastRetroBoard: RetroBoardStatus) {
+    this.currentUserInRetroBoardApiService
+      .setLastRetroBoardAsStarted(
+        retroBoardLastRetroBoard.retroBoardFirebaseDocId,
+        retroBoardLastRetroBoard.teamFirebaseDocId,
+        retroBoardLastRetroBoard.workspaceFirebaseDocId)
+        .then(() => {
 
-    this.setIsFinishedInRetroBoard(false);
-    this.eventsService.emitStartRetroInProgressProcessEmiter(true);
+        })
+        .catch(error => {
+          const err = error;
+        });
+  }
+
+  openRetroProcess() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.openRetroBoard();
+      });
+    } else {
+      this.openRetroBoard();
+    }
+  }
+
+  private openRetroBoard() {
+    this.currentUserInRetroBoardApiService
+      .setLastRetroBoardAsOpened(this.retroBoardToProcess.id, 'team', this.retroBoardToProcess.workspaceId)
+      .then(() => {
+        this.shouldEnableVoteBtns = true;
+        this.setIsFinishedInRetroBoard(false);
+        this.eventsService.emitStartRetroInProgressProcessEmiter(true);
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   openSnackBar(displayText: string) {

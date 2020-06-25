@@ -166,6 +166,40 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setLastRetroBoardAsFinished(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsFinished/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setLastRetroBoardAsOpened(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsOpened/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
