@@ -149,6 +149,23 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setLastRetroBoardAsStarted(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsStarted/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);

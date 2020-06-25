@@ -104,10 +104,10 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
-        this.setLastRetroBoard(retroBoardLastRetroBoard, retroBoard);
+        this.setLastRetroBoardAsStarted(retroBoardLastRetroBoard, retroBoard);
       });
     } else {
-      this.setLastRetroBoard(retroBoardLastRetroBoard, retroBoard);
+      this.setLastRetroBoardAsStarted(retroBoardLastRetroBoard, retroBoard);
     }
   }
 
@@ -121,14 +121,12 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     };
   }
 
-  private setLastRetroBoard(retroBoardLastRetroBoard: RetroBoardStatus, retroBoard: RetroBoard) {
+  private setLastRetroBoardAsStarted(retroBoardLastRetroBoard: RetroBoardStatus, retroBoard: RetroBoard) {
     this.currentUserApiService
-      .setLastRetroBoard(
+      .setLastRetroBoardAsStarted(
         retroBoardLastRetroBoard.retroBoardFirebaseDocId,
         retroBoardLastRetroBoard.teamFirebaseDocId,
-        retroBoardLastRetroBoard.workspaceFirebaseDocId,
-        retroBoardLastRetroBoard.isFinished,
-        retroBoardLastRetroBoard.isStarted)
+        retroBoardLastRetroBoard.workspaceFirebaseDocId)
         .then(() => {
           this.updateInFirebase(retroBoard);
           this.processingToNewPage(retroBoard);
