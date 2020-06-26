@@ -9,6 +9,7 @@ import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRet
 import { CurrentUserVotes } from '../models/currentUserVotes';
 import { RetroBoardOptions } from '../models/retroBoardOptions';
 import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalInfoToSave';
+import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashboard';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +78,18 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/getUsersInAction/' + workspaceFirebaseDocId + '/' + teamFirebaseDocId;
     return this.httpClient.get<any[]>(url, httpOptions).toPromise();
+  }
+
+  getUserLastRetroBoardForDashboard(workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUsersLastRetroBoardsStatus/' + workspaceFirebaseDocId;
+    return this.httpClient.get<RetroBoardStatusForDashboard>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
