@@ -119,6 +119,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     this.shouldHideCounterAfterStopTimer = true;
     this.timerIsStopped = true;
     this.currentInMin = this.maxInMin;
+    this.currentInSec = 0;
     this.unsubscribeTimer();
 
     const timerSettingToUpdate = { chosenTimerOpt: {}, isStarted: false };

@@ -16,6 +16,7 @@ import { UserInRetroBoardData } from 'src/app/models/userInRetroBoardData';
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -127,17 +128,45 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   private prepareBaseRetroBoardOptionsAndAdditionalInfo(newRetroBoardId: string) {
     const retroBoardOptionsToSave: RetroBoardOptions = this.prepareRetroBoardOptionsToSave(newRetroBoardId);
     const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = this.prepareRetroBoardAdditionalInfo(newRetroBoardId);
+    const retroBoardLastRetroBoard: RetroBoardStatus = this.prepareRetroBoardStatus(newRetroBoardId);
+
     if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
         this.setRetroBoardOptions(retroBoardOptionsToSave);
         this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
+        this.setLastRetroBoard(retroBoardLastRetroBoard);
       });
     } else {
       this.setRetroBoardOptions(retroBoardOptionsToSave);
       this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
+      this.setLastRetroBoard(retroBoardLastRetroBoard);
     }
   }
+  private prepareRetroBoardStatus(newRetroBoardId: string): RetroBoardStatus {
+    return {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      teamFirebaseDocId: this.addNewRetroBoardForm.value.teamsFormControl.id,
+      workspaceFirebaseDocId: this.currentWorkspace.id,
+      isFinished: false,
+      isStarted: false
+    };
+  }
+
+  private setLastRetroBoard(retroBoardLastRetroBoard: any) {
+    this.currentUserApiService
+      .setLastRetroBoard(
+        retroBoardLastRetroBoard.retroBoardFirebaseDocId,
+        retroBoardLastRetroBoard.teamFirebaseDocId,
+        retroBoardLastRetroBoard.workspaceFirebaseDocId,
+        retroBoardLastRetroBoard.isFinished,
+        retroBoardLastRetroBoard.isStarted)
+        .then(() => {})
+        .catch(error => {
+          const err = error;
+        });
+  }
+
   private setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
     this.currentUserApiService.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo).then(() => {})
     .catch(error => {

@@ -9,6 +9,7 @@ import { CurrentUserInRetroBoardDataToDisplay } from '../models/CurrentUserInRet
 import { CurrentUserVotes } from '../models/currentUserVotes';
 import { RetroBoardOptions } from '../models/retroBoardOptions';
 import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalInfoToSave';
+import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashboard';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,7 @@ export class CurrentUserApiService {
   baseUrl = environment.apiUrl + 'api/CurrentUsersInRetroBoard';
 
   getCurrentUserInRetroBoard(retroBoardId) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.isTokenExpired(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
-
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -36,11 +33,7 @@ export class CurrentUserApiService {
   }
 
   getRetroBoardOptions(retroBoardId: string) {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.isTokenExpired(fbToken)) {
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
-
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -85,6 +78,18 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/getUsersInAction/' + workspaceFirebaseDocId + '/' + teamFirebaseDocId;
     return this.httpClient.get<any[]>(url, httpOptions).toPromise();
+  }
+
+  getUserLastRetroBoardForDashboard(workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUsersLastRetroBoardsStatus/' + workspaceFirebaseDocId;
+    return this.httpClient.get<RetroBoardStatusForDashboard>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
@@ -133,6 +138,76 @@ export class CurrentUserApiService {
       workspaceFirebaseDocId,
       chosenAvatarUrl,
       displayName
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setLastRetroBoard(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, isFinished, isStarted) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setLastRetroBoard/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId,
+      isFinished,
+      isStarted
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setLastRetroBoardAsStarted(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsStarted/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setLastRetroBoardAsFinished(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsFinished/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setLastRetroBoardAsOpened(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardAsOpened/';
+
+    const dataToPost = {
+      retroBoardFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId
     };
 
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
@@ -270,11 +345,7 @@ export class CurrentUserApiService {
   }
 
   private prepareCurrentHttpOptions() {
-    let fbToken = this.localStorageService.getItem('token') as FbToken;
-    if (this.fbTokenService.isTokenExpired(fbToken)) {
-      this.fbTokenService.prepareToken(fbToken.refreshToken);
-      fbToken = this.localStorageService.getItem('token') as FbToken;
-    }
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 

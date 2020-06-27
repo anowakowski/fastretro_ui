@@ -19,7 +19,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
 
   shouldBlurRetroBoardCard: boolean;
   hideVoutCountInretroBoardCard: boolean;
-  selectedVouteCount = 6;
+  selectedVouteCount = 3;
 
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressRetroBoardOptionsDialogComponent>,
@@ -27,7 +27,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
     private currentUserApiService: CurrentUserApiService) { }
 
   ngOnInit() {
-    if (this.currentUserApiService.isTokenExpired()) { 
+    if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
         this.getRetroBoardOptions();
@@ -56,13 +56,23 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
       retroBoardFirebaseDocId: this.retroBoardOptions.retroBoardFirebaseDocId,
       shouldHideVoutCountInRetroBoardCard: this.hideVoutCountInretroBoardCard
     };
+    if (this.currentUserApiService.isTokenExpired()) {
+      this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.setNewRetroBoardOptionInApi(retroBoardOptionsToSave);
+      });
+    } else {
+      this.setNewRetroBoardOptionInApi(retroBoardOptionsToSave);
+    }
+  }
 
+  private setNewRetroBoardOptionInApi(retroBoardOptionsToSave: RetroBoardOptions) {
     this.currentUserApiService.setRetroBoardOptions(retroBoardOptionsToSave).then(() => {
-      this.dialogRef.close({freshRetroBoardOptions: retroBoardOptionsToSave});
+      this.dialogRef.close({ freshRetroBoardOptions: retroBoardOptionsToSave });
     })
-    .catch(error => {
-      const err = error;
-    });
+      .catch(error => {
+        const err = error;
+      });
   }
 
   closeClick(): void {
@@ -74,6 +84,7 @@ export class TeamRetroInProgressRetroBoardOptionsDialogComponent implements OnIn
       this.retroBoardOptions = response;
       this.shouldBlurRetroBoardCard = this.retroBoardOptions.shouldBlurRetroBoardCardText;
       this.hideVoutCountInretroBoardCard = this.retroBoardOptions.shouldHideVoutCountInRetroBoardCard;
+      this.selectedVouteCount = this.retroBoardOptions.maxVouteCount;
     })
     .catch(error => {
       const err = error;
