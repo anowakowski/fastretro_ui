@@ -16,7 +16,7 @@
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
     <span>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" (click)="onNotificationClick()">
         <mat-icon>notifications_none</mat-icon>
       </button>
       <mat-menu #menu="matMenu">

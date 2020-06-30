@@ -51,6 +51,10 @@ export class NavComponent implements OnInit {
     this.subscribeEvents();
   }
 
+  onNotificationClick() {
+    
+  }
+
   backToDashboard() {
     this.eventsService.emitSetReciveGoOutFromAllRetroBoardListEmiter();
     this.router.navigate(['/']);

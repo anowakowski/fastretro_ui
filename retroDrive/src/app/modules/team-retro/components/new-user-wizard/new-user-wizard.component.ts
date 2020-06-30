@@ -292,7 +292,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   private createNewWorkspace(findedUsr: User) {
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
-    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName);
+    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName,  findedUsr.uid);
 
     this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
       snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
@@ -302,11 +302,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareWorkspaceModel(workspaceName: any): WorkspaceToSave {
+  private prepareWorkspaceModel(workspaceName: any, createrUserId: string): WorkspaceToSave {
     return {
       name: workspaceName,
       isNewWorkspace: this.isNewWorkspace,
       isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
+      creatorUserId: createrUserId,
       creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
     };
   }
