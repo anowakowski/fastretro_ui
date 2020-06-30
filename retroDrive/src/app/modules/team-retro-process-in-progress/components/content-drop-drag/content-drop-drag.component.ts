@@ -1095,26 +1095,23 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
           this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
             this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
-            this.setUserInTeamInApi();
+            this.setUserInTeamInApi(this.currentWorkspace.id, currentRetroBoardTeamId);
           });
         } else {
-          this.setUserInTeamInApi();
+          this.setUserInTeamInApi(this.currentWorkspace.id, currentRetroBoardTeamId);
         }
       });
     });
   }
 
-  private setUserInTeamInApi() {
-    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
-      const teamId = teamSnapshot.id as string;
-      this.currentUserInRetroBoardApiService.setUserInTeam(
-        this.currentUser.uid,
-        teamId,
-        this.currentWorkspace.id,
-        this.currentUser.chosenAvatarUrl,
-        this.currentUser.displayName)
-          .then(() => {});
-    });
+  private setUserInTeamInApi(workspaceId: string, teamId: string) {
+    this.currentUserInRetroBoardApiService.setUserInTeam(
+      this.currentUser.uid,
+      teamId,
+      workspaceId,
+      this.currentUser.chosenAvatarUrl,
+      this.currentUser.displayName)
+        .then(() => {});
   }
 
   private setUpTimerBaseSetting(retroBoardId: string) {
@@ -1294,10 +1291,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
               this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
                 this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
-                this.setUserInTeamInApi();
+                this.setUserInTeamInApi(workspaceId, retroBoardTeamId);
               });
             } else {
-              this.setUserInTeamInApi();
+              this.setUserInTeamInApi(workspaceId, retroBoardTeamId);
             }
           });
         });
