@@ -55,7 +55,9 @@ export class RegisterFormComponent implements OnInit {
           });
       })
       .catch(error => {
-        this.openInfoSnackBar(true);
+        if (error.code === 'auth/email-already-in-use') {
+          this.openInfoSnackBar(true);
+        }
       });
   }
 
@@ -107,7 +109,7 @@ export class RegisterFormComponent implements OnInit {
   }
 
   private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
-    const durationInSeconds = 500;
+    const durationInSeconds = 5;
     this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
