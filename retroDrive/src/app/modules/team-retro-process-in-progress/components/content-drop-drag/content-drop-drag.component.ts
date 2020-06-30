@@ -1053,7 +1053,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.userIsNotInCurrentRetroBoardTeam = true;
             this.openDialogForJoinToExistingTeam(teamName);
           }
-
         });
       });
     }
@@ -1093,7 +1092,28 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           };
           this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
         }
+        if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+          this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+            this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+            this.setUserInTeamInApi();
+          });
+        } else {
+          this.setUserInTeamInApi();
+        }
       });
+    });
+  }
+
+  private setUserInTeamInApi() {
+    this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
+      const teamId = teamSnapshot.id as string;
+      this.currentUserInRetroBoardApiService.setUserInTeam(
+        this.currentUser.uid,
+        teamId,
+        this.currentWorkspace.id,
+        this.currentUser.chosenAvatarUrl,
+        this.currentUser.displayName)
+          .then(() => {});
     });
   }
 
@@ -1245,7 +1265,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (!this.userIsNotInCurrentRetroBoardWorkspace) {
         this.retroBoardToProcess.team.get().then(teamSnapshot => {
           const retroBoardTeamId = teamSnapshot.id as string;
-
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
             if (userTeamsSnapshot.docs.length > 0) {
               userTeamsSnapshot.docs.forEach(userTeamDoc => {
@@ -1271,6 +1290,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               };
 
               this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
+            }
+            if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+              this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+                this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+                this.setUserInTeamInApi();
+              });
+            } else {
+              this.setUserInTeamInApi();
             }
           });
         });
