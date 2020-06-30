@@ -59,7 +59,6 @@
     </div>
     <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
   </div>
-
   <div *ngIf="retroBoards.length === 0">
     <mat-card style="opacity: 0.985;">
       <span style="font-size: 16px;">Go to teams and joint to existng team or create new</span>
@@ -79,7 +78,13 @@
       </button>
     </mat-card>
   </div>
+  
+  <div style="margin-top: 50px; margin-left: 22px;">
+    <app-loadding-single-elements-spinner *ngIf="dataIsLoading"></app-loadding-single-elements-spinner>
+  </div>  
+
 </div>
+
 <div *ngIf="currentUser.isNewUser">
   <app-new-user-wizard></app-new-user-wizard>
 </div>

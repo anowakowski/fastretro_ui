@@ -31,6 +31,8 @@ export class DashboardComponent implements OnInit {
   finishedRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
   openRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
 
+  dataIsLoading = true;
+
   constructor(
     private localStorageService: LocalStorageService,
     public dialog: MatDialog,
@@ -165,7 +167,6 @@ export class DashboardComponent implements OnInit {
                 }
               }
             }
-
             return predicatResult;
           });
           const findedLastOpenedRB = findedLastOpenedRBSnapshot.payload.doc.data() as RetroBoardToSave;
@@ -188,7 +189,6 @@ export class DashboardComponent implements OnInit {
                 }
               }
             }
-
             return predicatResult;
           });
           const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
@@ -199,6 +199,10 @@ export class DashboardComponent implements OnInit {
             findedLastFinishedRetroBorad.team = team;
             this.addToRetroBoards(findedLastFinishedRetroBorad, true);
           });
+        }
+        if ((response.lastRetroBoardOpened === null || response.lastRetroBoardOpened === '') &&
+            (response.lastRetroBoardFinished === null || response.lastRetroBoardFinished === '')) {
+          this.dataIsLoading = false;
         }
       }
     });
@@ -211,6 +215,7 @@ export class DashboardComponent implements OnInit {
     if (!isFinished) {
       this.retroBoards.push(retroboardToAdd as RetroBoard);
     }
+    this.dataIsLoading = false;
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
