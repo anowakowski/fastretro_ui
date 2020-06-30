@@ -1,5 +1,10 @@
-.info-warrning-snackbar {
+.info-warrning-snackbar-user-not-exist {
     margin-left: 42px;
+    font-size: 15px;
+}
+
+.info-warrning-snackbar-user-currently-exist {
+    margin-left: 18px;
     font-size: 15px;
 }
 

@@ -541,8 +541,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
 
-      if (result.addedNewActionSuccessfully) {
-        this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+      if (result !== undefined && result !== null) {
+        if (result.addedNewActionSuccessfully) {
+          this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+        }
       }
     });
   }
@@ -1053,7 +1055,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.userIsNotInCurrentRetroBoardTeam = true;
             this.openDialogForJoinToExistingTeam(teamName);
           }
-
         });
       });
     }
@@ -1093,8 +1094,26 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           };
           this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
         }
+        if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+          this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+            this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+            this.setUserInTeamInApi(this.currentWorkspace.id, currentRetroBoardTeamId);
+          });
+        } else {
+          this.setUserInTeamInApi(this.currentWorkspace.id, currentRetroBoardTeamId);
+        }
       });
     });
+  }
+
+  private setUserInTeamInApi(workspaceId: string, teamId: string) {
+    this.currentUserInRetroBoardApiService.setUserInTeam(
+      this.currentUser.uid,
+      teamId,
+      workspaceId,
+      this.currentUser.chosenAvatarUrl,
+      this.currentUser.displayName)
+        .then(() => {});
   }
 
   private setUpTimerBaseSetting(retroBoardId: string) {
@@ -1245,7 +1264,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (!this.userIsNotInCurrentRetroBoardWorkspace) {
         this.retroBoardToProcess.team.get().then(teamSnapshot => {
           const retroBoardTeamId = teamSnapshot.id as string;
-
           this.firestoreRetroInProgressService.getUserTeams(this.currentUser.uid).then(userTeamsSnapshot => {
             if (userTeamsSnapshot.docs.length > 0) {
               userTeamsSnapshot.docs.forEach(userTeamDoc => {
@@ -1271,6 +1289,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               };
 
               this.firestoreRetroInProgressService.addNewUserTeams(userTeamsToSave);
+            }
+            if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+              this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+                this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+                this.setUserInTeamInApi(workspaceId, retroBoardTeamId);
+              });
+            } else {
+              this.setUserInTeamInApi(workspaceId, retroBoardTeamId);
             }
           });
         });

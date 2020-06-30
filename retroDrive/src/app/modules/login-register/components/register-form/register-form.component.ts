@@ -5,6 +5,8 @@ import { FirestoreLoginRegisterService } from '../../services/firestore-login-re
 import { User } from 'src/app/models/user';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { FbTokenService } from 'src/app/services/fb-token.service';
+import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snackbar.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register-form',
@@ -23,7 +25,8 @@ export class RegisterFormComponent implements OnInit {
     private router: Router,
     private fls: FirestoreLoginRegisterService,
     private formBuilder: FormBuilder,
-    private fbTokenService: FbTokenService) { }
+    private fbTokenService: FbTokenService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.createNewEmailPassRegisterForm();
@@ -37,19 +40,25 @@ export class RegisterFormComponent implements OnInit {
     const emailVaule = this.addNewEmailPassRegisterForm.value.emailFormControl;
     const passValue = this.addNewEmailPassRegisterForm.value.passFormControl;
 
-    this.auth.emailSigUp(emailVaule, passValue).then((userCredentials) => {
-      const logedUser = userCredentials.user;
-      this.fls.findUsers(logedUser.email)
-        .then(snapshotFindedUsr => {
-          if (snapshotFindedUsr.docs.length === 0) {
-            const logedUserModel: User = this.prepareUserModel(logedUser);
-            this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
-            this.fls.updateUsr(logedUserModel);
-          }
-        }).finally(() => {
-          this.router.navigate(['/']);
-        });
-    });
+    this.auth.emailSigUp(emailVaule, passValue)
+      .then((userCredentials) => {
+        const logedUser = userCredentials.user;
+        this.fls.findUsers(logedUser.email)
+          .then(snapshotFindedUsr => {
+            if (snapshotFindedUsr.docs.length === 0) {
+              const logedUserModel: User = this.prepareUserModel(logedUser);
+              this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
+              this.fls.updateUsr(logedUserModel);
+            }
+          }).finally(() => {
+            this.router.navigate(['/']);
+          });
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          this.openInfoSnackBar(true);
+        }
+      });
   }
 
   createNewEmailPassRegisterForm() {
@@ -99,6 +108,16 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
+  private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        shouldShowUserIsCurrentlyExistsError
+      }
+    });
+  }
+
   private prepareUserModel(logedUser): User {
     return {
       uid: logedUser.uid,
@@ -109,5 +128,4 @@ export class RegisterFormComponent implements OnInit {
       chosenAvatarUrl: ''
     };
   }
-
 }
