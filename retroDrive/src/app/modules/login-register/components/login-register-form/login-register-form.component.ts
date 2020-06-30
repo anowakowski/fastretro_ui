@@ -95,7 +95,7 @@ export class LoginRegisterFormComponent implements OnInit {
               this.router.navigate(['/']);
             });
       }).catch(error => {
-        this.openInfoSnackBar('User with given email not exist');
+        this.openInfoSnackBar(true);
       });
     }
   }
@@ -118,12 +118,12 @@ export class LoginRegisterFormComponent implements OnInit {
     };
   }
 
-  private openInfoSnackBar(textToDisplay) {
+  private openInfoSnackBar(shouldShowUserNotExistError: boolean) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
-        displayText: '' + textToDisplay
+        shouldShowUserNotExistError
       }
     });
   }
