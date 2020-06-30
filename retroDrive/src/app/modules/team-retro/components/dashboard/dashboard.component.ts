@@ -155,7 +155,19 @@ export class DashboardComponent implements OnInit {
     this.currentUserInRetroBoardApiService.getUserLastRetroBoardForDashboard(this.currentWorkspace.id).then(response => {
       if (response != null) {
         if (response.lastRetroBoardOpened != null && response.lastRetroBoardOpened !== '') {
-          const findedLastOpenedRBSnapshot = retroBoardsSnapshot.find(rbs => rbs.payload.doc.id === response.lastRetroBoardOpened);
+          const findedLastOpenedRBSnapshot = retroBoardsSnapshot.find(rbs => {
+            let predicatResult = false;
+            if (rbs !== undefined) {
+              if (rbs.payload !== undefined) {
+                if (rbs.payload.doc.id === response.lastRetroBoardOpened) {
+                  predicatResult = true;
+                  return predicatResult;
+                }
+              }
+            }
+
+            return predicatResult;
+          });
           const findedLastOpenedRB = findedLastOpenedRBSnapshot.payload.doc.data() as RetroBoardToSave;
           findedLastOpenedRB.id = findedLastOpenedRBSnapshot.payload.doc.id as string;
 
@@ -166,7 +178,19 @@ export class DashboardComponent implements OnInit {
           });
         }
         if (response.lastRetroBoardFinished != null && response.lastRetroBoardFinished !== '') {
-          const findedLastFinishedRBSnapshot = retroBoardsSnapshot.find(rbs => rbs.payload.doc.id === response.lastRetroBoardFinished);
+          const findedLastFinishedRBSnapshot = retroBoardsSnapshot.find(rbs => {
+            let predicatResult = false;
+            if (rbs !== undefined) {
+              if (rbs.payload !== undefined) {
+                if (rbs.payload.doc.id === response.lastRetroBoardFinished) {
+                  predicatResult = true;
+                  return predicatResult;
+                }
+              }
+            }
+
+            return predicatResult;
+          });
           const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
           findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
 
