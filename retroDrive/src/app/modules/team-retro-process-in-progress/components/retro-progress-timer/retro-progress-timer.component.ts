@@ -170,8 +170,6 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
         });
     });
 
-
-
     this.startRetroInProgressProcessSubscriptions =
       this.eventsServices.getStartRetroInProgressProcessEmiter().subscribe(shouldStartRetroProcess => {
         this.shouldShowStartTimerIcon = true;
