@@ -10,11 +10,17 @@ import { EventsService } from 'src/app/services/events.service';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit {
 
   public setCurrentWorkspaceSubscriptions: any;
+
+  foods: any[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
+  ];
 
   constructor(
     public auth: AuthService,

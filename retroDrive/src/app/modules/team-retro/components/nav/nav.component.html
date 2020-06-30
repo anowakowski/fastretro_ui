@@ -10,12 +10,33 @@
     <button *ngIf="shouldShowBackToDashboard" mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
+    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
-    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-right: 5px;">{{currentUser.displayName}}</span>    
+    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
+    <span>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>notifications_none</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>dialpad</mat-icon>
+          <span>Redial dsa klndsknjkfdnkj nfdsjknfjkdsnjkfdnjkf nsjk</span>
+        </button>
+        <button mat-menu-item disabled>
+          <mat-icon>voicemail</mat-icon>
+          <span>Check voice mail</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>notifications_off</mat-icon>
+          <span>Disable alerts</span>
+        </button>
+      </mat-menu>
+    </span>
 
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
+    
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>
+
   </mat-toolbar-row>
 </mat-toolbar>
