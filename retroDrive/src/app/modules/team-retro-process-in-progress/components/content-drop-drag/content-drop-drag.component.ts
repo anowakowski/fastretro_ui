@@ -541,8 +541,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       console.log('Bottom sheet has been dismissed.');
       currentCard.isInAddedToAction = false;
 
-      if (result.addedNewActionSuccessfully) {
-        this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+      if (result !== undefined && result !== null) {
+        if (result.addedNewActionSuccessfully) {
+          this.addedAdditionalInfoWithCurrentActionCountInRetroBoard();
+        }
       }
     });
   }
