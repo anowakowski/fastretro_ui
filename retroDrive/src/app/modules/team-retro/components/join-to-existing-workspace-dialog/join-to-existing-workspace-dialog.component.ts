@@ -11,6 +11,8 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { UserNotification } from 'src/app/models/userNotification';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-join-to-existing-workspace-dialog',
@@ -29,7 +31,8 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
     private formBuilder: FormBuilder,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService
   ) {}
 
   ngOnInit() {
@@ -45,10 +48,29 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           // tslint:disable-next-line:object-literal-key-quotes
           this.existingWorkspaceNameFormControl.setErrors({'notexists': true});
         } else {
-          const findedWorkspace = workspaceSnapshot.docs[0];
-          const workspaceId = findedWorkspace.id;
+          const findedWorkspaceDoc = workspaceSnapshot.docs[0];
+          const workspaceId = findedWorkspaceDoc.id;
+          const findedWorkspace = findedWorkspaceDoc.data();
           // this.createUserWorkspaces(this.data.currentUser, workspaceId);
-          this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
+          if (!findedWorkspace.isWithRequireAccess) {
+            this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
+          } else {
+            const userNotyfication: UserNotification = {
+              userWantToJoinFirebaseId: this.data.currentUser.uid,
+              creatorUserFirebaseId: findedWorkspace.creatorUserId,
+              workspceWithRequiredAccessFirebaseId: workspaceId
+            };
+            this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
+              .then(response => {
+                // eimit new notification after save
+                // create dialog / snackbar to show about workspace with required action
+              })
+              .catch(error => {
+                const err = error;
+              });
+
+            // create waitng place to hold waiting usr to approval
+          }
         }
       });
     }

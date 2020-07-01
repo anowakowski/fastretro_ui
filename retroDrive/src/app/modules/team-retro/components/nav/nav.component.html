@@ -17,7 +17,7 @@
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
     <span>
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" (click)="onNotificationClick()">
-        <mat-icon>notifications_none</mat-icon>
+        <mat-icon>notifications</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item>

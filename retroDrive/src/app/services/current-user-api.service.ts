@@ -10,6 +10,7 @@ import { CurrentUserVotes } from '../models/currentUserVotes';
 import { RetroBoardOptions } from '../models/retroBoardOptions';
 import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashboard';
+import { UserNotification } from '../models/userNotification';
 
 @Injectable({
   providedIn: 'root'
@@ -247,6 +248,18 @@ export class CurrentUserApiService {
 
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
+
+  setUserNotification(userNotyfication: UserNotification) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setUserNotification/';
+
+    return this.httpClient.post(url, userNotyfication, httpOptions).toPromise();
+  }
+
 
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
