@@ -7,6 +7,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-nav',
@@ -33,6 +34,7 @@ export class NavComponent implements OnInit {
   currentUser: User;
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
+  public currentUserNotifications = new Array<UserNotification>();
 
   @Output() toggleSidenav = new EventEmitter<void>();
   @Input() shouldShowBackToDashboard = false;
@@ -62,12 +64,18 @@ export class NavComponent implements OnInit {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
         if (response !== undefined && response !== null) {
-
+          if (response.length > 0) {
+            this.prepareUsrNotification(response);
+          }
         }
       })
       .catch(error => {
         const err = error;
       });
+  }
+
+  private prepareUsrNotification(response: UserNotification[]) {
+    this.currentUserNotifications = response;
   }
 
   backToDashboard() {
