@@ -32,8 +32,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     private firestoreService: FirestoreRetroBoardService,
     private formBuilder: FormBuilder,
     private localStorageService: LocalStorageService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService
-  ) {}
+    private currentUserInRetroBoardApiService: CurrentUserApiService) {}
 
   ngOnInit() {
     this.createActionForRetroBoardForm();

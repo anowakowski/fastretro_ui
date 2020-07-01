@@ -6,6 +6,7 @@ import { User } from 'src/app/models/user';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Workspace } from 'src/app/models/workspace';
 import { EventsService } from 'src/app/services/events.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-nav',
@@ -26,7 +27,8 @@ export class NavComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private eventsService: EventsService) { }
+    private eventsService: EventsService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -49,10 +51,23 @@ export class NavComponent implements OnInit {
     }
 
     this.subscribeEvents();
+    this.getUserNotification();
   }
 
   onNotificationClick() {
-    
+
+  }
+
+  getUserNotification() {
+    this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+
+        }
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   backToDashboard() {

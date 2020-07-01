@@ -93,6 +93,18 @@ export class CurrentUserApiService {
     return this.httpClient.get<RetroBoardStatusForDashboard>(url, httpOptions).toPromise();
   }
 
+  getUserNotification(userId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUserNotifications/' + userId;
+    return this.httpClient.get<UserNotification[]>(url, httpOptions).toPromise();
+  }
+
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
 
