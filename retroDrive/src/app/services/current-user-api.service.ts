@@ -272,7 +272,6 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, userNotyfication, httpOptions).toPromise();
   }
 
-
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
     retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {

@@ -57,7 +57,9 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
             const userNotyfication: UserNotification = {
               userWantToJoinFirebaseId: this.data.currentUser.uid,
               creatorUserFirebaseId: findedWorkspace.creatorUserId,
-              workspceWithRequiredAccessFirebaseId: workspaceId
+              workspceWithRequiredAccessFirebaseId: workspaceId,
+              displayName: this.data.currentUser.displayName,
+              email: this.data.currentUser.email,
             };
             this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
               .then(response => {
