@@ -10,7 +10,9 @@ import { CurrentUserVotes } from '../models/currentUserVotes';
 import { RetroBoardOptions } from '../models/retroBoardOptions';
 import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashboard';
-import { UserNotification } from '../models/userNotification';
+
+import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
+import { UserNotificationToSave } from '../models/UserNotificationToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -102,7 +104,7 @@ export class CurrentUserApiService {
     };
 
     const url = this.baseUrl + '/getUserNotifications/' + userId;
-    return this.httpClient.get<UserNotification[]>(url, httpOptions).toPromise();
+    return this.httpClient.get<UserNotificationWorkspaceWithRequiredAccess[]>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
@@ -261,7 +263,7 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
-  setUserNotification(userNotyfication: UserNotification) {
+  setUserNotification(userNotyfication: UserNotificationToSave) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {

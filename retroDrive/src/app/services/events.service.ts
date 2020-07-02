@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { TimerOption } from '../models/timerOption';
 import { Workspace } from '../models/workspace';
-import { UserNotification } from '../models/userNotification';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,7 @@ constructor() { }
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setNewCurrentWorkspaceEmiter: EventEmitter<Workspace> = new EventEmitter();
   private setAllRetroBoardAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
-  private showNewNotificationEmiter: EventEmitter<UserNotification> = new EventEmitter();
+  //private showNewNotificationEmiter: EventEmitter<UserNotificationToSave> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -129,12 +128,12 @@ constructor() { }
     return this.setAllRetroBoardAsDefaultSectionEmiter;
   }
 
-  emitShowNewNotificationEmiter(userNotification: UserNotification) {
-    this.showNewNotificationEmiter.emit(userNotification);
-  }
+  // emitShowNewNotificationEmiter(userNotification: UserNotificationToSave) {
+  //   this.showNewNotificationEmiter.emit(userNotification);
+  // }
 
-  getShowNewNotificationEmiter() {
-    return this.showNewNotificationEmiter;
-  }
+  // getShowNewNotificationEmiter() {
+  //   return this.showNewNotificationEmiter;
+  // }
 }
 

@@ -11,8 +11,9 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { UserNotification } from 'src/app/models/userNotification';
+
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 
 @Component({
   selector: 'app-join-to-existing-workspace-dialog',
@@ -54,7 +55,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           if (!findedWorkspace.isWithRequireAccess) {
             this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
           } else {
-            const userNotyfication: UserNotification = {
+            const userNotyfication: UserNotificationToSave = {
               userWantToJoinFirebaseId: this.data.currentUser.uid,
               creatorUserFirebaseId: findedWorkspace.creatorUserId,
               workspceWithRequiredAccessFirebaseId: workspaceId,
