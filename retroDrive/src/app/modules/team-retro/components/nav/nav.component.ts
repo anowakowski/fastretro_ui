@@ -10,6 +10,8 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
+import { ApproveUserWantToJoinToWorkspaceDialogComponent } from '../approve-user-want-to-join-to-workspace-dialog/approve-user-want-to-join-to-workspace-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-nav',
@@ -31,7 +33,8 @@ export class NavComponent implements OnInit {
     private router: Router,
     private localStorageService: LocalStorageService,
     private eventsService: EventsService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public dialog: MatDialog) { }
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
@@ -64,8 +67,23 @@ export class NavComponent implements OnInit {
   }
 
   goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const dialogRef = this.dialog.open(ApproveUserWantToJoinToWorkspaceDialogComponent, {
+      width: '600px',
+      data: {
+        userNotificationWorkspaceWithRequiredAccess: userNotification,
+        currentUser: this.currentUser
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        if (result.shouldRefreshTeams) {
+
+        }
+      }
+    });
   }
+
 
   getUserNotification() {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
