@@ -274,6 +274,27 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, userNotyfication, httpOptions).toPromise();
   }
 
+  setApproveUserWantToJoinToWorkspace(
+    userWantToJoinFirebaseId: string,
+    creatorUserFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string,
+    requestIsApprove: boolean) {
+      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setApproveUserWantToJoinToWorkspace/';
+
+      const dataToPost = {
+        userWantToJoinFirebaseId,
+        creatorUserFirebaseId,
+        workspceWithRequiredAccessFirebaseId,
+        requestIsApprove
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
     retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {

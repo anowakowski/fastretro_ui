@@ -36,10 +36,34 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
   }
 
   approveUserWantToJoinToWorkspace() {
+    const requestIsApprove = true;
+    this.currentUserApiService.setApproveUserWantToJoinToWorkspace(
+      this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.creatorUserFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
+      requestIsApprove
+      )
+      .then(() => {})
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  rejectUserWantToJoinToWorkspace() {
+    const requestIsApprove = false;
+    this.currentUserApiService.setApproveUserWantToJoinToWorkspace(
+      this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.creatorUserFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
+      requestIsApprove
+      )
+      .then(() => {})
+      .catch(error => {
+        const err = error;
+      });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }
