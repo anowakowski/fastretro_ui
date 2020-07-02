@@ -32,7 +32,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     this.currentUser = this.data.currentUser as User;
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
-    console.log(this.data);
+    this.setNotificationAsRead();
   }
 
   setNotificationAsRead() {
