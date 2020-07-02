@@ -35,6 +35,8 @@ import { AllRetroboardListComponent } from './components/all-retroboard-list/all
 import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { ApproveUserWantToJoinToWorkspaceDialogComponent } from './components/approve-user-want-to-join-to-workspace-dialog/approve-user-want-to-join-to-workspace-dialog.component';
 
 @NgModule({
   imports: [
@@ -67,7 +69,8 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
     CreateNewTeamBottomsheetComponent,
     AllRetroboardListComponent,
     JoinToExistingWorkspaceDialogComponent,
-    ChangeCurrentUserWorksapceDialogComponent
+    ChangeCurrentUserWorksapceDialogComponent,
+    ApproveUserWantToJoinToWorkspaceDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -76,7 +79,8 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
     NewUserWiazrdInfoDialogComponent,
     CreateNewTeamBottomsheetComponent,
     JoinToExistingWorkspaceDialogComponent,
-    ChangeCurrentUserWorksapceDialogComponent
+    ChangeCurrentUserWorksapceDialogComponent,
+    ApproveUserWantToJoinToWorkspaceDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
