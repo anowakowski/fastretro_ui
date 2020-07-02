@@ -40,14 +40,13 @@
       <div *ngIf="currentUserNotifications.length > 0">
         <div *ngFor="let userNotification of currentUserNotifications">
           <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
-            <!-- <mat-icon>dialpad</mat-icon> -->
             <mat-icon color="warn">stop_circle</mat-icon>
             <span style="font-size: 13px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
-          </button>
+          </button>          
           <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
             <mat-icon>dialpad</mat-icon>
             <span style="font-size: 13px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
-          </button>          
+          </button>         
         </div>
       </div>
     </mat-menu>
