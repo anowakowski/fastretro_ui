@@ -43,7 +43,9 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
       this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
       requestIsApprove
       )
-      .then(() => {})
+      .then(() => {
+        this.dialogRef.close();
+      })
       .catch(error => {
         const err = error;
       });
@@ -57,7 +59,9 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
       this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
       requestIsApprove
       )
-      .then(() => {})
+      .then(() => {
+        this.dialogRef.close();
+      })
       .catch(error => {
         const err = error;
       });

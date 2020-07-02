@@ -17,8 +17,8 @@
   <div mat-dialog-actions>
     <button mat-raised-button color="basic" (click)="onNoClick()">Cancel</button>
     <div fxFlex></div>
-    <button mat-raised-button color="warn">Reject<mat-icon>remove_circle_outline</mat-icon></button>
-    <button mat-raised-button color="primary" style="margin-left:10px;">Approve<mat-icon>add_circle_outline</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="rejectUserWantToJoinToWorkspace()">Reject&nbsp;<mat-icon>remove_circle_outline</mat-icon></button>
+    <button mat-raised-button color="primary" style="margin-left:10px;" (click)="approveUserWantToJoinToWorkspace()">Approve&nbsp;<mat-icon>add_circle_outline</mat-icon></button>
   </div>
 
 </div>
