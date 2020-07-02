@@ -6,6 +6,6 @@ export class UserNotificationWorkspaceWithRequiredAccess {
     public workspceWithRequiredAccessFirebaseId: string;
     public email: string;
     public displayName: string;
-    public WorkspaceName: string;
+    public workspaceName: string;
     public userNotification: UserNotification;
 }

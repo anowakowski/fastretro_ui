@@ -23,7 +23,9 @@
         <div *ngFor="let userNotification of currentUserNotifications">
           <button mat-menu-item>
             <mat-icon>dialpad</mat-icon>
-            <span>{{userNotification.displayName}}</span>
+            <span>{{userNotification.displayName}}</span> 
+            <span> want to join to </span>
+            <span>{{userNotification.workspaceName}}</span>
           </button>
         </div>
 

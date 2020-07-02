@@ -73,7 +73,7 @@ export class NavComponent implements OnInit {
       })
       .catch(error => {
         const err = error;
-      });
+    });
   }
 
   private prepareUsrNotification(response: UserNotificationWorkspaceWithRequiredAccess[]) {
