@@ -59,6 +59,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
               userWantToJoinFirebaseId: this.data.currentUser.uid,
               creatorUserFirebaseId: findedWorkspace.creatorUserId,
               workspceWithRequiredAccessFirebaseId: workspaceId,
+              workspaceName,
               displayName: this.data.currentUser.displayName,
               email: this.data.currentUser.email,
             };

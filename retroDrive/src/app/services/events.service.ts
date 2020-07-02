@@ -22,7 +22,7 @@ constructor() { }
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setNewCurrentWorkspaceEmiter: EventEmitter<Workspace> = new EventEmitter();
   private setAllRetroBoardAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
-  //private showNewNotificationEmiter: EventEmitter<UserNotificationToSave> = new EventEmitter();
+  // private showNewNotificationEmiter: EventEmitter<UserNotificationToSave> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
