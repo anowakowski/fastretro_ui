@@ -295,6 +295,22 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setUserNotificationAsRead(userWantToJoinFirebaseId: any, creatorUserFirebaseId: any, workspceWithRequiredAccessFirebaseId: any) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setUserNotificationAsRead/';
+
+    const dataToPost = {
+      userWantToJoinFirebaseId,
+      creatorUserFirebaseId,
+      workspceWithRequiredAccessFirebaseId
+    };
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
     retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {

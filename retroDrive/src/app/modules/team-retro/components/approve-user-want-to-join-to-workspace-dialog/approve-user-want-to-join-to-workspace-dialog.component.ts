@@ -35,6 +35,20 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     console.log(this.data);
   }
 
+  setNotificationAsRead() {
+    this.currentUserApiService.setUserNotificationAsRead(
+      this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.creatorUserFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
+    )
+    .then(() => {
+
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
   approveUserWantToJoinToWorkspace() {
     const requestIsApprove = true;
     this.currentUserApiService.setApproveUserWantToJoinToWorkspace(
