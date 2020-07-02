@@ -76,6 +76,10 @@ export class NavComponent implements OnInit {
     });
   }
 
+  userNotifictaionHasNoReadNotify() {
+    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+  }
+
   private prepareUsrNotification(response: UserNotificationWorkspaceWithRequiredAccess[]) {
     this.currentUserNotifications = response;
   }

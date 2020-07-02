@@ -1,8 +1,33 @@
-.example-icon {
+  .example-icon {
     margin-right: 12px;
     padding: 0 14px;
   }
   
   .example-spacer {
     flex: 1 1 auto;
+  }
+
+  ::ng-deep.mat-menu-panel {
+    max-width: none !important;
+  }
+
+  .mat-menu-panel.more-width-mat-menu {
+    width: 500px; 
+  }
+
+  .mat-badge.hide-text .mat-badge-content {
+    color: transparent;
+  }
+
+  .mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content {
+    right: -4px;
+  }
+
+  .mat-badge-medium.mat-badge-above .mat-badge-content {
+    top: -4px;
+  }
+
+  .mat-badge-medium .mat-badge-content {
+    width: 10px;
+    height: 10px;
   }
