@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Notification Details</h1>
-<div>
-  <div mat-dialog-content>
+<div *ngIf="!isApprovedRequest">
+  <div  mat-dialog-content>
     <h3>
       Approve the user who wants to join the workspace
       <mat-divider></mat-divider>
@@ -21,4 +21,20 @@
     <button mat-raised-button color="primary" style="margin-left:10px;" (click)="approveUserWantToJoinToWorkspace()">Approve&nbsp;<mat-icon>add_circle_outline</mat-icon></button>
   </div>
 
+</div>
+
+<div *ngIf="isApprovedRequest">
+  <div  mat-dialog-content>
+    <h3>
+      Approve the user who wants to join the workspace
+      <mat-divider></mat-divider>
+    </h3>
+    
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      this request was approved
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Cancel</button>
+  </div>
 </div>

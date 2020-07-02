@@ -107,6 +107,24 @@ export class CurrentUserApiService {
     return this.httpClient.get<UserNotificationWorkspaceWithRequiredAccess[]>(url, httpOptions).toPromise();
   }
 
+  getUserWaitingToApproveWorkspaceJoin(
+    userWantToJoinFirebaseId: string,
+    creatorUserFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url =
+      this.baseUrl + '/getUserWaitingToApproveWorkspaceJoin/' +
+        userWantToJoinFirebaseId + '/' + creatorUserFirebaseId + '/' + workspceWithRequiredAccessFirebaseId;
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
+  }
+
+
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;
 

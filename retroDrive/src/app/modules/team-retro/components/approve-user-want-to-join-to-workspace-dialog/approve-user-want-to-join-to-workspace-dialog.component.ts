@@ -19,6 +19,7 @@ import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/user
 export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
   currentUser: User;
   userNotificationWorkspaceWithRequiredAccess: any;
+  isApprovedRequest: boolean;
 
 
   constructor(
@@ -33,6 +34,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
     this.setNotificationAsRead();
+    this.getIsUserApprovedRequest();
   }
 
   setNotificationAsRead() {
@@ -43,6 +45,22 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     )
     .then(() => {
 
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
+  getIsUserApprovedRequest() {
+    this.currentUserApiService.getUserWaitingToApproveWorkspaceJoin(
+      this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.creatorUserFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId
+    )
+    .then(response => {
+      if (response !== undefined && response !== null) {
+        this.isApprovedRequest = response.isApprovalByCreator;
+      }
     })
     .catch(error => {
       const err = error;
