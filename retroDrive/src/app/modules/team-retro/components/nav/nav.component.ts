@@ -58,7 +58,12 @@ export class NavComponent implements OnInit {
     this.getUserNotification();
   }
 
-  onNotificationClick() {
+  onSetNotificationAsReadClick() {
+    //this.currentUserInRetroBoardApiService.setNotificationAsRead()
+
+  }
+
+  goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
 
   }
 

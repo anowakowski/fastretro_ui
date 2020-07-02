@@ -27,24 +27,22 @@
       matBadgeColor="warn"
       style="cursor: pointer; margin-top: 7px;"
       class="hide-text" 
-      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0"
-      (click)="onNotificationClick()">
+      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0">
         <mat-icon>notifications</mat-icon>
     </span>
     <span 
       [matMenuTriggerFor]="menu"
       style="cursor: pointer; margin-top: 7px;"
-      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0"
-      (click)="onNotificationClick()">
+      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0">
         <mat-icon>notifications</mat-icon>
     </span>    
     <mat-menu class="more-width-mat-menu" #menu="matMenu">
       <div *ngIf="currentUserNotifications.length > 0">
         <div *ngFor="let userNotification of currentUserNotifications">
-          <button *ngIf="!userNotification.userNotification.isRead" mat-menu-item>
+          <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
             <!-- <mat-icon>dialpad</mat-icon> -->
             <mat-icon color="warn">stop_circle</mat-icon>
-            <span style="font-size: 13px;">{{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            <span style="font-size: 13px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
           </button>
         </div>
       </div>
