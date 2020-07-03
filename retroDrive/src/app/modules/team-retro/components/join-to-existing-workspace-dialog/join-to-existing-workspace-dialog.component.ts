@@ -14,6 +14,8 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 
 @Component({
   selector: 'app-join-to-existing-workspace-dialog',
@@ -33,7 +35,8 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     private firestoreService: FirestoreRetroBoardService,
     private formBuilder: FormBuilder,
     private localStorageService: LocalStorageService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) {}
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.createActionForRetroBoardForm();
@@ -67,6 +70,8 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
               .then(response => {
                 // eimit new notification after save
                 // create dialog / snackbar to show about workspace with required action
+                this.openSnackbar();
+                this.dialogRef.close({shouldRefreshTeams: false});
               })
               .catch(error => {
                 const err = error;
@@ -81,6 +86,17 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close({shouldRefreshTeams: false});
+  }
+
+  openSnackbar() {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        shouldShowWarningMessage: false,
+        displayText: 'this Workspace require access by Owner'
+      }
+    });
   }
 
   private addToUserWorkspaces(findedUsr: User, workspaceIdToAdd: string, userWorkspace: UserWorkspace) {
