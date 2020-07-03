@@ -55,7 +55,8 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     this.currentUserApiService.getUserWaitingToApproveWorkspaceJoin(
       this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
       this.userNotificationWorkspaceWithRequiredAccess.creatorUserFirebaseId,
-      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId
+      this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId,
+      this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId
     )
     .then(response => {
       if (response !== undefined && response !== null) {

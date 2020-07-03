@@ -7,5 +7,6 @@ export class UserNotificationWorkspaceWithRequiredAccess {
     public email: string;
     public displayName: string;
     public workspaceName: string;
+    public userWaitingToApproveWorkspaceJoinId: number;
     public userNotification: UserNotification;
 }
