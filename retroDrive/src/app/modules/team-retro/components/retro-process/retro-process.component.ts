@@ -89,12 +89,12 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   openSnackBarForDelete(retroBoardName) {
-    const durationInSeconds = 3;
+    const durationInSeconds = 5;
     this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
         shouldShowWarningMessage: true,
-        displayText: 'deleted Retro Board: ' + retroBoardName
+        displayText: 'Deleted Retro Board: ' + retroBoardName
       }
     });
   }
