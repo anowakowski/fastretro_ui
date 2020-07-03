@@ -30,6 +30,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
   currentUser: User;
   teamsSubscriptions: any;
+  workspaceNameForRequiredAccess: any;
   //currentWorkspaceId: string;
 
   constructor(
@@ -94,7 +95,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
             });
           });
         });
-
       });
     });
   }
@@ -154,6 +154,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
           this.prepareFreshUserWorkspace();
           this.teamsSubscriptions.unsubscribe();
           this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        }
+        if (result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
+          const workspaceName = result.workspaceName;
+          this.workspaceNameForRequiredAccess = workspaceName;
         }
       }
     });

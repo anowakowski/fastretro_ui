@@ -71,7 +71,11 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
                 // eimit new notification after save
                 // create dialog / snackbar to show about workspace with required action
                 this.openSnackbar();
-                this.dialogRef.close({shouldRefreshTeams: false});
+                this.dialogRef.close({
+                  shouldRefreshTeams: false,
+                  shouldShowRequestForWorkspaceWithRequiredAccess: true,
+                  workspaceName
+                });
               })
               .catch(error => {
                 const err = error;
