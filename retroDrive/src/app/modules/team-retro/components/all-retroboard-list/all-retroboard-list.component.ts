@@ -73,7 +73,7 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataIsLoading = true;
-    
+
     this.currentUser = this.localStorageService.getItem('currentUser');
 
     if (this.currentUser === undefined) {

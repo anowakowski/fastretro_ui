@@ -105,6 +105,7 @@ export class NavComponent implements OnInit {
 
   private prepareUsrNotification(response: UserNotificationWorkspaceWithRequiredAccess[]) {
     this.currentUserNotifications = response;
+    this.sortCurrentUserNoitficationByIsReadByAsc();
   }
 
   backToDashboard() {
@@ -126,6 +127,15 @@ export class NavComponent implements OnInit {
       this.eventsService.getSetNewCurrentWorkspaceEmiterEmiter().subscribe(currentWorkspace => {
         this.currentUserWorkspaceName = currentWorkspace.name;
       });
+  }
+
+  sortCurrentUserNoitficationByIsReadByAsc() {
+    this.currentUserNotifications.sort((leftSide, rightSide): number => {
+      if (leftSide.userNotification.isRead < rightSide.userNotification.isRead) { return -1; }
+      if (leftSide.userNotification.isRead > rightSide.userNotification.isRead) { return 1; }
+
+      return 0;
+    });
   }
 
 }
