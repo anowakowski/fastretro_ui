@@ -41,11 +41,11 @@
         <div *ngFor="let userNotification of currentUserNotifications">
           <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
             <mat-icon color="warn">stop_circle</mat-icon>
-            <span style="font-size: 13px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            <span style="font-size: 15px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
           </button>          
           <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
             <mat-icon>dialpad</mat-icon>
-            <span style="font-size: 13px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            <span style="font-size: 14px; color: #696969;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
           </button>         
         </div>
       </div>
