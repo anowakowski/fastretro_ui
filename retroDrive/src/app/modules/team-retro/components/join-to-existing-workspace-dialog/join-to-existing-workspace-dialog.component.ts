@@ -94,7 +94,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
       duration: durationInSeconds * 1000,
       data: {
         shouldShowWarningMessage: false,
-        displayText: 'this Workspace require access by Owner'
+        displayText: 'This Workspace Require Access By Owner'
       }
     });
   }
