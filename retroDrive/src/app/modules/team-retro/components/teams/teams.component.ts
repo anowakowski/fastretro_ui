@@ -52,6 +52,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.setItemFromLocalStorage();
     this.prepareTeamsForCurrentWorkspace();
     this.getAllWaitingWorkspaceRequests();
+    this.prepareFreshUserWorkspace();
   }
 
   ngOnDestroy(): void {
