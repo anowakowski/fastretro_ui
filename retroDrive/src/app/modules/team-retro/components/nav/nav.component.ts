@@ -84,14 +84,11 @@ export class NavComponent implements OnInit {
     });
   }
 
-
   getUserNotification() {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
         if (response !== undefined && response !== null) {
-          if (response.length > 0) {
-            this.prepareUsrNotification(response);
-          }
+          this.prepareUsrNotification(response);
         }
       })
       .catch(error => {
@@ -103,9 +100,14 @@ export class NavComponent implements OnInit {
     return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
   }
 
-  private prepareUsrNotification(response: UserNotificationWorkspaceWithRequiredAccess[]) {
-    this.currentUserNotifications = response;
-    this.sortCurrentUserNoitficationByIsReadByAsc();
+  private prepareUsrNotification(response: any) {
+    if (response.userNotificationWorkspaceWithRequiredAccesses !== undefined &&
+        response.userNotificationWorkspaceWithRequiredAccesses !== null) {
+          if (response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
+            this.currentUserNotifications = response.userNotificationWorkspaceWithRequiredAccesses;
+            this.sortCurrentUserNoitficationByIsReadByAsc();
+          }
+    }
   }
 
   backToDashboard() {

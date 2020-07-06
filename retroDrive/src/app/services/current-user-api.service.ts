@@ -104,7 +104,7 @@ export class CurrentUserApiService {
     };
 
     const url = this.baseUrl + '/getUserNotifications/' + userId;
-    return this.httpClient.get<UserNotificationWorkspaceWithRequiredAccess[]>(url, httpOptions).toPromise();
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
   }
 
   getUserWaitingToApproveWorkspaceJoin(
