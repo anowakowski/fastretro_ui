@@ -117,7 +117,20 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
       const findedUserWorkspaceId = userWorkspaceSnapshot.docs[0].id as string;
       findedUserWorkspace.workspaces.push(workspacesToAddToUserWorkspace);
       this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
+      this.setUserNotificationForuserWaitingToApproveWorkspaceJoin();
       this.dialogRef.close();
     });
+  }
+
+  private setUserNotificationForuserWaitingToApproveWorkspaceJoin() {
+    this.currentUserApiService
+      .setUserNotificationForuserWaitingToApproveWorkspaceJoin(
+        this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId)
+      .then(() => {
+        // add usr notification to refresh
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 }

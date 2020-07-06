@@ -351,6 +351,20 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setUserNotificationForuserWaitingToApproveWorkspaceJoin(userWaitingToApproveWorkspaceJoinId: number) {
+      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserNotificationForuserWaitingToApproveWorkspaceJoin/';
+
+      const dataToPost = {
+        userWaitingToApproveWorkspaceJoinId
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
     retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
