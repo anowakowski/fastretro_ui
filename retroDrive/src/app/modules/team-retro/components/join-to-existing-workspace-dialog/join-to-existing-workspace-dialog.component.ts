@@ -74,7 +74,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
                 this.dialogRef.close({
                   shouldRefreshTeams: false,
                   shouldShowRequestForWorkspaceWithRequiredAccess: true,
-                  workspaceName
+                  workspaceWithRequiredAccessId: workspaceId
                 });
               })
               .catch(error => {

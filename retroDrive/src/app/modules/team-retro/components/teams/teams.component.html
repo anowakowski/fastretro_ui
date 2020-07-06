@@ -1,14 +1,14 @@
 <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.9;">Your Workspace. You can joint to team or create new and you can change your current workspace</mat-card>
-<div>
+<div *ngIf="userNotificationWorkspaceWithRequiredAccessForWaitingRequests.length > 0">
   <mat-card class="example-card" style="opacity: 0.97; border-style: solid; border-color: #ec6c6c;">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Your Current Request To Approve By Owner</mat-card-title>
+      <mat-card-title>Your Waiting Requests To Approve By Owner</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <mat-list>
+        <mat-list *ngFor="let workspaceWaitingForAccess of userNotificationWorkspaceWithRequiredAccessForWaitingRequests">
             <mat-list-item>
-              <span style="font-size: 20px; font-weight: bold; color: #585858;">{{this.workspaceNameForRequiredAccess}}</span>
+              <span style="font-size: 20px; font-weight: bold; color: #585858;">{{workspaceWaitingForAccess.workspaceName}}</span>
             </mat-list-item>
         </mat-list>
     </mat-card-content>
