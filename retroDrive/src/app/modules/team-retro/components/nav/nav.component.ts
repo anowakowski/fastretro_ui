@@ -62,7 +62,7 @@ export class NavComponent implements OnInit {
   }
 
   onSetNotificationAsReadClick() {
-    //this.currentUserInRetroBoardApiService.setNotificationAsRead()
+    // this.currentUserInRetroBoardApiService.setNotificationAsRead()
 
   }
 
@@ -107,7 +107,14 @@ export class NavComponent implements OnInit {
             this.currentUserNotifications = response.userNotificationWorkspaceWithRequiredAccesses;
             this.sortCurrentUserNoitficationByIsReadByAsc();
           }
-    }
+    } else if (response.UserNotificationWorkspaceWithRequiredAccessResponses !== undefined &&
+               response.UserNotificationWorkspaceWithRequiredAccessResponses !== null) {
+                 if (response.UserNotificationWorkspaceWithRequiredAccessResponses.length > 0) {
+                   // add response notifications
+
+                 }
+
+      }
   }
 
   backToDashboard() {
