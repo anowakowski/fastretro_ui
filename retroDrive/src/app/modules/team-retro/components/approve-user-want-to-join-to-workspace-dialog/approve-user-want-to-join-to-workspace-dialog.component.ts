@@ -9,6 +9,7 @@ import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { User } from 'src/app/models/user';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
+import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 
 @Component({
   selector: 'app-approve-user-want-to-join-to-workspace-dialog',
@@ -20,7 +21,6 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
   currentUser: User;
   userNotificationWorkspaceWithRequiredAccess: any;
   isApprovedRequest: boolean;
-
 
   constructor(
     public dialogRef: MatDialogRef<ApproveUserWantToJoinToWorkspaceDialogComponent>,
@@ -78,7 +78,9 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
       requestIsApprove
       )
       .then(() => {
-        this.dialogRef.close();
+        this.addToUserWorkspaces(
+          this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId,
+          this.userNotificationWorkspaceWithRequiredAccess.workspceWithRequiredAccessFirebaseId);
       })
       .catch(error => {
         const err = error;
@@ -103,5 +105,19 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  private addToUserWorkspaces(userId: string, workspaceId: string) {
+    this.firestoreService.getUserWorkspace(userId).then(userWorkspaceSnapshot => {
+      const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
+        workspace: this.firestoreService.addWorkspaceAsRef(workspaceId),
+        isCurrent: false
+      };
+      const findedUserWorkspace = userWorkspaceSnapshot.docs[0].data() as UserWorkspaceToSave;
+      const findedUserWorkspaceId = userWorkspaceSnapshot.docs[0].id as string;
+      findedUserWorkspace.workspaces.push(workspacesToAddToUserWorkspace);
+      this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
+      this.dialogRef.close();
+    });
   }
 }
