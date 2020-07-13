@@ -105,7 +105,6 @@ export class NavComponent implements OnInit {
         response.userNotificationWorkspaceWithRequiredAccesses !== null) {
           if (response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
             this.currentUserNotifications = response.userNotificationWorkspaceWithRequiredAccesses;
-            this.sortCurrentUserNoitficationByIsReadByAsc();
           }
     } else if (response.UserNotificationWorkspaceWithRequiredAccessResponses !== undefined &&
                response.UserNotificationWorkspaceWithRequiredAccessResponses !== null) {
@@ -114,7 +113,8 @@ export class NavComponent implements OnInit {
 
                  }
 
-      }
+    }
+    this.sortCurrentUserNoitficationByIsReadByAsc();
   }
 
   backToDashboard() {
