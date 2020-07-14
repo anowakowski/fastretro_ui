@@ -104,15 +104,20 @@ export class NavComponent implements OnInit {
     if (response.userNotificationWorkspaceWithRequiredAccesses !== undefined &&
         response.userNotificationWorkspaceWithRequiredAccesses !== null) {
           if (response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
-            this.currentUserNotifications = response.userNotificationWorkspaceWithRequiredAccesses;
+            const userNotificationWorkspaceWithRequiredAccesses = response.userNotificationWorkspaceWithRequiredAccesses as any[];
+            userNotificationWorkspaceWithRequiredAccesses.forEach(userNotificationWorkspaceWithRequiredAccess => {
+              this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccess);
+            });
           }
-    } else if (response.UserNotificationWorkspaceWithRequiredAccessResponses !== undefined &&
-               response.UserNotificationWorkspaceWithRequiredAccessResponses !== null) {
-                 if (response.UserNotificationWorkspaceWithRequiredAccessResponses.length > 0) {
-                   // add response notifications
-
-                 }
-
+    }
+    if (response.userNotificationWorkspaceWithRequiredAccessResponses !== undefined &&
+        response.userNotificationWorkspaceWithRequiredAccessResponses !== null) {
+      if (response.userNotificationWorkspaceWithRequiredAccessResponses.length > 0) {
+        const userNotificationWorkspaceWithRequiredAccessResponses = response.userNotificationWorkspaceWithRequiredAccessResponses as any[];
+        userNotificationWorkspaceWithRequiredAccessResponses.forEach(userNotificationWorkspaceWithRequiredAccessResponse => {
+          this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccessResponse);
+        });
+      }
     }
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }
