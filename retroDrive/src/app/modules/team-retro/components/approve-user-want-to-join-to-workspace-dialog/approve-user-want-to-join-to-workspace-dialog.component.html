@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Notification Details</h1>
-<div *ngIf="!isApprovedRequest">
+<div *ngIf="!isApprovedRequest && isNotificationForApproval()">
   <div  mat-dialog-content>
     <h3>
       Approve the user who wants to join the workspace
@@ -23,7 +23,7 @@
 
 </div>
 
-<div *ngIf="isApprovedRequest">
+<div *ngIf="isApprovedRequest && isNotificationForApproval()">
   <div  mat-dialog-content>
     <h3>
       Approve the user who wants to join the workspace

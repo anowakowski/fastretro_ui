@@ -19,7 +19,7 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 
 export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
   currentUser: User;
-  userNotificationWorkspaceWithRequiredAccess: any;
+  userNotificationWorkspaceWithRequiredAccess: UserNotificationWorkspaceWithRequiredAccess;
   isApprovedRequest: boolean;
 
   constructor(
@@ -34,7 +34,9 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
     this.setNotificationAsRead();
-    this.getIsUserApprovedRequest();
+    if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === 'WorkspaceWithRequiredAccess') {
+      this.getIsUserApprovedRequest();
+    }
   }
 
   setNotificationAsRead() {
@@ -50,6 +52,11 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     .catch(error => {
       const err = error;
     });
+  }
+
+  isNotificationForApproval() {
+    // tslint:disable-next-line:max-line-length
+    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === 'userNotificationWorkspaceWithRequiredAccess';
   }
 
   getIsUserApprovedRequest() {
