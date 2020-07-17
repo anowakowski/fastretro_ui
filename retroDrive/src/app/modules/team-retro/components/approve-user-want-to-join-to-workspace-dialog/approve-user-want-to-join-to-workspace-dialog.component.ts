@@ -18,6 +18,9 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 })
 
 export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
+  private readonly workspaceWithRequiredAccessName = 'WorkspaceWithRequiredAccess';
+  private readonly workspaceWithRequiredAccessResponseName = 'WorkspaceWithRequiredAccessResponse';
+
   currentUser: User;
   userNotificationWorkspaceWithRequiredAccess: UserNotificationWorkspaceWithRequiredAccess;
   isApprovedRequest: boolean;
@@ -33,10 +36,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     this.currentUser = this.data.currentUser as User;
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
-    this.setNotificationAsRead();
-    if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === 'WorkspaceWithRequiredAccess') {
-      this.getIsUserApprovedRequest();
-    }
+    this.setNotificationContentToDisplay();
   }
 
   setNotificationAsRead() {
@@ -56,7 +56,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
 
   isNotificationForApproval() {
     // tslint:disable-next-line:max-line-length
-    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === 'userNotificationWorkspaceWithRequiredAccess';
+    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessResponseName;
   }
 
   getIsUserApprovedRequest() {
@@ -139,5 +139,12 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
       .catch(error => {
         const err = error;
       });
+  }
+
+  private setNotificationContentToDisplay() {
+    if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
+      this.getIsUserApprovedRequest();
+      this.setNotificationAsRead();
+    }
   }
 }

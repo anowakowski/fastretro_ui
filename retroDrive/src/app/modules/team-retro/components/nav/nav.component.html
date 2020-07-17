@@ -52,11 +52,11 @@
           <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccessResponse'">
             <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
               <mat-icon color="warn">stop_circle</mat-icon>
-              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has accepted</span>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been accepted</span>
             </button>          
             <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
               <mat-icon>dialpad</mat-icon>
-              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has accepted</span>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been accepted</span>
             </button>              
           </div>
         </div>

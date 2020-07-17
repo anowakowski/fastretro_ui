@@ -35,6 +35,22 @@
     </div>
   </div>
   <div mat-dialog-actions>
-    <button mat-raised-button color="basic" (click)="onNoClick()">Cancel</button>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
+  </div>
+</div>
+
+<div *ngIf="!isNotificationForApproval()">
+  <div  mat-dialog-content>
+    <h3>
+      Your request has been approved
+      <mat-divider></mat-divider>
+    </h3>
+    
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      Your join request to <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.workspaceName}}</span> has been accepted by Owner
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
   </div>
 </div>
