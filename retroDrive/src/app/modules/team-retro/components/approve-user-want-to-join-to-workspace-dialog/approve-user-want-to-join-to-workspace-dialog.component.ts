@@ -145,6 +145,15 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
     if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
       this.getIsUserApprovedRequest();
       this.setNotificationAsRead();
+    } else if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType ===
+        this.workspaceWithRequiredAccessResponseName) {
+          this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
+            this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
+          )
+          .then(() => {})
+          .catch(error => {
+            const err = error;
+          });
     }
   }
 }
