@@ -78,13 +78,27 @@ export class NavComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (result.shouldRefreshTeams) {
-
         }
       }
     });
   }
 
   getUserNotification() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserNotyficationFromApi();
+      });
+    } else {
+      this.getUserNotyficationFromApi();
+    }
+  }
+
+  userNotifictaionHasNoReadNotify() {
+    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+  }
+
+  private getUserNotyficationFromApi() {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
         if (response !== undefined && response !== null) {
@@ -93,11 +107,7 @@ export class NavComponent implements OnInit {
       })
       .catch(error => {
         const err = error;
-    });
-  }
-
-  userNotifictaionHasNoReadNotify() {
-    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+      });
   }
 
   private prepareUsrNotification(response: any) {
