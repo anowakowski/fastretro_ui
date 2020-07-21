@@ -10,8 +10,9 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
-import { ApproveUserWantToJoinToWorkspaceDialogComponent } from '../approve-user-want-to-join-to-workspace-dialog/approve-user-want-to-join-to-workspace-dialog.component';
+
 import { MatDialog } from '@angular/material/dialog';
+import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
 
 @Component({
   selector: 'app-nav',
@@ -67,7 +68,7 @@ export class NavComponent implements OnInit {
   }
 
   goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
-    const dialogRef = this.dialog.open(ApproveUserWantToJoinToWorkspaceDialogComponent, {
+    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
       width: '600px',
       data: {
         userNotificationWorkspaceWithRequiredAccess: userNotification,

@@ -12,12 +12,12 @@ import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/user
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 
 @Component({
-  selector: 'app-approve-user-want-to-join-to-workspace-dialog',
-  templateUrl: './approve-user-want-to-join-to-workspace-dialog.component.html',
-  styleUrls: ['./approve-user-want-to-join-to-workspace-dialog.component.css']
+  selector: 'app-user-notification-details-dialog',
+  templateUrl: './user-notification-details-dialog.component.html',
+  styleUrls: ['./user-notification-details-dialog.component.css']
 })
 
-export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
+export class UserNotificationDetailsDialogComponent implements OnInit {
   private readonly workspaceWithRequiredAccessName = 'WorkspaceWithRequiredAccess';
   private readonly workspaceWithRequiredAccessResponseName = 'WorkspaceWithRequiredAccessResponse';
 
@@ -26,7 +26,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
   isApprovedRequest: boolean;
 
   constructor(
-    public dialogRef: MatDialogRef<ApproveUserWantToJoinToWorkspaceDialogComponent>,
+    public dialogRef: MatDialogRef<UserNotificationDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
     private currentUserApiService: CurrentUserApiService

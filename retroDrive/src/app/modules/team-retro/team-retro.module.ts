@@ -36,7 +36,7 @@ import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-exi
 // tslint:disable-next-line:max-line-length
 import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 // tslint:disable-next-line:max-line-length
-import { ApproveUserWantToJoinToWorkspaceDialogComponent } from './components/approve-user-want-to-join-to-workspace-dialog/approve-user-want-to-join-to-workspace-dialog.component';
+import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog/user-notification-details-dialog.component';
 
 @NgModule({
   imports: [
@@ -70,7 +70,7 @@ import { ApproveUserWantToJoinToWorkspaceDialogComponent } from './components/ap
     AllRetroboardListComponent,
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
-    ApproveUserWantToJoinToWorkspaceDialogComponent
+    UserNotificationDetailsDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -80,7 +80,7 @@ import { ApproveUserWantToJoinToWorkspaceDialogComponent } from './components/ap
     CreateNewTeamBottomsheetComponent,
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
-    ApproveUserWantToJoinToWorkspaceDialogComponent
+    UserNotificationDetailsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
