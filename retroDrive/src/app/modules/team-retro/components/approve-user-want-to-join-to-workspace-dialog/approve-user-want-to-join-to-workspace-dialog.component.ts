@@ -56,7 +56,7 @@ export class ApproveUserWantToJoinToWorkspaceDialogComponent implements OnInit {
 
   isNotificationForApproval() {
     // tslint:disable-next-line:max-line-length
-    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessResponseName;
+    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName;
   }
 
   getIsUserApprovedRequest() {
