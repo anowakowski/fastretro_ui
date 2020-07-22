@@ -11,6 +11,7 @@ import { User } from 'src/app/models/user';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 import { EventsService } from 'src/app/services/events.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-user-notification-details-dialog',
@@ -132,12 +133,24 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   }
 
   private setUserNotificationForuserWaitingToApproveWorkspaceJoin() {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = {
+      creationDate: currentDate,
+      userId: this.userNotificationWorkspaceWithRequiredAccess.userWantToJoinFirebaseId
+    };
+    this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(userNotificationDocId);
+    });
+  }
+
+  private setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(userNotificationDocId) {
     this.currentUserApiService
       .setUserNotificationForuserWaitingToApproveWorkspaceJoin(
-        this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId)
-      .then(() => {
-        // add usr notification to refresh
-      })
+        this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId,
+        userNotificationDocId
+      )
+      .then(() => { })
       .catch(error => {
         const err = error;
       });

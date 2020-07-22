@@ -83,7 +83,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
 
   private setNotification(findedWorkspace, workspaceId: string, workspaceName: any) {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
-    const usrNotificationToSave = {creationDate: currentDate, userId: findedWorkspace.creatorUserId}; // user who should get notification
+    const usrNotificationToSave = {creationDate: currentDate, userId: findedWorkspace.creatorUserId};
     this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
       const userNotificationDocId = userNotificationSnapshot.id;
       this.setUserNotificationInCurrentUserApi(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);

@@ -365,7 +365,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
-  setUserNotificationForuserWaitingToApproveWorkspaceJoin(userWaitingToApproveWorkspaceJoinId: number) {
+  setUserNotificationForuserWaitingToApproveWorkspaceJoin(userWaitingToApproveWorkspaceJoinId: number, userNotificationDocId: string) {
       const fbToken = this.localStorageService.getItem('token') as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
@@ -374,7 +374,8 @@ export class CurrentUserApiService {
       const url = this.baseUrl + '/setUserNotificationForuserWaitingToApproveWorkspaceJoin/';
 
       const dataToPost = {
-        userWaitingToApproveWorkspaceJoinId
+        userWaitingToApproveWorkspaceJoinId,
+        userNotificationDocId
       };
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
