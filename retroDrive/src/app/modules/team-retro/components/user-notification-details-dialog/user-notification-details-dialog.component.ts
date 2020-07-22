@@ -10,6 +10,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { User } from 'src/app/models/user';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-user-notification-details-dialog',
@@ -29,7 +30,8 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<UserNotificationDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
-    private currentUserApiService: CurrentUserApiService
+    private currentUserApiService: CurrentUserApiService,
+    private eventsService: EventsService
   ) {}
 
   ngOnInit() {

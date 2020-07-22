@@ -126,6 +126,7 @@ export class NavComponent implements OnInit {
   }
 
   private prepareUsrNotification(response: any) {
+    this.currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
     if (response.userNotificationWorkspaceWithRequiredAccesses !== undefined &&
         response.userNotificationWorkspaceWithRequiredAccesses !== null) {
           if (response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
