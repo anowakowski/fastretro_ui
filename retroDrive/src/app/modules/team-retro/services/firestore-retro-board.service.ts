@@ -16,7 +16,6 @@ const RETRO_BOARD_COLLECTION = '/retroBoards';
   providedIn: 'root'
 })
 export class FirestoreRetroBoardService {
-
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
@@ -34,6 +33,10 @@ export class FirestoreRetroBoardService {
 
   addToCurrentUserInRetroBoard(currentUserInRetroBoard: CurrentUsersInRetroBoardToSave) {
     this.firestoreBase.addNewItem('/currentUserInRetroBoard/', currentUserInRetroBoard);
+  }
+
+  addNewUserNotification(userNotificationToSave) {
+    return this.firestoreBase.addNewItem('/userNotifications/', userNotificationToSave);
   }
 
   updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {

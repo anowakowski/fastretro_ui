@@ -5,4 +5,5 @@ export class UserNotificationToSave {
     public workspaceName: string;
     public email: string;
     public displayName: string;
+    public userNotificationFirebaseDocId: string;
 }

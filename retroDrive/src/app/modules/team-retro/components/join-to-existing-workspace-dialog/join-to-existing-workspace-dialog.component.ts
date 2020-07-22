@@ -16,6 +16,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-join-to-existing-workspace-dialog',
@@ -58,30 +59,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           if (!findedWorkspace.isWithRequireAccess) {
             this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
           } else {
-            const userNotyfication: UserNotificationToSave = {
-              userWantToJoinFirebaseId: this.data.currentUser.uid,
-              creatorUserFirebaseId: findedWorkspace.creatorUserId,
-              workspceWithRequiredAccessFirebaseId: workspaceId,
-              workspaceName,
-              displayName: this.data.currentUser.displayName,
-              email: this.data.currentUser.email,
-            };
-            this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
-              .then(response => {
-                // eimit new notification after save
-                // create dialog / snackbar to show about workspace with required action
-                this.openSnackbar();
-                this.dialogRef.close({
-                  shouldRefreshTeams: false,
-                  shouldShowRequestForWorkspaceWithRequiredAccess: true,
-                  workspaceWithRequiredAccessId: workspaceId
-                });
-              })
-              .catch(error => {
-                const err = error;
-              });
-
-            // create waitng place to hold waiting usr to approval
+            this.setNotification(findedWorkspace, workspaceId, workspaceName);
           }
         }
       });
@@ -101,6 +79,52 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
         displayText: 'This Workspace Require Access By Owner'
       }
     });
+  }
+
+  private setNotification(findedWorkspace, workspaceId: string, workspaceName: any) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = {creationDate: currentDate};
+    this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setUserNotificationInCurrentUserApi(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);
+    });
+  }
+
+  private setUserNotificationInCurrentUserApi(
+    findedWorkspace: any,
+    workspaceId: string,
+    workspaceName: any,
+    userNotificationDocId: string) {
+    const userNotyfication: UserNotificationToSave =
+      this.prepareUserNotification(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);
+    this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
+      .then(() => {
+        this.openSnackbar();
+        this.dialogRef.close({
+          shouldRefreshTeams: false,
+          shouldShowRequestForWorkspaceWithRequiredAccess: true,
+          workspaceWithRequiredAccessId: workspaceId
+        });
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private prepareUserNotification(
+    findedWorkspace,
+    workspaceId: string,
+    workspaceName: any,
+    userNotificationFirebaseDocId: string): UserNotificationToSave {
+    return {
+      userWantToJoinFirebaseId: this.data.currentUser.uid,
+      creatorUserFirebaseId: findedWorkspace.creatorUserId,
+      workspceWithRequiredAccessFirebaseId: workspaceId,
+      workspaceName,
+      displayName: this.data.currentUser.displayName,
+      email: this.data.currentUser.email,
+      userNotificationFirebaseDocId
+    };
   }
 
   private addToUserWorkspaces(findedUsr: User, workspaceIdToAdd: string, userWorkspace: UserWorkspace) {
