@@ -49,7 +49,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId
     )
     .then(() => {
-
+      this.eventsService.emitSetRefreshNotificationEmiter();
     })
     .catch(error => {
       const err = error;
@@ -152,7 +152,9 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
           this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
             this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
           )
-          .then(() => {})
+          .then(() => {
+            this.eventsService.emitSetRefreshNotificationEmiter();
+          })
           .catch(error => {
             const err = error;
           });

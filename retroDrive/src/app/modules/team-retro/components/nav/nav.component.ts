@@ -23,12 +23,14 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 export class NavComponent implements OnInit {
 
   public setCurrentWorkspaceSubscriptions: any;
+  public userNotificationSubscription: any;
 
   foods: any[] = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
+  setRefreshNotificationSubscription: any;
 
   constructor(
     public auth: AuthService,
@@ -43,7 +45,6 @@ export class NavComponent implements OnInit {
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
   public currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
-  userNotificationSubscription: any;
 
   @Output() toggleSidenav = new EventEmitter<void>();
   @Input() shouldShowBackToDashboard = false;
@@ -62,7 +63,6 @@ export class NavComponent implements OnInit {
     }
 
     this.subscribeEvents();
-    // this.getUserNotification();
     this.subscribeUserNotification();
   }
 
@@ -167,6 +167,9 @@ export class NavComponent implements OnInit {
       this.eventsService.getSetNewCurrentWorkspaceEmiterEmiter().subscribe(currentWorkspace => {
         this.currentUserWorkspaceName = currentWorkspace.name;
       });
+    this.setRefreshNotificationSubscription = this.eventsService.getsetRefreshNotificationEmiter().subscribe(() => {
+      this.getUserNotification();
+    });
   }
 
   sortCurrentUserNoitficationByIsReadByAsc() {
