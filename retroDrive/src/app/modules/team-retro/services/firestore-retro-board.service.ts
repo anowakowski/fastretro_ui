@@ -16,6 +16,7 @@ const RETRO_BOARD_COLLECTION = '/retroBoards';
   providedIn: 'root'
 })
 export class FirestoreRetroBoardService {
+
   constructor(private firestoreBase: FirestoreBaseService) { }
 
   addNewRetroBoard(newRetroBoard) {
@@ -77,6 +78,16 @@ export class FirestoreRetroBoardService {
     };
 
     return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
+  getUserNotificationSnapshotChanges(userId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: userId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/userNotifications/', condition);
   }
 
   findWorkspacesByName(name: string) {

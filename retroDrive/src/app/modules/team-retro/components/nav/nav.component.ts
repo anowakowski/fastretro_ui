@@ -13,6 +13,7 @@ import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 @Component({
   selector: 'app-nav',
@@ -34,6 +35,7 @@ export class NavComponent implements OnInit {
     private router: Router,
     private localStorageService: LocalStorageService,
     private eventsService: EventsService,
+    private firestoreService: FirestoreRetroBoardService,
     private currentUserInRetroBoardApiService: CurrentUserApiService,
     public dialog: MatDialog) { }
 
@@ -41,6 +43,7 @@ export class NavComponent implements OnInit {
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
   public currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
+  userNotificationSubscription: any;
 
   @Output() toggleSidenav = new EventEmitter<void>();
   @Input() shouldShowBackToDashboard = false;
@@ -97,6 +100,16 @@ export class NavComponent implements OnInit {
 
   userNotifictaionHasNoReadNotify() {
     return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+  }
+
+  private subscribeUserNotification() {
+    this.userNotificationSubscription =
+      this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {
+      userNotificationsSnapshot.forEach(userNotificationSnapshot => {
+        const findedUserNotification = userNotificationSnapshot.payload.doc.data();
+        this.getUserNotyficationFromApi();
+      });
+    });
   }
 
   private getUserNotyficationFromApi() {
