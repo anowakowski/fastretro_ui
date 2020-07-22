@@ -62,7 +62,8 @@ export class NavComponent implements OnInit {
     }
 
     this.subscribeEvents();
-    this.getUserNotification();
+    // this.getUserNotification();
+    this.subscribeUserNotification();
   }
 
   onSetNotificationAsReadClick() {

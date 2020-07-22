@@ -190,6 +190,17 @@ export class TeamsComponent implements OnInit, OnDestroy {
   }
 
   private getAllWaitingWorkspaceRequests() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getAllWaitingWorkspaceRequestsFromApi();
+      });
+    } else {
+      this.getAllWaitingWorkspaceRequestsFromApi();
+    }
+  }
+
+  private getAllWaitingWorkspaceRequestsFromApi() {
     this.currentUserInRetroBoardApiService.getAllWaitingWorkspaceRequests(
       this.currentUser.uid
     ).then(response => {
