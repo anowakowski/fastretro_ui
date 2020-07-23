@@ -281,7 +281,6 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     } else if (!this.isNewWorkspace && !isWithRequireAccess) {
       this.addUserToExistingWorkspaces(findedUsr);
     } else if (!this.isNewWorkspace && isWithRequireAccess) {
-      
       this.setWorkpsaceProcessWithRequiredAccess(findedUsr);
     }
   }
