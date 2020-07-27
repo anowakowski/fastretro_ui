@@ -187,8 +187,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
           if (snapshotFindedUsr.docs.length > 0) {
             const findedUsr = snapshotFindedUsr.docs[0].data() as User;
             this.updateFindedUser(findedUsr, chosenAvatar, displayName);
-            const findedWorkspace = workspaceSnapshot.docs[0].data() as Workspace;
-            this.createWorkspaceProcess(findedUsr, findedWorkspace.isWithRequireAccess);
+            if (workspaceSnapshot.docs.length > 0) {
+              const findedWorkspace = workspaceSnapshot.docs[0].data() as Workspace;
+              this.createWorkspaceProcess(findedUsr, findedWorkspace.isWithRequireAccess);
+            } else {
+              this.createWorkspaceProcess(findedUsr);
+            }
           }
         });
       }
@@ -275,7 +279,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createWorkspaceProcess(findedUsr: User, isWithRequireAccess: boolean) {
+  private createWorkspaceProcess(findedUsr: User, isWithRequireAccess: boolean = false) {
     if (this.isNewWorkspace) {
       this.createNewWorkspace(findedUsr);
     } else if (!this.isNewWorkspace && !isWithRequireAccess) {
