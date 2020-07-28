@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -20,17 +20,18 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
 
   public setCurrentWorkspaceSubscriptions: any;
   public userNotificationSubscription: any;
+  public allNotificationSubscription: any;
+  public setRefreshNotificationSubscription: any;
 
   foods: any[] = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
-  setRefreshNotificationSubscription: any;
 
   constructor(
     public auth: AuthService,
@@ -64,6 +65,10 @@ export class NavComponent implements OnInit {
 
     this.subscribeEvents();
     this.subscribeUserNotification();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeEvents();
   }
 
   goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
@@ -110,7 +115,8 @@ export class NavComponent implements OnInit {
     this.userNotificationSubscription =
       this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {
       if (userNotificationsSnapshot.length === 0) {
-        this.firestoreService.getAllUserNotificationSnapshotChanges().subscribe(allNotificationsSnapshot => {
+        this.allNotificationSubscription =
+          this.firestoreService.getAllUserNotificationSnapshotChanges().subscribe(allNotificationsSnapshot => {
           const findedNotification = allNotificationsSnapshot.find( ns => (ns.payload.doc.data() as any).userId === this.currentUser.uid);
           if (findedNotification !== undefined && findedNotification !== null) {
             this.getUserNotyficationFromApi();
@@ -182,6 +188,21 @@ export class NavComponent implements OnInit {
     this.setRefreshNotificationSubscription = this.eventsService.getsetRefreshNotificationEmiter().subscribe(() => {
       this.getUserNotification();
     });
+  }
+
+  private unsubscribeEvents() {
+    if (this.userNotificationSubscription !== undefined) {
+      this.userNotificationSubscription.unsubscribe();
+    }
+    if (this.setCurrentWorkspaceSubscriptions !== undefined) {
+      this.setCurrentWorkspaceSubscriptions.unsubscribe();
+    }
+    if (this.allNotificationSubscription !== undefined) {
+      this.allNotificationSubscription.unsubscribe();
+    }
+    if (this.setRefreshNotificationSubscription !== undefined) {
+      this.setRefreshNotificationSubscription.unsubscribe();
+    }
   }
 
   sortCurrentUserNoitficationByIsReadByAsc() {
