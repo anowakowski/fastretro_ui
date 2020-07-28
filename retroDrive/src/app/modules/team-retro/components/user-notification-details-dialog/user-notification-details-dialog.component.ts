@@ -106,7 +106,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       requestIsApprove
       )
       .then(() => {
-        this.dialogRef.close();
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin()
       })
       .catch(error => {
         const err = error;
@@ -128,7 +128,6 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       findedUserWorkspace.workspaces.push(workspacesToAddToUserWorkspace);
       this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
       this.setUserNotificationForuserWaitingToApproveWorkspaceJoin();
-      this.dialogRef.close();
     });
   }
 
@@ -150,7 +149,9 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
         this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoinId,
         userNotificationDocId
       )
-      .then(() => { })
+      .then(() => {
+        this.dialogRef.close();
+       })
       .catch(error => {
         const err = error;
       });
