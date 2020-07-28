@@ -128,6 +128,22 @@ export class CurrentUserApiService {
     return this.httpClient.get<any>(url, httpOptions).toPromise();
   }
 
+  getIsExistingUserWaitingToApproveWorkspace(
+    userWantToJoinFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url =
+      this.baseUrl + '/getIsExistingUserWaitingToApproveWorkspace/' +
+        userWantToJoinFirebaseId + '/' + workspceWithRequiredAccessFirebaseId;
+    return this.httpClient.get<boolean>(url, httpOptions).toPromise();
+  }
+
   getAllWaitingWorkspaceRequests(
     userWantToJoinFirebaseId: string) {
     const fbToken = this.localStorageService.getItem('token') as FbToken;

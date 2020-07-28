@@ -59,7 +59,21 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           if (!findedWorkspace.isWithRequireAccess) {
             this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
           } else {
-            this.setNotification(findedWorkspace, workspaceId, workspaceName);
+            this.currentUserInRetroBoardApiService.getIsExistingUserWaitingToApproveWorkspace( this.data.currentUser.uid, workspaceId)
+              .then(response => {
+                const isExistingWaitingToApprovalWorkspace = response;
+                if (isExistingWaitingToApprovalWorkspace !== null && isExistingWaitingToApprovalWorkspace !== undefined) {
+                  if (isExistingWaitingToApprovalWorkspace) {
+                    // bottomsheet
+                  } else {
+                    this.setNotification(findedWorkspace, workspaceId, workspaceName);
+                  }
+                }
+              })
+              .catch(error => {
+                const err = error;
+              })
+            
           }
         }
       });
