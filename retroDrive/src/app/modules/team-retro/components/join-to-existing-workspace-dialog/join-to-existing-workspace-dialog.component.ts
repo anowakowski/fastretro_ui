@@ -64,7 +64,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
                 const isExistingWaitingToApprovalWorkspace = response;
                 if (isExistingWaitingToApprovalWorkspace !== null && isExistingWaitingToApprovalWorkspace !== undefined) {
                   if (isExistingWaitingToApprovalWorkspace) {
-                    // bottomsheet
+                    this.openSnackbar('you are currently send request to join for this workspace');
                   } else {
                     this.setNotification(findedWorkspace, workspaceId, workspaceName);
                   }
@@ -72,8 +72,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
               })
               .catch(error => {
                 const err = error;
-              })
-            
+              });
           }
         }
       });
@@ -84,13 +83,13 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     this.dialogRef.close({shouldRefreshTeams: false});
   }
 
-  openSnackbar() {
+  openSnackbar(displayText) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
         shouldShowWarningMessage: false,
-        displayText: 'This Workspace Require Access By Owner'
+        displayText
       }
     });
   }
@@ -113,7 +112,7 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
       this.prepareUserNotification(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);
     this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
       .then(() => {
-        this.openSnackbar();
+        this.openSnackbar('This Workspace Require Access By Owner');
         this.dialogRef.close({
           shouldRefreshTeams: false,
           shouldShowRequestForWorkspaceWithRequiredAccess: true,
