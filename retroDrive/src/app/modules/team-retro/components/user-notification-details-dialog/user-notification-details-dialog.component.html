@@ -51,7 +51,10 @@
                       !userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove">rejected</span>         
          by Owner 
       </div>
-      <div style="margin-top: 7px;">
+      <div 
+        style="margin-top: 7px;" 
+        *ngIf="userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.isApprovalByCreator && 
+               userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove">
         Go to 
         <span style="font-size: 17px;">Workspace & Teams</span> 
         section and choose <br /> 
