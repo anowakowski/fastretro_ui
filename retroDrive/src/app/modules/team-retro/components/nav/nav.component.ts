@@ -103,6 +103,14 @@ export class NavComponent implements OnInit {
     return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
   }
 
+  isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess) : boolean {
+    const isAccpeted =
+      userNotification.userWaitingToApproveWorkspaceJoin.isApprovalByCreator &&
+      userNotification.userWaitingToApproveWorkspaceJoin.requestIsApprove;
+
+    return isAccpeted;
+  }
+
   private subscribeUserNotification() {
     this.userNotificationSubscription =
       this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {

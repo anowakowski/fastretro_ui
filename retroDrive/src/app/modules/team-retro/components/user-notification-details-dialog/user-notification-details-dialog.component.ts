@@ -106,7 +106,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       requestIsApprove
       )
       .then(() => {
-        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin()
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin();
       })
       .catch(error => {
         const err = error;
@@ -115,6 +115,14 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  isAceptedByOwnerAndIsApproved(): boolean {
+    const isAccpeted =
+    this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.isApprovalByCreator &&
+    this.userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove;
+
+    return isAccpeted;
   }
 
   private addToUserWorkspaces(userId: string, workspaceId: string) {

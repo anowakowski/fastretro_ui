@@ -45,16 +45,12 @@
       <div>Your join request to 
         <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.workspaceName}}</span>
          has been 
-         <span *ngIf="userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.isApprovalByCreator && 
-                      userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove">accepted</span>
-         <span *ngIf="userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.isApprovalByCreator && 
-                      !userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove">rejected</span>         
+         <span *ngIf="isAceptedByOwnerAndIsApproved()">accepted</span>
+         <span *ngIf="!isAceptedByOwnerAndIsApproved()">rejected</span>         
          by Owner 
       </div>
       <div 
-        style="margin-top: 7px;" 
-        *ngIf="userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.isApprovalByCreator && 
-               userNotificationWorkspaceWithRequiredAccess.userWaitingToApproveWorkspaceJoin.requestIsApprove">
+        style="margin-top: 7px;" *ngIf="isAceptedByOwnerAndIsApproved()">
         Go to 
         <span style="font-size: 17px;">Workspace & Teams</span> 
         section and choose <br /> 

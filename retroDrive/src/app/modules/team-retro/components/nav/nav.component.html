@@ -56,7 +56,10 @@
             </button>          
             <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
               <mat-icon>dialpad</mat-icon>
-              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been accepted</span>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been 
+                <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
+                <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
+              </span>
             </button>              
           </div>
         </div>
