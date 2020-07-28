@@ -66,11 +66,6 @@ export class NavComponent implements OnInit {
     this.subscribeUserNotification();
   }
 
-  onSetNotificationAsReadClick() {
-    // this.currentUserInRetroBoardApiService.setNotificationAsRead()
-
-  }
-
   goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
     const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
       width: '600px',
@@ -103,7 +98,7 @@ export class NavComponent implements OnInit {
     return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
   }
 
-  isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess) : boolean {
+  isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess): boolean {
     const isAccpeted =
       userNotification.userWaitingToApproveWorkspaceJoin.isApprovalByCreator &&
       userNotification.userWaitingToApproveWorkspaceJoin.requestIsApprove;
@@ -114,10 +109,19 @@ export class NavComponent implements OnInit {
   private subscribeUserNotification() {
     this.userNotificationSubscription =
       this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {
-      userNotificationsSnapshot.forEach(userNotificationSnapshot => {
-        const findedUserNotification = userNotificationSnapshot.payload.doc.data();
-        this.getUserNotyficationFromApi();
-      });
+      if (userNotificationsSnapshot.length === 0) {
+        this.firestoreService.getAllUserNotificationSnapshotChanges().subscribe(allNotificationsSnapshot => {
+          const findedNotification = allNotificationsSnapshot.find( ns => (ns.payload.doc.data() as any).userId === this.currentUser.uid);
+          if (findedNotification !== undefined && findedNotification !== null) {
+            this.getUserNotyficationFromApi();
+          }
+        });
+      } else {
+        userNotificationsSnapshot.forEach(userNotificationSnapshot => {
+          const findedUserNotification = userNotificationSnapshot.payload.doc.data();
+          this.getUserNotyficationFromApi();
+        });
+      }
     });
   }
 

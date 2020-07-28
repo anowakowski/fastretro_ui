@@ -90,6 +90,10 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/userNotifications/', condition);
   }
 
+  getAllUserNotificationSnapshotChanges() {
+    return this.firestoreBase.snapshotChanges('/userNotifications/');
+  }
+
   findWorkspacesByName(name: string) {
     const condition: ConditionQueryData = {
       fieldName: 'name',
