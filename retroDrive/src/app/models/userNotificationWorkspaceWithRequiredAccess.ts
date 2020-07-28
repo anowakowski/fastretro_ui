@@ -1,4 +1,5 @@
 import { UserNotification } from './userNotification';
+import { UserWaitingToApproveWorkspaceJoin } from './userWaitingToApproveWorkspaceJoin';
 
 export class UserNotificationWorkspaceWithRequiredAccess {
     public userWantToJoinFirebaseId: string;
@@ -8,5 +9,6 @@ export class UserNotificationWorkspaceWithRequiredAccess {
     public displayName: string;
     public workspaceName: string;
     public userWaitingToApproveWorkspaceJoinId: number;
+    public userWaitingToApproveWorkspaceJoin: UserWaitingToApproveWorkspaceJoin;
     public userNotification: UserNotification;
 }
