@@ -37,6 +37,7 @@ import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-exi
 import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog/user-notification-details-dialog.component';
+import { ViewAllNotificationsComponent } from './components/view-all-notifications/view-all-notifications.component';
 
 @NgModule({
   imports: [
@@ -70,7 +71,8 @@ import { UserNotificationDetailsDialogComponent } from './components/user-notifi
     AllRetroboardListComponent,
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
-    UserNotificationDetailsDialogComponent
+    UserNotificationDetailsDialogComponent,
+    ViewAllNotificationsComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
