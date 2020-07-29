@@ -9,6 +9,7 @@ import { FirestoreRetroBoardService } from 'src/app/modules/team-retro/services/
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
+import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog copy/user-notification-details-dialog.component';
 
 @Component({
   selector: 'app-nav',

@@ -34,6 +34,7 @@ import { TeamRetroInProgressUserWithoutRbTeamDialogComponent } from './component
 import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from './components/team-retro-in-progress-show-all-users-in-current-retro-dialog/team-retro-in-progress-show-all-users-in-current-retro-dialog-component';
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './components/team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './components/team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
+import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog copy/user-notification-details-dialog.component';
 
 
 
@@ -64,7 +65,8 @@ import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './compone
     TeamRetroInProgressUserWithoutRbTeamDialogComponent,
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
     TeamRetroInProgressRetroBoardOptionsDialogComponent,
-    TeamRetroInProgressShowPreviousActionsDialogComponent
+    TeamRetroInProgressShowPreviousActionsDialogComponent,
+    UserNotificationDetailsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -78,7 +80,8 @@ import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './compone
     TeamRetroInProgressUserWithoutRbTeamDialogComponent,
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
     TeamRetroInProgressRetroBoardOptionsDialogComponent,
-    TeamRetroInProgressShowPreviousActionsDialogComponent
+    TeamRetroInProgressShowPreviousActionsDialogComponent,
+    UserNotificationDetailsDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService
