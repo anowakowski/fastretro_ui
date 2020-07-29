@@ -2,9 +2,10 @@
   <mat-toolbar-row>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
     <span [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
-    <button mat-stroked-button style="margin-left: 15px;" (click)="backToDashboard()">
+    <button mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
+    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     <!--<button mat-raised-button color="warn" (click)="stopTimer()"><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>-->
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" class="user-avatar-img" width="40" height="40" alt="logo">
@@ -58,8 +59,7 @@
         </div>
       </div>
     </mat-menu>       
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
-    <span style="margin-left: 12px;">
+    <span style="margin-left: 20px;">
       <span *ngIf="!shouldChangeRetroDisplayText">Retro in progress...</span>
       <span *ngIf="shouldChangeRetroDisplayText">Retro is finished</span>
     </span>
