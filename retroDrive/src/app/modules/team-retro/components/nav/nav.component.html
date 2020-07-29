@@ -18,7 +18,7 @@
 
     <span
       style="cursor: pointer; margin-top: 7px;"
-      *ngIf="currentUserNotifications.length === 0">
+      *ngIf="currentUserNotifications.length === 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    
     <span
@@ -27,13 +27,13 @@
       matBadgeColor="warn"
       style="cursor: pointer; margin-top: 7px;"
       class="hide-text" 
-      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0">
+      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>
     <span 
       [matMenuTriggerFor]="menu"
       style="cursor: pointer; margin-top: 7px;"
-      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0">
+      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    
     <mat-menu class="more-width-mat-menu" #menu="matMenu">
