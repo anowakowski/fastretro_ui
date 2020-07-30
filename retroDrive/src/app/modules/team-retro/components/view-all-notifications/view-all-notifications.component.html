@@ -10,7 +10,11 @@
           <mat-icon color="warn">stop_circle</mat-icon>
         </span>
         <mat-divider [vertical]="true"></mat-divider>
-        <span style="margin-left:10px;">no read notification</span>
+        <span style="margin-left:10px;">
+          Your joined request to {{userNotification.workspaceName}} has been 
+            <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
+            <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
+        </span>
         <div fxFlex></div>
         <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
           <mat-icon>assignment</mat-icon>&nbsp; show notification details
