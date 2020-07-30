@@ -95,7 +95,7 @@ export class NavComponent implements OnInit, OnDestroy {
       userNotification.userWaitingToApproveWorkspaceJoin.requestIsApprove;
 
     return isAccpeted;
-  }  
+  }
 
   stopTimer() {
     this.shouldChangeRetroDisplayText = true;
@@ -103,6 +103,11 @@ export class NavComponent implements OnInit, OnDestroy {
 
   backToDashboard() {
     this.router.navigate(['/']);
+  }
+
+  goToViewAllNotifications() {
+    this.eventsServices.emitSetAllNotificationViewAsDefaultSectionEmiter();
+    this.router.navigate(['/retro/all-your-notifications']);
   }
 
   private subscribeUserNotification() {
