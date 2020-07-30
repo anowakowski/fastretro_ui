@@ -17,7 +17,10 @@
           </button>
           <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-raised-button (click)="setBtnColor(allRetroBoardListSection)">
             <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
-          </button>        
+          </button> 
+          <button class="sidenav-elemnt" color="{{allNotificationsColor}}" [routerLink]="['/retro/all-your-notifications']" mat-raised-button (click)="setBtnColor(allNotificationsSection)">
+            <mat-icon>notifications</mat-icon>&nbsp; All your notifications
+          </button>                  
           <app-sidenav-usercard></app-sidenav-usercard>
           <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
             <i class="fa fa-sign-out"></i>&nbsp; SignOut

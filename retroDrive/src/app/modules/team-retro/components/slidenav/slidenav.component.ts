@@ -40,7 +40,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   public teamsSection = EDIT_TEAMS_SECCTION;
   public retroProcessSection = RETRO_PROCES_SECCTION;
   public allRetroBoardListSection = All_RETROBOARDS_LIST_SECTION;
-  public allNotifications = ALL_NOTIFICATIONS_SECTION;
+  public allNotificationsSection = ALL_NOTIFICATIONS_SECTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
   public teamsColor = BASIC_BTN_COLOR;
@@ -132,7 +132,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     } else if (this.currentChosenSection === All_RETROBOARDS_LIST_SECTION) {
       this.allRetroBoardListColor = BASIC_BTN_COLOR;
     } else if (this.currentChosenSection === ALL_NOTIFICATIONS_SECTION) {
-      this.allNotifications = BASIC_BTN_COLOR;
+      this.allNotificationsColor = BASIC_BTN_COLOR;
     }
   }
 
