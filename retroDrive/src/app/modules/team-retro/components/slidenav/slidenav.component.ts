@@ -15,6 +15,7 @@ const EDIT_TEAMS_SECCTION = 'teams';
 const RETRO_PROCES_SECCTION = 'retroProcess';
 // tslint:disable-next-line:variable-name
 const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
+const ALL_NOTIFICATIONS_SECTION = 'all-your-notifications';
 
 
 @Component({
@@ -39,11 +40,13 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   public teamsSection = EDIT_TEAMS_SECCTION;
   public retroProcessSection = RETRO_PROCES_SECCTION;
   public allRetroBoardListSection = All_RETROBOARDS_LIST_SECTION;
+  public allNotifications = ALL_NOTIFICATIONS_SECTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
   public allRetroBoardListColor = BASIC_BTN_COLOR;
+  public allNotificationsColor = BASIC_BTN_COLOR;
 
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
@@ -128,6 +131,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.retroProcessColor = BASIC_BTN_COLOR;
     } else if (this.currentChosenSection === All_RETROBOARDS_LIST_SECTION) {
       this.allRetroBoardListColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === ALL_NOTIFICATIONS_SECTION) {
+      this.allNotifications = BASIC_BTN_COLOR;
     }
   }
 
@@ -140,6 +145,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.retroProcessColor = CURRENT_BTN_COLOR;
     } else if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
       this.allRetroBoardListColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === ALL_NOTIFICATIONS_SECTION) {
+      this.allNotificationsColor = CURRENT_BTN_COLOR;
     }
   }
 
@@ -151,6 +158,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.setBtnColor(RETRO_PROCES_SECCTION);
     } else if (this.currentRouteSecction.search('all-retroboard-list') > 0) {
       this.setBtnColor(All_RETROBOARDS_LIST_SECTION);
+    } else if (this.currentRouteSecction.search('all-your-notification') > 0) {
+      this.setBtnColor(ALL_NOTIFICATIONS_SECTION);
     } else {
       this.setBtnColor(DASHBOARD_SECTION);
     }
