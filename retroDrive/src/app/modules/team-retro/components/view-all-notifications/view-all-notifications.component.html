@@ -42,6 +42,7 @@
           notifcation send {{userNotification.userNotification.creatonDate}}
         </span>        
         <div fxFlex></div>
+        <button mat-raised-button color="warn" style="margin-left: 10px; margin-top: -8px; margin-bottom: -8px;" *ngIf="!userNotification.userNotification.isRead" (click)="setNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotification)"><mat-icon>article</mat-icon>&nbsp;set as read</button>        
         <button mat-raised-button color="primary" style="margin-left: 10px; margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToNotifyDetail(userNotification)">
           <mat-icon>read_more</mat-icon>&nbsp; open notification details
         </button>

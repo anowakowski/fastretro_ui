@@ -129,6 +129,19 @@ export class ViewAllNotificationsComponent implements OnInit {
       });
   }
 
+  setNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    this.currentUserInRetroBoardApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
+      userNotification.userNotification.id
+    )
+    .then(() => {
+      this.eventsService.emitSetRefreshNotificationEmiter();
+      this.getUserNotification();
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
   private addToUserWorkspaces(userNotification: UserNotificationWorkspaceWithRequiredAccess, isApproved) {
     this.firestoreService.getUserWorkspace(userNotification.userWantToJoinFirebaseId).then(userWorkspaceSnapshot => {
       const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
