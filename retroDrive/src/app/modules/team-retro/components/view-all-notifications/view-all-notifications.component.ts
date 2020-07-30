@@ -85,12 +85,12 @@ export class ViewAllNotificationsComponent implements OnInit {
     });
   }
 
-  openSnackbar(displayText) {
+  openSnackbar(displayText, shouldShowWarningMessage) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
-        shouldShowWarningMessage: false,
+        shouldShowWarningMessage,
         displayText
       }
     });
@@ -105,7 +105,7 @@ export class ViewAllNotificationsComponent implements OnInit {
       requestIsApprove
       )
       .then(() => {
-        this.addToUserWorkspaces(userNotification);
+        this.addToUserWorkspaces(userNotification, true);
       })
       .catch(error => {
         const err = error;
@@ -122,14 +122,14 @@ export class ViewAllNotificationsComponent implements OnInit {
       )
       .then(() => {
         this.setNotificationAsRead(userNotification);
-        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification, false);
       })
       .catch(error => {
         const err = error;
       });
   }
 
-  private addToUserWorkspaces(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+  private addToUserWorkspaces(userNotification: UserNotificationWorkspaceWithRequiredAccess, isApproved) {
     this.firestoreService.getUserWorkspace(userNotification.userWantToJoinFirebaseId).then(userWorkspaceSnapshot => {
       const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
         workspace: this.firestoreService.addWorkspaceAsRef(userNotification.workspceWithRequiredAccessFirebaseId),
@@ -141,32 +141,39 @@ export class ViewAllNotificationsComponent implements OnInit {
       this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
 
       this.setNotificationAsRead(userNotification);
-      this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
+      this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification, isApproved);
     });
   }
 
-  private setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
-    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
-    const usrNotificationToSave = {
-      creationDate: currentDate,
-      userId: userNotification.userWantToJoinFirebaseId
-    };
-    this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
-      const userNotificationDocId = userNotificationSnapshot.id;
-      this.setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(userNotification, userNotificationDocId);
-    });
+  private setUserNotificationForuserWaitingToApproveWorkspaceJoin(
+    userNotification: UserNotificationWorkspaceWithRequiredAccess,
+    isApproved) {
+      const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+      const usrNotificationToSave = {
+        creationDate: currentDate,
+        userId: userNotification.userWantToJoinFirebaseId
+      };
+      this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+        const userNotificationDocId = userNotificationSnapshot.id;
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(userNotification, userNotificationDocId, isApproved);
+      });
   }
 
   private setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(
     userNotification: UserNotificationWorkspaceWithRequiredAccess,
-    userNotificationDocId) {
+    userNotificationDocId,
+    isApproved) {
       this.currentUserInRetroBoardApiService
         .setUserNotificationForuserWaitingToApproveWorkspaceJoin(
           userNotification.userWaitingToApproveWorkspaceJoinId,
           userNotificationDocId
         )
         .then(() => {
-          this.openSnackbar('you accpeted join to workspace request');
+          if (isApproved) {
+            this.openSnackbar('you have accepted joining the user to workspace', false);
+          } else {
+            this.openSnackbar('you have rejected joining the user to workspace', true);
+          }
           this.getUserNotification();
         })
         .catch(error => {
