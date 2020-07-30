@@ -137,8 +137,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkSectionToGreyedBackground(currentChosenSection) {
-    return currentChosenSection === this.allRetroBoardListSection || currentChosenSection === this.allNotificationsSection;
+  isSectionWithGreyedBackground() {
+    return this.currentChosenSection === this.allRetroBoardListSection || this.currentChosenSection === this.allNotificationsSection;
   }
 
   private getUserNotyficationFromApi() {

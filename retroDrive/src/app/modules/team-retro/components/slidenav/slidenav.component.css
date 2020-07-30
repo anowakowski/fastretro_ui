@@ -99,9 +99,11 @@
 }
 
 .teams-retro-background-img-all-retroboard-section-with-height  {
-
   height: 100%;
+}
 
+.breadcrumb-background-color {
+  background-color: #fefefe;
 }
 
 .card-title {
