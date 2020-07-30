@@ -28,8 +28,8 @@
         </div>
       </div>
     </mat-drawer> 
-    <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 
-    'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection,
+    <div [ngClass]="{'teams-retro-background-img': checkSectionToGreyedBackground(currentChosenSection) === false, 
+    'teams-retro-background-img-all-retroboard-section': checkSectionToGreyedBackground(currentChosenSection) === true,
     'teams-retro-background-img-all-retroboard-section-with-height': shouldShowMoreHigherOnAllRetroBoardList === true}">
       <div class="app-sidenav-content">
         <div class="wrapper">

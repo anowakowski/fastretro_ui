@@ -111,6 +111,11 @@ export class NavComponent implements OnInit, OnDestroy {
     return isAccpeted;
   }
 
+  goToViewAllNotifications() {
+    this.eventsService.emitSetAllNotificationViewAsDefaultSectionEmiter();
+    this.router.navigate(['/retro/all-your-notifications']);
+  }
+
   private subscribeUserNotification() {
     this.userNotificationSubscription =
       this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {

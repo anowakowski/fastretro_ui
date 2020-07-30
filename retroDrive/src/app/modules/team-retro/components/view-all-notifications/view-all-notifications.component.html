@@ -2,7 +2,7 @@
   <div *ngFor="let userNotification of currentUserNotifications">
     <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccess'">
       <!--no read notification-->
-      <mat-card style="margin-top: 10px; opacity: 0.985;" *ngIf="!userNotification.userNotification.isRead">
+      <mat-card style="margin-top: 10px;" *ngIf="!userNotification.userNotification.isRead">
         <span style="margin-right:10px; margin-bottom: -10px;">
           <mat-icon color="warn">stop_circle</mat-icon>
         </span>
@@ -16,7 +16,7 @@
         </button>
       </mat-card>
       <!--read notification-->
-      <mat-card style="margin-top: 10px; opacity: 0.985;" *ngIf="userNotification.userNotification.isRead">
+      <mat-card style="margin-top: 10px;" *ngIf="userNotification.userNotification.isRead">
         <span style="margin-right:10px; margin-bottom: -10px;">
           <mat-icon>dialpad</mat-icon>
         </span>

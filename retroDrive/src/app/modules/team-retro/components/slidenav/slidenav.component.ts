@@ -54,8 +54,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   goOutFromAllRetroBoardSubscription: any;
   setMoreHigherForBackgroundSubscription: any;
   setNoMoreHigherForBackgroundSubscription: any;
-
   setAllRetroBoardsListSubscription: any;
+  setAllNotificationSectionSubscription: any;
 
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
@@ -137,6 +137,10 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkSectionToGreyedBackground(currentChosenSection) {
+    return currentChosenSection === this.allRetroBoardListSection || currentChosenSection === this.allNotificationsSection;
+  }
+
   private getUserNotyficationFromApi() {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
@@ -212,5 +216,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       });
     this.setAllRetroBoardsListSubscription = this.eventService.getSetAllRetroBoardAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(All_RETROBOARDS_LIST_SECTION));
+    this.setAllNotificationSectionSubscription = this.eventService.getSetAllNotificationViewAsDefaultSectionEmiter()
+      .subscribe(() => this.setBtnColor(ALL_NOTIFICATIONS_SECTION));
   }
 }

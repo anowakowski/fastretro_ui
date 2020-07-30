@@ -17,6 +17,8 @@ constructor() { }
   private newTimerSettingEmiter: EventEmitter<string> = new EventEmitter();
   private setTeamsAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setRetroProcessAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+  private setAllNotificationViewAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+
   private setReciveGoOutFromAllRetroBoardListEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
@@ -86,6 +88,14 @@ constructor() { }
 
   getSetRetroProcessAsDefaultSectionEmiter() {
     return this.setRetroProcessAsDefaultSectionEmiter;
+  }
+
+  emitSetAllNotificationViewAsDefaultSectionEmiter() {
+    this.setAllNotificationViewAsDefaultSectionEmiter.emit();
+  }
+
+  getSetAllNotificationViewAsDefaultSectionEmiter() {
+    return this.setAllNotificationViewAsDefaultSectionEmiter;
   }
 
   emitSetReciveGoOutFromAllRetroBoardListEmiter() {
