@@ -119,7 +119,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   }
 
   setSlidenavPosition(sectionNameToCurrent: string) {
-    if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
+    if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION || sectionNameToCurrent === ALL_NOTIFICATIONS_SECTION) {
       this.shouldCloseSlidenav = true;
     } else {
       this.shouldCloseSlidenav = false;

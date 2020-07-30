@@ -66,7 +66,6 @@ export class ViewAllNotificationsComponent implements OnInit {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
         if (response !== undefined && response !== null) {
-          this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
           this.prepareUsrNotification(response);
         }
       })
@@ -94,6 +93,11 @@ export class ViewAllNotificationsComponent implements OnInit {
           this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccessResponse);
         });
       }
+    }
+    if (this.currentUserNotifications.length > 10) {
+      this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
+    } else {
+      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
     }
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }
