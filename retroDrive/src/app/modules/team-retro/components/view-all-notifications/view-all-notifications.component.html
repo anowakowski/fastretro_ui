@@ -11,7 +11,12 @@
           user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}} 
         </span>
         <mat-divider style="margin-left: 10px; margin-right: 10px;" [vertical]="true"></mat-divider>
-        <span style="font-style: italic; font-size: 11.5px; margin-top: -10px; margin-bottom: -10px;">notifcation send {{userNotification.userNotification.creatonDate}} <br />approved</span>
+        <span style="font-style: italic; font-size: 11.5px; margin-top: -10px; margin-bottom: -10px;">
+          notifcation send {{userNotification.userNotification.creatonDate}} <br />
+          <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">Approved</span>
+          <span *ngIf="isAcpetedByOwner(userNotification) && !isAceptedByOwnerAndIsApproved(userNotification)">Rejected</span>
+          <span *ngIf="!isAcpetedByOwner(userNotification)">Not accepted jet</span>
+        </span>
         <div fxFlex></div>
         <button mat-raised-button color="warn" style="margin-top: -8px; margin-bottom: -8px;" *ngIf="!isAcpetedByOwner(userNotification)" (click)="rejectUserWantToJoinToWorkspace(userNotification)">Reject&nbsp;<mat-icon>remove_circle_outline</mat-icon></button>
         <button mat-raised-button color="primary" style="margin-left: 10px; margin-top: -8px; margin-bottom: -8px;" *ngIf="!isAcpetedByOwner(userNotification)" (click)="approveUserWantToJoinToWorkspace(userNotification)">Approve&nbsp;<mat-icon>add_circle_outline</mat-icon></button>        
@@ -21,10 +26,10 @@
       </mat-card>     
     </div>
     <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccessResponse'">
-      <!--no read notification-->
-      <mat-card style="margin-top: 10px; opacity: 0.985;" *ngIf="!userNotification.userNotification.isRead">
+      <mat-card style="margin-top: 10px; opacity: 0.985;">
         <span style="margin-right:10px; margin-bottom: -10px;">
-          <mat-icon color="warn">stop_circle</mat-icon>
+          <mat-icon color="warn" *ngIf="!userNotification.userNotification.isRead">stop_circle</mat-icon>
+          <mat-icon *ngIf="userNotification.userNotification.isRead">dialpad</mat-icon>
         </span>
         <mat-divider [vertical]="true"></mat-divider>
         <span style="margin-left:10px;">
@@ -32,27 +37,15 @@
             <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
             <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
         </span>
+        <mat-divider style="margin-left: 10px; margin-right: 10px;" [vertical]="true"></mat-divider>
+        <span style="font-style: italic; font-size: 11.5px;">
+          notifcation send {{userNotification.userNotification.creatonDate}}
+        </span>        
         <div fxFlex></div>
-        <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
-          <mat-icon>assignment</mat-icon>&nbsp; show notification details
+        <button mat-raised-button color="primary" style="margin-left: 10px; margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToNotifyDetail(userNotification)">
+          <mat-icon>read_more</mat-icon>&nbsp; open notification details
         </button>
       </mat-card>
-      <!--read notification-->
-      <mat-card style="margin-top: 10px; opacity: 0.985;" *ngIf="userNotification.userNotification.isRead">
-        <span style="margin-right:10px; margin-bottom: -10px;">
-          <mat-icon>dialpad</mat-icon>
-        </span>
-        <mat-divider [vertical]="true"></mat-divider>
-        <span style="margin-left:10px;">
-          Your joined request to {{userNotification.workspaceName}} has been 
-            <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
-            <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
-        </span>
-        <div fxFlex></div>
-        <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
-          <mat-icon>assignment</mat-icon>&nbsp; show notification details
-        </button>
-      </mat-card>  
     </div>
   </div>
 </div>
