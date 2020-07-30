@@ -208,6 +208,7 @@ export class ViewAllNotificationsComponent implements OnInit {
     } else {
       this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
     }
+    this.sortCurrentUserNoitficationByCreationDateDesc();
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }
 
@@ -215,6 +216,15 @@ export class ViewAllNotificationsComponent implements OnInit {
     this.currentUserNotifications.sort((leftSide, rightSide): number => {
       if (leftSide.userNotification.isRead < rightSide.userNotification.isRead) { return -1; }
       if (leftSide.userNotification.isRead > rightSide.userNotification.isRead) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortCurrentUserNoitficationByCreationDateDesc() {
+    this.currentUserNotifications.sort((leftSide, rightSide): number => {
+      if (leftSide.userNotification.creatonDate > rightSide.userNotification.creatonDate) { return -1; }
+      if (leftSide.userNotification.creatonDate < rightSide.userNotification.creatonDate) { return 1; }
 
       return 0;
     });

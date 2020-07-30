@@ -168,6 +168,7 @@ export class NavComponent implements OnInit, OnDestroy {
         });
       }
     }
+    this.sortCurrentUserNoitficationByCreationDateDesc();
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }
 
@@ -214,6 +215,15 @@ export class NavComponent implements OnInit, OnDestroy {
     this.currentUserNotifications.sort((leftSide, rightSide): number => {
       if (leftSide.userNotification.isRead < rightSide.userNotification.isRead) { return -1; }
       if (leftSide.userNotification.isRead > rightSide.userNotification.isRead) { return 1; }
+
+      return 0;
+    });
+  }
+
+  sortCurrentUserNoitficationByCreationDateDesc() {
+    this.currentUserNotifications.sort((leftSide, rightSide): number => {
+      if (leftSide.userNotification.creatonDate > rightSide.userNotification.creatonDate) { return -1; }
+      if (leftSide.userNotification.creatonDate < rightSide.userNotification.creatonDate) { return 1; }
 
       return 0;
     });
