@@ -6,6 +6,7 @@ import { User } from 'src/app/models/user';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-view-all-notifications',
@@ -23,7 +24,8 @@ export class ViewAllNotificationsComponent implements OnInit {
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     private currentUserInRetroBoardApiService: CurrentUserApiService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private eventsService: EventsService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -64,6 +66,7 @@ export class ViewAllNotificationsComponent implements OnInit {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
         if (response !== undefined && response !== null) {
+          this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
           this.prepareUsrNotification(response);
         }
       })
