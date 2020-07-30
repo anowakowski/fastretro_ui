@@ -19,7 +19,7 @@ export class SidenavUsercardComponent implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private authService: AuthService) { }
+    public authService: AuthService) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
