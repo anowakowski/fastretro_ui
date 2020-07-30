@@ -32,6 +32,7 @@ export class NavComponent implements OnInit, OnDestroy {
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
+  notificationCount: number;
 
   constructor(
     public auth: AuthService,
@@ -168,8 +169,11 @@ export class NavComponent implements OnInit, OnDestroy {
         });
       }
     }
+    this.notificationCount = this.currentUserNotifications.length;
     this.sortCurrentUserNoitficationByCreationDateDesc();
     this.sortCurrentUserNoitficationByIsReadByAsc();
+
+    this.getMaxItemsToShow();
   }
 
   backToDashboard() {
@@ -209,6 +213,10 @@ export class NavComponent implements OnInit, OnDestroy {
     if (this.setRefreshNotificationSubscription !== undefined) {
       this.setRefreshNotificationSubscription.unsubscribe();
     }
+  }
+
+  private getMaxItemsToShow() {
+    this.currentUserNotifications = this.currentUserNotifications.splice(0, 10);
   }
 
   sortCurrentUserNoitficationByIsReadByAsc() {
