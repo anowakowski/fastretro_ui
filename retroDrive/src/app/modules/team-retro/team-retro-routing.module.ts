@@ -18,8 +18,7 @@ const routes: Routes = [
       {path: 'teams', component: TeamsComponent},
       {path: 'process', component: RetroProcessComponent},
       {path: 'all-retroboard-list', component: AllRetroboardListComponent},
-      {path: 'all-your-notifications', component: ViewAllNotificationsComponent},
-      {path: 'all-your-notifications/:id', component: ViewAllNotificationsComponent},
+      {path: 'all-your-notifications', component: ViewAllNotificationsComponent}
     ]
   }
 ];
