@@ -203,7 +203,7 @@ export class ViewAllNotificationsComponent implements OnInit {
         });
       }
     }
-    if (this.currentUserNotifications.length > 10) {
+    if (this.currentUserNotifications.length > 12) {
       this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
     } else {
       this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
