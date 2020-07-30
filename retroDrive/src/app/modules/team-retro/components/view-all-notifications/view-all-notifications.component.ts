@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
@@ -20,12 +20,14 @@ import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board
   templateUrl: './view-all-notifications.component.html',
   styleUrls: ['./view-all-notifications.component.css']
 })
-export class ViewAllNotificationsComponent implements OnInit {
+export class ViewAllNotificationsComponent implements OnInit, OnDestroy {
 
   currentUser: User;
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
   public currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
+  userNotificationAllViewSubscription: any;
+  allNotificationInAllViewSubscription: any;
 
   constructor(
     public auth: AuthService,
@@ -49,7 +51,11 @@ export class ViewAllNotificationsComponent implements OnInit {
       }
     }
 
-    this.getUserNotification();
+    this.subscribeUserNotification();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeEvents();
   }
 
   getUserNotification() {
@@ -250,7 +256,27 @@ export class ViewAllNotificationsComponent implements OnInit {
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }
 
-  sortCurrentUserNoitficationByIsReadByAsc() {
+  private subscribeUserNotification() {
+    this.userNotificationAllViewSubscription =
+      this.firestoreService.getUserNotificationSnapshotChanges(this.currentUser.uid).subscribe(userNotificationsSnapshot => {
+      if (userNotificationsSnapshot.length === 0) {
+        this.allNotificationInAllViewSubscription =
+          this.firestoreService.getAllUserNotificationSnapshotChanges().subscribe(allNotificationsSnapshot => {
+          const findedNotification = allNotificationsSnapshot.find( ns => (ns.payload.doc.data() as any).userId === this.currentUser.uid);
+          if (findedNotification !== undefined && findedNotification !== null) {
+            this.getUserNotyficationFromApi();
+          }
+        });
+      } else {
+        userNotificationsSnapshot.forEach(userNotificationSnapshot => {
+          const findedUserNotification = userNotificationSnapshot.payload.doc.data();
+          this.getUserNotyficationFromApi();
+        });
+      }
+    });
+  }
+
+  private sortCurrentUserNoitficationByIsReadByAsc() {
     this.currentUserNotifications.sort((leftSide, rightSide): number => {
       if (leftSide.userNotification.isRead < rightSide.userNotification.isRead) { return -1; }
       if (leftSide.userNotification.isRead > rightSide.userNotification.isRead) { return 1; }
@@ -259,12 +285,21 @@ export class ViewAllNotificationsComponent implements OnInit {
     });
   }
 
-  sortCurrentUserNoitficationByCreationDateDesc() {
+  private sortCurrentUserNoitficationByCreationDateDesc() {
     this.currentUserNotifications.sort((leftSide, rightSide): number => {
       if (leftSide.userNotification.creatonDate > rightSide.userNotification.creatonDate) { return -1; }
       if (leftSide.userNotification.creatonDate < rightSide.userNotification.creatonDate) { return 1; }
 
       return 0;
     });
+  }
+
+  private unsubscribeEvents() {
+    if (this.userNotificationAllViewSubscription !== undefined) {
+      this.userNotificationAllViewSubscription.unsubscribe();
+    }
+    if (this.allNotificationInAllViewSubscription !== undefined) {
+      this.allNotificationInAllViewSubscription.unsubscribe();
+    }
   }
 }
