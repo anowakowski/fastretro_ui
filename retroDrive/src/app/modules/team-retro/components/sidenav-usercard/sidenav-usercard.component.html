@@ -1,16 +1,22 @@
-<div class="sidnav-userprofile sidenav-elemnt">
-  <mat-card class="sidenav-userprofile-card">
-      <mat-card-header >
-        <div 
-          *ngIf="currentUser.chosenAvatarUrl"
-          [ngStyle]="{ 'background-image': 'url(' + currentUser.chosenAvatarUrl + ')' }" 
-          mat-card-avatar 
-          class="sidnav-userprofile-header-image" >
-        </div>
-        <mat-card-title class="sidenav-card-header">{{currentUser.displayName}}</mat-card-title>
-        <mat-card-subtitle>
-          {{currentUserWorkspaceName}}
-        </mat-card-subtitle>
-      </mat-card-header>
-  </mat-card>       
-</div> 
+<div class="sidnav-usercard-element-position">
+  <div class="sidnav-userprofile sidenav-elemnt">
+    <mat-card class="sidenav-userprofile-card">
+        <mat-card-header >
+          <div 
+            *ngIf="currentUser.chosenAvatarUrl"
+            [ngStyle]="{ 'background-image': 'url(' + currentUser.chosenAvatarUrl + ')' }" 
+            mat-card-avatar 
+            class="sidnav-userprofile-header-image" >
+          </div>
+          <mat-card-title class="sidenav-card-header">{{currentUser.displayName}}</mat-card-title>
+          <mat-card-subtitle>
+            {{currentUserWorkspaceName}}
+          </mat-card-subtitle>
+        </mat-card-header>
+    </mat-card>       
+  </div>
+  <button style="margin-top: 25px;" class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="authService.signOut()">
+    <i class="fa fa-sign-out"></i>&nbsp; SignOut
+  </button>  
+</div>
+

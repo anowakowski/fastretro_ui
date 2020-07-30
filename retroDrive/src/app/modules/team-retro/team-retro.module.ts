@@ -35,6 +35,9 @@ import { AllRetroboardListComponent } from './components/all-retroboard-list/all
 import { JoinToExistingWorkspaceDialogComponent } from './components/join-to-existing-workspace-dialog/join-to-existing-workspace-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog/user-notification-details-dialog.component';
+import { ViewAllNotificationsComponent } from './components/view-all-notifications/view-all-notifications.component';
 
 @NgModule({
   imports: [
@@ -67,7 +70,9 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
     CreateNewTeamBottomsheetComponent,
     AllRetroboardListComponent,
     JoinToExistingWorkspaceDialogComponent,
-    ChangeCurrentUserWorksapceDialogComponent
+    ChangeCurrentUserWorksapceDialogComponent,
+    UserNotificationDetailsDialogComponent,
+    ViewAllNotificationsComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -76,7 +81,8 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
     NewUserWiazrdInfoDialogComponent,
     CreateNewTeamBottomsheetComponent,
     JoinToExistingWorkspaceDialogComponent,
-    ChangeCurrentUserWorksapceDialogComponent
+    ChangeCurrentUserWorksapceDialogComponent,
+    UserNotificationDetailsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

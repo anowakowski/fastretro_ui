@@ -6,6 +6,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Router } from '@angular/router';
 import { EventsService } from 'src/app/services/events.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
@@ -15,6 +16,7 @@ const EDIT_TEAMS_SECCTION = 'teams';
 const RETRO_PROCES_SECCTION = 'retroProcess';
 // tslint:disable-next-line:variable-name
 const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
+const ALL_NOTIFICATIONS_SECTION = 'all-your-notifications';
 
 
 @Component({
@@ -39,37 +41,38 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   public teamsSection = EDIT_TEAMS_SECCTION;
   public retroProcessSection = RETRO_PROCES_SECCTION;
   public allRetroBoardListSection = All_RETROBOARDS_LIST_SECTION;
+  public allNotificationsSection = ALL_NOTIFICATIONS_SECTION;
 
   public dashboardColor = CURRENT_BTN_COLOR;
   public teamsColor = BASIC_BTN_COLOR;
   public retroProcessColor = BASIC_BTN_COLOR;
   public allRetroBoardListColor = BASIC_BTN_COLOR;
+  public allNotificationsColor = BASIC_BTN_COLOR;
 
   setNewTeamsSubscription: any;
   setRetroProcessSubscription: any;
   goOutFromAllRetroBoardSubscription: any;
   setMoreHigherForBackgroundSubscription: any;
   setNoMoreHigherForBackgroundSubscription: any;
-
   setAllRetroBoardsListSubscription: any;
+  setAllNotificationSectionSubscription: any;
 
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
+  shouldShowNotificationSection: boolean;
 
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     public router: Router,
-    private eventService: EventsService) { }
+    private eventService: EventsService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;
-
-    this.setCurrentSectionByRoute();
-    this.subscribeEvents();
 
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -80,6 +83,10 @@ export class SlidenavComponent implements OnInit, OnDestroy {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
       }
     }
+
+    this.setCurrentSectionByRoute();
+    this.subscribeEvents();
+    this.getUserNotificationToCheckIfAnyExists();
   }
 
   ngOnDestroy() {
@@ -112,11 +119,41 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   }
 
   setSlidenavPosition(sectionNameToCurrent: string) {
-    if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
+    if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION || sectionNameToCurrent === ALL_NOTIFICATIONS_SECTION) {
       this.shouldCloseSlidenav = true;
     } else {
       this.shouldCloseSlidenav = false;
     }
+  }
+
+  getUserNotificationToCheckIfAnyExists() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserNotyficationFromApi();
+      });
+    } else {
+      this.getUserNotyficationFromApi();
+    }
+  }
+
+  isSectionWithGreyedBackground() {
+    return this.currentChosenSection === this.allRetroBoardListSection || this.currentChosenSection === this.allNotificationsSection;
+  }
+
+  private getUserNotyficationFromApi() {
+    this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+          if (response.userNotificationWorkspaceWithRequiredAccessResponses.length > 0 ||
+              response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
+                this.shouldShowNotificationSection = true;
+          }
+        }
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   private setBasicColor() {
@@ -128,6 +165,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.retroProcessColor = BASIC_BTN_COLOR;
     } else if (this.currentChosenSection === All_RETROBOARDS_LIST_SECTION) {
       this.allRetroBoardListColor = BASIC_BTN_COLOR;
+    } else if (this.currentChosenSection === ALL_NOTIFICATIONS_SECTION) {
+      this.allNotificationsColor = BASIC_BTN_COLOR;
     }
   }
 
@@ -140,6 +179,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.retroProcessColor = CURRENT_BTN_COLOR;
     } else if (sectionNameToCurrent === All_RETROBOARDS_LIST_SECTION) {
       this.allRetroBoardListColor = CURRENT_BTN_COLOR;
+    } else if (sectionNameToCurrent === ALL_NOTIFICATIONS_SECTION) {
+      this.allNotificationsColor = CURRENT_BTN_COLOR;
     }
   }
 
@@ -151,6 +192,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.setBtnColor(RETRO_PROCES_SECCTION);
     } else if (this.currentRouteSecction.search('all-retroboard-list') > 0) {
       this.setBtnColor(All_RETROBOARDS_LIST_SECTION);
+    } else if (this.currentRouteSecction.search('all-your-notification') > 0) {
+      this.setBtnColor(ALL_NOTIFICATIONS_SECTION);
     } else {
       this.setBtnColor(DASHBOARD_SECTION);
     }
@@ -173,5 +216,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       });
     this.setAllRetroBoardsListSubscription = this.eventService.getSetAllRetroBoardAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(All_RETROBOARDS_LIST_SECTION));
+    this.setAllNotificationSectionSubscription = this.eventService.getSetAllNotificationViewAsDefaultSectionEmiter()
+      .subscribe(() => this.setBtnColor(ALL_NOTIFICATIONS_SECTION));
   }
 }

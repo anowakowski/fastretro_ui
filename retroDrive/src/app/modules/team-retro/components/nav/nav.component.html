@@ -10,12 +10,67 @@
     <button *ngIf="shouldShowBackToDashboard" mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
+    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
-    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-right: 5px;">{{currentUser.displayName}}</span>    
+    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
 
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
+    <span
+      style="cursor: pointer; margin-top: 7px;"
+      *ngIf="currentUserNotifications.length === 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>    
+    <span
+      [matMenuTriggerFor]="menu"
+      matBadge="0"
+      matBadgeColor="warn"
+      style="cursor: pointer; margin-top: 7px;"
+      class="hide-text" 
+      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>
+    <span 
+      [matMenuTriggerFor]="menu"
+      style="cursor: pointer; margin-top: 7px;"
+      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>    
+    <mat-menu class="more-width-mat-menu" #menu="matMenu">
+      <div *ngIf="currentUserNotifications.length > 0">
+        <div *ngFor="let userNotification of currentUserNotifications">
+          <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccess'">
+            <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            </button>          
+            <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span style="font-size: 14px; color: #696969;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            </button>  
+          </div>
+          <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccessResponse'">
+            <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been accepted</span>
+            </button>          
+            <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been 
+                <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
+                <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
+              </span>
+            </button>              
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button style="text-align: center; margin-top: -5px; margin-bottom: -8px;" (click)="goToViewAllNotifications()"  mat-menu-item>
+          <span>
+            <span style="font-size: 13.5px;">view all notifications ({{notificationCount}})</span>
+          </span>
+        </button>         
+      </div>
+    </mat-menu>
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>
   </mat-toolbar-row>
 </mat-toolbar>

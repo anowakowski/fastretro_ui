@@ -1,0 +1,65 @@
+<h1 mat-dialog-title>Notification Details</h1>
+<div *ngIf="!isApprovedRequest && isNotificationForApproval()">
+  <div  mat-dialog-content>
+    <h3>
+      Approve the user who wants to join the workspace
+      <mat-divider></mat-divider>
+    </h3>
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      User
+      <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.displayName}}</span> <span style="font-size: 17px;"> | </span>
+      <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.email}}</span>
+      want to join to workspace
+      <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.workspaceName}}</span>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Cancel</button>
+    <div fxFlex></div>
+    <button mat-raised-button color="warn" (click)="rejectUserWantToJoinToWorkspace()">Reject&nbsp;<mat-icon>remove_circle_outline</mat-icon></button>
+    <button mat-raised-button color="primary" style="margin-left:10px;" (click)="approveUserWantToJoinToWorkspace()">Approve&nbsp;<mat-icon>add_circle_outline</mat-icon></button>
+  </div>
+</div>
+
+<div *ngIf="isApprovedRequest && isNotificationForApproval()">
+  <div  mat-dialog-content>
+    <h3>
+      Approve the user who wants to join the workspace
+      <mat-divider></mat-divider>
+    </h3>
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      this request was approved
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
+  </div>
+</div>
+<div *ngIf="!isNotificationForApproval()">
+  <div  mat-dialog-content>
+    <h3>
+      Your request has been approved
+      <mat-divider></mat-divider>
+    </h3>
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      <div>Your join request to 
+        <span style="font-size: 17px;">{{userNotificationWorkspaceWithRequiredAccess.workspaceName}}</span>
+         has been 
+         <span *ngIf="isAceptedByOwnerAndIsApproved()">accepted</span>
+         <span *ngIf="!isAceptedByOwnerAndIsApproved()">rejected</span>         
+         by Owner 
+      </div>
+      <div 
+        style="margin-top: 7px;" *ngIf="isAceptedByOwnerAndIsApproved()">
+        Go to 
+        <span style="font-size: 17px;">Workspace & Teams</span> 
+        section and choose <br /> 
+        <span style="font-size: 17px;">Change your current workspace </span> 
+        to select your new workspace.
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
+  </div>
+</div>

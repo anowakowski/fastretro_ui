@@ -12,6 +12,12 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
+import { formatDate } from '@angular/common';
+
 @Component({
   selector: 'app-join-to-existing-workspace-dialog',
   templateUrl: './join-to-existing-workspace-dialog.component.html',
@@ -29,8 +35,9 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
     private formBuilder: FormBuilder,
-    private localStorageService: LocalStorageService
-  ) {}
+    private localStorageService: LocalStorageService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.createActionForRetroBoardForm();
@@ -45,10 +52,28 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           // tslint:disable-next-line:object-literal-key-quotes
           this.existingWorkspaceNameFormControl.setErrors({'notexists': true});
         } else {
-          const findedWorkspace = workspaceSnapshot.docs[0];
-          const workspaceId = findedWorkspace.id;
+          const findedWorkspaceDoc = workspaceSnapshot.docs[0];
+          const workspaceId = findedWorkspaceDoc.id;
+          const findedWorkspace = findedWorkspaceDoc.data();
           // this.createUserWorkspaces(this.data.currentUser, workspaceId);
-          this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
+          if (!findedWorkspace.isWithRequireAccess) {
+            this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
+          } else {
+            this.currentUserInRetroBoardApiService.getIsExistingUserWaitingToApproveWorkspace( this.data.currentUser.uid, workspaceId)
+              .then(response => {
+                const isExistingWaitingToApprovalWorkspace = response;
+                if (isExistingWaitingToApprovalWorkspace !== null && isExistingWaitingToApprovalWorkspace !== undefined) {
+                  if (isExistingWaitingToApprovalWorkspace) {
+                    this.openSnackbar('you are currently send request to join for this workspace');
+                  } else {
+                    this.setNotification(findedWorkspace, workspaceId, workspaceName);
+                  }
+                }
+              })
+              .catch(error => {
+                const err = error;
+              });
+          }
         }
       });
     }
@@ -56,6 +81,63 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close({shouldRefreshTeams: false});
+  }
+
+  openSnackbar(displayText) {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        shouldShowWarningMessage: false,
+        displayText
+      }
+    });
+  }
+
+  private setNotification(findedWorkspace, workspaceId: string, workspaceName: any) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = {creationDate: currentDate, userId: findedWorkspace.creatorUserId};
+    this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setUserNotificationInCurrentUserApi(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);
+    });
+  }
+
+  private setUserNotificationInCurrentUserApi(
+    findedWorkspace: any,
+    workspaceId: string,
+    workspaceName: any,
+    userNotificationDocId: string) {
+    const userNotyfication: UserNotificationToSave =
+      this.prepareUserNotification(findedWorkspace, workspaceId, workspaceName, userNotificationDocId);
+    this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
+      .then(() => {
+        this.openSnackbar('This Workspace Require Access By Owner');
+        this.dialogRef.close({
+          shouldRefreshTeams: false,
+          shouldShowRequestForWorkspaceWithRequiredAccess: true,
+          workspaceWithRequiredAccessId: workspaceId
+        });
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private prepareUserNotification(
+    findedWorkspace,
+    workspaceId: string,
+    workspaceName: any,
+    userNotificationFirebaseDocId: string): UserNotificationToSave {
+    return {
+      userWantToJoinFirebaseId: this.data.currentUser.uid,
+      creatorUserFirebaseId: findedWorkspace.creatorUserId,
+      workspceWithRequiredAccessFirebaseId: workspaceId,
+      workspaceName,
+      displayName: this.data.currentUser.displayName,
+      email: this.data.currentUser.email,
+      userNotificationFirebaseDocId
+    };
   }
 
   private addToUserWorkspaces(findedUsr: User, workspaceIdToAdd: string, userWorkspace: UserWorkspace) {

@@ -1,4 +1,7 @@
-<span class="example-pizza-party">
-  <span><i class="fa fa-exclamation-triangle"></i>&nbsp; {{data.displayText}}</span>
+<span class="info-warrning-snackbar-retro-board-deleted" *ngIf="this.data.shouldShowWarningMessage">
+  <span><i class="fa fa-exclamation-triangle info-icon-warrning-sncakbar"></i>&nbsp; {{data.displayText}}</span>
+</span>
+<span class="info-warrning-snackbar-workspace-with-required-access-send" *ngIf="!this.data.shouldShowWarningMessage">
+  <span><i class="fa fa fa-thumbs-o-up info-icon-ok-sncakbar"></i>&nbsp; {{data.displayText}}</span>
 </span>
 

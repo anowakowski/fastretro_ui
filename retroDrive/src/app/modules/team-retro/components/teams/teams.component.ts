@@ -18,6 +18,8 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { EventsService } from 'src/app/services/events.service';
 // tslint:disable-next-line:max-line-length
 import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 
 @Component({
   selector: 'app-teams',
@@ -30,6 +32,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
   currentUser: User;
   teamsSubscriptions: any;
+  workspaceNameForRequiredAccess: any;
+  userNotificationWorkspaceWithRequiredAccessForWaitingRequests = new Array<UserNotificationWorkspaceWithRequiredAccess>();
   //currentWorkspaceId: string;
 
   constructor(
@@ -39,13 +43,16 @@ export class TeamsComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private router: Router,
     private authService: AuthService,
-    private eventsService: EventsService) { }
+    private eventsService: EventsService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
     teams: Team[];
 
   ngOnInit() {
     this.setItemFromLocalStorage();
     this.prepareTeamsForCurrentWorkspace();
+    this.getAllWaitingWorkspaceRequests();
+    this.prepareFreshUserWorkspace();
   }
 
   ngOnDestroy(): void {
@@ -94,7 +101,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
             });
           });
         });
-
       });
     });
   }
@@ -154,6 +160,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
           this.prepareFreshUserWorkspace();
           this.teamsSubscriptions.unsubscribe();
           this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+        } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
+          this.getAllWaitingWorkspaceRequests();
         }
       }
     });
@@ -177,6 +185,27 @@ export class TeamsComponent implements OnInit, OnDestroy {
           this.teamsSubscriptions.unsubscribe();
           this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
         }
+      }
+    });
+  }
+
+  private getAllWaitingWorkspaceRequests() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getAllWaitingWorkspaceRequestsFromApi();
+      });
+    } else {
+      this.getAllWaitingWorkspaceRequestsFromApi();
+    }
+  }
+
+  private getAllWaitingWorkspaceRequestsFromApi() {
+    this.currentUserInRetroBoardApiService.getAllWaitingWorkspaceRequests(
+      this.currentUser.uid
+    ).then(response => {
+      if (response !== undefined && response !== null) {
+        this.userNotificationWorkspaceWithRequiredAccessForWaitingRequests = response;
       }
     });
   }

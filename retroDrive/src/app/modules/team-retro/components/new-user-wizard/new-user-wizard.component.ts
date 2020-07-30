@@ -18,6 +18,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
+import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -61,6 +64,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
     private firestoreRbService: FirestoreRetroBoardService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     public router: Router) { }
@@ -183,7 +187,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
           if (snapshotFindedUsr.docs.length > 0) {
             const findedUsr = snapshotFindedUsr.docs[0].data() as User;
             this.updateFindedUser(findedUsr, chosenAvatar, displayName);
-            this.createWorkspaceProcess(findedUsr);
+            if (workspaceSnapshot.docs.length > 0) {
+              const findedWorkspace = workspaceSnapshot.docs[0].data() as Workspace;
+              this.createWorkspaceProcess(findedUsr, findedWorkspace.isWithRequireAccess);
+            } else {
+              this.createWorkspaceProcess(findedUsr);
+            }
           }
         });
       }
@@ -202,12 +211,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   nextStepFromAvatarToSummary() {
-    // this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
-    //   workspaceSnapshot.docs.forEach(workspaceDoc => {
-    //     const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
-    //     this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
-    //   });
-    // });
+    this.firestoreRbService.findWorkspacesByName(this.workspaceNameFormControl.value).then(workspaceSnapshot => {
+      workspaceSnapshot.docs.forEach(workspaceDoc => {
+        const findedWorkspace = workspaceDoc.data() as WorkspaceToSave;
+        this.shouldShowInfoAboutRequireAccessForChosenWorkspaceName = findedWorkspace.isWithRequireAccess;
+      });
+    });
 
     if (this.avatarsFormGroup.valid) {
       this.stepper.next();
@@ -270,12 +279,87 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createWorkspaceProcess(findedUsr: User) {
+  private createWorkspaceProcess(findedUsr: User, isWithRequireAccess: boolean = false) {
     if (this.isNewWorkspace) {
       this.createNewWorkspace(findedUsr);
-    } else {
+    } else if (!this.isNewWorkspace && !isWithRequireAccess) {
       this.addUserToExistingWorkspaces(findedUsr);
+    } else if (!this.isNewWorkspace && isWithRequireAccess) {
+      this.setWorkpsaceProcessWithRequiredAccess(findedUsr);
     }
+  }
+
+  private setWorkpsaceProcessWithRequiredAccess(userToWantToJoin: User) {
+    const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
+    this.firestoreRbService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
+      if (workspaceSnapshot.docs.length === 0) {
+
+      } else {
+        const findedWorkspaceDoc = workspaceSnapshot.docs[0];
+        const workspaceId = findedWorkspaceDoc.id;
+        const findedWorkspace = findedWorkspaceDoc.data();
+        this.setNotification(findedWorkspace, workspaceId, workspaceName, userToWantToJoin);
+      }
+    });
+  }
+
+  private createNewWorkspaceForDefaultWorkspace(findedUsr: User) {
+    const workspaceName = findedUsr.displayName + '- default workspace';
+    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName,  findedUsr.uid);
+
+    this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
+      snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
+        const workspaceId = newWorkspaceSnapshot.id;
+        this.createUserWorkspaces(findedUsr, workspaceId);
+      });
+    });
+  }
+
+  private setNotification(
+    findedWorkspace,
+    workspaceId: string,
+    workspaceName: any,
+    userToWantToJoin: User) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = {creationDate: currentDate, userId: findedWorkspace.creatorUserId};
+    this.firestoreRbService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setUserNotificationInCurrentUserApi(findedWorkspace, workspaceId, workspaceName, userToWantToJoin, userNotificationDocId);
+    });
+  }
+
+  private setUserNotificationInCurrentUserApi(
+    findedWorkspace: any,
+    workspaceId: string,
+    workspaceName: any,
+    userToWantToJoin: User,
+    userNotificationDocId: string) {
+    const userNotyfication: UserNotificationToSave =
+      this.prepareUserNotification(findedWorkspace, workspaceId, workspaceName, userToWantToJoin, userNotificationDocId);
+    this.currentUserInRetroBoardApiService.setUserNotification(userNotyfication)
+      .then(() => {
+        this.createNewWorkspaceForDefaultWorkspace(userToWantToJoin);
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private prepareUserNotification(
+    findedWorkspace,
+    workspaceId: string,
+    workspaceName: any,
+    userToWantToJoin: User,
+    userNotificationFirebaseDocId: string): UserNotificationToSave {
+    return {
+      userWantToJoinFirebaseId: userToWantToJoin.uid,
+      creatorUserFirebaseId: findedWorkspace.creatorUserId,
+      workspceWithRequiredAccessFirebaseId: workspaceId,
+      workspaceName,
+      displayName: userToWantToJoin.displayName,
+      email: userToWantToJoin.email,
+      userNotificationFirebaseDocId
+    };
   }
 
   private addUserToExistingWorkspaces(findedUsr: User) {
@@ -292,7 +376,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
   private createNewWorkspace(findedUsr: User) {
     const workspaceName = this.workspaceFormGroup.value.workspaceNameFormControl;
-    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName);
+    const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName,  findedUsr.uid);
 
     this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {
       snapshotNewWorkspace.get().then(newWorkspaceSnapshot => {
@@ -302,11 +386,12 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private prepareWorkspaceModel(workspaceName: any): WorkspaceToSave {
+  private prepareWorkspaceModel(workspaceName: any, createrUserId: string): WorkspaceToSave {
     return {
       name: workspaceName,
       isNewWorkspace: this.isNewWorkspace,
       isWithRequireAccess: this.isWorkspaceWithRequiredAccess,
+      creatorUserId: createrUserId,
       creationDate: formatDate(new Date(), 'yyyy/MM/dd', 'en')
     };
   }

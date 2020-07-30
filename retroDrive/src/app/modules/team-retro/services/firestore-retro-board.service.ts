@@ -36,6 +36,10 @@ export class FirestoreRetroBoardService {
     this.firestoreBase.addNewItem('/currentUserInRetroBoard/', currentUserInRetroBoard);
   }
 
+  addNewUserNotification(userNotificationToSave) {
+    return this.firestoreBase.addNewItem('/userNotifications/', userNotificationToSave);
+  }
+
   updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {
     this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
   }
@@ -74,6 +78,20 @@ export class FirestoreRetroBoardService {
     };
 
     return this.firestoreBase.getFiltered('/userTeams/', condition);
+  }
+
+  getUserNotificationSnapshotChanges(userId: string) {
+    const condition: ConditionQueryData = {
+      fieldName: 'userId',
+      conditionOperator: '==',
+      value: userId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChanges('/userNotifications/', condition);
+  }
+
+  getAllUserNotificationSnapshotChanges() {
+    return this.firestoreBase.snapshotChanges('/userNotifications/');
   }
 
   findWorkspacesByName(name: string) {

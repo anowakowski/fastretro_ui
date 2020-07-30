@@ -17,21 +17,24 @@
           </button>
           <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-raised-button (click)="setBtnColor(allRetroBoardListSection)">
             <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
-          </button>        
+          </button> 
+          <button class="sidenav-elemnt" color="{{allNotificationsColor}}" [routerLink]="['/retro/all-your-notifications']" mat-raised-button *ngIf="shouldShowNotificationSection" (click)="setBtnColor(allNotificationsSection)">
+            <mat-icon>notifications</mat-icon>&nbsp; All your notifications
+          </button>                  
           <app-sidenav-usercard></app-sidenav-usercard>
-          <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
+          <!-- <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
             <i class="fa fa-sign-out"></i>&nbsp; SignOut
-          </button>
+          </button> -->
         </div>
       </div>
     </mat-drawer> 
-    <div [ngClass]="{'teams-retro-background-img': currentChosenSection !== allRetroBoardListSection, 
-    'teams-retro-background-img-all-retroboard-section': currentChosenSection === allRetroBoardListSection,
+    <div [ngClass]="{'teams-retro-background-img': isSectionWithGreyedBackground() === false, 
+    'teams-retro-background-img-all-retroboard-section': isSectionWithGreyedBackground() === true,
     'teams-retro-background-img-all-retroboard-section-with-height': shouldShowMoreHigherOnAllRetroBoardList === true}">
       <div class="app-sidenav-content">
         <div class="wrapper">
           <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
+            <ol [ngClass]="{'breadcrumb-background-color': isSectionWithGreyedBackground() === true}" class="breadcrumb">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
               <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>

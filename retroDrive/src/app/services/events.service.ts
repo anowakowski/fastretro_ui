@@ -17,11 +17,14 @@ constructor() { }
   private newTimerSettingEmiter: EventEmitter<string> = new EventEmitter();
   private setTeamsAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setRetroProcessAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+  private setAllNotificationViewAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+
   private setReciveGoOutFromAllRetroBoardListEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setAllRetroBoardBackgroudnNoMoreHigherEmiter: EventEmitter<string> = new EventEmitter();
   private setNewCurrentWorkspaceEmiter: EventEmitter<Workspace> = new EventEmitter();
   private setAllRetroBoardAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
+  private setRefreshNotificationEmiter: EventEmitter<void> = new EventEmitter();
 
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
@@ -87,6 +90,14 @@ constructor() { }
     return this.setRetroProcessAsDefaultSectionEmiter;
   }
 
+  emitSetAllNotificationViewAsDefaultSectionEmiter() {
+    this.setAllNotificationViewAsDefaultSectionEmiter.emit();
+  }
+
+  getSetAllNotificationViewAsDefaultSectionEmiter() {
+    return this.setAllNotificationViewAsDefaultSectionEmiter;
+  }
+
   emitSetReciveGoOutFromAllRetroBoardListEmiter() {
     this.setReciveGoOutFromAllRetroBoardListEmiter.emit();
   }
@@ -125,6 +136,15 @@ constructor() { }
 
   getSetAllRetroBoardAsDefaultSectionEmiter() {
     return this.setAllRetroBoardAsDefaultSectionEmiter;
+  }
+
+
+  emitSetRefreshNotificationEmiter() {
+    this.setRefreshNotificationEmiter.emit();
+  }
+
+  getsetRefreshNotificationEmiter() {
+    return this.setRefreshNotificationEmiter;
   }
 }
 

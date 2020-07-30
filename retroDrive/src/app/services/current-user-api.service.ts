@@ -11,6 +11,9 @@ import { RetroBoardOptions } from '../models/retroBoardOptions';
 import { RetroBoardAdditionalInfoToSave } from '../models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashboard';
 
+import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
+import { UserNotificationToSave } from '../models/UserNotificationToSave';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -90,6 +93,69 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/getUsersLastRetroBoardsStatus/' + workspaceFirebaseDocId;
     return this.httpClient.get<RetroBoardStatusForDashboard>(url, httpOptions).toPromise();
+  }
+
+  getUserNotification(userId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUserNotifications/' + userId;
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
+  }
+
+  getUserWaitingToApproveWorkspaceJoin(
+    userWantToJoinFirebaseId: string,
+    creatorUserFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string,
+    userWaitingToApproveWorkspaceJoinId: number) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url =
+      this.baseUrl + '/getUserWaitingToApproveWorkspaceJoin/' +
+        userWantToJoinFirebaseId +
+        '/' + creatorUserFirebaseId +
+        '/' + workspceWithRequiredAccessFirebaseId +
+        '/' + userWaitingToApproveWorkspaceJoinId;
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
+  }
+
+  getIsExistingUserWaitingToApproveWorkspace(
+    userWantToJoinFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url =
+      this.baseUrl + '/getIsExistingUserWaitingToApproveWorkspace/' +
+        userWantToJoinFirebaseId + '/' + workspceWithRequiredAccessFirebaseId;
+    return this.httpClient.get<boolean>(url, httpOptions).toPromise();
+  }
+
+  getAllWaitingWorkspaceRequests(
+    userWantToJoinFirebaseId: string) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url =
+      this.baseUrl + '/getAllWaitingWorkspaceRequests/' + userWantToJoinFirebaseId;
+    return this.httpClient.get<UserNotificationWorkspaceWithRequiredAccess[]>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
@@ -245,6 +311,88 @@ export class CurrentUserApiService {
         retroBoardActionCardFirebaseDocId
       };
 
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setUserNotification(userNotyfication: UserNotificationToSave) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setUserNotification/';
+
+    return this.httpClient.post(url, userNotyfication, httpOptions).toPromise();
+  }
+
+  setApproveUserWantToJoinToWorkspace(
+    userWantToJoinFirebaseId: string,
+    creatorUserFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string,
+    requestIsApprove: boolean) {
+      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setApproveUserWantToJoinToWorkspace/';
+
+      const dataToPost = {
+        userWantToJoinFirebaseId,
+        creatorUserFirebaseId,
+        workspceWithRequiredAccessFirebaseId,
+        requestIsApprove
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setUserNotificationAsRead(
+    userWantToJoinFirebaseId: string,
+    creatorUserFirebaseId: string,
+    workspceWithRequiredAccessFirebaseId: string,
+    userWaitingToApproveWorkspaceJoinId: number) {
+      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserNotificationAsRead/';
+
+      const dataToPost = {
+        userWantToJoinFirebaseId,
+        creatorUserFirebaseId,
+        workspceWithRequiredAccessFirebaseId,
+        userWaitingToApproveWorkspaceJoinId
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotificationId: number) {
+    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse/';
+
+    const dataToPost = {
+      userNotificationId
+    };
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setUserNotificationForuserWaitingToApproveWorkspaceJoin(userWaitingToApproveWorkspaceJoinId: number, userNotificationDocId: string) {
+      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserNotificationForuserWaitingToApproveWorkspaceJoin/';
+
+      const dataToPost = {
+        userWaitingToApproveWorkspaceJoinId,
+        userNotificationDocId
+      };
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 

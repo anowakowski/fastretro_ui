@@ -1,4 +1,18 @@
-.mat-form-field {
-    margin-right: 8px;
-  }
+.info-warrning-snackbar-retro-board-deleted {
+    margin-left: 42px;
+    font-size: 15px;
+}
+
+.info-warrning-snackbar-workspace-with-required-access-send {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.info-icon-warrning-sncakbar {
+    color: #f34e4e;
+}
+
+.info-icon-ok-sncakbar {
+  color: #4ef372;
+}
   

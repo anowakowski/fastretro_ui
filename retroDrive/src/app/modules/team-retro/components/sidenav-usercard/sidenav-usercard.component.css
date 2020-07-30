@@ -1,7 +1,6 @@
 
   .sidnav-userprofile{
-    margin-top: 20px;
-    opacity: 0.7;
+    opacity: 0.95;
   }
   
   .sidenav-userprofile-card {
@@ -43,4 +42,15 @@
   
   .sidenav-userprofile-subtitle-following {
     margin-left: 2px;
+  }
+
+  .sidnav-usercard-element-position {
+    position: absolute;
+    bottom: 85px;
+  }
+
+  .sidenav-btn-signOut {
+
+    width: 360px;
+    height: 40px;
   }

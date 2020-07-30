@@ -11,4 +11,13 @@
 
     .user-avatar-img {
       margin: 0px 0px 13px 30px;
-    }   
+    } 
+    
+    
+    ::ng-deep.mat-menu-panel {
+      max-width: none !important;
+    }
+  
+    .mat-menu-panel.more-width-mat-menu {
+      width: 500px; 
+    }    

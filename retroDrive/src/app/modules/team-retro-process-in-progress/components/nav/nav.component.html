@@ -2,17 +2,70 @@
   <mat-toolbar-row>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
     <span [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
-    <button mat-stroked-button style="margin-left: 15px;" (click)="backToDashboard()">
+    <button mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
-
-
+    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     <!--<button mat-raised-button color="warn" (click)="stopTimer()"><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>-->
     <img *ngIf="!currentUser.isNewUser" [src]="currentUser.chosenAvatarUrl" class="user-avatar-img" width="40" height="40" alt="logo">
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
-    <span style="margin-left: 12px;">
+    <span
+      style="cursor: pointer; margin-top: 7px;"
+      *ngIf="currentUserNotifications.length === 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>    
+    <span
+      [matMenuTriggerFor]="menu"
+      matBadge="0"
+      matBadgeColor="warn"
+      style="cursor: pointer; margin-top: 7px;"
+      class="hide-text" 
+      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>
+    <span 
+      [matMenuTriggerFor]="menu"
+      style="cursor: pointer; margin-top: 7px;"
+      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+        <mat-icon>notifications</mat-icon>
+    </span>    
+    <mat-menu class="more-width-mat-menu" #menu="matMenu">
+      <div *ngIf="currentUserNotifications.length > 0">
+        <div *ngFor="let userNotification of currentUserNotifications">
+          <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccess'">
+            <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            </button>          
+            <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span style="font-size: 14px; color: #696969;">user {{userNotification.displayName}} want to join to {{userNotification.workspaceName}}</span>
+            </button>  
+          </div>
+          <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccessResponse'">
+            <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been accepted</span>
+            </button>          
+            <button *ngIf="userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span style="font-size: 15px;">Your joined request to {{userNotification.workspaceName}} has been 
+                <span *ngIf="isAceptedByOwnerAndIsApproved(userNotification)">accepted</span>
+                <span *ngIf="!isAceptedByOwnerAndIsApproved(userNotification)">rejected</span>                
+              </span>
+            </button>              
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button style="text-align: center; margin-top: -5px; margin-bottom: -8px;" (click)="goToViewAllNotifications()"  mat-menu-item>
+          <span>
+            <span style="font-size: 13.5px;">view all notifications</span>
+          </span>
+        </button>          
+      </div>
+    </mat-menu>       
+    <span style="margin-left: 20px;">
       <span *ngIf="!shouldChangeRetroDisplayText">Retro in progress...</span>
       <span *ngIf="shouldChangeRetroDisplayText">Retro is finished</span>
     </span>
