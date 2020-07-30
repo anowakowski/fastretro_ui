@@ -7,6 +7,13 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
+import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
+import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
+import { formatDate } from '@angular/common';
+import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 
 @Component({
   selector: 'app-view-all-notifications',
@@ -24,8 +31,10 @@ export class ViewAllNotificationsComponent implements OnInit {
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private firestoreService: FirestoreRetroBoardService,
     public dialog: MatDialog,
-    private eventsService: EventsService) { }
+    private eventsService: EventsService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
@@ -60,6 +69,106 @@ export class ViewAllNotificationsComponent implements OnInit {
       userNotification.userWaitingToApproveWorkspaceJoin.requestIsApprove;
 
     return isAccpeted;
+  }
+
+  isAcpetedByOwner(userNotification: UserNotificationWorkspaceWithRequiredAccess): boolean {
+    return userNotification.userWaitingToApproveWorkspaceJoin.isApprovalByCreator;
+  }
+
+  goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
+      width: '600px',
+      data: {
+        userNotificationWorkspaceWithRequiredAccess: userNotification,
+        currentUser: this.currentUser
+      }
+    });
+  }
+
+  openSnackbar(displayText) {
+    const durationInSeconds = 5;
+    this.snackBar.openFromComponent(RetroBoardSnackbarComponent, {
+      duration: durationInSeconds * 1000,
+      data: {
+        shouldShowWarningMessage: false,
+        displayText
+      }
+    });
+  }
+
+  approveUserWantToJoinToWorkspace(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const requestIsApprove = true;
+    this.currentUserInRetroBoardApiService.setApproveUserWantToJoinToWorkspace(
+      userNotification.userWantToJoinFirebaseId,
+      userNotification.creatorUserFirebaseId,
+      userNotification.workspceWithRequiredAccessFirebaseId,
+      requestIsApprove
+      )
+      .then(() => {
+        this.addToUserWorkspaces(userNotification);
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private addToUserWorkspaces(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    this.firestoreService.getUserWorkspace(userNotification.userWantToJoinFirebaseId).then(userWorkspaceSnapshot => {
+      const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
+        workspace: this.firestoreService.addWorkspaceAsRef(userNotification.workspceWithRequiredAccessFirebaseId),
+        isCurrent: false
+      };
+      const findedUserWorkspace = userWorkspaceSnapshot.docs[0].data() as UserWorkspaceToSave;
+      const findedUserWorkspaceId = userWorkspaceSnapshot.docs[0].id as string;
+      findedUserWorkspace.workspaces.push(workspacesToAddToUserWorkspace);
+      this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
+      this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
+    });
+  }
+
+  private setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = {
+      creationDate: currentDate,
+      userId: userNotification.userWantToJoinFirebaseId
+    };
+    this.firestoreService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(userNotification, userNotificationDocId);
+    });
+  }
+
+  private setUserNotificationForuserWaitingToApproveWorkspaceJoinInApi(
+    userNotification: UserNotificationWorkspaceWithRequiredAccess,
+    userNotificationDocId) {
+      this.currentUserInRetroBoardApiService
+        .setUserNotificationForuserWaitingToApproveWorkspaceJoin(
+          userNotification.userWaitingToApproveWorkspaceJoinId,
+          userNotificationDocId
+        )
+        .then(() => {
+          this.openSnackbar('you accpeted request');
+          this.getUserNotification();
+        })
+        .catch(error => {
+          const err = error;
+        });
+  }
+
+  rejectUserWantToJoinToWorkspace(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const requestIsApprove = false;
+    this.currentUserInRetroBoardApiService.setApproveUserWantToJoinToWorkspace(
+      userNotification.userWantToJoinFirebaseId,
+      userNotification.creatorUserFirebaseId,
+      userNotification.workspceWithRequiredAccessFirebaseId,
+      requestIsApprove
+      )
+      .then(() => {
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   private getUserNotyficationFromApi() {
