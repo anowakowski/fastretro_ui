@@ -112,6 +112,23 @@ export class ViewAllNotificationsComponent implements OnInit {
       });
   }
 
+  rejectUserWantToJoinToWorkspace(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    const requestIsApprove = false;
+    this.currentUserInRetroBoardApiService.setApproveUserWantToJoinToWorkspace(
+      userNotification.userWantToJoinFirebaseId,
+      userNotification.creatorUserFirebaseId,
+      userNotification.workspceWithRequiredAccessFirebaseId,
+      requestIsApprove
+      )
+      .then(() => {
+        this.setNotificationAsRead(userNotification);
+        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
   private addToUserWorkspaces(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
     this.firestoreService.getUserWorkspace(userNotification.userWantToJoinFirebaseId).then(userWorkspaceSnapshot => {
       const workspacesToAddToUserWorkspace: UserWorkspaceDataToSave = {
@@ -122,6 +139,8 @@ export class ViewAllNotificationsComponent implements OnInit {
       const findedUserWorkspaceId = userWorkspaceSnapshot.docs[0].id as string;
       findedUserWorkspace.workspaces.push(workspacesToAddToUserWorkspace);
       this.firestoreService.updateUserWorkspaces(findedUserWorkspace, findedUserWorkspaceId);
+
+      this.setNotificationAsRead(userNotification);
       this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
     });
   }
@@ -155,20 +174,19 @@ export class ViewAllNotificationsComponent implements OnInit {
         });
   }
 
-  rejectUserWantToJoinToWorkspace(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
-    const requestIsApprove = false;
-    this.currentUserInRetroBoardApiService.setApproveUserWantToJoinToWorkspace(
+  private setNotificationAsRead(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+    this.currentUserInRetroBoardApiService.setUserNotificationAsRead(
       userNotification.userWantToJoinFirebaseId,
       userNotification.creatorUserFirebaseId,
       userNotification.workspceWithRequiredAccessFirebaseId,
-      requestIsApprove
-      )
-      .then(() => {
-        this.setUserNotificationForuserWaitingToApproveWorkspaceJoin(userNotification);
-      })
-      .catch(error => {
-        const err = error;
-      });
+      userNotification.userWaitingToApproveWorkspaceJoinId
+    )
+    .then(() => {
+      this.eventsService.emitSetRefreshNotificationEmiter();
+    })
+    .catch(error => {
+      const err = error;
+    });
   }
 
   private getUserNotyficationFromApi() {
