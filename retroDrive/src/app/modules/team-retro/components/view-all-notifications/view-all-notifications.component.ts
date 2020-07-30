@@ -166,7 +166,7 @@ export class ViewAllNotificationsComponent implements OnInit {
           userNotificationDocId
         )
         .then(() => {
-          this.openSnackbar('you accpeted request');
+          this.openSnackbar('you accpeted join to workspace request');
           this.getUserNotification();
         })
         .catch(error => {
