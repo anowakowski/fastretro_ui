@@ -6,6 +6,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Router } from '@angular/router';
 import { EventsService } from 'src/app/services/events.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
@@ -58,21 +59,20 @@ export class SlidenavComponent implements OnInit, OnDestroy {
 
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
+  shouldShowNotificationSection: boolean;
 
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     public router: Router,
-    private eventService: EventsService) { }
+    private eventService: EventsService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;
-
-    this.setCurrentSectionByRoute();
-    this.subscribeEvents();
 
     this.currentUser = this.localStorageService.getItem('currentUser');
 
@@ -83,6 +83,10 @@ export class SlidenavComponent implements OnInit, OnDestroy {
         this.userWorkspace = this.localStorageService.getItem('userWorkspace');
       }
     }
+
+    this.setCurrentSectionByRoute();
+    this.subscribeEvents();
+    this.getUserNotificationToCheckIfAnyExists();
   }
 
   ngOnDestroy() {
@@ -120,6 +124,32 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     } else {
       this.shouldCloseSlidenav = false;
     }
+  }
+
+  getUserNotificationToCheckIfAnyExists() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserNotyficationFromApi();
+      });
+    } else {
+      this.getUserNotyficationFromApi();
+    }
+  }
+
+  private getUserNotyficationFromApi() {
+    this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+          if (response.userNotificationWorkspaceWithRequiredAccessResponses.length > 0 ||
+              response.userNotificationWorkspaceWithRequiredAccesses.length > 0) {
+                this.shouldShowNotificationSection = true;
+          }
+        }
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   private setBasicColor() {
