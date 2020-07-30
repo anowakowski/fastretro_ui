@@ -1,3 +1,27 @@
-<p>
-  view-all-notifications works!
-</p>
+<div style="margin-top: 20px;">
+  <!--no read notification-->
+  <mat-card style="margin-top: 10px; opacity: 0.985;">
+    <span style="margin-right:10px; margin-bottom: -10px;">
+      <mat-icon color="warn">stop_circle</mat-icon>
+    </span>
+    <mat-divider [vertical]="true"></mat-divider>
+    <span style="margin-left:10px;">no read notification</span>
+    <div fxFlex></div>
+    <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
+      <mat-icon>assignment</mat-icon>&nbsp; show notification details
+    </button>
+  </mat-card>
+  <!--read notification-->
+  <mat-card style="margin-top: 10px; opacity: 0.985;">
+    <span style="margin-right:10px; margin-bottom: -10px;">
+      <mat-icon>dialpad</mat-icon>
+    </span>
+    <mat-divider [vertical]="true"></mat-divider>
+    <span style="margin-left:10px;">read notification</span>
+    <div fxFlex></div>
+    
+    <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;">
+      <mat-icon>assignment</mat-icon>&nbsp; show notification details
+    </button>
+  </mat-card>
+</div>
