@@ -30,7 +30,7 @@
 
         <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
           <div class="chart-wrapper">
-            <canvas baseChart height="27" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            <canvas baseChart height="30" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
               [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
             </canvas>
           </div>
@@ -41,12 +41,13 @@
             <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
           </div>
         </mat-card-content>
-        <mat-card-actions *ngIf="retroBoard.isFinished">
+        <!--this need get retro board card-->
+        <!-- <mat-card-actions *ngIf="retroBoard.isFinished">
           <div fxFlex></div>
-          <button mat-raised-button color="primary">
+          <button mat-raised-button color="primary" (click)="saveAsExcel(retroBoard)">
             Save Actions as Excel <mat-icon>get_app</mat-icon>
           </button>
-        </mat-card-actions>        
+        </mat-card-actions>         -->
       </mat-card>
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
