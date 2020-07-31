@@ -117,7 +117,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   onGoToPreviousRetroBoard() {
     this.dialogRef.close();
-    this.router.navigate(['/retro-in-progress/' + this.previousUrlParameterId]);
+    this.router.navigateByUrl('/retro-in-progress/' + this.previousUrlParameterId);
   }
 
   saveAsExcel() {
