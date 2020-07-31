@@ -1,7 +1,7 @@
 <div *ngIf="!currentUser.isNewUser">
   <div *ngIf="retroBoards.length > 0">
 
-    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
+    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
       <span style="margin-right:10px;">Your last retro boards </span>
       <mat-divider [vertical]="true"></mat-divider>
       <span style="margin-left:10px;">you have {{openRetroBoards.length}} open and {{finishedRetroBoards.length}} finished retro board</span>
@@ -30,7 +30,7 @@
 
         <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
           <div class="chart-wrapper">
-            <canvas baseChart height="40" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            <canvas baseChart height="27" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
               [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
             </canvas>
           </div>
@@ -41,6 +41,12 @@
             <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
           </div>
         </mat-card-content>
+        <mat-card-actions *ngIf="retroBoard.isFinished">
+          <div fxFlex></div>
+          <button mat-raised-button color="primary">
+            Save Actions as Excel <mat-icon>get_app</mat-icon>
+          </button>
+        </mat-card-actions>        
       </mat-card>
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
