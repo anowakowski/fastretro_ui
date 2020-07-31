@@ -165,9 +165,14 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
 
   saveAsExcel() {
     const cardWithActionToSaveAsExcel = new Array();
+    this.prepareExcelData(cardWithActionToSaveAsExcel);
 
+    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'allRetroBoardAction');
+  }
+
+  private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
     this.simpleRetroBoardCards.forEach(simpleCard => {
-      simpleCard.actions.forEach(action => {
+      simpleCard.actions.forEach((action: { text: any; }) => {
         const cardWithActionToExcel = {
           cardTitle: simpleCard.name,
           actionText: action.text
@@ -176,8 +181,6 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
         cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
       });
     });
-
-    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'test');
   }
 
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
