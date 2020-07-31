@@ -176,6 +176,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
         const cardWithActionToExcel = {
           retroBoardName: this.data.retroBoardName,
           teamName: this.data.teamName,
+          cardType: this.prepareCardType(simpleCard),
           cardTitle: simpleCard.name,
           actionText: action.text
         };
@@ -183,6 +184,14 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
         cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
       });
     });
+  }
+
+  private prepareCardType(simpleCard: any) {
+    if (simpleCard.isWentWellRetroBoradCol) {
+      return 'Went Well';
+    } else {
+      return 'To Improve';
+    }
   }
 
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
@@ -283,6 +292,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       simpleCardToAdd.id = retroBoardCard.id;
+      simpleCardToAdd.isWentWellRetroBoradCol = retroBoardCard.isWentWellRetroBoradCol;
 
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
