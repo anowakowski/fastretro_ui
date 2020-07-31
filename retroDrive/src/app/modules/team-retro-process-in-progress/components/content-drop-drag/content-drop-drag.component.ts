@@ -291,10 +291,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
-
+      const team = teamSnapshot.data() as Team;
       const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
         width: '1100px',
-        data: {currentCard, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+        data: {
+          currentCard,
+          retroBoardId:
+          this.retroBoardToProcess.id,
+          workspaceId:
+          this.currentWorkspace.id,
+          teamId,
+          retroBoardName: this.retroBoardToProcess.retroName,
+          teamName: team.name}
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -313,9 +321,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
+      const team = teamSnapshot.data() as Team;
       const dialogRef = this.dialog.open(TeamRetroInProgressShowAllActionsDialogComponent, {
         width: '1100px',
-        data: {retroBoardCardToShow, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+        data: {
+          retroBoardCardToShow,
+          retroBoardId: this.retroBoardToProcess.id,
+          workspaceId: this.currentWorkspace.id,
+          teamId,
+          retroBoardName: this.retroBoardToProcess.retroName,
+          teamName: team.name
+        }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -327,12 +343,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   openPreviousCardActionDialog() {
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
+      const team = teamSnapshot.data() as Team;
       const dialogRef = this.dialog.open(TeamRetroInProgressShowPreviousActionsDialogComponent, {
         width: '1100px',
         data: {
           previousRetroBoardToShowActionsDocId: this.previousRetroBoardToShowActionsDocId,
           workspaceId: this.currentWorkspace.id,
-          teamId
+          teamId,
+          teamName: team.name
         }
       });
       dialogRef.afterClosed().subscribe(result => {

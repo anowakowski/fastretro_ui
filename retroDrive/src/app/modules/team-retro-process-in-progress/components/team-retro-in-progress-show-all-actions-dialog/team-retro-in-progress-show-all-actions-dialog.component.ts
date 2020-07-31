@@ -8,6 +8,7 @@ import { formatDate } from '@angular/common';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-all-actions-dialog',
@@ -29,7 +30,8 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
     private formBuilder: FormBuilder,
-    private currentUserInRetroBoardApiService: CurrentUserApiService
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private excelService: ExcelService
   ) { }
 
   simpleRetroBoardCards: any[];
@@ -161,6 +163,37 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     }
   }
 
+  saveAsExcel() {
+    const cardWithActionToSaveAsExcel = new Array();
+    this.prepareExcelData(cardWithActionToSaveAsExcel);
+
+    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'allRetroBoardActions');
+  }
+
+  private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
+    this.simpleRetroBoardCards.forEach(simpleCard => {
+      simpleCard.actions.forEach(action => {
+        const cardWithActionToExcel = {
+          retroBoardName: this.data.retroBoardName,
+          teamName: this.data.teamName,
+          cardType: this.prepareCardType(simpleCard),
+          cardTitle: simpleCard.name,
+          actionText: action.text
+        };
+
+        cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
+      });
+    });
+  }
+
+  private prepareCardType(simpleCard: any) {
+    if (simpleCard.isWentWellRetroBoradCol) {
+      return 'Went Well';
+    } else {
+      return 'To Improve';
+    }
+  }
+
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
     this.currentUserInRetroBoardApiService.setUsersInAction(
       this.usersInTeamValueSelected,
@@ -259,6 +292,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       simpleCardToAdd.id = retroBoardCard.id;
+      simpleCardToAdd.isWentWellRetroBoradCol = retroBoardCard.isWentWellRetroBoradCol;
 
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {

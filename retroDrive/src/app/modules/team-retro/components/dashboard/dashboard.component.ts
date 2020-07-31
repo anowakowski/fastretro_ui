@@ -20,6 +20,7 @@ import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,7 +42,8 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private eventServices: EventsService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) {
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private excelService: ExcelService) {
       monkeyPatchChartJsTooltip();
       monkeyPatchChartJsLegend();
   }
@@ -142,6 +144,24 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/retro/all-retroboard-list']);
   }
 
+  saveAsExcel(retroBoard: RetroBoard) {}
+  /*
+  private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
+    this.simpleRetroBoardCards.forEach(simpleCard => {
+      simpleCard.actions.forEach(action => {
+        const cardWithActionToExcel = {
+          retroBoardName: this.data.retroBoardName,
+          teamName: this.data.teamName,
+          cardType: this.prepareCardType(simpleCard),
+          cardTitle: simpleCard.name,
+          actionText: action.text
+        };
+
+        cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
+      });
+    });
+  }
+  */
   private prepareRetroBoardForDashboard(retroBoardsSnapshot) {
     if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
       this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {

@@ -22,6 +22,7 @@ import { SpinnerTickService } from './services/spinner-tick.service';
 import { CurrentUserApiService } from './services/current-user-api.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FbTokenService } from './services/fb-token.service';
+import { ExcelService } from './services/excel.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FbTokenService } from './services/fb-token.service';
     SpinnerTickService,
     CurrentUserApiService,
     FbTokenService,
+    ExcelService,
     AuthGuard,
     LoginRegisterGuard
   ],

@@ -11,6 +11,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { RetroBoard } from 'src/app/models/retroBoard';
 import { DataPassingService } from 'src/app/services/data-passing.service';
 import { Router } from '@angular/router';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-previous-actions-dialog',
@@ -36,6 +37,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
     private formBuilder: FormBuilder,
     private currentUserApiService: CurrentUserApiService,
     private dataPassingService: DataPassingService,
+    private excelService: ExcelService,
     private router: Router
   ) { }
 
@@ -115,7 +117,38 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
 
   onGoToPreviousRetroBoard() {
     this.dialogRef.close();
-    this.router.navigate(['/retro-in-progress/' + this.previousUrlParameterId]);
+    this.router.navigateByUrl('/retro-in-progress/' + this.previousUrlParameterId);
+  }
+
+  saveAsExcel() {
+    const cardWithActionToSaveAsExcel = new Array();
+    this.prepareExcelData(cardWithActionToSaveAsExcel);
+
+    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'allPreviousRetroBoardActions');
+  }
+
+  private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
+    this.simpleRetroBoardCards.forEach(simpleCard => {
+      simpleCard.actions.forEach(action => {
+        const cardWithActionToExcel = {
+          retroBoardName: this.findedPreviousRetroBoard.retroName,
+          teamName: this.data.teamName,
+          cardType: this.prepareCardType(simpleCard),
+          cardTitle: simpleCard.name,
+          actionText: action.text
+        };
+
+        cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
+      });
+    });
+  }
+
+  private prepareCardType(simpleCard: any) {
+    if (simpleCard.isWentWellRetroBoradCol) {
+      return 'Went Well';
+    } else {
+      return 'To Improve';
+    }
   }
 
   private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
@@ -281,6 +314,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       simpleCardToAdd.id = retroBoardCard.id;
+      simpleCardToAdd.isWentWellRetroBoradCol = retroBoardCard.isWentWellRetroBoradCol;
 
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
