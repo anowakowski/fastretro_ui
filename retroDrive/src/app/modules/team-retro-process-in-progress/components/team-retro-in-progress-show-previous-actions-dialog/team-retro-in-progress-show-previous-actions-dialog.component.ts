@@ -314,6 +314,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       simpleCardToAdd.name = retroBoardCard.name;
       simpleCardToAdd.actions = new Array<RetroBoardCardActions>();
       simpleCardToAdd.id = retroBoardCard.id;
+      simpleCardToAdd.isWentWellRetroBoradCol = retroBoardCard.isWentWellRetroBoradCol;
 
       retroBoardCard.actions.forEach(action => {
         action.get().then(actionSnapshot => {
