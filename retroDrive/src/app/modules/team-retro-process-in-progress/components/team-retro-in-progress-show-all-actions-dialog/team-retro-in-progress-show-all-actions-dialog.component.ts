@@ -172,7 +172,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
 
   private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
     this.simpleRetroBoardCards.forEach(simpleCard => {
-      simpleCard.actions.forEach((action: { text: any; }) => {
+      simpleCard.actions.forEach(action => {
         const cardWithActionToExcel = {
           retroBoardName: this.data.retroBoardName,
           teamName: this.data.teamName,

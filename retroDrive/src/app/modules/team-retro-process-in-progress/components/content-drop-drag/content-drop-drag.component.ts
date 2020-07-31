@@ -291,10 +291,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
-
+      const team = teamSnapshot.data() as Team;
       const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
         width: '1100px',
-        data: {currentCard, retroBoardId: this.retroBoardToProcess.id, workspaceId: this.currentWorkspace.id, teamId}
+        data: {
+          currentCard,
+          retroBoardId:
+          this.retroBoardToProcess.id,
+          workspaceId:
+          this.currentWorkspace.id,
+          teamId,
+          retroBoardName: this.retroBoardToProcess.retroName,
+          teamName: team.name}
       });
 
       dialogRef.afterClosed().subscribe(result => {
