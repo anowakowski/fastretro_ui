@@ -8,9 +8,12 @@
             mat-card-avatar 
             class="sidnav-userprofile-header-image" >
           </div>
-          <mat-card-title class="sidenav-card-header">{{currentUser.displayName}}</mat-card-title>
+          <mat-card-title class="sidenav-card-header">
+            <div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
+            <div><i class="fa fa-envelope-o"></i> <span style="margin-left: 5px;">{{currentUser.email}}</span></div>
+          </mat-card-title>
           <mat-card-subtitle>
-            {{currentUserWorkspaceName}}
+            <i class="fa fa-building"></i> <span style="margin-left: 5px;">{{currentUserWorkspaceName}}</span>
           </mat-card-subtitle>
         </mat-card-header>
     </mat-card>       
