@@ -167,7 +167,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     const cardWithActionToSaveAsExcel = new Array();
     this.prepareExcelData(cardWithActionToSaveAsExcel);
 
-    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'allRetroBoardAction');
+    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'allRetroBoardActions');
   }
 
   private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
