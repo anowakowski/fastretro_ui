@@ -133,6 +133,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
         const cardWithActionToExcel = {
           retroBoardName: this.findedPreviousRetroBoard.retroName,
           teamName: this.data.teamName,
+          cardType: this.prepareCardType(simpleCard),
           cardTitle: simpleCard.name,
           actionText: action.text
         };
@@ -140,6 +141,14 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
         cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
       });
     });
+  }
+
+  private prepareCardType(simpleCard: any) {
+    if (simpleCard.isWentWellRetroBoradCol) {
+      return 'Went Well';
+    } else {
+      return 'To Improve';
+    }
   }
 
   private setCurrentUsersInActionWithFormControl(actionName, retroBoardCardActionId) {
