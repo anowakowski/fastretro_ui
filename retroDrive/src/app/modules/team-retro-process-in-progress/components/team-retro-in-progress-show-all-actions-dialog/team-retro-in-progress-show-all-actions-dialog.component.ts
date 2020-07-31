@@ -8,6 +8,7 @@ import { formatDate } from '@angular/common';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-all-actions-dialog',
@@ -29,7 +30,8 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FiresrtoreRetroProcessInProgressService,
     private formBuilder: FormBuilder,
-    private currentUserInRetroBoardApiService: CurrentUserApiService
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private excelService: ExcelService
   ) { }
 
   simpleRetroBoardCards: any[];
@@ -159,6 +161,23 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
     if (actionIsSolved !== undefined) {
       this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
     }
+  }
+
+  saveAsExcel() {
+    const cardWithActionToSaveAsExcel = new Array();
+
+    this.simpleRetroBoardCards.forEach(simpleCard => {
+      simpleCard.actions.forEach(action => {
+        const cardWithActionToExcel = {
+          cardTitle: simpleCard.name,
+          actionText: action.text
+        };
+
+        cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
+      });
+    });
+
+    this.excelService.exportAsExcelFile(cardWithActionToSaveAsExcel, 'test');
   }
 
   private setUserInActionInApi(simpleRetroBoardCard: any, action: any) {
