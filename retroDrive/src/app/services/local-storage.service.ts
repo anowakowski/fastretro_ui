@@ -27,9 +27,9 @@ export class LocalStorageService {
   getEncryptedItem(key: string): any {
     const encryptedItem = localStorage.getItem(key);
     const decryptedItem = CryptoJS.AES.decrypt(encryptedItem, SECRET_KEY);
-    const data = decryptedItem.toString(CryptoJS.enc.Utf8);
-
-    return decryptedItem;
+    const itemJson = decryptedItem.toString(CryptoJS.enc.Utf8);
+    const parsedItem = JSON.parse(itemJson);
+    return parsedItem;
   }
 
   removeItem(key: string) {
