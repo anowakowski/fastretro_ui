@@ -21,6 +21,7 @@ export class AuthService {
 
   user$: Observable<any>;
   authState: any;
+  public urlToRedirect;
 
   constructor(
     private afAuth: AngularFireAuth,

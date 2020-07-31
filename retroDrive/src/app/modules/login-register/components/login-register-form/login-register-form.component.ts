@@ -92,7 +92,11 @@ export class LoginRegisterFormComponent implements OnInit {
               }
             })
             .finally(() => {
-              this.router.navigate(['/']);
+              if (this.auth.urlToRedirect) {
+                this.router.navigate([this.auth.urlToRedirect]);
+              } else {
+                this.router.navigate(['/']);
+              }
             });
       }).catch(error => {
         this.openInfoSnackBar(true);
