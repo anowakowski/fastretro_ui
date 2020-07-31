@@ -122,11 +122,20 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
       const cardWithActionToExcel = {
         retroBoardName: this.data.retroBoardName,
         teamName: this.data.teamName,
+        cardType: this.prepareCardType(this.dataRetroBoardCard),
         cardTitle: this.dataRetroBoardCard.name,
         actionText: action.text
       };
       cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
     });
+  }
+
+  private prepareCardType(retroBoardCard: any) {
+    if (retroBoardCard.isWentWellRetroBoradCol) {
+      return 'Went Well';
+    } else {
+      return 'To Improve';
+    }
   }
 
   private addFreshActualCountOfRetroBoardActions() {
