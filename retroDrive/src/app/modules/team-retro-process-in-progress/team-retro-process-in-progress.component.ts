@@ -42,6 +42,7 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
   private setupCurrentUserWithUserWorkspace() {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setItem('currentUser', currentUser);
+      this.localStorageService.setEncryptedItem('encryptedUser', currentUser);
       this.prepareUserWorkspace(currentUser);
     });
   }

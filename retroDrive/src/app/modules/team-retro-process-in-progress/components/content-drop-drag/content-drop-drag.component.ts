@@ -138,6 +138,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getItem('currentUser');
+    const test = this.localStorageService.getEncryptedItem('encryptedUser');
     this.userWorkspace = this.localStorageService.getItem('userWorkspace');
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
     this.sortByData.push('name');
