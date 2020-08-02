@@ -211,14 +211,18 @@ export class DashboardComponent implements OnInit {
             }
             return predicatResult;
           });
-          const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
-          findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
+          if (findedLastFinishedRBSnapshot !== undefined) {
+            if (findedLastFinishedRBSnapshot.payload !== undefined) {
+              const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
+              findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
 
-          findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
-            const team = teamSnapshot.data();
-            findedLastFinishedRetroBorad.team = team;
-            this.addToRetroBoards(findedLastFinishedRetroBorad, true);
-          });
+              findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
+                const team = teamSnapshot.data();
+                findedLastFinishedRetroBorad.team = team;
+                this.addToRetroBoards(findedLastFinishedRetroBorad, true);
+              });
+            }
+          }
         }
         if ((response.lastRetroBoardOpened === null || response.lastRetroBoardOpened === '') &&
             (response.lastRetroBoardFinished === null || response.lastRetroBoardFinished === '')) {
