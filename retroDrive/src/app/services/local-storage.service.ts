@@ -5,6 +5,7 @@ const SECRET_KEY = 'secret_key';
 const CURRENT_USER = 'ZkRb3yiQwcFWU#';
 const CURRENT_WORKSPACE = '3ucMp!KU#Xts#';
 const USER_WORKSPACE = 'K2aiKK@N9k3V2AgCTTKxNW';
+const TOKEN = 'Sa@LRm*Dc6mmKkyiu';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,10 @@ export class LocalStorageService {
 
   constructor() { }
 
-  public currentUser = CURRENT_USER;
-  public currentWorkspace = CURRENT_WORKSPACE;
-  public userWorkspace = USER_WORKSPACE;
+  public currentUserKey  = CURRENT_USER;
+  public currentWorkspaceKey = CURRENT_WORKSPACE;
+  public userWorkspaceKey = USER_WORKSPACE;
+  public tokenKey = TOKEN;
 
   getItem(key: string): any {
     return JSON.parse(localStorage.getItem(key));
