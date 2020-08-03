@@ -33,7 +33,7 @@ export class LocalStorageService {
     localStorage.setItem(key, encryptedData.toString());
   }
 
-  getEncryptedItem(key: string): any {
+  getDecryptedItem(key: string): any {
     const encryptedItem = localStorage.getItem(key);
     const decryptedItem = CryptoJS.AES.decrypt(encryptedItem, SECRET_KEY);
     const itemJson = decryptedItem.toString(CryptoJS.enc.Utf8);

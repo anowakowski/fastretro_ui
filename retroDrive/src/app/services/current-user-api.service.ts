@@ -24,7 +24,7 @@ export class CurrentUserApiService {
   baseUrl = environment.apiUrl + 'api/CurrentUsersInRetroBoard';
 
   getCurrentUserInRetroBoard(retroBoardId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -36,7 +36,7 @@ export class CurrentUserApiService {
   }
 
   getRetroBoardOptions(retroBoardId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -48,7 +48,7 @@ export class CurrentUserApiService {
   }
 
   getPreviousRetroBoardId(retroBoardId: string, workspaceId: string, teamId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -60,7 +60,7 @@ export class CurrentUserApiService {
   }
 
   getUsersInTeam(workspaceFirebaseDocId: string, teamFirebaseDocId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -72,7 +72,7 @@ export class CurrentUserApiService {
   }
 
   getUsersInActionInTeam(workspaceFirebaseDocId: any, teamFirebaseDocId: any, ) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -84,7 +84,7 @@ export class CurrentUserApiService {
   }
 
   getUserLastRetroBoardForDashboard(workspaceFirebaseDocId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -96,7 +96,7 @@ export class CurrentUserApiService {
   }
 
   getUserNotification(userId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -112,7 +112,7 @@ export class CurrentUserApiService {
     creatorUserFirebaseId: string,
     workspceWithRequiredAccessFirebaseId: string,
     userWaitingToApproveWorkspaceJoinId: number) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -131,7 +131,7 @@ export class CurrentUserApiService {
   getIsExistingUserWaitingToApproveWorkspace(
     userWantToJoinFirebaseId: string,
     workspceWithRequiredAccessFirebaseId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -146,7 +146,7 @@ export class CurrentUserApiService {
 
   getAllWaitingWorkspaceRequests(
     userWantToJoinFirebaseId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
     const httpOptions = {
@@ -159,7 +159,7 @@ export class CurrentUserApiService {
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -175,12 +175,12 @@ export class CurrentUserApiService {
   }
 
   addCurrentUserToRetroBoardProcess(currentUser: User, currentRetroBoardId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     return this.GetAddCurrentUserResponse(fbToken, currentRetroBoardId, currentUser);
   }
 
   setRetroBoardOptions(retroBoardOptionsToSave: RetroBoardOptions) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -191,7 +191,7 @@ export class CurrentUserApiService {
   }
 
   setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -210,7 +210,7 @@ export class CurrentUserApiService {
   }
 
   setLastRetroBoard(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, isFinished, isStarted) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -229,7 +229,7 @@ export class CurrentUserApiService {
   }
 
   setLastRetroBoardAsStarted(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -246,7 +246,7 @@ export class CurrentUserApiService {
   }
 
   setLastRetroBoardAsFinished(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -263,7 +263,7 @@ export class CurrentUserApiService {
   }
 
   setLastRetroBoardAsOpened(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -280,7 +280,7 @@ export class CurrentUserApiService {
   }
 
   setRetroBoardAdditionalInfo(retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -296,7 +296,7 @@ export class CurrentUserApiService {
     workspaceFirebaseDocId: any,
     retroBoardCardFirebaseDocId,
     retroBoardActionCardFirebaseDocId) {
-      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
         headers
@@ -315,7 +315,7 @@ export class CurrentUserApiService {
   }
 
   setUserNotification(userNotyfication: UserNotificationToSave) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -330,7 +330,7 @@ export class CurrentUserApiService {
     creatorUserFirebaseId: string,
     workspceWithRequiredAccessFirebaseId: string,
     requestIsApprove: boolean) {
-      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
         headers
@@ -351,7 +351,7 @@ export class CurrentUserApiService {
     creatorUserFirebaseId: string,
     workspceWithRequiredAccessFirebaseId: string,
     userWaitingToApproveWorkspaceJoinId: number) {
-      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
         headers
@@ -368,7 +368,7 @@ export class CurrentUserApiService {
   }
 
   setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotificationId: number) {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
@@ -382,7 +382,7 @@ export class CurrentUserApiService {
   }
 
   setUserNotificationForuserWaitingToApproveWorkspaceJoin(userWaitingToApproveWorkspaceJoinId: number, userNotificationDocId: string) {
-      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
         headers
@@ -399,7 +399,7 @@ export class CurrentUserApiService {
   addRetroBoardAdditionalInfoWithActionCount(
     actionsCount: number,
     retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave) {
-      const fbToken = this.localStorageService.getItem('token') as FbToken;
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
       const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
       const httpOptions = {
         headers
@@ -417,12 +417,12 @@ export class CurrentUserApiService {
   }
 
   isTokenExpired() {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     return this.fbTokenService.isTokenExpired(fbToken);
   }
 
   regeneraTokenPromise() {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     return this.fbTokenService.prepareTokenPromise(fbToken.refreshToken);
   }
 
@@ -493,7 +493,7 @@ export class CurrentUserApiService {
   }
 
   private prepareCurrentHttpOptions() {
-    const fbToken = this.localStorageService.getItem('token') as FbToken;
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
 
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
