@@ -216,7 +216,6 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
       retroName: value.retroName,
       team: value.teamsFormControl,
       isFinished: false,
-      // members: value.membersFormControl,
       creationDate: currentDate,
       lastModifiedDate: currentDate,
       urlParamId: guid.toString(),
