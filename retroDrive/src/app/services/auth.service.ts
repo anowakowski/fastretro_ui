@@ -49,11 +49,11 @@ export class AuthService {
     return this.authState !== null;
   }
 
-  getToken() {
-    this.afAuth.idToken.subscribe(token => {
-      this.localStorageService.setItem('token', token);
-    });
-  }
+  // getToken() {
+  //   this.afAuth.idToken.subscribe(token => {
+  //     this.localStorageService.setItem('token', token);
+  //   });
+  // }
 
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();

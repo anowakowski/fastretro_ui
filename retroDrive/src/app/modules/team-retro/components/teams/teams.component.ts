@@ -232,6 +232,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
               this.localStorageService.removeItem('userWorkspace');
               this.localStorageService.setItem('userWorkspace', userWorkspace);
 
+              this.localStorageService.removeItem(this.localStorageService.userWorkspaceKey);
+              this.localStorageService.setEncryptedItem(this.localStorageService.userWorkspaceKey, userWorkspace);
+
               findedUserWorkspaceToSave.workspaces.find(uw => uw.isCurrent).workspace.get().then(currWokrspaceSnapshot => {
                 const currentWorkspaceToAdd = currWokrspaceSnapshot.data() as Workspace;
                 currentWorkspaceToAdd.id = currWokrspaceSnapshot.id as string;

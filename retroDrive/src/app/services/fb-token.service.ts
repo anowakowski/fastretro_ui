@@ -62,5 +62,6 @@ export class FbTokenService {
     };
 
     this.localStorageService.setItem('token', fbToken);
+    this.localStorageService.setEncryptedItem(this.localStorageService.tokenKey, fbToken);
   }
 }
