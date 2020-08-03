@@ -69,13 +69,13 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     if (this.currentUser === undefined) {
       this.authService.signOut();
     } else {
       if (!this.currentUser.isNewUser) {
-        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
         this.prepreRetroBoardForCurrentWorkspace();
@@ -211,14 +211,18 @@ export class DashboardComponent implements OnInit {
             }
             return predicatResult;
           });
-          const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
-          findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
+          if (findedLastFinishedRBSnapshot !== undefined) {
+            if (findedLastFinishedRBSnapshot.payload !== undefined) {
+              const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
+              findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
 
-          findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
-            const team = teamSnapshot.data();
-            findedLastFinishedRetroBorad.team = team;
-            this.addToRetroBoards(findedLastFinishedRetroBorad, true);
-          });
+              findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
+                const team = teamSnapshot.data();
+                findedLastFinishedRetroBorad.team = team;
+                this.addToRetroBoards(findedLastFinishedRetroBorad, true);
+              });
+            }
+          }
         }
         if ((response.lastRetroBoardOpened === null || response.lastRetroBoardOpened === '') &&
             (response.lastRetroBoardFinished === null || response.lastRetroBoardFinished === '')) {

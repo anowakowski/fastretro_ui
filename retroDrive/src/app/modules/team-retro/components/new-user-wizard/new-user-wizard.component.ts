@@ -71,7 +71,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     this.avatars = [
       {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false, id: 1},

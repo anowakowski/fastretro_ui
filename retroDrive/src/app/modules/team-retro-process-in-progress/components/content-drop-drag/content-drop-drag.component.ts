@@ -137,8 +137,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   */
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
-    this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
+    this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
+
     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
     this.sortByData.push('name');
     this.sortByData.push('voute count');
@@ -1339,8 +1340,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
-              this.localStorageService.removeItem('userWorkspace');
-              this.localStorageService.setItem('userWorkspace', userWorkspace);
+
+              this.localStorageService.removeItem(this.localStorageService.userWorkspaceKey);
+              this.localStorageService.setEncryptedItem(this.localStorageService.userWorkspaceKey, userWorkspace);
 
               findedUserWorkspace.workspaces.find(uw => uw.isCurrent).workspace.get().then(currWokrspaceSnapshot => {
                 const currentWorkspaceToAdd = currWokrspaceSnapshot.data() as Workspace;

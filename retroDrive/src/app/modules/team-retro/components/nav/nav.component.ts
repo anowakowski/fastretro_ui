@@ -52,13 +52,13 @@ export class NavComponent implements OnInit, OnDestroy {
   @Input() shouldShowBackToDashboard = false;
 
   ngOnInit() {
-    this.currentUser = this.localStorageService.getItem('currentUser');
+    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     if (this.currentUser === undefined) {
       this.auth.signOut();
     } else {
       if (!this.currentUser.isNewUser) {
-        this.userWorkspace = this.localStorageService.getItem('userWorkspace');
+        this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
         this.currentUserWorkspaceName = currentWorkspace.name;
       }
