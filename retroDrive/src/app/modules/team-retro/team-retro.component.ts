@@ -40,7 +40,6 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
 
   private setupCurrentUserWithUserWorkspace() {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
-      this.localStorageService.setItem('currentUser', currentUser);
       this.localStorageService.setEncryptedItem(this.localStorageService.userWorkspaceKey, currentUser);
       if (currentUser !== undefined) {
         if (!currentUser.isNewUser) {
@@ -67,9 +66,6 @@ export class TeamRetroComponent implements OnInit, OnDestroy {
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
-              this.localStorageService.removeItem('userWorkspace');
-              this.localStorageService.setItem('userWorkspace', userWorkspace);
-
               this.localStorageService.removeItem(this.localStorageService.userWorkspaceKey);
               this.localStorageService.setEncryptedItem(this.localStorageService.userWorkspaceKey, userWorkspace);
             });

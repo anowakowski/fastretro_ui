@@ -41,7 +41,6 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
 
   private setupCurrentUserWithUserWorkspace() {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
-      this.localStorageService.setItem('currentUser', currentUser);
       this.localStorageService.setEncryptedItem(this.localStorageService.currentUserKey, currentUser);
       this.prepareUserWorkspace(currentUser);
     });
@@ -64,9 +63,6 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
               };
 
               userWorkspace.workspaces.push(userWorkspacesDataToAdd);
-              this.localStorageService.removeItem('userWorkspace');
-              this.localStorageService.setItem('userWorkspace', userWorkspace);
-
               this.localStorageService.removeItem(this.localStorageService.userWorkspaceKey);
               this.localStorageService.setEncryptedItem(this.localStorageService.userWorkspaceKey, userWorkspace);
             });
