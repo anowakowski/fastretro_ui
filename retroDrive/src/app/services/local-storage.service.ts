@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
+import { environment } from 'src/environments/environment';
 
-const SECRET_KEY = 'secret_key';
 const CURRENT_USER = 'ZkRb3yiQwcFWU#';
 const CURRENT_WORKSPACE = '3ucMp!KU#Xts#';
 const USER_WORKSPACE = 'K2aiKK@N9k3V2AgCTTKxNW';
@@ -12,8 +12,11 @@ const TOKEN = 'Sa@LRm*Dc6mmKkyiu';
 })
 export class LocalStorageService {
 
-  constructor() { }
+  constructor() {
+   this.secKey = environment.x_data;
+  }
 
+  private secKey;
   public currentUserKey  = CURRENT_USER;
   public currentWorkspaceKey = CURRENT_WORKSPACE;
   public userWorkspaceKey = USER_WORKSPACE;
@@ -29,13 +32,13 @@ export class LocalStorageService {
 
   setEncryptedItem(key: string, newItem: any) {
     const newItemAsJSON = JSON.stringify(newItem);
-    const encryptedData = CryptoJS.AES.encrypt(newItemAsJSON, SECRET_KEY);
+    const encryptedData = CryptoJS.AES.encrypt(newItemAsJSON, this.secKey);
     localStorage.setItem(key, encryptedData.toString());
   }
 
   getDecryptedItem(key: string): any {
     const encryptedItem = localStorage.getItem(key);
-    const decryptedItem = CryptoJS.AES.decrypt(encryptedItem, SECRET_KEY);
+    const decryptedItem = CryptoJS.AES.decrypt(encryptedItem, this.secKey);
     const itemJson = decryptedItem.toString(CryptoJS.enc.Utf8);
     const parsedItem = JSON.parse(itemJson);
     return parsedItem;

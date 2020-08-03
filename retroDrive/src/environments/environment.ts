@@ -14,7 +14,8 @@ export const environment = {
     appId: '1:389979442853:web:b1ab2fdc11e84660d0874c'
   },
   // apiUrl: 'https://localhost:44376/'
-  apiUrl: 'https://localhost:5001/'
+  apiUrl: 'https://localhost:5001/',
+  x_data: '89U@oZtP7K2v6@msD^c^^bY6@45*AKTjaz#CKE%Gep6NfBJsS3rg*zY$VCqrHfCQVhqFXmQNw5jtsaHMca$sRchzZva^iQ9fVjZupXWj!Nt@iCQUj4F7gXMf'
 };
 
 
