@@ -14,6 +14,7 @@ import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashb
 import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from '../models/UserNotificationToSave';
 import { RetroBoardApi } from '../models/retroBoardApi';
+import { RetroBoardCardApi } from '../models/retroBoardCardApi';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,18 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/GetRetroBoard/' + retroBoardFirebaseDocId;
     return this.httpClient.get<any>(url, httpOptions).toPromise();
+  }
+
+  getRetroBoardCards(retroBoardFirebaseDocId: string) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getRetroBoardCard/' + retroBoardFirebaseDocId;
+    return this.httpClient.get<RetroBoardCardApi[]>(url, httpOptions).toPromise();
   }
 
   getPreviousRetroBoardId(retroBoardId: string, workspaceId: string, teamId: string) {
@@ -212,6 +225,17 @@ export class CurrentUserApiService {
     const url = this.baseUrl + '/setRetroBoard/';
 
     return this.httpClient.post(url, retroBoardToSaveInApi, httpOptions).toPromise();
+  }
+
+  setRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApi) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoard/';
+
+    return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }
 
   setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
