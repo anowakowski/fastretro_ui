@@ -13,6 +13,7 @@ import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashb
 
 import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from '../models/UserNotificationToSave';
+import { RetroBoardToSaveInApi } from '../models/retroBoardToSaveInApi';
 
 @Injectable({
   providedIn: 'root'
@@ -202,7 +203,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
   }
 
-  setRetroBoard(retroBoardFirebaseDocId, retroBoardName, sprintNumber) {
+  setRetroBoard(retroBoardToSaveInApi: RetroBoardToSaveInApi) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -210,13 +211,7 @@ export class CurrentUserApiService {
     };
     const url = this.baseUrl + '/setRetroBoard/';
 
-    const dataToPost = {
-      retroBoardFirebaseDocId,
-      retroBoardName,
-      sprintNumber
-    };
-
-    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+    return this.httpClient.post(url, retroBoardToSaveInApi, httpOptions).toPromise();
   }
 
   setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
