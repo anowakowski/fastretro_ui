@@ -52,8 +52,10 @@ import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from '../team-ret
 import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { RetroBoardCardActions } from 'src/app/models/retroBoardCardActions';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+// tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
+import { RetroBoardToSaveInApi } from 'src/app/models/retroBoardToSaveInApi';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -913,27 +915,37 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
               this.retroBoardToProcess = findedRetroBoard;
               this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
-              this.isRetroBoardIsReady = true;
-              this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
-              this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
-              this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
-              this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
-              this.setRetroBoardColumnCards();
-              this.createAddNewRetroBoardCardForm();
-              this.subscribeEvents();
-              this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+              this.currentUserInRetroBoardApiService.getRetroBoard(findedRetroBoard.id)
+                .then(response => {
+                  if (response !== undefined && response !== null) {
+                    const retroBoardDataFromApi = response as RetroBoardToSaveInApi;
 
-              this.addCurrentUserToRetroBoardProcess();
-              this.spinnerTick();
-              this.setAllCurrentUsersInRetroBoardProcess();
-              this.getUsersVotes();
-              this.getRetroBoardOptions();
-              this.getPreviousRetroBoardDocId();
+                    this.retroBoardToProcess.retroName = retroBoardDataFromApi.retroBoardName;
+                    this.retroBoardToProcess.sprintNumber = retroBoardDataFromApi.sprintNumber;
 
-              // this.firestoreRetroInProgressService.findCurrentUserVoutes(this.currentUser.uid).subscribe(currentUserVotesSnapshot => {
-              //   const currentUserVotes = currentUserVotesSnapshot[0].payload.doc.data();
-              // });
+                    this.isRetroBoardIsReady = true;
+                    this.retroProcessIsStoped = findedRetroBoard.isFinished;
+
+                    this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
+                    this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
+                    this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
+                    this.setRetroBoardColumnCards();
+                    this.createAddNewRetroBoardCardForm();
+                    this.subscribeEvents();
+                    this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+
+                    this.addCurrentUserToRetroBoardProcess();
+                    this.spinnerTick();
+                    this.setAllCurrentUsersInRetroBoardProcess();
+                    this.getUsersVotes();
+                    this.getRetroBoardOptions();
+                    this.getPreviousRetroBoardDocId();
+                  }
+                })
+                .catch(error => {
+                  const err = error;
+                });
           });
 
         } else {
@@ -1224,23 +1236,39 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             const findedRetroBoard = retroBoardsSnapshot[0].payload.doc.data() as RetroBoardToSave;
             this.retroBoardToProcess = findedRetroBoard;
             this.retroBoardToProcess.id = retroBoardsSnapshot[0].payload.doc.id as string;
-            this.retroBoardData = this.retroBoardToProcess;
-            this.isRetroBoardIsReady = true;
-            this.retroProcessIsStoped = findedRetroBoard.isFinished;
 
-            this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
-            this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
-            this.setRetroBoardColumnCards();
-            this.createAddNewRetroBoardCardForm();
-            this.subscribeEvents();
-            this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
-            this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
-            this.addCurrentUserToRetroBoardProcess();
-            this.spinnerTick();
-            this.setAllCurrentUsersInRetroBoardProcess();
-            this.getUsersVotes();
-            this.getRetroBoardOptions();
-            this.getPreviousRetroBoardDocId();
+            this.currentUserInRetroBoardApiService.getRetroBoard(findedRetroBoard.id)
+            .then(response => {
+              if (response !== undefined && response !== null) {
+                const retroBoardDataFromApi = response as RetroBoardToSaveInApi;
+
+                this.retroBoardToProcess.retroName = retroBoardDataFromApi.retroBoardName;
+                this.retroBoardToProcess.sprintNumber = retroBoardDataFromApi.sprintNumber;
+
+                this.retroBoardData = this.retroBoardToProcess;
+
+                this.isRetroBoardIsReady = true;
+                this.retroProcessIsStoped = findedRetroBoard.isFinished;
+
+                this.checkIfCurrentUserIsInRetroBoardWorkspace(findedRetroBoard);
+                this.checkIfCurrentUserIsJoinedToRetroBoardTeam(findedRetroBoard);
+                this.setRetroBoardColumnCards();
+                this.createAddNewRetroBoardCardForm();
+                this.subscribeEvents();
+                this.setRetroBoardCardSubscription(this.retroBoardToProcess.id);
+                this.setUpTimerBaseSetting(this.retroBoardToProcess.id);
+
+                this.addCurrentUserToRetroBoardProcess();
+                this.spinnerTick();
+                this.setAllCurrentUsersInRetroBoardProcess();
+                this.getUsersVotes();
+                this.getRetroBoardOptions();
+                this.getPreviousRetroBoardDocId();
+              }
+            })
+            .catch(error => {
+              const err = error;
+            });
         });
       } else {
         // if url not exisis

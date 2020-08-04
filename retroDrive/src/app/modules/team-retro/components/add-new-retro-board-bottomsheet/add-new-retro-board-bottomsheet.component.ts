@@ -141,6 +141,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
         this.setLastRetroBoard(retroBoardLastRetroBoard);
       });
     } else {
+      this.setRetroBoardInApi(retroBoardToSaveInApi);
       this.setRetroBoardOptions(retroBoardOptionsToSave);
       this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
       this.setLastRetroBoard(retroBoardLastRetroBoard);

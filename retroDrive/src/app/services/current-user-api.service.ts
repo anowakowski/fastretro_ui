@@ -57,7 +57,7 @@ export class CurrentUserApiService {
     };
 
     const url = this.baseUrl + '/GetRetroBoard/' + retroBoardFirebaseDocId;
-    return this.httpClient.get<RetroBoardOptions>(url, httpOptions).toPromise();
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
   }
 
   getPreviousRetroBoardId(retroBoardId: string, workspaceId: string, teamId: string) {
