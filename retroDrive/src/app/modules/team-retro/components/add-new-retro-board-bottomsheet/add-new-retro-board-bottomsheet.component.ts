@@ -233,8 +233,6 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     const guid = Guid.create();
 
     const retroBoard = {
-      sprintNumber: value.sprintNumber,
-      retroName: value.retroName,
       team: value.teamsFormControl,
       isFinished: false,
       creationDate: currentDate,
