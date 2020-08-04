@@ -55,7 +55,7 @@ import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditio
 // tslint:disable-next-line:max-line-length
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
-import { RetroBoardToSaveInApi } from 'src/app/models/retroBoardToSaveInApi';
+import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -919,7 +919,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               this.currentUserInRetroBoardApiService.getRetroBoard(findedRetroBoard.id)
                 .then(response => {
                   if (response !== undefined && response !== null) {
-                    const retroBoardDataFromApi = response as RetroBoardToSaveInApi;
+                    const retroBoardDataFromApi = response as RetroBoardApi;
 
                     this.retroBoardToProcess.retroName = retroBoardDataFromApi.retroBoardName;
                     this.retroBoardToProcess.sprintNumber = retroBoardDataFromApi.sprintNumber;
@@ -1240,7 +1240,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             this.currentUserInRetroBoardApiService.getRetroBoard(findedRetroBoard.id)
             .then(response => {
               if (response !== undefined && response !== null) {
-                const retroBoardDataFromApi = response as RetroBoardToSaveInApi;
+                const retroBoardDataFromApi = response as RetroBoardApi;
 
                 this.retroBoardToProcess.retroName = retroBoardDataFromApi.retroBoardName;
                 this.retroBoardToProcess.sprintNumber = retroBoardDataFromApi.sprintNumber;

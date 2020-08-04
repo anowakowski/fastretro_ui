@@ -13,7 +13,7 @@ import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashb
 
 import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from '../models/UserNotificationToSave';
-import { RetroBoardToSaveInApi } from '../models/retroBoardToSaveInApi';
+import { RetroBoardApi } from '../models/retroBoardApi';
 
 @Injectable({
   providedIn: 'root'
@@ -203,7 +203,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
   }
 
-  setRetroBoard(retroBoardToSaveInApi: RetroBoardToSaveInApi) {
+  setRetroBoard(retroBoardToSaveInApi: RetroBoardApi) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {

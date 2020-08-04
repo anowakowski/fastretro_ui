@@ -17,7 +17,7 @@ import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
-import { RetroBoardToSaveInApi } from 'src/app/models/retroBoardToSaveInApi';
+import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -130,7 +130,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     const retroBoardOptionsToSave: RetroBoardOptions = this.prepareRetroBoardOptionsToSave(newRetroBoardId);
     const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = this.prepareRetroBoardAdditionalInfo(newRetroBoardId);
     const retroBoardLastRetroBoard: RetroBoardStatus = this.prepareRetroBoardStatus(newRetroBoardId);
-    const retroBoardToSaveInApi: RetroBoardToSaveInApi = this.prepareNewRetroBoard(newRetroBoardId);
+    const retroBoardToSaveInApi: RetroBoardApi = this.prepareNewRetroBoard(newRetroBoardId);
 
     if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
@@ -148,7 +148,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     }
   }
 
-  prepareNewRetroBoard(newRetroBoardId: string): RetroBoardToSaveInApi {
+  prepareNewRetroBoard(newRetroBoardId: string): RetroBoardApi {
     const value = this.addNewRetroBoardForm.value;
     return {
       retroBoardFirebaseDocId: newRetroBoardId,
@@ -157,7 +157,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     };
   }
 
-  private setRetroBoardInApi(retroBoardToSaveInApi: RetroBoardToSaveInApi) {
+  private setRetroBoardInApi(retroBoardToSaveInApi: RetroBoardApi) {
     this.currentUserApiService.setRetroBoard(retroBoardToSaveInApi)
       .then(() => {})
       .catch(error => {
