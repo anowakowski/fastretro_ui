@@ -425,8 +425,22 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           if (retroBoardCardSnapshot.exists) {
             card.isNewItem = false;
             card.isEdit = false;
+
             const cardToUpdate = this.prepareRetroBoardCardToUpdate(card);
-            this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, card.id);
+            const retroBoardCardToSave: RetroBoardCardApi = {
+              retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+              retroBoardCardFirebaseDocId: card.id,
+              text: card.name
+            };
+
+            this.currentUserInRetroBoardApiService.updateRetroBoardCard(retroBoardCardToSave)
+            .then(() => {
+              this.firestoreRetroInProgressService.updateRetroBoardCard(cardToUpdate, card.id);
+            })
+            .catch(error => {
+              const err = error;
+            });
+
             this.removeLocalCardFromArray(card, colName);
           }
         });
