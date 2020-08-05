@@ -56,6 +56,7 @@ import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditio
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 import { RetroBoardApi } from 'src/app/models/retroBoardApi';
+import { RetroBoardCardApi } from 'src/app/models/retroBoardCardApi';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -405,7 +406,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         card.isNewItem = false;
         card.isEdit = false;
         const cardToSave = this.prepareRetroBoardCardToSave(card);
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave).then(newRetroBoardCardSnapshot => {
+          const newRetroBoardCardId = newRetroBoardCardSnapshot.id as string;
+          const retroBoardCardToSave: RetroBoardCardApi = {
+            retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+            retroBoardCardFirebaseDocId: newRetroBoardCardId,
+            text: card.name
+          };
+          this.currentUserInRetroBoardApiService.setRetroBoardCard(retroBoardCardToSave)
+            .then(() => {})
+            .catch(error => {
+              const err = error;
+            });
+        });
         this.removeLocalCardFromArray(card, colName);
       } else if (!card.isNewItem && card.isEdit) {
         this.firestoreRetroInProgressService.findRetroBoardCardById(card.id).then(retroBoardCardSnapshot => {
@@ -1420,8 +1433,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoardCardToSave(card: RetroBoardCard) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const cardToSave = {
-      name: card.name,
+      // name: card.name,
       isEdit: card.isEdit,
       index: card.index,
       isNewItem: card.isNewItem,
@@ -1431,7 +1445,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       retroBoardId: card.retroBoardId,
       userId: this.currentUser.uid,
       voteCount: card.voteCount,
-      actions: new Array<any>()
+      actions: new Array<any>(),
+      modifyDate: currentDate
     };
 
     return cardToSave;
@@ -1456,8 +1471,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard) {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     return {
-      name: card.name,
+      // name: card.name,
       isEdit: card.isEdit,
       index: card.index,
       isNewItem: card.isNewItem,
@@ -1465,7 +1481,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
       mergedContent: card.mergedContent,
       voteCount: card.voteCount,
-      retroBoardId: card.retroBoardId
+      retroBoardId: card.retroBoardId,
+      modifyDate: currentDate
     };
   }
 
