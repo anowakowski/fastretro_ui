@@ -1200,8 +1200,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 retroBoardCard.id = retroBoardCardDocId;
 
                 const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardFirebaseDocId === retroBoardCardDocId);
-                retroBoardCard.name = findedRetroBoardCardApi.text;
-
+                if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
+                  retroBoardCard.name = findedRetroBoardCardApi.text;
+                }
                 this.addRetroBoardCardToCorrectColumn(retroBoardCard);
               });
               this.setIsExistingSomeRetroBoardCardActions();
