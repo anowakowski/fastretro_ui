@@ -250,6 +250,17 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }
 
+  updateRetroBoardCardFirebaseDocId(retroBoardCardToSaveInApi: RetroBoardCardApi) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/updateRetroBoardCardFirebaseDocId/';
+
+    return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
+  }
+
   setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);

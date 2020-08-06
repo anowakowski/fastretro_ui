@@ -417,10 +417,18 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const cardToSaveInFirebase = this.prepareRetroBoardCardToSave(card, savedRetroBoardCardInApi.id);
           this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSaveInFirebase).then(newRetroBoardCardSnapshot => {
             const newRetroBoardCardId = newRetroBoardCardSnapshot.id as string;
-            // const retroBoardCardToUpdateAfterSave: RetroBoardCardApi = {
-            //   retroBoardFirebaseDocId: this.retroBoardToProcess.id,
-            //   text: card.name
-            // };
+            const retroBoardCardToUpdateAfterSave: RetroBoardCardApi = {
+              retroBoardCardApiId: savedRetroBoardCardInApi.id,
+              retroBoardCardFirebaseDocId: newRetroBoardCardId,
+              retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+              text: card.name
+            };
+
+            this.currentUserInRetroBoardApiService.updateRetroBoardCardFirebaseDocId(retroBoardCardToUpdateAfterSave)
+              .then(() =>{})
+              .catch(error => {
+                const err = error;
+              });
 
           });
         })
@@ -1262,7 +1270,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.isExistingSomeRetroBoardCardAction = false;
     }
   }
-
 
   private addRetroBoardCardToCorrectColumn(retroBoardCard: RetroBoardCard) {
     if (retroBoardCard.isWentWellRetroBoradCol) {
