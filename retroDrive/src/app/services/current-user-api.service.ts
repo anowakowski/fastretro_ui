@@ -15,6 +15,7 @@ import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotif
 import { UserNotificationToSave } from '../models/UserNotificationToSave';
 import { RetroBoardApi } from '../models/retroBoardApi';
 import { RetroBoardCardApi } from '../models/retroBoardCardApi';
+import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -227,13 +228,13 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardToSaveInApi, httpOptions).toPromise();
   }
 
-  setRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApi) {
+  setRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApiToSave) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
       headers
     };
-    const url = this.baseUrl + '/setRetroBoard/';
+    const url = this.baseUrl + '/setRetroBoardCard/';
 
     return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }

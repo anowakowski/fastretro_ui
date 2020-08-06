@@ -57,6 +57,8 @@ import { TeamRetroInProgressShowPreviousActionsDialogComponent } from '../team-r
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 import { RetroBoardCardApi } from 'src/app/models/retroBoardCardApi';
+import { RetroBoardCardApiToSave } from 'src/app/models/retroBoardCardApiToSave';
+import { RetroBoardCardApiGet } from 'src/app/models/retroBoardCardApiGet';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -405,20 +407,28 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       if (card.isNewItem && card.isEdit) {
         card.isNewItem = false;
         card.isEdit = false;
-        const cardToSave = this.prepareRetroBoardCardToSave(card);
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave).then(newRetroBoardCardSnapshot => {
-          const newRetroBoardCardId = newRetroBoardCardSnapshot.id as string;
-          const retroBoardCardToSave: RetroBoardCardApi = {
-            retroBoardFirebaseDocId: this.retroBoardToProcess.id,
-            retroBoardCardFirebaseDocId: newRetroBoardCardId,
-            text: card.name
-          };
-          this.currentUserInRetroBoardApiService.setRetroBoardCard(retroBoardCardToSave)
-            .then(() => {})
-            .catch(error => {
-              const err = error;
-            });
+        const retroBoardCardToSave: RetroBoardCardApiToSave = {
+          retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+          text: card.name
+        };
+        this.currentUserInRetroBoardApiService.setRetroBoardCard(retroBoardCardToSave)
+        .then(response => {
+          const savedRetroBoardCardInApi = response as RetroBoardCardApiGet;
+          const cardToSaveInFirebase = this.prepareRetroBoardCardToSave(card, savedRetroBoardCardInApi.id);
+          this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSaveInFirebase).then(newRetroBoardCardSnapshot => {
+            const newRetroBoardCardId = newRetroBoardCardSnapshot.id as string;
+            // const retroBoardCardToUpdateAfterSave: RetroBoardCardApi = {
+            //   retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+            //   text: card.name
+            // };
+
+          });
+        })
+        .catch(error => {
+          const err = error;
         });
+
+
         this.removeLocalCardFromArray(card, colName);
       } else if (!card.isNewItem && card.isEdit) {
         this.firestoreRetroInProgressService.findRetroBoardCardById(card.id).then(retroBoardCardSnapshot => {
@@ -430,7 +440,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             const retroBoardCardToSave: RetroBoardCardApi = {
               retroBoardFirebaseDocId: this.retroBoardToProcess.id,
               retroBoardCardFirebaseDocId: card.id,
-              text: card.name
+              text: card.name,
+              retroBoardCardApiId: 0
             };
 
             this.currentUserInRetroBoardApiService.updateRetroBoardCard(retroBoardCardToSave)
@@ -1226,7 +1237,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 const retroBoardCardDocId = retroBoardCardSnapshot.payload.doc.id as string;
                 retroBoardCard.id = retroBoardCardDocId;
 
-                const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardFirebaseDocId === retroBoardCardDocId);
+                const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardApiId === retroBoardCard.retoBoardCardApiId);
                 if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
                   retroBoardCard.name = findedRetroBoardCardApi.text;
                 }
@@ -1446,7 +1457,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.firestoreRetroInProgressService.updateUserWorkspaces(findedUserWorkspace, this.userWorkspace.id);
   }
 
-  private prepareRetroBoardCardToSave(card: RetroBoardCard) {
+  private prepareRetroBoardCardToSave(card: RetroBoardCard, retoBoardCardApiId) {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const cardToSave = {
       // name: card.name,
@@ -1460,7 +1471,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       userId: this.currentUser.uid,
       voteCount: card.voteCount,
       actions: new Array<any>(),
-      modifyDate: currentDate
+      modifyDate: currentDate,
+      retoBoardCardApiId
     };
 
     return cardToSave;
@@ -1521,6 +1533,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       retroBoardId: this.retroBoardToProcess.id,
       userId: this.currentUser.uid,
       id: '',
+      retoBoardCardApiId: 0,
       voteCount: 0,
       actions: new Array<any>()
     };
@@ -1611,7 +1624,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
     this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
-    const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart);
+    const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart, 1);
     cardToSave.voteCount = 0;
     this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
   }

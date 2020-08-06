@@ -1,5 +1,5 @@
-export class RetroBoardCardApi {
-    retroBoardCardApiId: number;
+export class RetroBoardCardApiGet {
+    id: number;
     retroBoardFirebaseDocId: string;
     retroBoardCardFirebaseDocId: string;
     text: string;

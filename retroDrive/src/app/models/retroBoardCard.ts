@@ -21,5 +21,6 @@ export class RetroBoardCard {
     public retroBoardId: string;
     public userId: string;
     public voteCount: number;
+    public retoBoardCardApiId: number;
     public actions: Array<any>;
 }
