@@ -436,7 +436,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           const err = error;
         });
 
-
         this.removeLocalCardFromArray(card, colName);
       } else if (!card.isNewItem && card.isEdit) {
         this.firestoreRetroInProgressService.findRetroBoardCardById(card.id).then(retroBoardCardSnapshot => {
@@ -449,7 +448,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               retroBoardFirebaseDocId: this.retroBoardToProcess.id,
               retroBoardCardFirebaseDocId: card.id,
               text: card.name,
-              retroBoardCardApiId: 0
+              retroBoardCardApiId: card.retoBoardCardApiId
             };
 
             this.currentUserInRetroBoardApiService.updateRetroBoardCard(retroBoardCardToSave)
@@ -1515,7 +1514,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       mergedContent: card.mergedContent,
       voteCount: card.voteCount,
       retroBoardId: card.retroBoardId,
-      modifyDate: currentDate
+      modifyDate: currentDate,
+      retoBoardCardApiId: card.retoBoardCardApiId
     };
   }
 
