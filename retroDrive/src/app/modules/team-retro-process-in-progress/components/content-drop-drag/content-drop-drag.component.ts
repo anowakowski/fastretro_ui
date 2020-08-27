@@ -1569,7 +1569,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const indexOfFindedCurrentRetroBoardCard = this.getArrayIndex(findedCurrentRetroBoardCard, retroBoardCards);
     this.setCurrentCardAsMerge(currentCard, findedCurrentRetroBoardCard);
     if (findedFromMergedCart !== undefined) {
-      this.mergeLocalCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard);
+      this.mergeCards(findedFromMergedCart, currentCard, findedCurrentRetroBoardCard);
     } else {
       this.updateLocalRetroBoardCard(indexOfFindedCurrentRetroBoardCard, findedCurrentRetroBoardCard, retroBoardCards);
     }
@@ -1588,7 +1588,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return findedFromMergedCart.id !== findedCurrentRetroBoardCard.id;
   }
 
-  private mergeLocalCards(
+  private mergeCards(
     findedFromMergedCart: RetroBoardCard,
     currentCard: RetroBoardCard,
     findedCurrentRetroBoardCard: RetroBoardCard) {
