@@ -1593,7 +1593,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard: RetroBoardCard,
     findedCurrentRetroBoardCard: RetroBoardCard) {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
-        this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
+        // this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
         this.removeUserVoteOnCardForMerge(findedFromMergedCart);
         this.removeUserVoteOnCardForMerge(findedCurrentRetroBoardCard);
@@ -1629,11 +1629,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     findedFromMergedCart.isInMerge = false;
     findedFromMergedCart.isMerged = true;
 
-    this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
-    this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
-    const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart, 1);
-    cardToSave.voteCount = 0;
-    this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+    // this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
+    // this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
+    // const cardToSave = this.prepareRetroBoardCardToSave(findedFromMergedCart, 1);
+    // cardToSave.voteCount = 0;
+    // this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+
+    this.currentUserInRetroBoardApiService.SetRetroBoardCardsToMerge(findedFromMergedCart.id, findedCurrentRetroBoardCard.id)
+      .then(() => {
+
+      })
+      .catch(error => {
+        const err = error;
+      });
+
   }
 
   private setCardWithMergeRules(

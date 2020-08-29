@@ -239,6 +239,24 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }
 
+  SetRetroBoardCardsToMerge(
+    retroBoardCardToMergeFromFirebaseDocId: string,
+    retroBoardCardToMergeToCurrentFirebaseDocId: string) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setRetroBoardCardMergetContent/';
+
+      const dataToPost = {
+        retroBoardCardToMergeFromFirebaseDocId,
+        retroBoardCardToMergeToCurrentFirebaseDocId
+      };
+
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   updateRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApi) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
