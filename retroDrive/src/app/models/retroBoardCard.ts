@@ -16,11 +16,12 @@ export class RetroBoardCard {
     public isMerged: boolean;
     public isInDeleting: boolean;
     public isInAddedToAction: boolean;
-    public mergedContent: Array<MergedRetroBoardCard>;
+    public mergedContent: Array<string>;
     public isWentWellRetroBoradCol: boolean;
     public retroBoardId: string;
     public userId: string;
     public voteCount: number;
     public retoBoardCardApiId: number;
+    public mergedGroupApiId: number;
     public actions: Array<any>;
 }
