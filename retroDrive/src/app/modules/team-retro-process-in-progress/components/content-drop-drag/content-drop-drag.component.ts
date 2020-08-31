@@ -1650,7 +1650,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           retroBoardMergedParent.mergedGroupId);
 
         cardToSave.voteCount = 0;
-        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave);
+        this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave).then(retroBoardCardSnapshot => {
+          const newRetroBoardCardId = retroBoardCardSnapshot.id as string;
+
+          this.currentUserInRetroBoardApiService.setRetroBoardMergedFirebaseDocId(
+            retroBoardMergedParent.retroBoardCardApiId,
+            newRetroBoardCardId)
+              .then(() => {})
+              .catch(error => {
+                const err = error;
+              });
+        });
       })
       .catch(error => {
         const err = error;
