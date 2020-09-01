@@ -59,6 +59,7 @@ import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 import { RetroBoardCardApi } from 'src/app/models/retroBoardCardApi';
 import { RetroBoardCardApiToSave } from 'src/app/models/retroBoardCardApiToSave';
 import { RetroBoardCardApiGet } from 'src/app/models/retroBoardCardApiGet';
+import { Spinner } from 'ngx-spinner/lib/ngx-spinner.enum';
 
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
@@ -87,6 +88,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   actualCountOfUserVotes = 0;
   previousRetroBoardToShowActionsDocId: string;
   shouldShowPreviousActionBtn: boolean;
+  spinnerTickSubscription: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -521,7 +523,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 const err = error;
               }).
               finally(() => {
-                this.dataIsLoading = false;
+                this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(150).subscribe((interval) => {
+                  if (interval === 1) {
+                    this.dataIsLoading = false;
+                    this.spinnerTickSubscription.unsubscribe();
+                  }
+                });
               });
             });
          });
