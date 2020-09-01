@@ -1654,7 +1654,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 const err = error;
               }).
               finally(() => {
-                this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(150).subscribe((interval) => {
+                this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(100).subscribe((interval) => {
                   if (interval === 1) {
                     this.dataIsLoading = false;
                     this.spinnerTickSubscription.unsubscribe();
@@ -1726,7 +1726,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const err = error;
       })
       .finally(() => {
-        this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(150).subscribe((interval) => {
+        this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(90).subscribe((interval) => {
           if (interval === 1) {
             this.dataIsLoading = false;
             this.spinnerTickSubscription.unsubscribe();
