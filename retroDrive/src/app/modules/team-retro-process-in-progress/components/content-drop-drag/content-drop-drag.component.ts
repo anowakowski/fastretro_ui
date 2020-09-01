@@ -132,6 +132,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   public retroBoardOptions: RetroBoardOptions;
 
+  dataIsLoading = false;
+
   /*
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -486,8 +488,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.mergeProcess(currentCard, colName, this.toImproveRetroBoardCol.retroBoardCards);
     }
   }
-
-  dataIsLoading = false;
 
   onClickUnmergeCard(currentCard: RetroBoardCard, colName: string) {
     if (currentCard.isMerged) {
