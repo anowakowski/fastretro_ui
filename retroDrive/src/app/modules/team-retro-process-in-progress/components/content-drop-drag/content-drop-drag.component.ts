@@ -169,6 +169,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     if (this.tickSubscription !== undefined) {
       this.tickSubscription.unsubscribe();
     }
+    if (this.tickSubscription !== undefined) {
+      this.tickSubscription.unsubscribe();
+    }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
 
@@ -1645,6 +1648,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     findedCurrentRetroBoardCard: RetroBoardCard) {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
         // this.setCardWithMergeRules(findedFromMergedCart, findedCurrentRetroBoardCard, currentCard);
+        this.dataIsLoading = true;
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
         this.removeUserVoteOnCardForMerge(findedFromMergedCart);
         this.removeUserVoteOnCardForMerge(findedCurrentRetroBoardCard);
@@ -1706,6 +1710,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       })
       .catch(error => {
         const err = error;
+      })
+      .finally(() => {
+        this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(150).subscribe((interval) => {
+          if (interval === 1) {
+            this.dataIsLoading = false;
+            this.spinnerTickSubscription.unsubscribe();
+          }
+        });
       });
 
   }
