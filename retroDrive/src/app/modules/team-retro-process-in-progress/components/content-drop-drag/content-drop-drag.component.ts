@@ -409,7 +409,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         card.isEdit = false;
         const retroBoardCardToSave: RetroBoardCardApiToSave = {
           retroBoardFirebaseDocId: this.retroBoardToProcess.id,
-          text: card.name
+          text: card.name,
+          userFirebaseDocId: card.userId
         };
         this.currentUserInRetroBoardApiService.setRetroBoardCard(retroBoardCardToSave)
         .then(response => {
@@ -422,6 +423,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               retroBoardCardFirebaseDocId: newRetroBoardCardId,
               retroBoardFirebaseDocId: this.retroBoardToProcess.id,
               text: card.name,
+              userFirebaseDocId: card.userId,
               isMerged: false,
               mergedContent: []
             };
@@ -450,6 +452,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
               retroBoardFirebaseDocId: this.retroBoardToProcess.id,
               retroBoardCardFirebaseDocId: card.id,
               text: card.name,
+              userFirebaseDocId: card.userId,
               retroBoardCardApiId: card.retoBoardCardApiId,
               isMerged: card.isMerged,
               mergedContent: []
@@ -482,15 +485,50 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
   }
 
+  dataIsLoading = false;
+
   onClickUnmergeCard(currentCard: RetroBoardCard, colName: string) {
     if (currentCard.isMerged) {
-      currentCard.mergedContent.forEach(content => {
-         const newRetroBoardCard = '';
-            // this.prepareRetroBoardCardToSaveFromMerged(content, currentCard.isWentWellRetroBoradCol, currentCard.index);
-         this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard);
-      });
-      this.removeUserVoteOnCardForMerge(currentCard);
-      this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
+      this.dataIsLoading = true;
+      this.currentUserInRetroBoardApiService.SetRetroBoardCardsToUnMerge(currentCard.retoBoardCardApiId)
+        .then(response => {
+          const responseModel = response as any;
+          const unmergedRetroBoardCards = responseModel.childRetroBoardCards as RetroBoardCardApi[];
+
+          unmergedRetroBoardCards.forEach(unmergedRetroBoardCard => {
+            const newRetroBoardCard = this.prepareRetroBoardCardToSaveFromMerged(
+              unmergedRetroBoardCard,
+              currentCard.isWentWellRetroBoradCol,
+              currentCard.index);
+            this.firestoreRetroInProgressService.addNewRetroBoardCard(newRetroBoardCard).then(newRetroBoardCardSnapshot => {
+              const newRetroBoardCardId = newRetroBoardCardSnapshot.id as string;
+              const retroBoardCardToUpdateAfterSave: RetroBoardCardApi = {
+                retroBoardCardApiId: unmergedRetroBoardCard.retroBoardCardApiId,
+                retroBoardCardFirebaseDocId: newRetroBoardCardId,
+                retroBoardFirebaseDocId: this.retroBoardToProcess.id,
+                text: unmergedRetroBoardCard.text,
+                userFirebaseDocId: unmergedRetroBoardCard.userFirebaseDocId,
+                isMerged: false,
+                mergedContent: []
+              };
+
+              this.currentUserInRetroBoardApiService.updateRetroBoardCardFirebaseDocId(retroBoardCardToUpdateAfterSave)
+              .then(() => {
+                this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
+                this.removeUserVoteOnCardForMerge(currentCard);
+              })
+              .catch(error => {
+                const err = error;
+              }).
+              finally(() => {
+                this.dataIsLoading = false;
+              });
+            });
+         });
+        })
+        .catch(error => {
+          const err = error;
+        });
     }
   }
 
@@ -1492,23 +1530,20 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     return cardToSave;
   }
 
-  // private prepareRetroBoardCardToSaveFromMerged(mergedCard: MergedRetroBoardCard, isWentWellRetroBoradCol: boolean, index: number) {
-  //   return {
-  //     name: mergedCard.name,
-  //     userId: mergedCard.userId,
-  //     // tslint:disable-next-line:object-literal-shorthand
-  //     index: index,
-  //     isNewItem: false,
-  //     isMerged: false,
-  //     isEdit: false,
-  //     // tslint:disable-next-line:object-literal-shorthand
-  //     isWentWellRetroBoradCol: isWentWellRetroBoradCol,
-  //     mergedContent: new Array<MergedRetroBoardCard>(),
-  //     voteCount: 0,
-  //     actions: new Array<any>(),
-  //     retroBoardId: this.retroBoardToProcess.id
-  //   };
-  // }
+  private prepareRetroBoardCardToSaveFromMerged(mergedCard: RetroBoardCardApi, isWentWellRetroBoradCol: boolean, index: number) {
+    return {
+      userId: mergedCard.userFirebaseDocId,
+      index,
+      isNewItem: false,
+      isMerged: false,
+      isEdit: false,
+      isWentWellRetroBoradCol,
+      voteCount: 0,
+      actions: new Array<any>(),
+      retroBoardId: this.retroBoardToProcess.id,
+      retoBoardCardApiId: mergedCard.retroBoardCardApiId
+    };
+  }
 
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard) {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
