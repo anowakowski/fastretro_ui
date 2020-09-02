@@ -436,7 +436,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             };
 
             this.currentUserInRetroBoardApiService.updateRetroBoardCardFirebaseDocId(retroBoardCardToUpdateAfterSave)
-              .then(() =>{})
+              .then(() => {})
               .catch(error => {
                 const err = error;
               });
@@ -1514,13 +1514,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard) {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     return {
-      // name: card.name,
       isEdit: card.isEdit,
       index: card.index,
       isNewItem: card.isNewItem,
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
-      mergedContent: card.mergedContent,
       voteCount: card.voteCount,
       retroBoardId: card.retroBoardId,
       modifyDate: currentDate,
