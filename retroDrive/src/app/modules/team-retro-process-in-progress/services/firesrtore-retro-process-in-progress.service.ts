@@ -256,6 +256,6 @@ export class FiresrtoreRetroProcessInProgressService {
   }
 
   removeRetroBoardCard(id: string) {
-    this.firestoreBase.deleteItem('/retroBoardCards/', id);
+    return this.firestoreBase.deleteItem('/retroBoardCards/', id);
   }
 }

@@ -69,9 +69,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   openBottomSheet(): void {
     const bottomSheetRef = this.bottomSheetRef.open(AddNewRetroBoardBottomsheetComponent);
 
-    bottomSheetRef.afterDismissed().subscribe(() => {
-      console.log('Bottom sheet has been dismissed.');
-    });
+    bottomSheetRef.afterDismissed().subscribe(() => {});
   }
 
   shouldShowRetroBoardElements() {

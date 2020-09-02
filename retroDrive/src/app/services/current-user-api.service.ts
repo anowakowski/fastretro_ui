@@ -13,6 +13,9 @@ import { RetroBoardStatusForDashboard } from '../models/retroBoardStatusForDashb
 
 import { UserNotificationWorkspaceWithRequiredAccess } from '../models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationToSave } from '../models/UserNotificationToSave';
+import { RetroBoardApi } from '../models/retroBoardApi';
+import { RetroBoardCardApi } from '../models/retroBoardCardApi';
+import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +48,30 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/getRetroBoardOptions/' + retroBoardId;
     return this.httpClient.get<RetroBoardOptions>(url, httpOptions).toPromise();
+  }
+
+  getRetroBoard(retroBoardFirebaseDocId: string) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/GetRetroBoard/' + retroBoardFirebaseDocId;
+    return this.httpClient.get<any>(url, httpOptions).toPromise();
+  }
+
+  getRetroBoardCards(retroBoardFirebaseDocId: string) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getRetroBoardCard/' + retroBoardFirebaseDocId;
+    return this.httpClient.get<RetroBoardCardApi[]>(url, httpOptions).toPromise();
   }
 
   getPreviousRetroBoardId(retroBoardId: string, workspaceId: string, teamId: string) {
@@ -188,6 +215,120 @@ export class CurrentUserApiService {
     const url = this.baseUrl + '/setRetroBoardOptions/';
 
     return this.httpClient.post(url, retroBoardOptionsToSave, httpOptions).toPromise();
+  }
+
+  setRetroBoard(retroBoardToSaveInApi: RetroBoardApi) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoard/';
+
+    return this.httpClient.post(url, retroBoardToSaveInApi, httpOptions).toPromise();
+  }
+
+  setRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApiToSave) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setRetroBoardCard/';
+
+    return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
+  }
+
+  SetRetroBoardCardsToMerge(
+    retroBoardCardToMergeFromFirebaseDocId: string,
+    retroBoardCardToMergeToCurrentFirebaseDocId: string) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setRetroBoardCardMergetContent/';
+
+      const dataToPost = {
+        retroBoardCardToMergeFromFirebaseDocId,
+        retroBoardCardToMergeToCurrentFirebaseDocId
+      };
+
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  SetRetroBoardCardsToUnMerge(
+    retroBoardCardApiId: number) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setRetroBoardCardUnmerged/';
+
+      const dataToPost = {
+        retroBoardCardApiId
+      };
+
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setRetroBoardMergedFirebaseDocId(
+    retroBoardCardApiId: string,
+    retroBoardCardFirebaseDocId: string) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setRetroBoardMergedFirebaseDocId/';
+
+      const dataToPost = {
+        retroBoardCardApiId,
+        retroBoardCardFirebaseDocId
+      };
+
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setRemoveRetroBoardCardsToUnMerge(
+    retroBoardCardApiId: number,
+    retroBoardCardFirebaseDocId: string) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/removeRetroBoardCard/';
+
+      const dataToPost = {
+        retroBoardCardApiId,
+        retroBoardCardFirebaseDocId
+      };
+
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  updateRetroBoardCard(retroBoardCardToSaveInApi: RetroBoardCardApi) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/updateRetroBoardCard/';
+
+    return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
+  }
+
+  updateRetroBoardCardFirebaseDocId(retroBoardCardToSaveInApi: RetroBoardCardApi) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/updateRetroBoardCardFirebaseDocId/';
+
+    return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }
 
   setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {

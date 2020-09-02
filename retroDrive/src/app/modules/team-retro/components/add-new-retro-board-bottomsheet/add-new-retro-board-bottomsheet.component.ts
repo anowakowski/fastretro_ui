@@ -17,6 +17,7 @@ import { RetroBoardOptions } from 'src/app/models/retroBoardOptions';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
+import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
@@ -129,20 +130,41 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     const retroBoardOptionsToSave: RetroBoardOptions = this.prepareRetroBoardOptionsToSave(newRetroBoardId);
     const retroBoardAdditionalInfo: RetroBoardAdditionalInfoToSave = this.prepareRetroBoardAdditionalInfo(newRetroBoardId);
     const retroBoardLastRetroBoard: RetroBoardStatus = this.prepareRetroBoardStatus(newRetroBoardId);
+    const retroBoardToSaveInApi: RetroBoardApi = this.prepareNewRetroBoard(newRetroBoardId);
 
     if (this.currentUserApiService.isTokenExpired()) {
       this.currentUserApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.setRetroBoardInApi(retroBoardToSaveInApi);
         this.setRetroBoardOptions(retroBoardOptionsToSave);
         this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
         this.setLastRetroBoard(retroBoardLastRetroBoard);
       });
     } else {
+      this.setRetroBoardInApi(retroBoardToSaveInApi);
       this.setRetroBoardOptions(retroBoardOptionsToSave);
       this.setRetroBoardAdditionalInfo(retroBoardAdditionalInfo);
       this.setLastRetroBoard(retroBoardLastRetroBoard);
     }
   }
+
+  prepareNewRetroBoard(newRetroBoardId: string): RetroBoardApi {
+    const value = this.addNewRetroBoardForm.value;
+    return {
+      retroBoardFirebaseDocId: newRetroBoardId,
+      retroBoardName: value.retroName,
+      sprintNumber: value.sprintNumber
+    };
+  }
+
+  private setRetroBoardInApi(retroBoardToSaveInApi: RetroBoardApi) {
+    this.currentUserApiService.setRetroBoard(retroBoardToSaveInApi)
+      .then(() => {})
+      .catch(error => {
+        const err = error;
+      });
+  }
+
   private prepareRetroBoardStatus(newRetroBoardId: string): RetroBoardStatus {
     return {
       retroBoardFirebaseDocId: newRetroBoardId,
@@ -212,11 +234,8 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     const guid = Guid.create();
 
     const retroBoard = {
-      sprintNumber: value.sprintNumber,
-      retroName: value.retroName,
       team: value.teamsFormControl,
       isFinished: false,
-      // members: value.membersFormControl,
       creationDate: currentDate,
       lastModifiedDate: currentDate,
       urlParamId: guid.toString(),

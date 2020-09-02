@@ -35,6 +35,7 @@ import { TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent } from './
 import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './components/team-retro-in-progress-retro-board-options-dialog/team-retro-in-progress-retro-board-options-dialog-component';
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './components/team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog copy/user-notification-details-dialog.component';
+import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
 
 
 
@@ -66,7 +67,8 @@ import { UserNotificationDetailsDialogComponent } from './components/user-notifi
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
     TeamRetroInProgressRetroBoardOptionsDialogComponent,
     TeamRetroInProgressShowPreviousActionsDialogComponent,
-    UserNotificationDetailsDialogComponent
+    UserNotificationDetailsDialogComponent,
+    LoaddingSingleElementsSpinnerComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [

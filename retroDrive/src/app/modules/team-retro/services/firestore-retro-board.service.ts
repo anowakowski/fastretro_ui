@@ -226,8 +226,6 @@ export class FirestoreRetroBoardService {
 
   private prepareRetroBoardToSave(newRetroBoard: any) {
     return {
-      sprintNumber: newRetroBoard.sprintNumber,
-      retroName: newRetroBoard.retroName,
       team: this.prepareTeam(newRetroBoard.team),
       // members: newRetroBoard.members,
       creationDate: newRetroBoard.creationDate,
