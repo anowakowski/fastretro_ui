@@ -4,9 +4,8 @@
         <mat-card-header >
           <div 
             *ngIf="currentUser.chosenAvatarUrl"
-            [ngStyle]="{ 'background-image': 'url(' + currentUser.chosenAvatarUrl + ')' }" 
             mat-card-avatar 
-            class="sidnav-userprofile-header-image" >
+            class="sidnav-userprofile-header-image-avatar1" >
           </div>
           <mat-card-title class="sidenav-card-header">
             <div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
