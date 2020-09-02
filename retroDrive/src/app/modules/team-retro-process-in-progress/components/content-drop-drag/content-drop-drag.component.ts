@@ -862,7 +862,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   removeRetroBoardCard(currentCard: RetroBoardCard) {
     currentCard.isInDeleting = true;
-    this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id);
+    this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id).finally(() => {
+      this.currentUserInRetroBoardApiService.setRemoveRetroBoardCardsToUnMerge(currentCard.retoBoardCardApiId, currentCard.id)
+        .then(() => {})
+        .catch(error => {
+          const err = error;
+        });
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
