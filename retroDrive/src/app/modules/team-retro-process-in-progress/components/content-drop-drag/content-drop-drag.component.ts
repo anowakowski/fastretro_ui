@@ -1700,9 +1700,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
     this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id).finally(() => {
       this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id).finally(() => {
-        this.saveMergedRetroBoardCardToApi(findedFromMergedCart, findedCurrentRetroBoardCard);
+        this.saveMergedCardToApiWithTokenCheck(findedFromMergedCart, findedCurrentRetroBoardCard);
       });
     });
+  }
+
+  private saveMergedCardToApiWithTokenCheck(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise()
+        .then(refreshedTokenResponse => {
+          this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+          this.saveMergedRetroBoardCardToApi(findedFromMergedCart, findedCurrentRetroBoardCard);
+        });
+    } else {
+      this.saveMergedRetroBoardCardToApi(findedFromMergedCart, findedCurrentRetroBoardCard);
+    }
   }
 
   private saveMergedRetroBoardCardToApi(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
