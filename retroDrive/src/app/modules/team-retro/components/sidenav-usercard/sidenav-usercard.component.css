@@ -38,6 +38,7 @@
     height: 40px;
   }
 
+  /*avatars*/
   .sidnav-userprofile-header-image-avatar1 {
     background: url('../../../../../assets/avatars/avatar1.png');
     background-size: cover;
@@ -56,4 +57,103 @@
     transform: scale(1.10);
     opacity:0.7;
   }
+
+  
+  .sidnav-userprofile-header-image-avatar2 {
+    background: url('../../../../../assets/avatars/avatar2.png');
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image-avatar2,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image-avatar2 {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
+
+
+  .sidnav-userprofile-header-image-avatar3 {
+    background: url('../../../../../assets/avatars/avatar3.png');
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image-avatar3,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image-avatar3 {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
+
+
+  .sidnav-userprofile-header-image-avatar4 {
+    background: url('../../../../../assets/avatars/avatar4.png');
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image-avatar4,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image-avatar4 {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
  
+
+  .sidnav-userprofile-header-image-avatar5 {
+    background: url('../../../../../assets/avatars/avatar5.png');
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image-avatar5,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image-avatar5 {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
+
+
+  .sidnav-userprofile-header-image-avatar6 {
+    background: url('../../../../../assets/avatars/avatar6.png');
+    background-size: cover;
+    width: 110px;
+    height: 110px;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .sidenav-userprofile-card:hover .sidnav-userprofile-header-image-avatar6,
+  .sidenav-userprofile-card:focus .sidnav-userprofile-header-image-avatar6 {
+    transform: scale(1.10);
+    opacity:0.7;
+  }
