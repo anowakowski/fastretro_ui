@@ -1697,9 +1697,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private saveNewMergeRetroBoardCard(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
     findedFromMergedCart.isInMerge = false;
     findedFromMergedCart.isMerged = true;
-    this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id);
-    this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id);
 
+    this.firestoreRetroInProgressService.removeRetroBoardCard(findedFromMergedCart.id).finally(() => {
+      this.firestoreRetroInProgressService.removeRetroBoardCard(findedCurrentRetroBoardCard.id).finally(() => {
+        this.saveMergedRetroBoardCardToApi(findedFromMergedCart, findedCurrentRetroBoardCard);
+      });
+    });
+  }
+
+  private saveMergedRetroBoardCardToApi(findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard) {
     this.currentUserInRetroBoardApiService.SetRetroBoardCardsToMerge(findedFromMergedCart.id, findedCurrentRetroBoardCard.id)
       .then(response => {
         const retroBoardMergedParent = response as any;
@@ -1710,16 +1716,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           retroBoardMergedParent.mergedGroupId);
 
         cardToSave.voteCount = 0;
+
         this.firestoreRetroInProgressService.addNewRetroBoardCard(cardToSave).then(retroBoardCardSnapshot => {
           const newRetroBoardCardId = retroBoardCardSnapshot.id as string;
 
           this.currentUserInRetroBoardApiService.setRetroBoardMergedFirebaseDocId(
             retroBoardMergedParent.retroBoardCardApiId,
             newRetroBoardCardId)
-              .then(() => {})
-              .catch(error => {
-                const err = error;
-              });
+            .then(() => { })
+            .catch(error => {
+              const err = error;
+            });
         });
       })
       .catch(error => {
@@ -1733,7 +1740,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           }
         });
       });
-
   }
 
   // private setCardWithMergeRules(
