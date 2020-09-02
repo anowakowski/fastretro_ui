@@ -80,6 +80,7 @@
           </div>
           <div *ngIf="checkIfRetroBoardIsExists() && !dataIsLoading" class="retro-board-card-container"
           cdkDropList
+          id="{{column.name}}"
           [cdkDropListData]="column.retroBoardCards"
           (cdkDropListDropped)="drop($event)">
             <div class="retro-board-card retro-board-card-chosen-for-merge" 

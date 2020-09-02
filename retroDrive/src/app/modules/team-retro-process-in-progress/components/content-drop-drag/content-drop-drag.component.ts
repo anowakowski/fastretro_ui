@@ -134,6 +134,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   dataIsLoading = false;
 
+  wentWellDropDownContainerId = 'went well';
+  toImproveDropDownContainerId = 'to improve';
+
   /*
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -880,6 +883,36 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           event.container.data,
           event.previousIndex,
           event.currentIndex);
+
+        if (event.container.data.length > 0) {
+
+          const isWentWellContainer = event.container.id === WENT_WELL;
+
+          if (isWentWellContainer) {
+            const col = this.board.columns.find(x => x.name === WENT_WELL);
+            if (event.container.data.length === col.retroBoardCards.length){
+              col.retroBoardCards.forEach(rbc => {
+                if (!rbc.isWentWellRetroBoradCol) {
+                  rbc.isWentWellRetroBoradCol = true;
+                  const retroBoardCardToUpdate = this.prepareRetroBoardCardToUpdate(rbc);
+                  this.firestoreRetroInProgressService.updateRetroBoardCard(retroBoardCardToUpdate, rbc.id);
+                }
+              });
+            }
+          } else {
+            const col = this.board.columns.find(x => x.name === TO_IMPROVE);
+            if (event.container.data.length === col.retroBoardCards.length) {
+              col.retroBoardCards.forEach(rbc => {
+                if (rbc.isWentWellRetroBoradCol) {
+                  rbc.isWentWellRetroBoradCol = false;
+                  const retroBoardCardToUpdate = this.prepareRetroBoardCardToUpdate(rbc);
+                  this.firestoreRetroInProgressService.updateRetroBoardCard(retroBoardCardToUpdate, rbc.id);
+                }
+              });
+            }
+          }
+        }
+
       }
     }
   }
