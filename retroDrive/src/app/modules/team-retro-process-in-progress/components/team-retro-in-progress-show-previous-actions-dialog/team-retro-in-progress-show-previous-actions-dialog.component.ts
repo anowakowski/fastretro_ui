@@ -80,7 +80,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
                     const usersInTeam: UsersInTeams = {
                       userFirebaseDocId: usrsInTeam.userFirebaseDocId,
                       displayName: usrsInTeam.displayName,
-                      chosenAvatarName: usrsInTeam.chosenAvatarUrl,
+                      chosenAvatarName: usrsInTeam.chosenAvatarName,
                       teamFirebaseDocId: usrsInTeam.teamFirebaseDocId,
                       workspaceFirebaseDocId: usrsInTeam.workspaceFirebaseDocId
                     };

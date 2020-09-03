@@ -92,7 +92,7 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
         this.data.currentUser.uid,
         newTeamId,
         this.data.currentWorkspace.id,
-        this.data.currentUser.chosenAvatarUrl,
+        this.data.currentUser.chosenAvatarName,
         this.data.currentUser.displayName)
           .then(() => {
             this.dialogRef.close();

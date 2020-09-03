@@ -51,7 +51,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
           const usersInTeam: UsersInTeams = {
             userFirebaseDocId: usrsInTeam.userFirebaseDocId,
             displayName: usrsInTeam.displayName,
-            chosenAvatarName: usrsInTeam.ChosenAvatarUrl,
+            chosenAvatarName: usrsInTeam.ChosenAvatarName,
             teamFirebaseDocId: usrsInTeam.teamFirebaseDocId,
             workspaceFirebaseDocId: usrsInTeam.workspaceFirebaseDocId
           };
