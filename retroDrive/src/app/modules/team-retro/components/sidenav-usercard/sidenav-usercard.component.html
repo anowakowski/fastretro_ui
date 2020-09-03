@@ -3,9 +3,9 @@
     <mat-card class="sidenav-userprofile-card">
         <mat-card-header >
           <div 
-            *ngIf="currentUser.chosenAvatarUrl"
+            *ngIf="currentUser.chosenAvatarName"
             mat-card-avatar 
-            class="sidnav-userprofile-header-image-avatar1" >
+            class="sidnav-userprofile-header-image-{{currentUser.chosenAvatarName}}" >
           </div>
           <mat-card-title class="sidenav-card-header">
             <div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
