@@ -74,16 +74,21 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     this.avatars = [
-      {avatarName: 'avatar1', isChosen: false, id: 1},
-      {avatarName: 'avatar2', isChosen: false, id: 2},
-      {avatarName: 'avatar3', isChosen: false, id: 3},
-      {avatarName: 'avatar4', isChosen: false, id: 4},
-      {avatarName: 'avatar5', isChosen: false, id: 5},
-      {avatarName: 'avatar6', isChosen: false, id: 6}
+      {avatarName: 'avatar1', isChosen: false, id: 1, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar2', isChosen: false, id: 2, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar3', isChosen: false, id: 3, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar4', isChosen: false, id: 4, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar5', isChosen: false, id: 5, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar6', isChosen: false, id: 6, photoUrl: null, isSocialMediaAvatar: false},
     ];
 
     if (this.currentUser.photoURL !== null) {
-      // this.avatars.push({avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6});
+       this.avatars.push({
+         avatarName: 'socialMediaAvatar',
+         photoUrl: this.currentUser.photoURL,
+         isSocialMediaAvatar: true,
+         isChosen: false,
+         id: 7});
     }
 
     this.createFormsBuild();

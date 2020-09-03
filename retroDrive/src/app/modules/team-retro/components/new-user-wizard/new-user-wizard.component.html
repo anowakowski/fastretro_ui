@@ -59,10 +59,15 @@
         <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
                       'avatar-card-view-chosen': avatar.isChosen === true}" *ngFor="let avatar of avatars">
           <mat-card-header>
-            <div *ngIf="avatar.avatarName" mat-card-avatar
+            <div *ngIf="avatar.avatarName && !avatar.isSocialMediaAvatar" mat-card-avatar
               [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image-{{avatar.avatarName}}"
               (click)="onSelectAvatar(avatar)">
             </div>
+            <div *ngIf="avatar.avatarName && avatar.photoUrl && avatar.isSocialMediaAvatar" mat-card-avatar
+              [ngStyle]="{ 'background-image': 'url(' + avatar.photoUrl + ')' }"
+              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image"
+              (click)="onSelectAvatar(avatar)">
+            </div>            
           </mat-card-header>
         </mat-card>
       </div>
