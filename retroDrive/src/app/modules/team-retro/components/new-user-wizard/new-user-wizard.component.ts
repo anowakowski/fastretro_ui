@@ -421,7 +421,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
-    findedUsr.chosenAvatarName = chosenAvatar.avatarUrl;
+    findedUsr.chosenAvatarName = chosenAvatar.avatarName;
     findedUsr.displayName = displayName;
     findedUsr.isNewUser = false;
     this.firestoreRbService.updateUsr(findedUsr);
