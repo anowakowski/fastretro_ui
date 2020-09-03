@@ -84,9 +84,13 @@
     <div style="margin-top: 10px;" class="container-flex-summary-step">
       <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
         <mat-card-header>
-          <div *ngIf="chosenAvatar.avatarName" mat-card-avatar
+          <div *ngIf="chosenAvatar.avatarName && chosenAvatar.avatarName !== 'socialMediaAvatar'" mat-card-avatar
             class="sidnav-userprofile-header-image-{{chosenAvatar.avatarName}}">
-          </div>        
+          </div>
+          <div *ngIf="chosenAvatar.avatarName && chosenAvatar.avatarName === 'socialMediaAvatar'" mat-card-avatar
+            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.photoUrl + ')' }"
+            class="sidnav-userprofile-header-image">
+          </div>                  
         </mat-card-header>
       </mat-card>
       <div style="flex-direction: column;" [ngClass]="{'margin-summary-step-info-random-avatar': isAvatarFromRandomChosen}">
