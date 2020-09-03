@@ -6,6 +6,6 @@ export interface User {
     splayName?: string;
     myCustomData?: string;
     isNewUser: boolean;
-    chosenAvatarUrl: string;
+    chosenAvatarName: string;
 }
 

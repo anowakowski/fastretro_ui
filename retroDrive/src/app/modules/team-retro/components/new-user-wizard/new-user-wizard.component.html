@@ -59,9 +59,8 @@
         <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
                       'avatar-card-view-chosen': avatar.isChosen === true}" *ngFor="let avatar of avatars">
           <mat-card-header>
-            <div *ngIf="avatar.avatarUrl" mat-card-avatar
-              [ngStyle]="{ 'background-image': 'url(' + avatar.avatarUrl + ')' }"
-              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image"
+            <div *ngIf="avatar.avatarName" mat-card-avatar
+              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image-{{avatar.avatarName}}"
               (click)="onSelectAvatar(avatar)">
             </div>
           </mat-card-header>
@@ -80,9 +79,9 @@
     <div style="margin-top: 10px;" class="container-flex-summary-step">
       <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
         <mat-card-header>
-          <div *ngIf="chosenAvatar.avatarUrl" mat-card-avatar
-            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.avatarUrl + ')' }" class="sidnav-userprofile-header-image">
-          </div>
+          <div *ngIf="chosenAvatar.avatarName" mat-card-avatar
+            class="sidnav-userprofile-header-image-{{chosenAvatar.avatarName}}">
+          </div>        
         </mat-card-header>
       </mat-card>
       <div style="flex-direction: column;" [ngClass]="{'margin-summary-step-info-random-avatar': isAvatarFromRandomChosen}">

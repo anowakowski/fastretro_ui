@@ -1234,7 +1234,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.currentUser.uid,
       teamId,
       workspaceId,
-      this.currentUser.chosenAvatarUrl,
+      this.currentUser.chosenAvatarName,
       this.currentUser.displayName)
         .then(() => {});
   }

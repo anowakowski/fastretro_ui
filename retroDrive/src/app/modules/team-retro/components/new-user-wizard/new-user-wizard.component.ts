@@ -73,16 +73,26 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
+    // this.avatars = [
+    //   {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false, id: 1},
+    //   {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false, id: 2},
+    //   {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false, id: 3},
+    //   {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false, id: 4},
+    //   {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false, id: 5}
+    // ];
+
+
     this.avatars = [
-      {avatarUrl: 'https://robohash.org/PC1.png?set=set2', isChosen: false, id: 1},
-      {avatarUrl: 'https://robohash.org/PC2.png?set=set2', isChosen: false, id: 2},
-      {avatarUrl: 'https://robohash.org/PC3.png?set=set2', isChosen: false, id: 3},
-      {avatarUrl: 'https://robohash.org/PC4.png?set=set2', isChosen: false, id: 4},
-      {avatarUrl: 'https://robohash.org/PC5.png?set=set2', isChosen: false, id: 5}
+      {avatarName: 'avatar1', isChosen: false, id: 1},
+      {avatarName: 'avatar2', isChosen: false, id: 2},
+      {avatarName: 'avatar3', isChosen: false, id: 3},
+      {avatarName: 'avatar4', isChosen: false, id: 4},
+      {avatarName: 'avatar5', isChosen: false, id: 5},
+      {avatarName: 'avatar6', isChosen: false, id: 6}
     ];
 
     if (this.currentUser.photoURL !== null) {
-      this.avatars.push({avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6});
+      // this.avatars.push({avatarUrl: this.currentUser.photoURL, isChosen: false, id: 6});
     }
 
     this.createFormsBuild();
@@ -411,7 +421,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
-    findedUsr.chosenAvatarUrl = chosenAvatar.avatarUrl;
+    findedUsr.chosenAvatarName = chosenAvatar.avatarUrl;
     findedUsr.displayName = displayName;
     findedUsr.isNewUser = false;
     this.firestoreRbService.updateUsr(findedUsr);
