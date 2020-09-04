@@ -13,9 +13,9 @@
   }
 
   .sidenav-card-header {
-    margin-top: 20px;
-    margin-left: -8.7px;
-    font-size: 12.5px;
+    margin-top: 15px;
+    margin-left: -9px;
+    font-size: 11px;
   }
   
   .sidenav-userprofile-subtitle-followers {
@@ -30,6 +30,7 @@
   .sidnav-usercard-element-position {
     position: absolute;
     bottom: 85px;
+    margin-right: 20px;
   }
 
   .sidenav-btn-signOut {
