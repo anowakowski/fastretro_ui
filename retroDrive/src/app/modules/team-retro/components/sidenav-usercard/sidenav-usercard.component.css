@@ -13,10 +13,18 @@
   }
 
   .sidenav-card-header {
+    margin-top: 22px;
+    margin-left: -9px;
+    font-size: 11px;
+  }
+
+  
+  .sidenav-card-header-with-social-media-avatar {
     margin-top: 15px;
     margin-left: -9px;
     font-size: 11px;
   }
+  
   
   .sidenav-userprofile-subtitle-followers {
     margin-top: 8px;
