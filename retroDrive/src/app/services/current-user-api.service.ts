@@ -331,7 +331,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, retroBoardCardToSaveInApi, httpOptions).toPromise();
   }
 
-  setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarUrl, displayName) {
+  setUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarName, displayName) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -343,7 +343,7 @@ export class CurrentUserApiService {
       userFirebaseDocId,
       teamFirebaseDocId,
       workspaceFirebaseDocId,
-      chosenAvatarUrl,
+      chosenAvatarName,
       displayName
     };
 
@@ -627,7 +627,8 @@ export class CurrentUserApiService {
     const postData = {
       retroBoardId: currentRetroBoardId,
       userId: currentUser.uid,
-      chosenAvatarUrl: currentUser.chosenAvatarUrl,
+      chosenAvatarName: currentUser.chosenAvatarName,
+      photoUrl: currentUser.photoURL,
       displayName: currentUser.displayName
     };
     return this.httpClient.post(url, postData, httpOptions).toPromise();

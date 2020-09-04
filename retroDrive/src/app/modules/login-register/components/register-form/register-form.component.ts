@@ -125,7 +125,7 @@ export class RegisterFormComponent implements OnInit {
       splayName: logedUser.displayName,
       photoURL: logedUser.photoURL,
       isNewUser: true,
-      chosenAvatarUrl: ''
+      chosenAvatarName: ''
     };
   }
 }

@@ -1,5 +1,7 @@
 export class Avatar {
     id: number;
-    avatarUrl: string;
+    avatarName: string;
     isChosen: boolean;
+    photoUrl: string;
+    isSocialMediaAvatar: boolean;
 }

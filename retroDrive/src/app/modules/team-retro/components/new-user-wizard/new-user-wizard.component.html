@@ -59,11 +59,15 @@
         <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
                       'avatar-card-view-chosen': avatar.isChosen === true}" *ngFor="let avatar of avatars">
           <mat-card-header>
-            <div *ngIf="avatar.avatarUrl" mat-card-avatar
-              [ngStyle]="{ 'background-image': 'url(' + avatar.avatarUrl + ')' }"
-              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image"
+            <div *ngIf="avatar.avatarName && !avatar.isSocialMediaAvatar" mat-card-avatar
+              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image-{{avatar.avatarName}}"
               (click)="onSelectAvatar(avatar)">
             </div>
+            <div *ngIf="avatar.avatarName && avatar.photoUrl && avatar.isSocialMediaAvatar" mat-card-avatar
+              [ngStyle]="{ 'background-image': 'url(' + avatar.photoUrl + ')' }"
+              [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image"
+              (click)="onSelectAvatar(avatar)">
+            </div>            
           </mat-card-header>
         </mat-card>
       </div>
@@ -80,9 +84,13 @@
     <div style="margin-top: 10px;" class="container-flex-summary-step">
       <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card avatar-card-view">
         <mat-card-header>
-          <div *ngIf="chosenAvatar.avatarUrl" mat-card-avatar
-            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.avatarUrl + ')' }" class="sidnav-userprofile-header-image">
+          <div *ngIf="chosenAvatar.avatarName && chosenAvatar.avatarName !== 'socialMediaAvatar'" mat-card-avatar
+            class="sidnav-userprofile-header-image-{{chosenAvatar.avatarName}}">
           </div>
+          <div *ngIf="chosenAvatar.avatarName && chosenAvatar.avatarName === 'socialMediaAvatar'" mat-card-avatar
+            [ngStyle]="{ 'background-image': 'url(' + chosenAvatar.photoUrl + ')' }"
+            class="sidnav-userprofile-header-image">
+          </div>                  
         </mat-card-header>
       </mat-card>
       <div style="flex-direction: column;" [ngClass]="{'margin-summary-step-info-random-avatar': isAvatarFromRandomChosen}">

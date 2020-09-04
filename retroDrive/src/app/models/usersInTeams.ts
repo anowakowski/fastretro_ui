@@ -7,5 +7,5 @@ export class UsersInTeams {
     workspaceFirebaseDocId: string;
     photoURL?: string;
     displayName?: string;
-    chosenAvatarUrl: string;
+    chosenAvatarName: string;
 }
