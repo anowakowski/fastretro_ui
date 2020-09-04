@@ -628,6 +628,7 @@ export class CurrentUserApiService {
       retroBoardId: currentRetroBoardId,
       userId: currentUser.uid,
       chosenAvatarName: currentUser.chosenAvatarName,
+      photoUrl: currentUser.photoURL,
       displayName: currentUser.displayName
     };
     return this.httpClient.post(url, postData, httpOptions).toPromise();

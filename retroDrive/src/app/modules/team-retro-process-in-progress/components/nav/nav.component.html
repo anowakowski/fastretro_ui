@@ -8,7 +8,8 @@
     <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     <!--<button mat-raised-button color="warn" (click)="stopTimer()"><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>-->
-    <img *ngIf="!currentUser.isNewUser" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
+    <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName!=='socialMediaAvatar'" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
+    <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName==='socialMediaAvatar'" [src]="currentUser.photoURL" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; margin-right: 5px; border-radius: 50%;" alt="logo">
     <span *ngIf="!currentUser.isNewUser" style="font-size: 12px; margin-left: 5px;">{{currentUser.displayName}}</span>
     <span
       style="cursor: pointer; margin-top: 7px;"
