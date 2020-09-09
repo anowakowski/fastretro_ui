@@ -61,21 +61,17 @@ export class AddNewActionBottomsheetComponent implements OnInit {
   }
 
   private prepareRetroBoardCardToUpdate(card: RetroBoardCard, actionId: any) {
-
     const cardToUpdate = {
-      name: card.name,
       isEdit: card.isEdit,
       index: card.index,
       isNewItem: card.isNewItem,
       isMerged: card.isMerged,
       isWentWellRetroBoradCol: card.isWentWellRetroBoradCol,
-      mergedContent: card.mergedContent,
       voteCount: card.voteCount,
       actions: card.actions
     };
 
     this.setNewActionArray(cardToUpdate);
-
     this.prepareNewActionToCard(actionId, cardToUpdate);
 
     return cardToUpdate;
