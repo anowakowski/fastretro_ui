@@ -309,7 +309,7 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
-  setRetroBoardAction(
+  setRetroBoardCardAction(
     retroBoardFirebaseDocId: string,
     retroBoardCardFirebaseDocId: string,
     retroBoardActionCardFirebaseDocId: string,

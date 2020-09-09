@@ -41,6 +41,7 @@ export class AddNewActionBottomsheetComponent implements OnInit {
 
     const actionTextValue = this.addNewActionForRetroBoardCardForm.value.actionTextAreaFormControl;
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+
     const retroBoardCardActionToSave = {
       text: actionTextValue,
       creationDate: currentDate,
@@ -54,6 +55,19 @@ export class AddNewActionBottomsheetComponent implements OnInit {
         const retroBoardCardActionId = retroBoardCardActionDoc.id;
         const retroBoardCardToUpdate = this.prepareRetroBoardCardToUpdate(this.currentCard, retroBoardCardActionId);
         this.firestoreService.updateRetroBoardCard(retroBoardCardToUpdate, this.currentCard.id);
+
+        this.currentUserApiService.setRetroBoardCardAction(
+          this.currentCard.retroBoardId,
+          this.currentCard.id,
+          retroBoardCardActionId,
+          actionTextValue)
+            .then(response => {
+
+            })
+            .catch(error => {
+              const err = error;
+            })
+
 
         this.bottomSheetRef.dismiss({addedNewActionSuccessfully: true});
       });
