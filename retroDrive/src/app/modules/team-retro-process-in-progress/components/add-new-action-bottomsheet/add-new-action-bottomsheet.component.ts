@@ -6,6 +6,7 @@ import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrto
 import { formatDate } from '@angular/common';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
+import { RetroBoardCardActionsApiAfterAddGetModel } from 'src/app/models/retroBoardCardActionsApiAfterAddGetModel';
 
 @Component({
   selector: 'app-add-new-action-bottomsheet',
@@ -43,7 +44,7 @@ export class AddNewActionBottomsheetComponent implements OnInit {
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
 
     const retroBoardCardActionToSave = {
-      text: actionTextValue,
+      // text: actionTextValue,
       creationDate: currentDate,
       retroBoardCard: this.firestoreService.addRetroBoardAsRef(this.currentCard.id),
       retroBoardId: this.currentCard.retroBoardId,
@@ -62,7 +63,8 @@ export class AddNewActionBottomsheetComponent implements OnInit {
           retroBoardCardActionId,
           actionTextValue)
             .then(response => {
-
+              const getModel = response as RetroBoardCardActionsApiAfterAddGetModel;
+              // update fb action
             })
             .catch(error => {
               const err = error;
