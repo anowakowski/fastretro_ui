@@ -64,11 +64,15 @@ export class AddNewActionBottomsheetComponent implements OnInit {
           actionTextValue)
             .then(response => {
               const getModel = response as RetroBoardCardActionsApiAfterAddGetModel;
-              // update fb action
+              const actionToUpdate = {
+                retroBoardApiDocId: getModel.retroBoardApiDocId
+              };
+
+              this.firestoreService.updateRetroBoardCardAction(actionToUpdate, retroBoardCardActionId);
             })
             .catch(error => {
               const err = error;
-            })
+            });
 
 
         this.bottomSheetRef.dismiss({addedNewActionSuccessfully: true});
