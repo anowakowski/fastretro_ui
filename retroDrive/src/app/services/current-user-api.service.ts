@@ -186,7 +186,7 @@ export class CurrentUserApiService {
     return this.httpClient.get<UserNotificationWorkspaceWithRequiredAccess[]>(url, httpOptions).toPromise();
   }
 
-  getRetroBoardActionCard(retroBoardActionCardApiId: string) {
+  getRetroBoardActionCard(retroBoardActionCardApiId: number) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
 
@@ -196,6 +196,18 @@ export class CurrentUserApiService {
 
     const url = this.baseUrl + '/getRetroBoardActionCard/' + retroBoardActionCardApiId;
     return this.httpClient.get<RetroBoardActionCardApiGet>(url, httpOptions).toPromise();
+  }
+
+  getRetroBoardActionsForCard(retroBoardCardFirebaseId: string) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getRetroBoardActionsForCard/' + retroBoardCardFirebaseId;
+    return this.httpClient.get<RetroBoardActionCardApiGet[]>(url, httpOptions).toPromise();
   }
 
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {

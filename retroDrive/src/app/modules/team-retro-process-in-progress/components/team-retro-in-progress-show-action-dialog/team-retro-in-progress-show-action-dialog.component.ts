@@ -9,6 +9,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
 import { ExcelService } from 'src/app/services/excel.service';
+import { RetroBoardActionCardApiGet } from 'src/app/models/retroBoardActionCardApiGet';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-action-dialog',
@@ -36,6 +37,8 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   actions: any[];
   usersInTeamValueSelected: any;
   usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
+
+  actionsFromApi: RetroBoardActionCardApiGet[];
 
   ngOnInit() {
     this.dataRetroBoardCard = this.data.currentCard as RetroBoardCard;
@@ -259,31 +262,38 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.actions = new Array<any>();
     const actionBaseNameForFormControl = 'action';
     let actionForDynamicNameOfFormControlIndex = 0;
-    this.dataRetroBoardCard.actions.forEach(action => {
-      action.get().then(actionSnapshot => {
-        const retroBoardCardAction = actionSnapshot.data();
-        const docId = actionSnapshot.id;
-        retroBoardCardAction.id = docId;
-        const actionText = '';
-        const apiId = retroBoardCardAction.apiId;
-        this.currentUserInRetroBoardApiService.getRetroBoardActionCard(apiId)
-          .then(response => {
-            if (response !== undefined && response !== null) {
-              const retroBoardCardActionFromApi = response;
 
-            }
+    this.currentUserInRetroBoardApiService.getRetroBoardActionsForCard(this.dataRetroBoardCard.id)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+          this.actionsFromApi = response;
+
+          this.dataRetroBoardCard.actions.forEach(action => {
+            action.get().then(actionSnapshot => {
+              const retroBoardCardAction = actionSnapshot.data();
+              const docId = actionSnapshot.id;
+              retroBoardCardAction.id = docId;
+
+              this.prepareActionText(docId, retroBoardCardAction);
+
+              const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
+              retroBoardCardAction.actionNameForFormControl = actionName;
+              this.prepareDyncamicFormControlForAction(actionName);
+
+              this.actions.push(retroBoardCardAction);
+
+              this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+
+              actionForDynamicNameOfFormControlIndex++;
+            });
           });
-        const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
-        retroBoardCardAction.actionNameForFormControl = actionName;
-        this.prepareDyncamicFormControlForAction(actionName);
-
-        this.actions.push(retroBoardCardAction);
-
-        this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
-
-        actionForDynamicNameOfFormControlIndex++;
+        }
       });
-    });
+  }
+
+  private prepareActionText(docId: any, retroBoardCardAction: any) {
+    const actionText = this.actionsFromApi.find(ac => ac.retroBoardActionCardFirebaseDocId === docId);
+    retroBoardCardAction.text = actionText;
   }
 
   private prepareDyncamicFormControlForAction(actionName: string) {
