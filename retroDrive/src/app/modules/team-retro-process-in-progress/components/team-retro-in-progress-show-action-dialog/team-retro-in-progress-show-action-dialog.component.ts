@@ -264,6 +264,15 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
         const retroBoardCardAction = actionSnapshot.data();
         const docId = actionSnapshot.id;
         retroBoardCardAction.id = docId;
+        const actionText = '';
+        const apiId = retroBoardCardAction.apiId;
+        this.currentUserInRetroBoardApiService.getRetroBoardActionCard(apiId)
+          .then(response => {
+            if (response !== undefined && response !== null) {
+              const retroBoardCardActionFromApi = response;
+
+            }
+          });
         const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
         retroBoardCardAction.actionNameForFormControl = actionName;
         this.prepareDyncamicFormControlForAction(actionName);
