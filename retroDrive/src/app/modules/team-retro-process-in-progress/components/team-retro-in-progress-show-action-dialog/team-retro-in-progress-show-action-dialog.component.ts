@@ -292,8 +292,8 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   }
 
   private prepareActionText(docId: any, retroBoardCardAction: any) {
-    const actionText = this.actionsFromApi.find(ac => ac.retroBoardActionCardFirebaseDocId === docId);
-    retroBoardCardAction.text = actionText;
+    const findedAction = this.actionsFromApi.find(ac => ac.retroBoardActionCardFirebaseDocId === docId);
+    retroBoardCardAction.text = findedAction.text;
   }
 
   private prepareDyncamicFormControlForAction(actionName: string) {
