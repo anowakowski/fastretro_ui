@@ -95,10 +95,10 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.firestoreService.deleteRetroBoardCardAction(action.id).then(() => {
       const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
       this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
+      this.currentUserInRetroBoardApiService.removeRetroBoardCardAction(action.retroBoardApiDocId, action.id);
 
       this.addFreshActualCountOfRetroBoardActions();
     });
-
   }
 
   changeActionIsSolved(event, action: any) {
@@ -183,14 +183,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
       action.isEdit = false;
       action.text = textValue;
 
-      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
-
-      const retroBoardCardActionToSave = {
-        text: textValue,
-        creationDate: currentDate,
-      };
-
-      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.currentUserInRetroBoardApiService.updateRetroBoardActionCard(action.retroBoardApiDocId, action.id, textValue);
     }
   }
 
