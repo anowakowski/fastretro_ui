@@ -120,14 +120,7 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
       action.isEdit = false;
       action.text = textValue;
 
-      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
-
-      const retroBoardCardActionToSave = {
-        text: textValue,
-        creationDate: currentDate,
-      };
-
-      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.currentUserInRetroBoardApiService.updateRetroBoardActionCard(action.retroBoardApiDocId, action.id, textValue);
     }
   }
 
