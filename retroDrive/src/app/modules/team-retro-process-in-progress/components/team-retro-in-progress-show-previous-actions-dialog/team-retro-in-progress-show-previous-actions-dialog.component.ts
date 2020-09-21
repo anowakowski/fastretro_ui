@@ -269,14 +269,7 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       action.isEdit = false;
       action.text = textValue;
 
-      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
-
-      const retroBoardCardActionToSave = {
-        text: textValue,
-        creationDate: currentDate,
-      };
-
-      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.currentUserApiService.updateRetroBoardActionCard(action.retroBoardApiDocId, action.id, textValue);
     }
   }
 
@@ -316,28 +309,45 @@ export class TeamRetroInProgressShowPreviousActionsDialogComponent implements On
       simpleCardToAdd.id = retroBoardCard.id;
       simpleCardToAdd.isWentWellRetroBoradCol = retroBoardCard.isWentWellRetroBoradCol;
 
-      retroBoardCard.actions.forEach(action => {
-        action.get().then(actionSnapshot => {
-          const retroBoardCardAction = actionSnapshot.data();
-          if (retroBoardCardAction !== undefined) {
-            const docId = actionSnapshot.id;
-            retroBoardCardAction.isEdit = false;
-            retroBoardCardAction.id = docId;
-            const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
-            retroBoardCardAction.actionNameForFormControl = actionName;
+      this.currentUserApiService.getRetroBoardActionsForCard(retroBoardCard.id)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+          const actionsFromApi = response;
 
-            this.prepareDyncamicFormControlForAction(actionName);
-            simpleCardToAdd.actions.push(retroBoardCardAction);
+          retroBoardCard.actions.forEach(action => {
+            action.get().then(actionSnapshot => {
+              const retroBoardCardAction = actionSnapshot.data();
+              if (retroBoardCardAction !== undefined) {
+                const docId = actionSnapshot.id;
+                retroBoardCardAction.isEdit = false;
+                retroBoardCardAction.id = docId;
 
-            this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+                this.prepareActionText(docId, retroBoardCardAction, actionsFromApi);
 
-            actionForDynamicNameOfFormControlIndex++;
-          }
-        });
+                const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
+                retroBoardCardAction.actionNameForFormControl = actionName;
+
+                this.prepareDyncamicFormControlForAction(actionName);
+                simpleCardToAdd.actions.push(retroBoardCardAction);
+
+                this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+
+                actionForDynamicNameOfFormControlIndex++;
+              }
+            });
+          });
+          this.simpleRetroBoardCards.push(simpleCardToAdd);
+        }
       });
-      this.simpleRetroBoardCards.push(simpleCardToAdd);
+
+
     });
   }
+
+  private prepareActionText(docId: any, retroBoardCardAction: any, actionsFromApi: any) {
+    const findedAction = actionsFromApi.find(ac => ac.retroBoardActionCardFirebaseDocId === docId);
+    retroBoardCardAction.text = findedAction.text;
+  }  
 
   private prepareDyncamicFormControlForAction(actionName: string) {
     this.addUserToActionForm.setControl(actionName, new FormControl());

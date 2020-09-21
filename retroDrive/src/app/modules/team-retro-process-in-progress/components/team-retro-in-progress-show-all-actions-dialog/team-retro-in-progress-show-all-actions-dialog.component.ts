@@ -318,8 +318,6 @@ export class TeamRetroInProgressShowAllActionsDialogComponent implements OnInit 
           this.simpleRetroBoardCards.push(simpleCardToAdd);
         }
       });
-
-
     });
   }
 
