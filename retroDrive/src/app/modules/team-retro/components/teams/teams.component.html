@@ -42,6 +42,7 @@
       <mat-card-actions style="margin-top: -14px;">
         <button mat-raised-button color="primary" (click)="changeCurrentUserWorksapceDialog()">Change your current workspace &nbsp;<mat-icon>compare_arrows</mat-icon></button>
         <button mat-raised-button color="accent" (click)="jointToExisitngWorkspaceDialog()">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
+
       </mat-card-actions>
     </mat-card>
 </div>
@@ -53,8 +54,8 @@
     </mat-card-header>
 
     <mat-card-content>
-        <mat-selection-list #shoes>
-            <mat-list-option *ngFor="let team of teams">
+        <mat-selection-list #teamsList (selectionChange)="onSelectionTeam(teamsList.selectedOptions.selected)">
+            <mat-list-option *ngFor="let team of teams" [value]="team">
               {{team.name}}
               <mat-divider></mat-divider>
             </mat-list-option>
@@ -77,6 +78,8 @@
     <mat-card-actions style="margin-top: -14px;">
       <button mat-raised-button color="primary" style="width: 260px;" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
       <button mat-raised-button color="accent" style="width: 233px;" (click)="jointToExisitngTeamDialog()">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
+      <div fxFlex></div>
+      <button mat-raised-button color="warn" (click)="jointToExisitngWorkspaceDialog()" [disabled]="teamsToLeave.length === 0">Leave the team &nbsp;<mat-icon>batch_prediction</mat-icon></button>      
     </mat-card-actions>
   </mat-card>
 </div>

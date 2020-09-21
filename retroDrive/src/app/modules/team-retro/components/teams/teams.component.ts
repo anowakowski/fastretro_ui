@@ -34,6 +34,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   teamsSubscriptions: any;
   workspaceNameForRequiredAccess: any;
   userNotificationWorkspaceWithRequiredAccessForWaitingRequests = new Array<UserNotificationWorkspaceWithRequiredAccess>();
+  teamsToLeave = [];
   //currentWorkspaceId: string;
 
   constructor(
@@ -187,6 +188,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  onSelectionTeam(selectedTeams) {
+    this.teamsToLeave = selectedTeams.map(st => st.value);
   }
 
   private getAllWaitingWorkspaceRequests() {
