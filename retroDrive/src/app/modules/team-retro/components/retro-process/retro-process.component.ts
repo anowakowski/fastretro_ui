@@ -17,6 +17,8 @@ import { RetroBoard } from 'src/app/models/retroBoard';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
+import { EventsService } from 'src/app/services/events.service';
+import { UsersInTeams } from 'src/app/models/usersInTeams';
 
 @Component({
   selector: 'app-retro-process',
@@ -34,6 +36,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
   currentUser: User;
 
+  userNotJoinedToAnyTeam = false;
 
   constructor(
     private bottomSheetRef: MatBottomSheet,
@@ -43,6 +46,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private router: Router,
     private localStorageService: LocalStorageService,
     private authService: AuthService,
+    private eventServices: EventsService,
     private currentUserApiService: CurrentUserApiService) { }
 
   ngOnDestroy(): void {
@@ -64,6 +68,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     }
 
     this.prepareRetroBoard();
+    this.checkIfUserIsJoinedToAnyTeam();
   }
 
   openBottomSheet(): void {
@@ -108,6 +113,18 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     } else {
       this.setLastRetroBoardAsStarted(retroBoardLastRetroBoard, retroBoard);
     }
+  }
+
+  goToTeams() {
+    this.eventServices.emitSetTeamsAsDefaultSection();
+    this.router.navigate(['/retro/teams']);
+  }
+
+  private checkIfUserIsJoinedToAnyTeam() {
+    this.frbs.findUserTeams(this.currentUser.uid)
+      .then(userInTeamSnapshot => {
+        this.userNotJoinedToAnyTeam = userInTeamSnapshot.empty;
+      });
   }
 
   private prepareRetroBoardStatus(retroBoard: RetroBoard): RetroBoardStatus {

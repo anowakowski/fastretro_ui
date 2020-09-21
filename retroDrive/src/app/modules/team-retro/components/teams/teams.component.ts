@@ -67,7 +67,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
-        //this.currentWorkspaceId = this.currentWorkspace.id;
+        // this.currentWorkspaceId = this.currentWorkspace.id;
       } else {
         this.router.navigate(['/']);
       }
