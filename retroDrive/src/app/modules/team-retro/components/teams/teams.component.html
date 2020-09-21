@@ -40,9 +40,9 @@
 
     <mat-card class="example-card" style="margin-top: 5px;">
       <mat-card-actions style="margin-top: -14px;">
+        <button mat-raised-button color="primary">Add new workspace &nbsp;<mat-icon>add</mat-icon></button>
         <button mat-raised-button color="primary" (click)="changeCurrentUserWorksapceDialog()">Change your current workspace &nbsp;<mat-icon>compare_arrows</mat-icon></button>
-        <button mat-raised-button color="accent" (click)="jointToExisitngWorkspaceDialog()">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
-
+        <button mat-raised-button color="accent" (click)="jointToExisitngWorkspaceDialog()" style="margin-left: -1px;">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
       </mat-card-actions>
     </mat-card>
 </div>
@@ -79,7 +79,7 @@
       <button mat-raised-button color="primary" style="width: 260px;" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
       <button mat-raised-button color="accent" style="width: 233px;" (click)="jointToExisitngTeamDialog()">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
       <div fxFlex></div>
-      <button mat-raised-button color="warn" (click)="jointToExisitngWorkspaceDialog()" [disabled]="teamsToLeave.length === 0">Leave the teams &nbsp;<mat-icon>exit_to_app</mat-icon></button>      
+      <button mat-raised-button color="warn" [disabled]="teamsToLeave.length === 0">Leave the teams &nbsp;<mat-icon>exit_to_app</mat-icon></button>      
     </mat-card-actions>
   </mat-card>
 </div>
