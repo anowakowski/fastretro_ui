@@ -8,4 +8,5 @@ export class RetroBoardCardActions {
     public retroBoardId: string;
     public isWentWell: boolean;
     public actionIsSolved: boolean;
+    public retroBoardApiDocId: number;
 }

@@ -9,6 +9,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
 import { ExcelService } from 'src/app/services/excel.service';
+import { RetroBoardActionCardApiGet } from 'src/app/models/retroBoardActionCardApiGet';
 
 @Component({
   selector: 'app-team-retro-in-progress-show-action-dialog',
@@ -36,6 +37,8 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   actions: any[];
   usersInTeamValueSelected: any;
   usersInTeams: UsersInTeams[] = new Array<UsersInTeams>();
+
+  actionsFromApi: RetroBoardActionCardApiGet[];
 
   ngOnInit() {
     this.dataRetroBoardCard = this.data.currentCard as RetroBoardCard;
@@ -92,10 +95,10 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.firestoreService.deleteRetroBoardCardAction(action.id).then(() => {
       const retroBoardToUpdate = this.prepareRetroBoardCardToUpdate(this.dataRetroBoardCard, actionIds);
       this.firestoreService.updateRetroBoardCard(retroBoardToUpdate, this.dataRetroBoardCard.id);
+      this.currentUserInRetroBoardApiService.removeRetroBoardCardAction(action.retroBoardApiDocId, action.id);
 
       this.addFreshActualCountOfRetroBoardActions();
     });
-
   }
 
   changeActionIsSolved(event, action: any) {
@@ -180,14 +183,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
       action.isEdit = false;
       action.text = textValue;
 
-      const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
-
-      const retroBoardCardActionToSave = {
-        text: textValue,
-        creationDate: currentDate,
-      };
-
-      this.firestoreService.updateRetroBoardCardAction(retroBoardCardActionToSave, action.id);
+      this.currentUserInRetroBoardApiService.updateRetroBoardActionCard(action.retroBoardApiDocId, action.id, textValue);
     }
   }
 
@@ -259,22 +255,38 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
     this.actions = new Array<any>();
     const actionBaseNameForFormControl = 'action';
     let actionForDynamicNameOfFormControlIndex = 0;
-    this.dataRetroBoardCard.actions.forEach(action => {
-      action.get().then(actionSnapshot => {
-        const retroBoardCardAction = actionSnapshot.data();
-        const docId = actionSnapshot.id;
-        retroBoardCardAction.id = docId;
-        const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
-        retroBoardCardAction.actionNameForFormControl = actionName;
-        this.prepareDyncamicFormControlForAction(actionName);
 
-        this.actions.push(retroBoardCardAction);
+    this.currentUserInRetroBoardApiService.getRetroBoardActionsForCard(this.dataRetroBoardCard.id)
+      .then(response => {
+        if (response !== undefined && response !== null) {
+          this.actionsFromApi = response;
 
-        this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+          this.dataRetroBoardCard.actions.forEach(action => {
+            action.get().then(actionSnapshot => {
+              const retroBoardCardAction = actionSnapshot.data();
+              const docId = actionSnapshot.id;
+              retroBoardCardAction.id = docId;
 
-        actionForDynamicNameOfFormControlIndex++;
+              this.prepareActionText(docId, retroBoardCardAction);
+
+              const actionName = actionBaseNameForFormControl + actionForDynamicNameOfFormControlIndex.toString();
+              retroBoardCardAction.actionNameForFormControl = actionName;
+              this.prepareDyncamicFormControlForAction(actionName);
+
+              this.actions.push(retroBoardCardAction);
+
+              this.setCurrentUsersInActionWithFormControl(actionName, retroBoardCardAction.id);
+
+              actionForDynamicNameOfFormControlIndex++;
+            });
+          });
+        }
       });
-    });
+  }
+
+  private prepareActionText(docId: any, retroBoardCardAction: any) {
+    const findedAction = this.actionsFromApi.find(ac => ac.retroBoardActionCardFirebaseDocId === docId);
+    retroBoardCardAction.text = findedAction.text;
   }
 
   private prepareDyncamicFormControlForAction(actionName: string) {
