@@ -3,7 +3,14 @@
     <mat-form-field class="example-full-width">
       <mat-label>Add new workspace</mat-label>
       <textarea [formControl]="workspaceNameFormControl" matInput></textarea>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
+        workspace name is required!
+      </mat-error>       
     </mat-form-field>
-    <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New Team</button>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+      <mat-slide-toggle>workspace with required access</mat-slide-toggle>
+    </div>
+    
+    <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New workspace</button>
   </form>
 </mat-nav-list>

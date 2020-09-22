@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { formatDate } from '@angular/common';
 import { Workspace } from 'src/app/models/workspace';
@@ -15,7 +15,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
 
   addNewWorkspaceForm: FormGroup;
-  workspaceNameFormControl = new FormControl('');
+  workspaceNameFormControl = new FormControl('', Validators.required);
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<CreateNewWorkspaceBottomsheetComponent>,
