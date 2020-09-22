@@ -43,7 +43,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   checked = false;
   currentUser: User;
 
-  isNewWorkspace = false;
+  isNewWorkspace = true;
   isWorkspaceWithRequiredAccess = false;
 
   chosenAvatar: Avatar;
@@ -97,6 +97,8 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     this.setRandomAvatar();
 
     this.clearLocalStorage();
+    const value = 'default workspace for ' + this.currentUser.email;
+    this.workspaceNameFormControl.setValue(value);
   }
 
   ngOnDestroy(): void {
@@ -310,7 +312,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   private createNewWorkspaceForDefaultWorkspace(findedUsr: User) {
-    const workspaceName = findedUsr.displayName + '- default workspace';
+    const workspaceName = 'default workspace-' + findedUsr.email;
     const workspace: WorkspaceToSave = this.prepareWorkspaceModel(workspaceName,  findedUsr.uid);
 
     this.firestoreRbService.addNewWorkspace(workspace).then(snapshotNewWorkspace => {

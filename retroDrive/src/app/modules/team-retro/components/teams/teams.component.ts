@@ -34,6 +34,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   teamsSubscriptions: any;
   workspaceNameForRequiredAccess: any;
   userNotificationWorkspaceWithRequiredAccessForWaitingRequests = new Array<UserNotificationWorkspaceWithRequiredAccess>();
+  teamsToLeave = [];
   //currentWorkspaceId: string;
 
   constructor(
@@ -67,7 +68,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
       if (!this.currentUser.isNewUser) {
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
-        //this.currentWorkspaceId = this.currentWorkspace.id;
+        // this.currentWorkspaceId = this.currentWorkspace.id;
       } else {
         this.router.navigate(['/']);
       }
@@ -187,6 +188,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  onSelectionTeam(selectedTeams) {
+    this.teamsToLeave = selectedTeams.map(st => st.value);
   }
 
   private getAllWaitingWorkspaceRequests() {
