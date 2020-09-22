@@ -194,6 +194,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.teamsToLeave = selectedTeams.map(st => st.value);
   }
 
+  leaveTeams() {
+    if (this.teamsToLeave.length > 0) {
+
+    }
+  }
+
   private getAllWaitingWorkspaceRequests() {
     if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
       this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
