@@ -20,6 +20,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
+import { CreateNewWorkspaceBottomsheetComponent } from '../create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
 
 @Component({
   selector: 'app-teams',
@@ -122,6 +123,16 @@ export class TeamsComponent implements OnInit, OnDestroy {
     const bottomSheetRef = this.bottomSheetRef.open(CreateNewTeamBottomsheetComponent, {
       data: {
         currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(() => {});
+  }
+
+  createNewWorkspaceBottomShet() {
+    const bottomSheetRef = this.bottomSheetRef.open(CreateNewWorkspaceBottomsheetComponent, {
+      data: {
         currentUser: this.currentUser
       }
     });
