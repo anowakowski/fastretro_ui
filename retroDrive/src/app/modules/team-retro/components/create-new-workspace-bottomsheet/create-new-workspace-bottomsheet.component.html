@@ -1,11 +1,18 @@
 <mat-nav-list>
-  <form [formGroup]="addNewWorkspaceForm" (ngSubmit)="createNewWorkspaceForm()">
+  <form [formGroup]="addNewWorkspaceForm" (ngSubmit)="createNewWorkspace()">
     <mat-form-field class="example-full-width">
       <mat-label>Add new workspace</mat-label>
-      <textarea [formControl]="workspaceNameFormControl" matInput></textarea>
+      <input 
+        [formControl]="workspaceNameFormControl" 
+        [valueDataValidator]="true"
+        matInput
+        required/>
       <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
         workspace name is required!
-      </mat-error>       
+      </mat-error>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting')">
+        This workspace name is currently in use
+      </mat-error>             
     </mat-form-field>
     <div style="margin-top: 10px; margin-bottom: 20px;">
       <mat-slide-toggle>workspace with required access</mat-slide-toggle>

@@ -6,6 +6,7 @@ import { Workspace } from 'src/app/models/workspace';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-create-new-workspace-bottomsheet',
@@ -22,7 +23,8 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private formBuilder: FormBuilder,
     private firestoreService: FirestoreRetroBoardService,
-    private currentUserApiService: CurrentUserApiService) { }
+    private currentUserApiService: CurrentUserApiService,
+    private localStorageService: LocalStorageService) { }
 
   ngOnInit() {
     this.createNewWorkspaceForm();
@@ -35,8 +37,29 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
   }
 
   createNewWorkspace() {
-    const teamNameValue = this.addNewWorkspaceForm.value.workspaceNameFormControl;
+    const workspaceNameValue = this.addNewWorkspaceForm.value.workspaceNameFormControl;
     const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    this.workspaceNameValidationProcess(workspaceNameValue);
 
+  }
+
+  private workspaceNameValidationProcess(workspaceName: any) {
+    this.firestoreService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
+      if (workspaceSnapshot.docs.length > 0) {
+        this.processingValidationWhenWorkspaceExists();
+      }
+    });
+  }
+
+  private processingValidationWhenWorkspaceExists() {
+    this.clearLocalStorage();
+    this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
+
+    this.workspaceNameFormControl.updateValueAndValidity();
+  }
+
+  private clearLocalStorage() {
+    this.localStorageService.removeItem('shouldShowWithWorkspaceExists');
+    this.localStorageService.removeItem('shouldShowCantFindWorkspace');
   }
 }
