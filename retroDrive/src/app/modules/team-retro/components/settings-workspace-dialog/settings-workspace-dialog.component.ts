@@ -40,10 +40,7 @@ export class SettingsWorkspaceDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SettingsWorkspaceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService,
-    private formBuilder: FormBuilder,
-    private localStorageService: LocalStorageService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService,
-    private snackBar: MatSnackBar) {}
+    private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.createForm();
