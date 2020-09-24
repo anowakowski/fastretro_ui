@@ -189,19 +189,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private refreshWorkspaceAndTeamsAfterSave(result: any) {
-    if (result !== undefined) {
-      if (result.shouldRefreshTeams) {
-        const chosenWorkspaceId = result.workspaceId;
-        this.prepareFreshUserWorkspace();
-        this.teamsSubscriptions.unsubscribe();
-        this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
-      } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
-        this.getAllWaitingWorkspaceRequests();
-      }
-    }
-  }
-
   changeCurrentUserWorksapceDialog() {
     const dialogRef = this.dialog.open(ChangeCurrentUserWorksapceDialogComponent, {
       width: '600px',
@@ -231,6 +218,19 @@ export class TeamsComponent implements OnInit, OnDestroy {
   leaveTeams() {
     if (this.teamsToLeave.length > 0) {
 
+    }
+  }
+
+  private refreshWorkspaceAndTeamsAfterSave(result: any) {
+    if (result !== undefined) {
+      if (result.shouldRefreshTeams) {
+        const chosenWorkspaceId = result.workspaceId;
+        this.prepareFreshUserWorkspace();
+        this.teamsSubscriptions.unsubscribe();
+        this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+      } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
+        this.getAllWaitingWorkspaceRequests();
+      }
     }
   }
 
