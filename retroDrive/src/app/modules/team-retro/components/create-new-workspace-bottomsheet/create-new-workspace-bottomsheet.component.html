@@ -15,7 +15,7 @@
       </mat-error>             
     </mat-form-field>
     <div style="margin-top: 10px; margin-bottom: 20px;">
-      <mat-slide-toggle [value]="selectedIsRequiredAccess" (change)="onChangeSlideToggle($event)">workspace with required access</mat-slide-toggle>
+      <mat-slide-toggle (change)="onChangeSlideToggle($event)">workspace with required access</mat-slide-toggle>
     </div>
     
     <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New workspace</button>
