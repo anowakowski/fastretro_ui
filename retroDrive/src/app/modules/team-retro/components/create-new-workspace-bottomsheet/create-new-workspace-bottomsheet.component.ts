@@ -44,12 +44,12 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
 
     if (this.addNewWorkspaceForm.valid) {
       this.shouldValidateWorkspaceName = true;
-      this.validateWorkspaceName(workspaceNameValue);
+      this.validateIfWorkspaceIsCurrentlyInUse(workspaceNameValue);
       const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
     }
   }
 
-  private validateWorkspaceName(workspaceName: any) {
+  private validateIfWorkspaceIsCurrentlyInUse(workspaceName: any) {
     this.firestoreService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
       if (workspaceSnapshot.docs.length > 0) {
         this.processingValidationWhenWorkspaceExists();
