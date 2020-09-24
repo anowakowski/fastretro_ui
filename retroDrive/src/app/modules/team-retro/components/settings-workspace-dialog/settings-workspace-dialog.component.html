@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Join to existing team in current workaspace</h1>
+<form [formGroup]="joinToExisitngWorkspaceForm" (ngSubmit)="joinToExisitngWorkspace()">
+  <div mat-dialog-content>
+    
+      <mat-form-field style="width: 100%; margin-bottom: 15px;">
+        <mat-label>Workspace Name</mat-label>
+        <input
+          matInput
+          placeholder="Put the existing workspace name"
+          [formControl]="existingWorkspaceNameFormControl"
+          required>
+        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('userisjoinedtoworkspace')">
+            You are currently joined to this workspaces
+        </mat-error>             
+        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('notexists')">
+            This workspace name is not exists
+        </mat-error>          
+        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('required')">
+          This workspace name is required
+        </mat-error>        
+      </mat-form-field>
+    
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+    <div fxFlex></div>
+    <button mat-raised-button type="submit" color="primary">Joint to existing workspace<mat-icon>launch</mat-icon></button>
+  </div>
+</form>

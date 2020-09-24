@@ -38,7 +38,9 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
 // tslint:disable-next-line:max-line-length
 import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog/user-notification-details-dialog.component';
 import { ViewAllNotificationsComponent } from './components/view-all-notifications/view-all-notifications.component';
+// tslint:disable-next-line:max-line-length
 import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
+import { SettingsWorkspaceDialogComponent } from './components/settings-workspace-dialog/settings-workspace-dialog.component';
 
 @NgModule({
   imports: [
@@ -74,7 +76,8 @@ import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-
     ChangeCurrentUserWorksapceDialogComponent,
     UserNotificationDetailsDialogComponent,
     ViewAllNotificationsComponent,
-    CreateNewWorkspaceBottomsheetComponent
+    CreateNewWorkspaceBottomsheetComponent,
+    SettingsWorkspaceDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -85,7 +88,8 @@ import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
     UserNotificationDetailsDialogComponent,
-    CreateNewWorkspaceBottomsheetComponent
+    CreateNewWorkspaceBottomsheetComponent,
+    SettingsWorkspaceDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
