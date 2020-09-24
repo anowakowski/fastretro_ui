@@ -28,68 +28,14 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class LeaveTeamDialogComponent implements OnInit {
 
-  editExisitngWorkspaceForm: FormGroup;
-  existingWorkspaceNameFormControl = new FormControl('', [Validators.required, Validators.maxLength(70)]);
-
-  workspaceNotExist = false;
-  currentWorkspace: Workspace;
-
-  selectedIsRequiredAccess = false;
-
   constructor(
     public dialogRef: MatDialogRef<LeaveTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private firestoreService: FirestoreRetroBoardService,
-    private formBuilder: FormBuilder) {}
+    @Inject(MAT_DIALOG_DATA) public teamsToLeave: Team[],
+    private firestoreService: FirestoreRetroBoardService) {}
 
-  ngOnInit() {
-    this.createForm();
-    this.currentWorkspace = this.data.currentWorkspace as Workspace;
-    this.existingWorkspaceNameFormControl.setValue(this.currentWorkspace.name);
-    this.selectedIsRequiredAccess = this.currentWorkspace.isWithRequireAccess;
-  }
+  ngOnInit() {}
 
   onNoClick(): void {
     this.dialogRef.close({shouldRefreshTeams: false});
-  }
-
-  onSaveEditedWorkspace() {
-    if (this.editExisitngWorkspaceForm.valid) {
-      const workspaceName = this.editExisitngWorkspaceForm.value.existingWorkspaceNameFormControl;
-
-      this.firestoreService.findWorkspacesByName(workspaceName)
-        .then(workpsaceSnapshot => {
-          if (!workpsaceSnapshot.empty && this.currentWorkspace.isWithRequireAccess === this.selectedIsRequiredAccess) {
-            // tslint:disable-next-line:object-literal-key-quotes
-            this.existingWorkspaceNameFormControl.setErrors({'workspacenameinuse': true});
-          } else {
-            const workspace: WorkspaceToUpdateWorkspace = this.prepareWorkspaceModel(workspaceName);
-            this.firestoreService.updateWorkspacesName(workspace, this.currentWorkspace.id)
-              .then(() => {
-                this.dialogRef.close({
-                  workspaceId: this.currentWorkspace.id,
-                  shouldRefreshTeams: true
-                });
-              });
-          }
-        });
-    }
-  }
-
-  onChangeSlideToggle(eventValue: MatSlideToggleChange) {
-    this.selectedIsRequiredAccess = eventValue.checked;
-  }
-
-  private prepareWorkspaceModel(workspaceName: any): WorkspaceToUpdateWorkspace {
-    return {
-      name: workspaceName,
-      isWithRequireAccess: this.selectedIsRequiredAccess
-    };
-  }
-
-  private createForm() {
-    this.editExisitngWorkspaceForm = this.formBuilder.group({
-      existingWorkspaceNameFormControl: this.existingWorkspaceNameFormControl,
-    });
   }
 }

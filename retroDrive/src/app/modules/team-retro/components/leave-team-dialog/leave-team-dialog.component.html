@@ -1,33 +1,14 @@
-<h1 mat-dialog-title>Workspace settings</h1>
-<form [formGroup]="editExisitngWorkspaceForm" (ngSubmit)="onSaveEditedWorkspace()">
-  <div mat-dialog-content>
-    
-      <mat-form-field style="width: 100%; margin-bottom: 15px;">
-        <mat-label>Workspace Name</mat-label>
-        <input
-          matInput
-          placeholder="Put the existing workspace name"
-          [formControl]="existingWorkspaceNameFormControl"
-          required>
-        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('workspacenameinuse')">
-            This workspace name is currently in use
-        </mat-error>                     
-        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('required')">
-          This workspace name is required
-        </mat-error>  
-        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('maxlength')">
-          This workspace name is to long
-        </mat-error>                
-      </mat-form-field>
-
-      <div style="margin-top: 10px; margin-bottom: 20px;">
-        <mat-slide-toggle [checked]="selectedIsRequiredAccess" (change)="onChangeSlideToggle($event)">workspace with required access</mat-slide-toggle>
-      </div>      
-    
+<h1 mat-dialog-title>leave teams confirmation</h1>
+  <div mat-dialog-content style="margin-bottom: 10px;">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let team of teamsToLeave;" [value]="team">
+        {{team.name}}
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>    
   </div>
   <div mat-dialog-actions>
     <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
     <div fxFlex></div>
-    <button mat-raised-button type="submit" color="primary">Save settings &nbsp;<mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary">Are you sure you want to leave these teams? &nbsp;<mat-icon>save</mat-icon></button>
   </div>
-</form>

@@ -22,6 +22,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { CreateNewWorkspaceBottomsheetComponent } from '../create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
 import { SettingsWorkspaceDialogComponent } from '../settings-workspace-dialog/settings-workspace-dialog.component';
+import { LeaveTeamDialogComponent } from '../leave-team-dialog/leave-team-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -189,6 +190,17 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
   }
 
+  leaveTeamsDialog(teamsToLeave: Team[]) {
+    const dialogRef = this.dialog.open(LeaveTeamDialogComponent, {
+      width: '600px',
+      data: teamsToLeave
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
+  }
+
   changeCurrentUserWorksapceDialog() {
     const dialogRef = this.dialog.open(ChangeCurrentUserWorksapceDialogComponent, {
       width: '600px',
@@ -217,7 +229,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   leaveTeams() {
     if (this.teamsToLeave.length > 0) {
-
+      this.leaveTeamsDialog(this.teamsToLeave);
     }
   }
 
