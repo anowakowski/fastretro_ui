@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>leave teams confirmation</h1>
-  <div mat-dialog-content style="margin-bottom: 10px;">
+  <div mat-dialog-content style="margin-bottom: 25px;">
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let team of teamsToLeave;" [value]="team">
         {{team.name}}
@@ -10,5 +10,5 @@
   <div mat-dialog-actions>
     <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
     <div fxFlex></div>
-    <button mat-raised-button color="primary">Are you sure you want to leave these teams? &nbsp;<mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary">Are you sure you want to leave these teams? &nbsp;<mat-icon>exit_to_app</mat-icon></button>
   </div>
