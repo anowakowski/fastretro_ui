@@ -104,14 +104,18 @@ export class JoinToExistingTeamDialogComponent implements OnInit {
       if (userTeamsSnapshot.docs.length > 0) {
         userTeamsSnapshot.docs.forEach(userTeamDoc => {
           const findedUserTeamData = userTeamDoc.data();
-          findedUserTeamData.teams.forEach(teamRef => {
-           teamRef.get().then(teamDoc => {
-             const findedUserTeam = teamDoc.data() as Team;
-             findedUserTeam.id = teamDoc.id as string;
+          if (findedUserTeamData.teams.length > 0) {
+            findedUserTeamData.teams.forEach(teamRef => {
+              teamRef.get().then(teamDoc => {
+                const findedUserTeam = teamDoc.data() as Team;
+                findedUserTeam.id = teamDoc.id as string;
+                this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
+              });
+             });
+          } else {
+            this.dataIsLoading = false;
+          }
 
-             this.removeFromLocalTeamsIfFindedTeamsIsCurrentlyAdded(findedUserTeam);
-           });
-          });
         });
       } else {
         this.dataIsLoading = false;
