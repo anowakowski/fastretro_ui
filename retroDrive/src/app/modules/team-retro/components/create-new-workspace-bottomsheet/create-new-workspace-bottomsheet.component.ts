@@ -15,9 +15,6 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
 
-  addNewWorkspaceForm: FormGroup;
-  workspaceNameFormControl = new FormControl('', Validators.required);
-
   constructor(
     private bottomSheetRef: MatBottomSheetRef<CreateNewWorkspaceBottomsheetComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
@@ -26,8 +23,14 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     private currentUserApiService: CurrentUserApiService,
     private localStorageService: LocalStorageService) { }
 
+  addNewWorkspaceForm: FormGroup;
+  workspaceNameFormControl = new FormControl('', Validators.required);
+
+  shouldValidateWorkspaceName;
+
   ngOnInit() {
     this.createNewWorkspaceForm();
+    this.clearLocalStorage();
   }
 
   createNewWorkspaceForm() {
@@ -38,8 +41,9 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
 
   createNewWorkspace() {
     const workspaceNameValue = this.addNewWorkspaceForm.value.workspaceNameFormControl;
-    
+
     if (this.addNewWorkspaceForm.valid) {
+      this.shouldValidateWorkspaceName = true;
       this.validateWorkspaceName(workspaceNameValue);
       const currentDate = formatDate(new Date(), 'yyyy/MM/dd', 'en');
     }
@@ -62,6 +66,5 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
 
   private clearLocalStorage() {
     this.localStorageService.removeItem('shouldShowWithWorkspaceExists');
-    this.localStorageService.removeItem('shouldShowCantFindWorkspace');
   }
 }
