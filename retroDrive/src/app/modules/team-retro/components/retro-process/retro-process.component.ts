@@ -36,7 +36,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
   currentUser: User;
 
-  userNotJoinedToAnyTeam = false;
+  userJoinedToAnyTeam = false;
 
   constructor(
     private bottomSheetRef: MatBottomSheet,
@@ -123,7 +123,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   private checkIfUserIsJoinedToAnyTeam() {
     this.frbs.findUserTeams(this.currentUser.uid)
       .then(userInTeamSnapshot => {
-        this.userNotJoinedToAnyTeam = userInTeamSnapshot.empty;
+        this.userJoinedToAnyTeam = userInTeamSnapshot.docs[0].data().teams.length > 0;
       });
   }
 
