@@ -30,7 +30,7 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     private localStorageService: LocalStorageService) { }
 
   addNewWorkspaceForm: FormGroup;
-  workspaceNameFormControl = new FormControl('', Validators.required);
+  workspaceNameFormControl = new FormControl('', [Validators.required, Validators.maxLength(70)]);
 
   shouldValidateWorkspaceName;
   selectedIsRequiredAccess;

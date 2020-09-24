@@ -12,7 +12,10 @@
       </mat-error>
       <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting')">
         This workspace name is currently in use
-      </mat-error>             
+      </mat-error>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('maxlength')">
+        This workspace name is to long
+      </mat-error>                        
     </mat-form-field>
     <div style="margin-top: 10px; margin-bottom: 20px;">
       <mat-slide-toggle (change)="onChangeSlideToggle($event)">workspace with required access</mat-slide-toggle>
