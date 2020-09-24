@@ -138,7 +138,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
       }
     });
 
-    bottomSheetRef.afterDismissed().subscribe(() => {});
+    bottomSheetRef.afterDismissed().subscribe(result => {
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
   }
 
   jointToExisitngTeamDialog() {
@@ -167,17 +169,21 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (result.shouldRefreshTeams) {
-          const chosenWorkspaceId = result.workspaceId;
-          this.prepareFreshUserWorkspace();
-          this.teamsSubscriptions.unsubscribe();
-          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
-        } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
-          this.getAllWaitingWorkspaceRequests();
-        }
-      }
+      this.refreshWorkspaceAndTeamsAfterSave(result);
     });
+  }
+
+  private refreshWorkspaceAndTeamsAfterSave(result: any) {
+    if (result !== undefined) {
+      if (result.shouldRefreshTeams) {
+        const chosenWorkspaceId = result.workspaceId;
+        this.prepareFreshUserWorkspace();
+        this.teamsSubscriptions.unsubscribe();
+        this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+      } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
+        this.getAllWaitingWorkspaceRequests();
+      }
+    }
   }
 
   changeCurrentUserWorksapceDialog() {

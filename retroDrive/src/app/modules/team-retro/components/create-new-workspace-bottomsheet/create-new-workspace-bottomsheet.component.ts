@@ -137,7 +137,10 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     findedUserWorkspace.workspaces.push(userWorkspaceDataToSave);
     this.firestoreService.updateUserWorkspaces(findedUserWorkspace, userWorkspaceId)
       .then(() => {
-        this.bottomSheetRef.dismiss();
+        this.bottomSheetRef.dismiss({
+          workspaceId,
+          shouldRefreshTeams: true
+        });
       });
   }
 }
