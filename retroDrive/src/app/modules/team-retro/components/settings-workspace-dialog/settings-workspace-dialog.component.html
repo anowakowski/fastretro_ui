@@ -14,7 +14,10 @@
         </mat-error>                     
         <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('required')">
           This workspace name is required
-        </mat-error>        
+        </mat-error>  
+        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('maxlength')">
+          This workspace name is to long
+        </mat-error>                
       </mat-form-field>
 
       <div style="margin-top: 10px; margin-bottom: 20px;">

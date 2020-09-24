@@ -29,7 +29,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 export class SettingsWorkspaceDialogComponent implements OnInit {
 
   editExisitngWorkspaceForm: FormGroup;
-  existingWorkspaceNameFormControl = new FormControl('', Validators.required);
+  existingWorkspaceNameFormControl = new FormControl('', [Validators.required, Validators.maxLength(70)]);
 
   workspaceNotExist = false;
   currentWorkspace: Workspace;
