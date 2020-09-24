@@ -193,12 +193,13 @@ export class TeamsComponent implements OnInit, OnDestroy {
   leaveTeamsDialog(teamsToLeave: Team[]) {
     const dialogRef = this.dialog.open(LeaveTeamDialogComponent, {
       width: '600px',
-      data: teamsToLeave
+      data: {
+        teamsToLeave,
+        currentUser: this.currentUser
+      }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.refreshWorkspaceAndTeamsAfterSave(result);
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   changeCurrentUserWorksapceDialog() {

@@ -28,14 +28,38 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class LeaveTeamDialogComponent implements OnInit {
 
+  teams: Team[];
+
   constructor(
     public dialogRef: MatDialogRef<LeaveTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public teamsToLeave: Team[],
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreRetroBoardService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.teams = this.data.teamsToLeave;
+  }
 
   onNoClick(): void {
-    this.dialogRef.close({shouldRefreshTeams: false});
+    this.dialogRef.close();
+  }
+
+  onLeaveTeams() {
+    this.firestoreService.getUserTeams(this.data.currentUser.uid).then(userTeamsSnapshot => {
+      const exisitngUserTeam = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+      const exisitngUserTeamId = userTeamsSnapshot.docs[0].id;
+
+      const teamsToUpdate = [];
+      exisitngUserTeam.teams.forEach(teamRef => {
+        if (this.teams.some(t => t.id === teamRef.id) === false) {
+          teamsToUpdate.push(teamRef);
+        }
+      });
+
+      exisitngUserTeam.teams = teamsToUpdate;
+      this.firestoreService.updateUserTeams(exisitngUserTeam, exisitngUserTeamId)
+        .then(() => {
+          this.dialogRef.close();
+        });
+    });
   }
 }

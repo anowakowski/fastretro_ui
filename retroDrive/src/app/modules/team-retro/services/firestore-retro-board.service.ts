@@ -42,7 +42,7 @@ export class FirestoreRetroBoardService {
   }
 
   updateUserTeams(exisitngUserTeamToUpdate: any, id: string) {
-    this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
+    return this.firestoreBase.updateItem('/userTeams/', id, exisitngUserTeamToUpdate);
   }
 
   updateRetroBoard(retroBoardToUpdate: any, id: any) {
