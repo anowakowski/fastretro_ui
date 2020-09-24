@@ -18,7 +18,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RetroBoardSnackbarComponent } from '../retro-board-snackbar/retro-board-snackbar.component';
 import { formatDate } from '@angular/common';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
-import { WorkspaceToUpdateWorkspaceName } from 'src/app/models/workspaceToUpdateWorkspaceName';
+import { WorkspaceToUpdateWorkspace } from 'src/app/models/workspaceToUpdateWorkspace';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-settings-workspace-dialog',
@@ -31,6 +32,9 @@ export class SettingsWorkspaceDialogComponent implements OnInit {
   existingWorkspaceNameFormControl = new FormControl('', Validators.required);
 
   workspaceNotExist = false;
+  currentWorkspace: Workspace;
+
+  selectedIsRequiredAccess = false;
 
   constructor(
     public dialogRef: MatDialogRef<SettingsWorkspaceDialogComponent>,
@@ -43,12 +47,14 @@ export class SettingsWorkspaceDialogComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
+    this.currentWorkspace = this.data.currentWorkspace as Workspace;
+    this.existingWorkspaceNameFormControl.setValue(this.currentWorkspace.name);
+    this.selectedIsRequiredAccess = this.currentWorkspace.isWithRequireAccess;
   }
 
   onNoClick(): void {
     this.dialogRef.close({shouldRefreshTeams: false});
   }
-
 
   onSaveEditedWorkspace() {
     if (this.editExisitngWorkspaceForm.valid) {
@@ -56,21 +62,31 @@ export class SettingsWorkspaceDialogComponent implements OnInit {
 
       this.firestoreService.findWorkspacesByName(workspaceName)
         .then(workpsaceSnapshot => {
-          if (!workpsaceSnapshot.empty) {
+          if (!workpsaceSnapshot.empty && this.currentWorkspace.isWithRequireAccess === this.selectedIsRequiredAccess) {
             // tslint:disable-next-line:object-literal-key-quotes
             this.existingWorkspaceNameFormControl.setErrors({'workspacenameinuse': true});
           } else {
-            const workspace: WorkspaceToUpdateWorkspaceName = this.prepareWorkspaceModel(workspaceName);
-            const workspaceId = workpsaceSnapshot.docs[0].id as string;
-            this.firestoreService.updateWorkspacesName(workspace, workspaceId);
+            const workspace: WorkspaceToUpdateWorkspace = this.prepareWorkspaceModel(workspaceName);
+            this.firestoreService.updateWorkspacesName(workspace, this.currentWorkspace.id)
+              .then(() => {
+                this.dialogRef.close({
+                  workspaceId: this.currentWorkspace.id,
+                  shouldRefreshTeams: true
+                });
+              });
           }
         });
     }
   }
 
-  private prepareWorkspaceModel(workspaceName: any): WorkspaceToUpdateWorkspaceName {
+  onChangeSlideToggle(eventValue: MatSlideToggleChange) {
+    this.selectedIsRequiredAccess = eventValue.checked;
+  }
+
+  private prepareWorkspaceModel(workspaceName: any): WorkspaceToUpdateWorkspace {
     return {
       name: workspaceName,
+      isWithRequireAccess: this.selectedIsRequiredAccess
     };
   }
 

@@ -9,7 +9,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
-import { WorkspaceToUpdateWorkspaceName } from 'src/app/models/workspaceToUpdateWorkspaceName';
+import { WorkspaceToUpdateWorkspace } from 'src/app/models/workspaceToUpdateWorkspace';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -53,8 +53,8 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
   }
 
-  updateWorkspacesName(workspaceNameToUpdate: WorkspaceToUpdateWorkspaceName, userWorkspaceId: string) {
-    return this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, workspaceNameToUpdate);
+  updateWorkspacesName(workspaceNameToUpdate: WorkspaceToUpdateWorkspace, workspaceId: string) {
+    return this.firestoreBase.updateItem('/workspaces/', workspaceId, workspaceNameToUpdate);
   }
 
   prepareTeam(team: Teams) {
@@ -107,6 +107,10 @@ export class FirestoreRetroBoardService {
     };
 
     return this.firestoreBase.getFiltered('/workspaces/', condition);
+  }
+
+  findWorkspaces(docId: string) {
+    return this.firestoreBase.getFilteredById('/workspaces/', docId);
   }
 
   retroBoardSnapshotChanges() {

@@ -21,6 +21,7 @@ import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-use
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { CreateNewWorkspaceBottomsheetComponent } from '../create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
+import { SettingsWorkspaceDialogComponent } from '../settings-workspace-dialog/settings-workspace-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -160,6 +161,21 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   jointToExisitngWorkspaceDialog() {
     const dialogRef = this.dialog.open(JoinToExistingWorkspaceDialogComponent, {
+      width: '600px',
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
+  }
+
+  settingsForCurrentWorkspaceDialog() {
+    const dialogRef = this.dialog.open(SettingsWorkspaceDialogComponent, {
       width: '600px',
       data: {
         currentWorkspace: this.currentWorkspace,
