@@ -9,6 +9,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { UserWorkspaceToSave } from 'src/app/models/userWorkspacesToSave';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { CurrentUsersInRetroBoardToSave } from 'src/app/models/currentUsersInRetroBoardToSave';
+import { WorkspaceToUpdateWorkspaceName } from 'src/app/models/workspaceToUpdateWorkspaceName';
 
 const RETRO_BOARD_COLLECTION = '/retroBoards';
 
@@ -50,6 +51,10 @@ export class FirestoreRetroBoardService {
 
   updateUserWorkspaces(findedUserWorkspace: UserWorkspaceToSave, userWorkspaceId: string) {
     return this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, findedUserWorkspace);
+  }
+
+  updateWorkspacesName(workspaceNameToUpdate: WorkspaceToUpdateWorkspaceName, userWorkspaceId: string) {
+    return this.firestoreBase.updateItem('/userworkspaces/', userWorkspaceId, workspaceNameToUpdate);
   }
 
   prepareTeam(team: Teams) {

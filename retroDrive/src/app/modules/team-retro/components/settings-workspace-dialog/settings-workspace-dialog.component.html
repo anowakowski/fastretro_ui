@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Join to existing team in current workaspace</h1>
-<form [formGroup]="joinToExisitngWorkspaceForm" (ngSubmit)="joinToExisitngWorkspace()">
+<form [formGroup]="editExisitngWorkspaceForm" (ngSubmit)="onSaveEditedWorkspace()">
   <div mat-dialog-content>
     
       <mat-form-field style="width: 100%; margin-bottom: 15px;">
@@ -9,12 +9,9 @@
           placeholder="Put the existing workspace name"
           [formControl]="existingWorkspaceNameFormControl"
           required>
-        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('userisjoinedtoworkspace')">
-            You are currently joined to this workspaces
-        </mat-error>             
-        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('notexists')">
-            This workspace name is not exists
-        </mat-error>          
+        <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('workspacenameinuse')">
+            This workspace name is currently in use
+        </mat-error>                     
         <mat-error *ngIf="existingWorkspaceNameFormControl.hasError('required')">
           This workspace name is required
         </mat-error>        
