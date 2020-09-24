@@ -133,7 +133,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
   createNewWorkspaceBottomShet() {
     const bottomSheetRef = this.bottomSheetRef.open(CreateNewWorkspaceBottomsheetComponent, {
       data: {
-        currentUser: this.currentUser
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
       }
     });
 
