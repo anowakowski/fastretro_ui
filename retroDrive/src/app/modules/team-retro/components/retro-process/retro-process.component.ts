@@ -37,7 +37,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   currentWorkspace: Workspace;
   currentUser: User;
 
-  userJoinedToAnyTeam = false;
+  showRetroBoardWhenUserJoinedToAnyTeam = true;
   teamsSubscriptions: any;
   userTeams: Team[];
 
@@ -129,7 +129,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     this.frbs.findUserTeams(this.currentUser.uid)
       .then(userInTeamSnapshot => {
         if (userInTeamSnapshot.empty) {
-          this.userJoinedToAnyTeam = false;
+          this.showRetroBoardWhenUserJoinedToAnyTeam = false;
         } else {
           if (userInTeamSnapshot.docs[0].data().teams.length > 0) {
             const userTeams = userInTeamSnapshot.docs[0].data() as UserTeamsToSave;
@@ -145,17 +145,17 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
                   userTeamToAdd.workspace = findedWorkspaceFromUserTeam;
 
                   if (findedWorkspaceFromUserTeam.id === this.currentWorkspace.id) {
-                    this.userJoinedToAnyTeam = true;
+                    this.showRetroBoardWhenUserJoinedToAnyTeam = true;
                     userHasAnyTeam = true;
                   } else if (!userHasAnyTeam) {
-                    this.userJoinedToAnyTeam = false;
+                    this.showRetroBoardWhenUserJoinedToAnyTeam = false;
                   }
                 });
               });
             });
 
           } else {
-            this.userJoinedToAnyTeam = false;
+            this.showRetroBoardWhenUserJoinedToAnyTeam = false;
 
           }
         }
@@ -245,7 +245,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       } else {
         this.dataIsLoading = false;
         if (this.retroBoards.length > 0) {
-          this.userJoinedToAnyTeam = false;
+          this.showRetroBoardWhenUserJoinedToAnyTeam = false;
         }
       }
     });
@@ -253,7 +253,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
   private addToRetroBoards(retroBoard: RetroBoard) {
     this.retroBoards.push(retroBoard);
-    this.userJoinedToAnyTeam = true;
+    this.showRetroBoardWhenUserJoinedToAnyTeam = true;
     this.dataIsLoading = false;
   }
 }
