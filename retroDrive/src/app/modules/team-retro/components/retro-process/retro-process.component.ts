@@ -132,13 +132,13 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
           this.showRetroBoardWhenUserJoinedToAnyTeam = false;
         } else {
           if (userInTeamSnapshot.docs[0].data().teams.length > 0) {
+            let userHasAnyTeam = false;
             const userTeams = userInTeamSnapshot.docs[0].data() as UserTeamsToSave;
             userTeams.teams.forEach(teamRef => {
               teamRef.get().then(teamDoc => {
                 const findedUserTeam = teamDoc.data();
                 findedUserTeam.id = teamDoc.id as string;
                 findedUserTeam.workspace.get().then(workspaceSnapshot => {
-                  let userHasAnyTeam = false;
                   const userTeamToAdd = findedUserTeam as Team;
                   const findedWorkspaceFromUserTeam = workspaceSnapshot.data() as Workspace;
                   findedWorkspaceFromUserTeam.id = workspaceSnapshot.id;
