@@ -138,6 +138,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
                 const findedUserTeam = teamDoc.data();
                 findedUserTeam.id = teamDoc.id as string;
                 findedUserTeam.workspace.get().then(workspaceSnapshot => {
+                  let userHasAnyTeam = false;
                   const userTeamToAdd = findedUserTeam as Team;
                   const findedWorkspaceFromUserTeam = workspaceSnapshot.data() as Workspace;
                   findedWorkspaceFromUserTeam.id = workspaceSnapshot.id;
@@ -145,11 +146,9 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
 
                   if (findedWorkspaceFromUserTeam.id === this.currentWorkspace.id) {
                     this.userJoinedToAnyTeam = true;
-
-                    return;
-                  } else {
+                    userHasAnyTeam = true;
+                  } else if (!userHasAnyTeam) {
                     this.userJoinedToAnyTeam = false;
-
                   }
                 });
               });
