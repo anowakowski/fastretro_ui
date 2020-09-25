@@ -70,7 +70,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.prepareRetroBoard();
+    this.prepareRetroBoardForCurrentUser();
     this.checkIfUserIsJoinedToAnyTeam();
   }
 
@@ -167,25 +167,18 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     this.frbs.updateRetroBoard(retroBoardToUpdate, retroBoard.id);
   }
 
-  private prepareRetroBoard() {
-
-
+  private prepareRetroBoardForCurrentUser() {
     this.frbs.findUserTeams(this.currentUser.uid)
     .then(userTeamsSnapshot => {
       this.userTeams = new Array<Team>();
       const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-
       this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
       .subscribe(snapshot => {
         this.dataIsLoading = snapshot.length > 0;
         this.retroBoards = [];
         this.CreateBaseRetroBoardData(snapshot, userTeams);
-        //this.prepareUserTeams(snapshot);
       });
-
     });
-
-
   }
 
   private CreateBaseRetroBoardData(snapshot: any, userTeams: UserTeamsToSave) {
@@ -195,7 +188,6 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       if (retroBoard.isStarted) {
         this.dataIsLoading = false;
       }
-
       if (!retroBoard.isStarted) {
         retroBoard.id = retroBoardSnapshot.payload.doc.id;
         const team = retroBoardSnapshot.payload.doc.data().team.get();
@@ -227,31 +219,5 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     this.retroBoards.push(retroBoard);
     this.userJoinedToAnyTeam = true;
     this.dataIsLoading = false;
-  }
-
-  prepareUserTeams(retroBoard: RetroBoard) {
-    this.frbs.findUserTeams(this.currentUser.uid)
-      .then(userTeamsSnapshot => {
-        this.userTeams = new Array<Team>();
-        const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-
-        userTeams.teams.forEach(teamRef => {
-          teamRef.get().then(teamDoc => {
-            const findedUserTeam = teamDoc.data();
-            findedUserTeam.id = teamDoc.id as string;
-            findedUserTeam.workspace.get().then(workspaceSnapshot => {
-              const userTeamToAdd = findedUserTeam as Team;
-              const findedWorkspace = workspaceSnapshot.data() as Workspace;
-              findedWorkspace.id = workspaceSnapshot.id;
-              userTeamToAdd.workspace = findedWorkspace;
-              if (findedWorkspace.id === this.currentWorkspace.id) {
-                this.userTeams.push(findedUserTeam);
-
-
-              }
-            });
-          });
-        });
-      });
   }
 }
