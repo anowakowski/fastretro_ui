@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {formatDate} from '@angular/common';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
@@ -26,7 +26,7 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
   templateUrl: './add-new-retro-board-bottomsheet.component.html',
   styleUrls: ['./add-new-retro-board-bottomsheet.component.css']
 })
-export class AddNewRetroBoardBottomsheetComponent implements OnInit {
+export class AddNewRetroBoardBottomsheetComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
@@ -62,6 +62,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
     this.createAddNewRetroBoardForm();
     this.prepareTeams();
+  }
+
+  ngOnDestroy(): void {
+    this.teamsSubscriptions.unsubscribe();
   }
 
   openLink(event: MouseEvent): void {
@@ -248,20 +252,6 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
     return retroBoard;
   }
-
-  // private prepareTeams() {
-  //   this.teams = new Array<Teams>();
-
-  //   this.frbs.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
-  //     snapshotTeams.docs.forEach(doc => {
-  //       const team: Teams = {
-  //         id: doc.id,
-  //         name: doc.data().name
-  //       };
-  //       this.teams.push(team);
-  //     });
-  //   });
-  // }
 
   prepareTeams() {
     this.teamsSubscriptions = this.frbs.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {

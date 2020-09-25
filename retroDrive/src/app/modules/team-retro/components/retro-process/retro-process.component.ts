@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { AddNewRetroBoardBottomsheetComponent } from '../add-new-retro-board-bottomsheet/add-new-retro-board-bottomsheet.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { RetroBoardToSave } from 'src/app/models/retroBoardToSave';
@@ -19,6 +19,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 import { EventsService } from 'src/app/services/events.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 @Component({
   selector: 'app-retro-process',
@@ -37,6 +38,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   currentUser: User;
 
   userJoinedToAnyTeam = false;
+  teamsSubscriptions: any;
+  userTeams: Team[];
 
   constructor(
     private bottomSheetRef: MatBottomSheet,
@@ -74,7 +77,7 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   openBottomSheet(): void {
     const bottomSheetRef = this.bottomSheetRef.open(AddNewRetroBoardBottomsheetComponent);
 
-    bottomSheetRef.afterDismissed().subscribe(() => {});
+    bottomSheetRef.afterDismissed().subscribe(() => { });
   }
 
   shouldShowRetroBoardElements() {
@@ -143,13 +146,13 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
         retroBoardLastRetroBoard.retroBoardFirebaseDocId,
         retroBoardLastRetroBoard.teamFirebaseDocId,
         retroBoardLastRetroBoard.workspaceFirebaseDocId)
-        .then(() => {
-          this.updateInFirebase(retroBoard);
-          this.processingToNewPage(retroBoard);
-        })
-        .catch(error => {
-          const err = error;
-        });
+      .then(() => {
+        this.updateInFirebase(retroBoard);
+        this.processingToNewPage(retroBoard);
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   private processingToNewPage(retroBoard: RetroBoard) {
@@ -165,15 +168,27 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   }
 
   private prepareRetroBoard() {
-    this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
+
+
+    this.frbs.findUserTeams(this.currentUser.uid)
+    .then(userTeamsSnapshot => {
+      this.userTeams = new Array<Team>();
+      const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+
+      this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
       .subscribe(snapshot => {
         this.dataIsLoading = snapshot.length > 0;
         this.retroBoards = [];
-        this.CreateBaseRetroBoardData(snapshot);
+        this.CreateBaseRetroBoardData(snapshot, userTeams);
+        //this.prepareUserTeams(snapshot);
+      });
+
     });
+
+
   }
 
-  private CreateBaseRetroBoardData(snapshot: any) {
+  private CreateBaseRetroBoardData(snapshot: any, userTeams: UserTeamsToSave) {
     snapshot.forEach(retroBoardSnapshot => {
       const retroBoard = retroBoardSnapshot.payload.doc.data() as RetroBoard;
 
@@ -184,23 +199,59 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       if (!retroBoard.isStarted) {
         retroBoard.id = retroBoardSnapshot.payload.doc.id;
         const team = retroBoardSnapshot.payload.doc.data().team.get();
-        this.prepareTeams(team, retroBoard);
+
+        this.prepareRetroBoardWithTeams(team, retroBoard, userTeams);
       }
     });
   }
 
-  private prepareTeams(team: any, retroBoard: RetroBoard) {
+  private prepareRetroBoardWithTeams(team: any, retroBoard: RetroBoard, userTeams: UserTeamsToSave) {
     team.then(teamSnap => {
       const teamToAdd = teamSnap.data() as Team;
       teamToAdd.id = teamSnap.id as string;
 
       retroBoard.team = teamToAdd;
-      this.addToRetroBoards(retroBoard);
+
+      if (userTeams.teams.some(ut => ut.id === retroBoard.team.id)) {
+        this.addToRetroBoards(retroBoard);
+      } else {
+        this.dataIsLoading = false;
+        if (this.retroBoards.length > 0) {
+          this.userJoinedToAnyTeam = false;
+        }
+      }
     });
   }
 
   private addToRetroBoards(retroBoard: RetroBoard) {
     this.retroBoards.push(retroBoard);
+    this.userJoinedToAnyTeam = true;
     this.dataIsLoading = false;
+  }
+
+  prepareUserTeams(retroBoard: RetroBoard) {
+    this.frbs.findUserTeams(this.currentUser.uid)
+      .then(userTeamsSnapshot => {
+        this.userTeams = new Array<Team>();
+        const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+
+        userTeams.teams.forEach(teamRef => {
+          teamRef.get().then(teamDoc => {
+            const findedUserTeam = teamDoc.data();
+            findedUserTeam.id = teamDoc.id as string;
+            findedUserTeam.workspace.get().then(workspaceSnapshot => {
+              const userTeamToAdd = findedUserTeam as Team;
+              const findedWorkspace = workspaceSnapshot.data() as Workspace;
+              findedWorkspace.id = workspaceSnapshot.id;
+              userTeamToAdd.workspace = findedWorkspace;
+              if (findedWorkspace.id === this.currentWorkspace.id) {
+                this.userTeams.push(findedUserTeam);
+
+
+              }
+            });
+          });
+        });
+      });
   }
 }
