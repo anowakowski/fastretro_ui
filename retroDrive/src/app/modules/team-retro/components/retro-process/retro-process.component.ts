@@ -53,7 +53,9 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private currentUserApiService: CurrentUserApiService) { }
 
   ngOnDestroy(): void {
-    this.retroBoardSubscriptions.unsubscribe();
+    if (this.retroBoardSubscriptions !== undefined) {
+      this.retroBoardSubscriptions.unsubscribe();
+    }
   }
 
   ngOnInit() {
@@ -201,14 +203,18 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   private prepareRetroBoardForCurrentUser() {
     this.frbs.findUserTeams(this.currentUser.uid)
     .then(userTeamsSnapshot => {
-      this.userTeams = new Array<Team>();
-      const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-      this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
-      .subscribe(snapshot => {
-        this.dataIsLoading = snapshot.length > 0;
-        this.retroBoards = [];
-        this.CreateBaseRetroBoardData(snapshot, userTeams);
-      });
+      if (!userTeamsSnapshot.empty) {
+        this.userTeams = new Array<Team>();
+        const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+        this.retroBoardSubscriptions = this.frbs.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id)
+          .subscribe(snapshot => {
+            this.dataIsLoading = snapshot.length > 0;
+            this.retroBoards = [];
+            this.CreateBaseRetroBoardData(snapshot, userTeams);
+          });
+      } else {
+        this.dataIsLoading = false;
+      }
     });
   }
 
