@@ -126,7 +126,38 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   private checkIfUserIsJoinedToAnyTeam() {
     this.frbs.findUserTeams(this.currentUser.uid)
       .then(userInTeamSnapshot => {
-        this.userJoinedToAnyTeam = userInTeamSnapshot.docs[0].data().teams.length > 0;
+        if (userInTeamSnapshot.empty) {
+          this.userJoinedToAnyTeam = false;
+        } else {
+          if (userInTeamSnapshot.docs[0].data().teams.length > 0) {
+            const userTeams = userInTeamSnapshot.docs[0].data() as UserTeamsToSave;
+            userTeams.teams.forEach(teamRef => {
+              teamRef.get().then(teamDoc => {
+                const findedUserTeam = teamDoc.data();
+                findedUserTeam.id = teamDoc.id as string;
+                findedUserTeam.workspace.get().then(workspaceSnapshot => {
+                  const userTeamToAdd = findedUserTeam as Team;
+                  const findedWorkspaceFromUserTeam = workspaceSnapshot.data() as Workspace;
+                  findedWorkspaceFromUserTeam.id = workspaceSnapshot.id;
+                  userTeamToAdd.workspace = findedWorkspaceFromUserTeam;
+
+                  if (findedWorkspaceFromUserTeam.id === this.currentWorkspace.id) {
+                    this.userJoinedToAnyTeam = true;
+
+                    return;
+                  } else {
+                    this.userJoinedToAnyTeam = false;
+
+                  }
+                });
+              });
+            });
+
+          } else {
+            this.userJoinedToAnyTeam = false;
+
+          }
+        }
       });
   }
 
