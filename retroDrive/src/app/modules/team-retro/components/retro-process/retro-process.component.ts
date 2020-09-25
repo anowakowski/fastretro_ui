@@ -70,8 +70,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.prepareRetroBoardForCurrentUser();
     this.checkIfUserIsJoinedToAnyTeam();
+    this.prepareRetroBoardForCurrentUser();
   }
 
   openBottomSheet(): void {
