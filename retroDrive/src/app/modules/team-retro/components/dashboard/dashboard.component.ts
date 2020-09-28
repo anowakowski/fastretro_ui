@@ -261,6 +261,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!isFinished) {
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== retroboardToAdd.id)) {
         this.retroBoards.push(retroboardToAdd as RetroBoard);
+      } else {
+        this.dataIsLoading = false;
       }
     }
     this.dataIsLoading = false;
@@ -281,9 +283,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== finishedRetroBoard.id)) {
         this.retroBoards.push(finishedRetroBoard);
+        this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
+      } else {
+        this.dataIsLoading = false;
       }
-
-      this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
     });
   }
 
