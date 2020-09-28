@@ -17,6 +17,7 @@ import { RetroBoardApi } from '../models/retroBoardApi';
 import { RetroBoardCardApi } from '../models/retroBoardCardApi';
 import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 import { RetroBoardActionCardApiGet } from '../models/retroBoardActionCardApiGet';
+import { UsersInTeamsToRemoveInApi } from '../models/usersInTeamsToRemoveInApi';
 
 @Injectable({
   providedIn: 'root'
@@ -431,7 +432,7 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
-  removeUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarName, displayName) {
+  removeUserInTeam(userInTeamToRemoveInApi: UsersInTeamsToRemoveInApi[]) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {
@@ -439,15 +440,7 @@ export class CurrentUserApiService {
     };
     const url = this.baseUrl + '/removeUserInTeam/';
 
-    const dataToPost = {
-      userFirebaseDocId,
-      teamFirebaseDocId,
-      workspaceFirebaseDocId,
-      chosenAvatarName,
-      displayName
-    };
-
-    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+    return this.httpClient.post(url, userInTeamToRemoveInApi, httpOptions).toPromise();
   }
 
   setLastRetroBoard(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, isFinished, isStarted) {

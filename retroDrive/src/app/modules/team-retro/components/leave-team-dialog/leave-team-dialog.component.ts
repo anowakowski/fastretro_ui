@@ -20,6 +20,7 @@ import { formatDate } from '@angular/common';
 import { WorkspaceToSave } from 'src/app/models/workspaceToSave';
 import { WorkspaceToUpdateWorkspace } from 'src/app/models/workspaceToUpdateWorkspace';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { UsersInTeamsToRemoveInApi } from 'src/app/models/usersInTeamsToRemoveInApi';
 
 @Component({
   selector: 'app-leave-team-dialog',
@@ -33,7 +34,8 @@ export class LeaveTeamDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<LeaveTeamDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private firestoreService: FirestoreRetroBoardService) {}
+    private firestoreService: FirestoreRetroBoardService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService,) {}
 
   ngOnInit() {
     this.teams = this.data.teamsToLeave;
@@ -58,8 +60,26 @@ export class LeaveTeamDialogComponent implements OnInit {
       exisitngUserTeam.teams = teamsToUpdate;
       this.firestoreService.updateUserTeams(exisitngUserTeam, exisitngUserTeamId)
         .then(() => {
-          this.dialogRef.close();
+          const teamToRemove: UsersInTeamsToRemoveInApi[] = this.prepareTeamsToRemoveInApi();
+          this.currentUserInRetroBoardApiService.removeUserInTeam(teamToRemove)
+            .then(() => {
+              this.dialogRef.close();
+            })
+            .catch(error => {
+              const err = error;
+            });
         });
+    });
+  }
+
+  private prepareTeamsToRemoveInApi(): UsersInTeamsToRemoveInApi[] {
+    return this.teams.map(t => {
+      const userInTeamsToRemove: UsersInTeamsToRemoveInApi = {
+        userFirebaseDocId: this.data.currentUser.uid,
+        teamFirebaseDocId: t.id,
+        workspaceFirebaseDocId: t.workspaceId
+      };
+      return userInTeamsToRemove;
     });
   }
 }
