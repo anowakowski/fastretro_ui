@@ -127,7 +127,6 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
   }
 
   private setNewTimer(timerOption: TimerOption) {
-    console.log(timerOption);
 
     this.shouldHideCounterAfterStopTimer = false;
     this.timerIsStopped = false;
