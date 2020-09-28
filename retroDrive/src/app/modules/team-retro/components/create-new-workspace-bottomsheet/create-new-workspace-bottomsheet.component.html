@@ -10,7 +10,7 @@
       <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
         workspace name is required!
       </mat-error>
-      <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting')">
+      <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting') && shouldShowValidationMessage">
         This workspace name is currently in use
       </mat-error>
       <mat-error *ngIf="workspaceNameFormControl.hasError('maxlength')">

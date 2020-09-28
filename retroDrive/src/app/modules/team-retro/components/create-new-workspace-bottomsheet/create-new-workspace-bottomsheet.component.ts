@@ -32,8 +32,8 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
   addNewWorkspaceForm: FormGroup;
   workspaceNameFormControl = new FormControl('', [Validators.required, Validators.maxLength(70)]);
 
-  shouldValidateWorkspaceName;
-  selectedIsRequiredAccess;
+  shouldShowValidationMessage = false;
+  selectedIsRequiredAccess = false;
 
   ngOnInit() {
     this.createNewWorkspaceForm();
@@ -50,10 +50,8 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     const workspaceNameValue = this.addNewWorkspaceForm.value.workspaceNameFormControl;
 
     if (this.addNewWorkspaceForm.valid) {
-      this.shouldValidateWorkspaceName = true;
-      this.validateIfWorkspaceIsCurrentlyInUse(workspaceNameValue);
 
-      this.createWorkspaceProcess(this.data.currentUser);
+      this.CreateWithValidatation(workspaceNameValue);
     }
   }
 
@@ -61,12 +59,17 @@ export class CreateNewWorkspaceBottomsheetComponent implements OnInit {
     this.selectedIsRequiredAccess = eventValue.checked;
   }
 
-  private validateIfWorkspaceIsCurrentlyInUse(workspaceName: any) {
-    this.firestoreService.findWorkspacesByName(workspaceName).then(workspaceSnapshot => {
-      if (workspaceSnapshot.docs.length > 0) {
-        this.processingValidationWhenWorkspaceExists();
-      }
-    });
+  private CreateWithValidatation(workspaceName: any) {
+    this.firestoreService.findWorkspacesByName(workspaceName)
+      .then(workspaceSnapshot => {
+        if (workspaceSnapshot.docs.length > 0) {
+          this.shouldShowValidationMessage = true;
+          this.processingValidationWhenWorkspaceExists();
+        } else {
+          this.shouldShowValidationMessage = false;
+          this.createWorkspaceProcess(this.data.currentUser);
+        }
+      });
   }
 
   private processingValidationWhenWorkspaceExists() {
