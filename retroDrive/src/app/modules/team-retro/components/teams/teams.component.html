@@ -36,12 +36,18 @@
               </mat-list-item>
           </mat-list>
       </mat-card-content>
+      <mat-card-actions style="margin-top: -25px;">
+        <div fxFlex></div>
+        <button mat-icon-button style="font-size: 27px;"><mat-icon>reply_all</mat-icon></button>
+        <button mat-icon-button style="font-size: 27px; margin-right: 10px;" (click)="settingsForCurrentWorkspaceDialog()"><mat-icon>settings</mat-icon></button>
+      </mat-card-actions>      
     </mat-card>
 
     <mat-card class="example-card" style="margin-top: 5px;">
       <mat-card-actions style="margin-top: -14px;">
-        <button mat-raised-button color="primary">Add new workspace &nbsp;<mat-icon>add</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="createNewWorkspaceBottomShet()" style="width: 260px;">Add new workspace &nbsp;<mat-icon>add</mat-icon></button>
         <button mat-raised-button color="primary" (click)="changeCurrentUserWorksapceDialog()">Change your current workspace &nbsp;<mat-icon>compare_arrows</mat-icon></button>
+        <div fxFlex></div>
         <button mat-raised-button color="accent" (click)="jointToExisitngWorkspaceDialog()" style="margin-left: -1px;">Join to existing workspace &nbsp;<mat-icon>batch_prediction</mat-icon></button>
       </mat-card-actions>
     </mat-card>
@@ -61,6 +67,10 @@
             </mat-list-option>
           </mat-selection-list>
     </mat-card-content>
+    <mat-card-actions style="margin-top: -25px;">
+      <div fxFlex></div>
+      <button mat-icon-button color="warn" style="font-size: 27px; margin-right: 10px;" [disabled]="teamsToLeave.length === 0" (click)="leaveTeams()"><mat-icon>exit_to_app</mat-icon></button>
+    </mat-card-actions>      
   </mat-card>
 
   <mat-card class="example-card" style="opacity: 0.97;" *ngIf="!isExistingTeams()">
@@ -77,9 +87,9 @@
   <mat-card class="example-card" style="margin-top: 5px;">
     <mat-card-actions style="margin-top: -14px;">
       <button mat-raised-button color="primary" style="width: 260px;" (click)="createNewTeamBottomShet()">Add New Team &nbsp;<mat-icon>add</mat-icon></button>
-      <button mat-raised-button color="accent" style="width: 233px;" (click)="jointToExisitngTeamDialog()">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>
+      
       <div fxFlex></div>
-      <button mat-raised-button color="warn" [disabled]="teamsToLeave.length === 0">Leave the teams &nbsp;<mat-icon>exit_to_app</mat-icon></button>      
+      <button mat-raised-button color="accent" style="width: 233px;" (click)="jointToExisitngTeamDialog()">Join to existing team &nbsp;<mat-icon>nature_people</mat-icon></button>   
     </mat-card-actions>
   </mat-card>
 </div>

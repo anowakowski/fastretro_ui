@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {formatDate} from '@angular/common';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
@@ -18,13 +18,15 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { RetroBoardAdditionalInfoToSave } from 'src/app/models/retroBoardAdditionalInfoToSave';
 import { RetroBoardStatus } from 'src/app/models/retroBoardStatus';
 import { RetroBoardApi } from 'src/app/models/retroBoardApi';
+import { Team } from 'src/app/models/team';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 @Component({
   selector: 'app-add-new-retro-board-bottomsheet',
   templateUrl: './add-new-retro-board-bottomsheet.component.html',
   styleUrls: ['./add-new-retro-board-bottomsheet.component.css']
 })
-export class AddNewRetroBoardBottomsheetComponent implements OnInit {
+export class AddNewRetroBoardBottomsheetComponent implements OnInit, OnDestroy {
 
   addNewRetroBoardForm: FormGroup;
   membersFormControl = new FormControl('');
@@ -44,6 +46,7 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
   shouldBlurRetroBoardCard: boolean;
   hideVoutCountInretroBoardCard: boolean;
   selectedVouteCount = 6;
+  teamsSubscriptions: any;
 
   constructor(
     private bottomSheetRef: MatBottomSheetRef<AddNewRetroBoardBottomsheetComponent>,
@@ -59,6 +62,10 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
 
     this.createAddNewRetroBoardForm();
     this.prepareTeams();
+  }
+
+  ngOnDestroy(): void {
+    this.teamsSubscriptions.unsubscribe();
   }
 
   openLink(event: MouseEvent): void {
@@ -246,18 +253,27 @@ export class AddNewRetroBoardBottomsheetComponent implements OnInit {
     return retroBoard;
   }
 
-  private prepareTeams() {
-    this.teams = new Array<Teams>();
-    this.frbs.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
-      snapshotTeams.docs.forEach(doc => {
-        const team: Teams = {
-          id: doc.id,
-          name: doc.data().name
-        };
-        this.teams.push(team);
+  prepareTeams() {
+    this.teamsSubscriptions = this.frbs.findUserTeamsSnapshotChanges(this.currentUser.uid).subscribe(userTeamsSnapshot => {
+      this.teams = new Array<Team>();
+      userTeamsSnapshot.forEach(userTeamSnapshot => {
+        const userTeams = userTeamSnapshot.payload.doc.data() as UserTeamsToSave;
+        userTeams.teams.forEach(teamRef => {
+          teamRef.get().then(teamDoc => {
+            const findedUserTeam = teamDoc.data();
+            findedUserTeam.id = teamDoc.id as string;
+            findedUserTeam.workspace.get().then(workspaceSnapshot => {
+              const userTeamToAdd = findedUserTeam as Team;
+              const findedWorkspace = workspaceSnapshot.data() as Workspace;
+              findedWorkspace.id = workspaceSnapshot.id;
+              userTeamToAdd.workspace = findedWorkspace;
+              if (findedWorkspace.id === this.currentWorkspace.id) {
+                this.teams.push(findedUserTeam);
+              }
+            });
+          });
+        });
       });
     });
   }
-
-
 }

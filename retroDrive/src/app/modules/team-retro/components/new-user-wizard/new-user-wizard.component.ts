@@ -267,7 +267,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
     this.clearLocalStorage();
     this.dataIsLoading = false;
     this.localStorageService.setItem('shouldShowWithWorkspaceExists', true);
-    this.openRetroBoardSnackbar('This workspace name is currently in use. Please change your workspace name or joint to existing');
+    this.openRetroBoardSnackbar('This workspace name is currently in use. Please change your workspace name or join to existing');
     this.workspaceNameFormControl.updateValueAndValidity();
   }
 

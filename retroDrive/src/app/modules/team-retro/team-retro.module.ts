@@ -38,6 +38,10 @@ import { ChangeCurrentUserWorksapceDialogComponent } from './components/change-c
 // tslint:disable-next-line:max-line-length
 import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog/user-notification-details-dialog.component';
 import { ViewAllNotificationsComponent } from './components/view-all-notifications/view-all-notifications.component';
+// tslint:disable-next-line:max-line-length
+import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
+import { SettingsWorkspaceDialogComponent } from './components/settings-workspace-dialog/settings-workspace-dialog.component';
+import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-team-dialog.component';
 
 @NgModule({
   imports: [
@@ -72,7 +76,10 @@ import { ViewAllNotificationsComponent } from './components/view-all-notificatio
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
     UserNotificationDetailsDialogComponent,
-    ViewAllNotificationsComponent
+    ViewAllNotificationsComponent,
+    CreateNewWorkspaceBottomsheetComponent,
+    SettingsWorkspaceDialogComponent,
+    LeaveTeamDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -82,7 +89,10 @@ import { ViewAllNotificationsComponent } from './components/view-all-notificatio
     CreateNewTeamBottomsheetComponent,
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
-    UserNotificationDetailsDialogComponent
+    UserNotificationDetailsDialogComponent,
+    CreateNewWorkspaceBottomsheetComponent,
+    SettingsWorkspaceDialogComponent,
+    LeaveTeamDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

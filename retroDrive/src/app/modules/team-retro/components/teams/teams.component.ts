@@ -20,6 +20,9 @@ import { EventsService } from 'src/app/services/events.service';
 import { ChangeCurrentUserWorksapceDialogComponent } from '../change-current-user-worksapce-dialog/change-current-user-worksapce-dialog.component';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
+import { CreateNewWorkspaceBottomsheetComponent } from '../create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
+import { SettingsWorkspaceDialogComponent } from '../settings-workspace-dialog/settings-workspace-dialog.component';
+import { LeaveTeamDialogComponent } from '../leave-team-dialog/leave-team-dialog.component';
 
 @Component({
   selector: 'app-teams',
@@ -129,6 +132,19 @@ export class TeamsComponent implements OnInit, OnDestroy {
     bottomSheetRef.afterDismissed().subscribe(() => {});
   }
 
+  createNewWorkspaceBottomShet() {
+    const bottomSheetRef = this.bottomSheetRef.open(CreateNewWorkspaceBottomsheetComponent, {
+      data: {
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(result => {
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
+  }
+
   jointToExisitngTeamDialog() {
     const dialogRef = this.dialog.open(JoinToExistingTeamDialogComponent, {
       width: '600px',
@@ -155,17 +171,35 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (result.shouldRefreshTeams) {
-          const chosenWorkspaceId = result.workspaceId;
-          this.prepareFreshUserWorkspace();
-          this.teamsSubscriptions.unsubscribe();
-          this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
-        } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
-          this.getAllWaitingWorkspaceRequests();
-        }
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
+  }
+
+  settingsForCurrentWorkspaceDialog() {
+    const dialogRef = this.dialog.open(SettingsWorkspaceDialogComponent, {
+      width: '600px',
+      data: {
+        currentWorkspace: this.currentWorkspace,
+        currentUser: this.currentUser,
+        userWorkspace: this.userWorkspace
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refreshWorkspaceAndTeamsAfterSave(result);
+    });
+  }
+
+  leaveTeamsDialog(teamsToLeave: Team[]) {
+    const dialogRef = this.dialog.open(LeaveTeamDialogComponent, {
+      width: '600px',
+      data: {
+        teamsToLeave,
+        currentUser: this.currentUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   changeCurrentUserWorksapceDialog() {
@@ -192,6 +226,25 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   onSelectionTeam(selectedTeams) {
     this.teamsToLeave = selectedTeams.map(st => st.value);
+  }
+
+  leaveTeams() {
+    if (this.teamsToLeave.length > 0) {
+      this.leaveTeamsDialog(this.teamsToLeave);
+    }
+  }
+
+  private refreshWorkspaceAndTeamsAfterSave(result: any) {
+    if (result !== undefined) {
+      if (result.shouldRefreshTeams) {
+        const chosenWorkspaceId = result.workspaceId;
+        this.prepareFreshUserWorkspace();
+        this.teamsSubscriptions.unsubscribe();
+        this.prepareTeamsForCurrentWorkspace(chosenWorkspaceId);
+      } else if (!result.shouldRefreshTeams && result.shouldShowRequestForWorkspaceWithRequiredAccess) {
+        this.getAllWaitingWorkspaceRequests();
+      }
+    }
   }
 
   private getAllWaitingWorkspaceRequests() {

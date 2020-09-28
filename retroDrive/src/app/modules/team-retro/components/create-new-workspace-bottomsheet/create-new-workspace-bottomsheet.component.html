@@ -1,0 +1,26 @@
+<mat-nav-list>
+  <form [formGroup]="addNewWorkspaceForm" (ngSubmit)="onCreateNewWorkspace()">
+    <mat-form-field class="example-full-width">
+      <mat-label>Add new workspace</mat-label>
+      <input 
+        [formControl]="workspaceNameFormControl" 
+        [valueDataValidator]="true"
+        matInput
+        required/>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('required')">
+        workspace name is required!
+      </mat-error>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('workspaceIsExisting') && shouldShowValidationMessage">
+        This workspace name is currently in use
+      </mat-error>
+      <mat-error *ngIf="workspaceNameFormControl.hasError('maxlength')">
+        This workspace name is to long
+      </mat-error>                        
+    </mat-form-field>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+      <mat-slide-toggle (change)="onChangeSlideToggle($event)">workspace with required access</mat-slide-toggle>
+    </div>
+    
+    <button style="width: 100%;" type="submit" mat-raised-button color="primary"> Create New workspace</button>
+  </form>
+</mat-nav-list>
