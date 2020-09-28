@@ -21,18 +21,23 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { ExcelService } from 'src/app/services/excel.service';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { UserTeams } from 'src/app/models/userTeams';
+import { find } from 'rxjs/operators';
+import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   simpleRetroBoardCards: any[];
   finishedRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
   openRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
 
   dataIsLoading = true;
+  retroBoardsDashboardSubscritpiton: any;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -47,6 +52,7 @@ export class DashboardComponent implements OnInit {
       monkeyPatchChartJsTooltip();
       monkeyPatchChartJsLegend();
   }
+
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -85,6 +91,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.retroBoardsDashboardSubscritpiton !== undefined) {
+      this.retroBoardsDashboardSubscritpiton.unsubscribe();
+    }
+  }
+
   openInfoForNewUsersDialog() {
     const dialogRef = this.dialog.open(WelcomeInfoNewUsersDashboardDialogComponent, {
       width: '400px'
@@ -107,26 +119,27 @@ export class DashboardComponent implements OnInit {
     return false;
   }
   private prepreRetroBoardForCurrentWorkspace() {
-    this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
-      this.retroBoards = new Array<RetroBoard>();
-      this.finishedRetroBoards = new Array<RetroBoardToSave>();
-      this.openRetroBoards = new Array<RetroBoardToSave>();
+    this.retroBoardsDashboardSubscritpiton =
+      this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
+        this.retroBoards = new Array<RetroBoard>();
+        this.finishedRetroBoards = new Array<RetroBoardToSave>();
+        this.openRetroBoards = new Array<RetroBoardToSave>();
 
-      this.prepareRetroBoardForDashboard(retroBoardsSnapshot);
+        this.prepareRetroBoardForDashboard(retroBoardsSnapshot);
 
 
-      retroBoardsSnapshot.forEach(retroBoardSnapshot => {
-        const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
-        retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
-        if (retroBoardData.isStarted) {
-          if (retroBoardData.isFinished) {
-            this.finishedRetroBoards.push(retroBoardData);
-          } else {
-            this.openRetroBoards.push(retroBoardData);
+        retroBoardsSnapshot.forEach(retroBoardSnapshot => {
+          const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
+          retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
+          if (retroBoardData.isStarted) {
+            if (retroBoardData.isFinished) {
+              this.finishedRetroBoards.push(retroBoardData);
+            } else {
+              this.openRetroBoards.push(retroBoardData);
+            }
           }
-        }
+        });
       });
-    });
   }
 
   goToTeams() {
@@ -145,35 +158,34 @@ export class DashboardComponent implements OnInit {
   }
 
   saveAsExcel(retroBoard: RetroBoard) {}
-  /*
-  private prepareExcelData(cardWithActionToSaveAsExcel: any[]) {
-    this.simpleRetroBoardCards.forEach(simpleCard => {
-      simpleCard.actions.forEach(action => {
-        const cardWithActionToExcel = {
-          retroBoardName: this.data.retroBoardName,
-          teamName: this.data.teamName,
-          cardType: this.prepareCardType(simpleCard),
-          cardTitle: simpleCard.name,
-          actionText: action.text
-        };
 
-        cardWithActionToSaveAsExcel.push(cardWithActionToExcel);
-      });
-    });
-  }
-  */
   private prepareRetroBoardForDashboard(retroBoardsSnapshot) {
     if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
       this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
-        this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot);
+
+        this.firestoreRBServices.findUserTeams(this.currentUser.uid)
+          .then(userTeamsSnapshot => {
+            if (!userTeamsSnapshot.empty) {
+
+              const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+              this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
+            }
+          });
+
       });
     } else {
-      this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot);
+      this.firestoreRBServices.findUserTeams(this.currentUser.uid)
+      .then(userTeamsSnapshot => {
+        if (!userTeamsSnapshot.empty) {
+          const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+          this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
+        }
+      });
     }
   }
 
-  private getUserLastRetroBoardForDashboard(retroBoardsSnapshot) {
+  private getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams: UserTeamsToSave) {
     this.currentUserInRetroBoardApiService.getUserLastRetroBoardForDashboard(this.currentWorkspace.id).then(response => {
       if (response != null) {
         if (response.lastRetroBoardOpened != null && response.lastRetroBoardOpened !== '') {
@@ -193,10 +205,15 @@ export class DashboardComponent implements OnInit {
           findedLastOpenedRB.id = findedLastOpenedRBSnapshot.payload.doc.id as string;
 
           findedLastOpenedRB.team.get().then(teamSnapshot => {
-            const team = teamSnapshot.data();
-            findedLastOpenedRB.team = team;
-            this.addToRetroBoards(findedLastOpenedRB, false);
-          });
+              const team = teamSnapshot.data();
+              findedLastOpenedRB.team = team;
+              findedLastOpenedRB.team.id = teamSnapshot.id;
+              if (userTeams.teams.some(ut => ut.id === findedLastOpenedRB.team.id)) {
+                this.addToRetroBoards(findedLastOpenedRB, false);
+              } else {
+                this.dataIsLoading = false;
+              }
+            });
         }
         if (response.lastRetroBoardFinished != null && response.lastRetroBoardFinished !== '') {
           const findedLastFinishedRBSnapshot = retroBoardsSnapshot.find(rbs => {
@@ -216,11 +233,17 @@ export class DashboardComponent implements OnInit {
               const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
               findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
 
+
               findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
-                const team = teamSnapshot.data();
-                findedLastFinishedRetroBorad.team = team;
-                this.addToRetroBoards(findedLastFinishedRetroBorad, true);
-              });
+                  const team = teamSnapshot.data();
+                  findedLastFinishedRetroBorad.team = team;
+                  findedLastFinishedRetroBorad.team.id = teamSnapshot.id;
+                  if (userTeams.teams.some(ut => ut.id === findedLastFinishedRetroBorad.team.id)) {
+                    this.addToRetroBoards(findedLastFinishedRetroBorad, true);
+                  } else {
+                    this.dataIsLoading = false;
+                  }
+                });
             }
           }
         }
@@ -237,7 +260,9 @@ export class DashboardComponent implements OnInit {
       this.prepareActionForFinishedRetroBoardCards(retroboardToAdd as RetroBoard);
     }
     if (!isFinished) {
-      this.retroBoards.push(retroboardToAdd as RetroBoard);
+      if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== retroboardToAdd.id)) {
+        this.retroBoards.push(retroboardToAdd as RetroBoard);
+      }
     }
     this.dataIsLoading = false;
   }
@@ -252,9 +277,13 @@ export class DashboardComponent implements OnInit {
           const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
           dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
           finishedRetroBoard.actions.push(dataRetroBoardCardAction);
+
         });
       }
-      this.retroBoards.push(finishedRetroBoard);
+      if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== finishedRetroBoard.id)) {
+        this.retroBoards.push(finishedRetroBoard);
+      }
+
       this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
     });
   }
