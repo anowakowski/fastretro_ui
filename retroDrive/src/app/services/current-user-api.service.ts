@@ -431,6 +431,25 @@ export class CurrentUserApiService {
     return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  removeUserInTeam(userFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, chosenAvatarName, displayName) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/removeUserInTeam/';
+
+    const dataToPost = {
+      userFirebaseDocId,
+      teamFirebaseDocId,
+      workspaceFirebaseDocId,
+      chosenAvatarName,
+      displayName
+    };
+
+    return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   setLastRetroBoard(retroBoardFirebaseDocId, teamFirebaseDocId, workspaceFirebaseDocId, isFinished, isStarted) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);

@@ -233,7 +233,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
               const findedLastFinishedRetroBorad = findedLastFinishedRBSnapshot.payload.doc.data() as RetroBoardToSave;
               findedLastFinishedRetroBorad.id = findedLastFinishedRBSnapshot.payload.doc.id as string;
 
-
               findedLastFinishedRetroBorad.team.get().then(teamSnapshot => {
                   const team = teamSnapshot.data();
                   findedLastFinishedRetroBorad.team = team;
