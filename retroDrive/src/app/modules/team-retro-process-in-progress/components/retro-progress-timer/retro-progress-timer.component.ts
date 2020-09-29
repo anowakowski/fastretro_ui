@@ -5,6 +5,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { TimerOption } from 'src/app/models/timerOption';
 import { FiresrtoreRetroProcessInProgressService } from '../../services/firesrtore-retro-process-in-progress.service';
 import { TimerSettingToSave } from 'src/app/models/timerSettingToSave';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-retro-progress-timer',
@@ -162,10 +163,13 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
           const timerSetting = timerSettingsSnapshot.payload.data() as TimerSettingToSave;
           const chosenTimerOption = timerSetting.chosenTimerOpt;
           this.timerIsInConfigurationMode = timerSetting.isStarted;
-          if (chosenTimerOption.value !== undefined && timerSetting.isStarted) {
-            this.setNewTimer(chosenTimerOption);
-            this.shouldShowStartTimerIcon = false;
-            this.eventsServices.emitTimmerIsRunningForBottomNavbarBtn();
+
+          if (chosenTimerOption.value !== undefined &&
+              timerSetting.isStarted &&
+              this.isFreshTimmer(timerSetting)) {
+                this.setNewTimer(chosenTimerOption);
+                this.shouldShowStartTimerIcon = false;
+                this.eventsServices.emitTimmerIsRunningForBottomNavbarBtn();
           } else if (!timerSetting.isStarted && !this.timerIsStopped) {
             this.stopRetroTimer();
             if (!this.retroProcessIsStop) {
@@ -182,6 +186,16 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
         this.subscribeStopRetroProcess();
     });
+  }
+
+  private isFreshTimmer(timerSetting: TimerSettingToSave): boolean {
+    const maxOfFreshValueInSecond = 20;
+    const currentDateStr = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const dateOfUpdateTimerSettings = new Date(timerSetting.updateDate);
+    const currentDate = new Date(currentDateStr);
+    const datesDiffInSeconds = (currentDate.getTime() - dateOfUpdateTimerSettings.getTime()) / 1000;
+
+    return datesDiffInSeconds < maxOfFreshValueInSecond;
   }
 
   private subscribeStopRetroProcess() {
