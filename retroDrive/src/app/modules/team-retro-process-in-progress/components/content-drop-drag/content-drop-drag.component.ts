@@ -89,6 +89,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   previousRetroBoardToShowActionsDocId: string;
   shouldShowPreviousActionBtn: boolean;
   spinnerTickSubscription: any;
+  timerIsRunningForBottomNavbarBtnSunscriptions: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -174,6 +175,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
     if (this.tickSubscription !== undefined) {
       this.tickSubscription.unsubscribe();
+    }
+    if (this.timerIsRunningForBottomNavbarBtnSunscriptions !== undefined) {
+      this.timerIsRunningForBottomNavbarBtnSunscriptions.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
@@ -1847,5 +1851,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.eventsService.getStopRetroInProgressProcessEmiter().subscribe(retoIsStoped => this.retroProcessIsStoped = retoIsStoped);
 
     this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
+    this.timerIsRunningForBottomNavbarBtnSunscriptions = this.eventsService.getEmitTimmerIsRunningForBottomNavbarBtnEmiter()
+      .subscribe(() => this.timerIsRunning = true);
   }
 }

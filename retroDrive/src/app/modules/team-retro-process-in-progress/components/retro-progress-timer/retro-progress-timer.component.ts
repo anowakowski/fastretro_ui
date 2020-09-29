@@ -165,6 +165,12 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
           if (chosenTimerOption.value !== undefined && timerSetting.isStarted) {
             this.setNewTimer(chosenTimerOption);
             this.shouldShowStartTimerIcon = false;
+            this.eventsServices.emitTimmerIsRunningForBottomNavbarBtn();
+          } else if (!timerSetting.isStarted && !this.timerIsStopped) {
+            this.stopRetroTimer();
+            if (!this.retroProcessIsStop) {
+              this.shouldShowStartTimerIcon = true;
+            }
           }
         });
     });
