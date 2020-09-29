@@ -125,6 +125,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
 
     const timerSettingToUpdate = { chosenTimerOpt: {}, isStarted: false };
     this.firebaseService.updateCurrentTimerSettings(timerSettingToUpdate, this.currentTimerSettingId);
+    this.eventsServices.emitTimerIsFinished();
   }
 
   private setNewTimer(timerOption: TimerOption) {
