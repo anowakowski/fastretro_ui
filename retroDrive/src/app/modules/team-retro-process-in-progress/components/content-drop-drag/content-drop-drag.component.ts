@@ -89,6 +89,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   previousRetroBoardToShowActionsDocId: string;
   shouldShowPreviousActionBtn: boolean;
   spinnerTickSubscription: any;
+  timerIsRunningForBottomNavbarBtnSunscriptions: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -174,6 +175,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     }
     if (this.tickSubscription !== undefined) {
       this.tickSubscription.unsubscribe();
+    }
+    if (this.timerIsRunningForBottomNavbarBtnSunscriptions !== undefined) {
+      this.timerIsRunningForBottomNavbarBtnSunscriptions.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
   }
@@ -290,8 +294,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(this.retroBoardToProcess.id)
           .then(timerSettingsSnapshot => {
             if (timerSettingsSnapshot.docs.length  > 0) {
+              const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
               const timerSettingId = timerSettingsSnapshot.docs[0].id;
-              const timerSettingToUpdate = { chosenTimerOpt: timerOpt, isStarted: true };
+              const timerSettingToUpdate = { chosenTimerOpt: timerOpt, isStarted: true,  updateDate: currentDate};
               this.firestoreRetroInProgressService.updateCurrentTimerSettings(timerSettingToUpdate, timerSettingId);
             }
           });
@@ -1242,11 +1247,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   private setUpTimerBaseSetting(retroBoardId: string) {
     this.firestoreRetroInProgressService.getFilteredTimerSettingForCurrentRetroBoard(retroBoardId).then(timerSettingsSnapshot => {
       if (timerSettingsSnapshot.docs.length === 0) {
+        const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
         const timerSetting: TimerSettingToSave = {
           chosenTimerOpt: {},
           // tslint:disable-next-line:object-literal-shorthand
           retroBoardId: retroBoardId,
-          isStarted: false
+          isStarted: false,
+          updateDate: currentDate
         };
         this.firestoreRetroInProgressService.addNewTimerSettingForRetroBoard(timerSetting).then(newTimerSettingSnapshot => {
           newTimerSettingSnapshot.get().then(newTimerSettingDocs => {
@@ -1847,5 +1854,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.eventsService.getStopRetroInProgressProcessEmiter().subscribe(retoIsStoped => this.retroProcessIsStoped = retoIsStoped);
 
     this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
+    this.timerIsRunningForBottomNavbarBtnSunscriptions = this.eventsService.getEmitTimmerIsRunningForBottomNavbarBtnEmiter()
+      .subscribe(() => this.timerIsRunning = true);
   }
 }

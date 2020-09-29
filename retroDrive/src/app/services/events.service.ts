@@ -15,6 +15,7 @@ constructor() { }
   private startRetroInProgressProcessEmiter: EventEmitter<boolean> = new EventEmitter();
   private timerIsFinishedEmiter: EventEmitter<void> = new EventEmitter();
   private newTimerSettingEmiter: EventEmitter<string> = new EventEmitter();
+  private emitTimmerIsRunningForBottomNavbarBtnEmiter: EventEmitter<void> = new EventEmitter();
   private setTeamsAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setRetroProcessAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setAllNotificationViewAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
@@ -72,6 +73,14 @@ constructor() { }
 
   getNewTimerSettingEmiter() {
     return this.newTimerSettingEmiter;
+  }
+
+  emitTimmerIsRunningForBottomNavbarBtn() {
+    this.emitTimmerIsRunningForBottomNavbarBtnEmiter.emit();
+  }
+
+  getEmitTimmerIsRunningForBottomNavbarBtnEmiter() {
+    return this.emitTimmerIsRunningForBottomNavbarBtnEmiter;
   }
 
   emitSetTeamsAsDefaultSection() {
