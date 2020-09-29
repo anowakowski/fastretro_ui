@@ -168,6 +168,7 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
           if (chosenTimerOption.value !== undefined &&
               timerSetting.isStarted &&
               this.isFreshTimmer(timerSetting)) {
+                this.clearTimerBeforeStardNewOneFromNewTimerSettings();
                 this.setNewTimer(chosenTimerOption);
                 this.shouldShowStartTimerIcon = false;
                 this.eventsServices.emitTimmerIsRunningForBottomNavbarBtn();
@@ -189,8 +190,14 @@ export class RetroProgressTimerComponent implements OnInit, OnDestroy {
     });
   }
 
+  private clearTimerBeforeStardNewOneFromNewTimerSettings() {
+    this.currentInMin = this.maxInMin;
+    this.currentInSec = 0;
+    this.unsubscribeTimer();
+  }
+
   private isFreshTimmer(timerSetting: TimerSettingToSave): boolean {
-    const maxOfFreshValueInSecond = 20;
+    const maxOfFreshValueInSecond = 15;
     const currentDateStr = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     const dateOfUpdateTimerSettings = new Date(timerSetting.updateDate);
     const currentDate = new Date(currentDateStr);
