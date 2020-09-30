@@ -60,6 +60,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
   shouldShowNotificationSection: boolean;
+  userSettings: import("d:/Projects/retroBoard/retroDrive/src/app/models/UserSettings").UserSettings;
 
   constructor(
     public auth: AuthService,
@@ -87,6 +88,11 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setCurrentSectionByRoute();
     this.subscribeEvents();
     this.getUserNotificationToCheckIfAnyExists();
+
+    this.currentUserInRetroBoardApiService.getUserSettings(this.currentUser.uid)
+      .then(response => {
+        this.userSettings = response;
+      });
   }
 
   ngOnDestroy() {

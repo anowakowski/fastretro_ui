@@ -90,6 +90,51 @@
   margin-bottom: -65px;
 }
 
+.teams-retro-background-img-backgroundImage1  {
+  background: url("../../../../../assets/idea2.jpeg"); 
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+  margin-bottom: -65px;
+}
+
+.teams-retro-background-img-backgroundImage2  {
+  background: url("../../../../../assets/geometric1.jpg"); 
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+  margin-bottom: -65px;
+}
+
+.teams-retro-background-img-backgroundImage3  {
+  background: url("../../../../../assets/clark-van-der-beken-IQeBZm8F-M4-unsplash.jpg"); 
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+  margin-bottom: -65px;
+}
+
+.teams-retro-background-img-backgroundImage4  {
+  background: url("../../../../../assets/stock-photo-gray-empty-room-studio-gradient-used-for-background-and-display-your-product-662267227.jpg"); 
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+  margin-bottom: -65px;
+}
+
+.teams-retro-background-img-backgroundImage5  {
+  background: url("../../../../../assets/stock-vector-floral-seamless-pattern-green-black-and-white-split-leaf-philodendron-plant-with-vines-on-white-1082605778.jpg"); 
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+  margin-bottom: -65px;
+}
+
 .teams-retro-background-img-all-retroboard-section  {
   background-color: #dddddd;
   background-size: cover;
