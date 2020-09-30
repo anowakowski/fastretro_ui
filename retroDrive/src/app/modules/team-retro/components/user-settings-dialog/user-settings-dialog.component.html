@@ -5,7 +5,7 @@
     <mat-divider></mat-divider>
   </h3>
 
-  <div class="container" style="margin-top: 25px; margin-bottom: 25px; margin-left: 10px;">
+  <div class="container" style="margin-top: 25px; margin-bottom: 25px;">
     <mat-card style="margin-right: 20px; border-radius: 0;" class="nav-user-settings-card" [ngClass]="{'backgroundImage-card-view': backgroundImage.isChosen === false,
     'backgroundImage-card-view-chosen': backgroundImage.isChosen === true}" *ngFor="let backgroundImage of backgroundImages">
       <mat-card-header style="margin-right: -32px;">
@@ -17,8 +17,6 @@
       </mat-card-header>
     </mat-card>
   </div>
-
-
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>

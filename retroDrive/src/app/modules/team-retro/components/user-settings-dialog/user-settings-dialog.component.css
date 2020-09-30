@@ -51,7 +51,7 @@
 
 
   .user-settings-header-image-backgroundImage3 {
-    background: url('../../../../../assets/idea1.jpg');
+    background: url('../../../../../assets/clark-van-der-beken-IQeBZm8F-M4-unsplash.jpg');
     background-size: cover;
     width: 230px;
     height: 150px;
@@ -66,6 +66,46 @@
 
   .nav-user-settings-card:hover .user-settings-header-image-backgroundImage3,
   .nav-user-settings-card:focus .user-settings-header-image-backgroundImage3 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  .user-settings-header-image-backgroundImage4 {
+    background: url('../../../../../assets/stock-photo-gray-empty-room-studio-gradient-used-for-background-and-display-your-product-662267227.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage4,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage4 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  .user-settings-header-image-backgroundImage5 {
+    background: url('../../../../../assets/stock-vector-floral-seamless-pattern-green-black-and-white-split-leaf-philodendron-plant-with-vines-on-white-1082605778.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage5,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage5 {
     transform: scale(1.05);
     opacity:0.9;
   }

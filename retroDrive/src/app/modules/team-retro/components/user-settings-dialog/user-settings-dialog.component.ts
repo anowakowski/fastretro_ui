@@ -29,7 +29,9 @@ export class UserSettingsDialogComponent implements OnInit {
     this.backgroundImages = [
       {name: 'backgroundImage1', isChosen: false, id: 1, photoUrl: null},
       {name: 'backgroundImage2', isChosen: false, id: 2, photoUrl: null},
-      {name: 'backgroundImage3', isChosen: false, id: 3, photoUrl: null}
+      {name: 'backgroundImage3', isChosen: false, id: 3, photoUrl: null},
+      {name: 'backgroundImage4', isChosen: false, id: 3, photoUrl: null},
+      {name: 'backgroundImage5', isChosen: false, id: 3, photoUrl: null}
     ];
   }
 
