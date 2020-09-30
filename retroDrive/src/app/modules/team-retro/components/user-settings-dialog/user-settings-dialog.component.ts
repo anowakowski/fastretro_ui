@@ -4,6 +4,7 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
+import { BackgroundImage } from 'src/app/models/backgroundImage';
 
 @Component({
   selector: 'app-user-settings-dialog',
@@ -14,8 +15,8 @@ export class UserSettingsDialogComponent implements OnInit {
 
   currentUser: User;
 
-  avatars: Array<Avatar>;
-  chosenAvatar: Avatar;
+  backgroundImages: Array<BackgroundImage>;
+  chosenBackgroundImage: BackgroundImage;
 
   constructor(
     public dialogRef: MatDialogRef<UserSettingsDialogComponent>,
@@ -25,42 +26,42 @@ export class UserSettingsDialogComponent implements OnInit {
   ngOnInit() {
     this.currentUser = this.data.currentUser;
 
-    this.avatars = [
-      {avatarName: 'avatar1', isChosen: false, id: 1, photoUrl: null, isSocialMediaAvatar: false},
-      {avatarName: 'avatar2', isChosen: false, id: 2, photoUrl: null, isSocialMediaAvatar: false},
-      {avatarName: 'avatar3', isChosen: false, id: 3, photoUrl: null, isSocialMediaAvatar: false}
+    this.backgroundImages = [
+      {name: 'avatar1', isChosen: false, id: 1, photoUrl: null},
+      {name: 'avatar2', isChosen: false, id: 2, photoUrl: null},
+      {name: 'avatar3', isChosen: false, id: 3, photoUrl: null}
     ];
   }
 
-  onSelectAvatar(currentAvatar: Avatar) {
+  onSelectBackgroundImage(currentBackgroundImage: BackgroundImage) {
 
-    const findedChosenAvatar = this.avatars.find(avat => avat.isChosen);
+    const findedChosenAvatar = this.backgroundImages.find(avat => avat.isChosen);
     if (findedChosenAvatar !== undefined) {
       findedChosenAvatar.isChosen = false;
       this.updateAvatarWhenSelected(findedChosenAvatar);
     }
 
 
-    currentAvatar.isChosen = true;
-    this.updateAvatarWhenSelected(currentAvatar);
+    currentBackgroundImage.isChosen = true;
+    this.updateAvatarWhenSelected(currentBackgroundImage);
     this.setChosenAvatar();
   }
 
-  private updateAvatarWhenSelected(avatar: Avatar) {
-    const index = this.getArrayIndex(avatar);
-    this.updaAvatar(index, avatar);
+  private updateAvatarWhenSelected(backgroundImage: BackgroundImage) {
+    const index = this.getArrayIndex(backgroundImage);
+    this.updateBackgroundImage(index, backgroundImage);
   }
 
-  private updaAvatar(index: number, avatarToUpdate: Avatar) {
-    this.avatars[index] = avatarToUpdate;
+  private updateBackgroundImage(index: number, backgroundImageToUpdate: BackgroundImage) {
+    this.backgroundImages[index] = backgroundImageToUpdate;
   }
 
-  private getArrayIndex(findedAvatar: Avatar) {
-    return this.avatars.indexOf(findedAvatar);
+  private getArrayIndex(findedBackgroundImage: BackgroundImage) {
+    return this.backgroundImages.indexOf(findedBackgroundImage);
   }
 
   setChosenAvatar() {
-    this.chosenAvatar = this.avatars.find(avatar => avatar.isChosen);
+    this.chosenBackgroundImage = this.backgroundImages.find(avatar => avatar.isChosen);
   }
 
   onNoClick(): void {
