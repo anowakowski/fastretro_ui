@@ -27,9 +27,9 @@ export class UserSettingsDialogComponent implements OnInit {
     this.currentUser = this.data.currentUser;
 
     this.backgroundImages = [
-      {name: 'avatar1', isChosen: false, id: 1, photoUrl: null},
-      {name: 'avatar2', isChosen: false, id: 2, photoUrl: null},
-      {name: 'avatar3', isChosen: false, id: 3, photoUrl: null}
+      {name: 'backgroundImage1', isChosen: false, id: 1, photoUrl: null},
+      {name: 'backgroundImage2', isChosen: false, id: 2, photoUrl: null},
+      {name: 'backgroundImage3', isChosen: false, id: 3, photoUrl: null}
     ];
   }
 
@@ -44,7 +44,7 @@ export class UserSettingsDialogComponent implements OnInit {
 
     currentBackgroundImage.isChosen = true;
     this.updateAvatarWhenSelected(currentBackgroundImage);
-    this.setChosenAvatar();
+    this.setChosenBackgroundImage();
   }
 
   private updateAvatarWhenSelected(backgroundImage: BackgroundImage) {
@@ -60,7 +60,7 @@ export class UserSettingsDialogComponent implements OnInit {
     return this.backgroundImages.indexOf(findedBackgroundImage);
   }
 
-  setChosenAvatar() {
+  setChosenBackgroundImage() {
     this.chosenBackgroundImage = this.backgroundImages.find(avatar => avatar.isChosen);
   }
 

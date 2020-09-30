@@ -8,7 +8,7 @@
   justify-content: start;
 }
 
-  .user-settings-header-image-avatar1 {
+  .user-settings-header-image-backgroundImage1 {
     background: url('../../../../../assets/idea2.jpeg');
     background-size: cover;
     width: 230px;
@@ -22,14 +22,14 @@
     border: 0;
   }
 
-  .nav-user-settings-card:hover .user-settings-header-image-avatar1,
-  .nav-user-settings-card:focus .user-settings-header-image-avatar1 {
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage1,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage1 {
     transform: scale(1.05);
     opacity:0.9;
   }
 
   
-  .user-settings-header-image-avatar2 {
+  .user-settings-header-image-backgroundImage2 {
     background: url('../../../../../assets/geometric1.jpg');
     background-size: cover;
     width: 230px;
@@ -43,14 +43,14 @@
     border: 0;
   }
 
-  .nav-user-settings-card:hover .user-settings-header-image-avatar2,
-  .nav-user-settings-card:focus .user-settings-header-image-avatar2 {
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage2,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage2 {
     transform: scale(1.05);
     opacity:0.9;
   }
 
 
-  .user-settings-header-image-avatar3 {
+  .user-settings-header-image-backgroundImage3 {
     background: url('../../../../../assets/idea1.jpg');
     background-size: cover;
     width: 230px;
@@ -64,8 +64,8 @@
     border: 0;
   }
 
-  .nav-user-settings-card:hover .user-settings-header-image-avatar3,
-  .nav-user-settings-card:focus .user-settings-header-image-avatar3 {
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage3,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage3 {
     transform: scale(1.05);
     opacity:0.9;
   }
