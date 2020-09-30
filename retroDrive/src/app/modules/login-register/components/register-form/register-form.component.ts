@@ -7,6 +7,8 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { FbTokenService } from 'src/app/services/fb-token.service';
 import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snackbar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserSettings } from 'src/app/models/UserSettings';
 
 @Component({
   selector: 'app-register-form',
@@ -26,7 +28,8 @@ export class RegisterFormComponent implements OnInit {
     private fls: FirestoreLoginRegisterService,
     private formBuilder: FormBuilder,
     private fbTokenService: FbTokenService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
   ngOnInit() {
     this.createNewEmailPassRegisterForm();
@@ -49,6 +52,7 @@ export class RegisterFormComponent implements OnInit {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
               this.fls.updateUsr(logedUserModel);
+              this.setNewUserSettings(logedUserModel);
             }
           }).finally(() => {
             this.router.navigate(['/']);
@@ -78,6 +82,7 @@ export class RegisterFormComponent implements OnInit {
             if (snapshotFindedUsr.docs.length === 0) {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fls.updateUsr(logedUserModel);
+              this.setNewUserSettings(logedUserModel);
             }
           })
           .finally(() => {
@@ -98,6 +103,7 @@ export class RegisterFormComponent implements OnInit {
             if (snapshotFindedUsr.docs.length === 0) {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fls.updateUsr(logedUserModel);
+              this.setNewUserSettings(logedUserModel);
             }
           })
           .finally(() => {
@@ -106,6 +112,15 @@ export class RegisterFormComponent implements OnInit {
     }).catch(error => {
       const errorForm = error;
     });
+  }
+
+  private setNewUserSettings(logedUserModel: User) {
+    const userSettings: UserSettings = {
+      userFirebaseDocId: logedUserModel.uid,
+      chosenImageBackgroundName: 'backgroundImage2'
+    };
+
+    this.currentUserInRetroBoardApiService.setUserSettings(userSettings);
   }
 
   private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
