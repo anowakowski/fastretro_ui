@@ -5,6 +5,8 @@ import { FirestoreRetroBoardService } from '../../services/firestore-retro-board
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
 import { BackgroundImage } from 'src/app/models/backgroundImage';
+import { UserSettings } from 'src/app/models/UserSettings';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 
 @Component({
   selector: 'app-user-settings-dialog',
@@ -21,7 +23,8 @@ export class UserSettingsDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<UserSettingsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private firestoreService: FirestoreRetroBoardService) {}
+    private firestoreService: FirestoreRetroBoardService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) {}
 
   ngOnInit() {
     this.currentUser = this.data.currentUser;
@@ -50,8 +53,9 @@ export class UserSettingsDialogComponent implements OnInit {
 
   onSaveSettings() {
     const chosenBackgroundName = this.backgroundImages.find(bi => bi.isChosen).name;
-    const userSettings = {
-      chosenBackgroundName
+    const userSettings: UserSettings = {
+      userFirebaseDocId: this.data.currentUser.uid,
+      chosenImageBackgroundName: chosenBackgroundName
     };
   }
 
