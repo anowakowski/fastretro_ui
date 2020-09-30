@@ -130,7 +130,9 @@ export class NavComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
   }
 
   private subscribeUserNotification() {

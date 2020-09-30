@@ -27,6 +27,8 @@ constructor() { }
   private setAllRetroBoardAsDefaultSectionEmiter: EventEmitter<string> = new EventEmitter();
   private setRefreshNotificationEmiter: EventEmitter<void> = new EventEmitter();
 
+  private refreshAfterUserSettingsWasChangedEmiter = new EventEmitter<void>();
+
   emitStopRetroInProgressProcessEmiter(shouldStopRetroProcess) {
     this.stopRetroInProgressProcessEmiter.emit(shouldStopRetroProcess);
   }
@@ -147,13 +149,20 @@ constructor() { }
     return this.setAllRetroBoardAsDefaultSectionEmiter;
   }
 
-
   emitSetRefreshNotificationEmiter() {
     this.setRefreshNotificationEmiter.emit();
   }
 
   getsetRefreshNotificationEmiter() {
     return this.setRefreshNotificationEmiter;
+  }
+
+  emitRefreshAfterUserSettingsWasChangedEmiter() {
+    this.refreshAfterUserSettingsWasChangedEmiter.emit();
+  }
+
+  getRefreshAfterUserSettingsWasChangedEmiter() {
+    return this.refreshAfterUserSettingsWasChangedEmiter;
   }
 }
 
