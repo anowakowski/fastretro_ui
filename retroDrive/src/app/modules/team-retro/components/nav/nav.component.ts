@@ -131,6 +131,7 @@ export class NavComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      location.reload();
     });
   }
 

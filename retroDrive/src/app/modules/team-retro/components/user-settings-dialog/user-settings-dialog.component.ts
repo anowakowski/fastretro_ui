@@ -63,7 +63,8 @@ export class UserSettingsDialogComponent implements OnInit {
       userFirebaseDocId: this.data.currentUser.uid,
       chosenImageBackgroundName: chosenBackgroundName
     };
-    this.currentUserInRetroBoardApiService.updateUserSettings(userSettings);
+    this.currentUserInRetroBoardApiService.updateUserSettings(userSettings)
+      .then(() => location.reload());
   }
 
   private updateAvatarWhenSelected(backgroundImage: BackgroundImage) {
