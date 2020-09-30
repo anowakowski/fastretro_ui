@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 
 import { User } from 'src/app/models/user';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-user-settings-dialog',
@@ -12,6 +13,8 @@ import { User } from 'src/app/models/user';
 export class UserSettingsDialogComponent implements OnInit {
 
   currentUser: User;
+  
+  avatars: Array<Avatar>;
 
   constructor(
     public dialogRef: MatDialogRef<UserSettingsDialogComponent>,
@@ -20,6 +23,12 @@ export class UserSettingsDialogComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.data.currentUser;
+
+    this.avatars = [
+      {avatarName: 'avatar1', isChosen: false, id: 1, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar2', isChosen: false, id: 2, photoUrl: null, isSocialMediaAvatar: false},
+      {avatarName: 'avatar3', isChosen: false, id: 3, photoUrl: null, isSocialMediaAvatar: false}
+    ];
   }
 
   onNoClick(): void {

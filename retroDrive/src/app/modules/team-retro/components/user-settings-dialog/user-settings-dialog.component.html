@@ -1,9 +1,21 @@
-<h1 mat-dialog-title>Workspace settings</h1>
-
+<h1 mat-dialog-title>User settings</h1>
 <div mat-dialog-content>
-
-
-
+  <h3>Change background image</h3>
+  <mat-divider></mat-divider>
+  <div class="container">
+    <mat-card style="margin-right: 20px;" class="sidenav-userprofile-card" [ngClass]="{'avatar-card-view': avatar.isChosen === false,
+                  'avatar-card-view-chosen': avatar.isChosen === true}" *ngFor="let avatar of avatars">
+      <mat-card-header>
+        <div *ngIf="avatar.avatarName && !avatar.isSocialMediaAvatar" mat-card-avatar
+          [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image-{{avatar.avatarName}}">
+        </div>
+        <div *ngIf="avatar.avatarName && avatar.photoUrl && avatar.isSocialMediaAvatar" mat-card-avatar
+          [ngStyle]="{ 'background-image': 'url(' + avatar.photoUrl + ')' }"
+          [ngClass]="{'userprofile-card-chosen': avatar.isChosen}" class="sidnav-userprofile-header-image">
+        </div>            
+      </mat-card-header>
+    </mat-card>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
