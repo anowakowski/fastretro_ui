@@ -43,10 +43,16 @@ export class UserSettingsDialogComponent implements OnInit {
       this.updateAvatarWhenSelected(findedChosenAvatar);
     }
 
-
     currentBackgroundImage.isChosen = true;
     this.updateAvatarWhenSelected(currentBackgroundImage);
     this.setChosenBackgroundImage();
+  }
+
+  onSaveSettings() {
+    const chosenBackgroundName = this.backgroundImages.find(bi => bi.isChosen).name;
+    const userSettings = {
+      chosenBackgroundName
+    };
   }
 
   private updateAvatarWhenSelected(backgroundImage: BackgroundImage) {
