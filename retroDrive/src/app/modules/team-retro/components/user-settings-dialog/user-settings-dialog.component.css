@@ -70,7 +70,6 @@
     opacity:0.9;
   }
 
-
   .userprofile-card-chosen {
     transform: scale(1.05);
     opacity:0.9;
@@ -85,13 +84,13 @@
       margin: 0 0px !important;
   }
 
-  .avatar-card-view {
+  .backgroundImage-card-view {
 
     border: solid 1.5px;
     border-color: #2567b3;
   }
 
-  .avatar-card-view-chosen {
+  .backgroundImage-card-view-chosen {
 
     border: solid 1.9px;
     border-color: #49cc3b;
