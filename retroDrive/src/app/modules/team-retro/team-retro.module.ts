@@ -42,6 +42,7 @@ import { ViewAllNotificationsComponent } from './components/view-all-notificatio
 import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-workspace-bottomsheet/create-new-workspace-bottomsheet.component';
 import { SettingsWorkspaceDialogComponent } from './components/settings-workspace-dialog/settings-workspace-dialog.component';
 import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-team-dialog.component';
+import { UserSettingsDialogComponent } from './components/user-settings-dialog/user-settings-dialog.component';
 
 @NgModule({
   imports: [
@@ -79,7 +80,8 @@ import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-t
     ViewAllNotificationsComponent,
     CreateNewWorkspaceBottomsheetComponent,
     SettingsWorkspaceDialogComponent,
-    LeaveTeamDialogComponent
+    LeaveTeamDialogComponent,
+    UserSettingsDialogComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,
@@ -92,7 +94,8 @@ import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-t
     UserNotificationDetailsDialogComponent,
     CreateNewWorkspaceBottomsheetComponent,
     SettingsWorkspaceDialogComponent,
-    LeaveTeamDialogComponent
+    LeaveTeamDialogComponent,
+    UserSettingsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
