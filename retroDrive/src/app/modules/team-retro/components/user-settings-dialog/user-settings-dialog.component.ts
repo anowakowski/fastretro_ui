@@ -27,8 +27,6 @@ export class UserSettingsDialogComponent implements OnInit {
     private currentUserInRetroBoardApiService: CurrentUserApiService) {}
 
   ngOnInit() {
-    this.currentUser = this.data.currentUser;
-
     this.backgroundImages = [
       {name: 'backgroundImage1', isChosen: false, id: 1, photoUrl: null},
       {name: 'backgroundImage2', isChosen: false, id: 2, photoUrl: null},
@@ -36,6 +34,14 @@ export class UserSettingsDialogComponent implements OnInit {
       {name: 'backgroundImage4', isChosen: false, id: 3, photoUrl: null},
       {name: 'backgroundImage5', isChosen: false, id: 3, photoUrl: null}
     ];
+    this.currentUser = this.data.currentUser;
+    this.currentUserInRetroBoardApiService.getUserSettings(this.currentUser.uid)
+      .then(response => {
+        const userSettingsFromApi = response;
+        this.chosenBackgroundImage = this.backgroundImages.find(avatar => avatar.name === userSettingsFromApi.chosenImageBackgroundName);
+        this.chosenBackgroundImage.isChosen = true;
+        this.updateAvatarWhenSelected(this.chosenBackgroundImage);
+      });
   }
 
   onSelectBackgroundImage(currentBackgroundImage: BackgroundImage) {
