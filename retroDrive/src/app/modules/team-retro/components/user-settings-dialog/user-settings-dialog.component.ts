@@ -13,7 +13,7 @@ import { Avatar } from 'src/app/models/avatar';
 export class UserSettingsDialogComponent implements OnInit {
 
   currentUser: User;
-  
+
   avatars: Array<Avatar>;
   chosenAvatar: Avatar;
 

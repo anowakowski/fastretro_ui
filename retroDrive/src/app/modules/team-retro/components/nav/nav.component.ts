@@ -75,7 +75,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
     const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
-      width: '800px',
+      width: '600px',
       data: {
         userNotificationWorkspaceWithRequiredAccess: userNotification,
         currentUser: this.currentUser
@@ -124,7 +124,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   private openUserSettingsDialogComponentDialog() {
     const dialogRef = this.dialog.open(UserSettingsDialogComponent, {
-      width: '600px',
+      width: '1200px',
       data: {
         currentUser: this.currentUser
       }
