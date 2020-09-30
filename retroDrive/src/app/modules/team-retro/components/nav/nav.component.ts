@@ -14,6 +14,7 @@ import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
+import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
 
 @Component({
   selector: 'app-nav',
@@ -115,6 +116,22 @@ export class NavComponent implements OnInit, OnDestroy {
   goToViewAllNotifications() {
     this.eventsService.emitSetAllNotificationViewAsDefaultSectionEmiter();
     this.router.navigate(['/retro/all-your-notifications']);
+  }
+
+  onUserSettings() {
+    this.openUserSettingsDialogComponentDialog();
+  }
+
+  private openUserSettingsDialogComponentDialog() {
+    const dialogRef = this.dialog.open(UserSettingsDialogComponent, {
+      width: '600px',
+      data: {
+        currentUser: this.currentUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
   private subscribeUserNotification() {
