@@ -64,7 +64,11 @@ export class UserSettingsDialogComponent implements OnInit {
       chosenImageBackgroundName: chosenBackgroundName
     };
     this.currentUserInRetroBoardApiService.updateUserSettings(userSettings)
-      .then(() => this.dialogRef.close());
+      .then(() => {
+        this.dialogRef.close({
+          shouldRefreshUserSettings: true
+        });
+      });
   }
 
   private updateAvatarWhenSelected(backgroundImage: BackgroundImage) {
