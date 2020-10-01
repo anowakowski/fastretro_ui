@@ -24,7 +24,7 @@
   min-height: 0;
 
   .board-bar {
-      background: rgba(63, 81, 181, 0.45);
+      background: rgb(63 81 181 / 58%);
       padding: 8px 15px;
   
       .board-name {
@@ -32,7 +32,7 @@
           margin-left: 18px;
           font-size: 20px;
           font-weight: bold;
-          color: #363c42;
+          color: #dadada;
       }
   }
 
@@ -57,7 +57,7 @@
 
               border-radius: 4px;
 
-              background: rgba(63, 81, 181, 0.41);
+              background: rgb(63 81 181 / 65%);
 
               &:not(:first-child) {
                   margin-left: 0;
@@ -69,7 +69,7 @@
                   font-family: 'Lato', sans-serif;
                   text-transform: uppercase;
                   margin-bottom: 20px;
-                  color: #363c42;
+                  color: #dadada;
               }
           }
       }
@@ -114,11 +114,11 @@
 }
 
 .retro-board-card-new-item-went-well {
-  border-color: #3ab73dbf;
+  border-color: #2db500ba;
 }
 
 .retro-board-card-new-item-to-improve {
-  border-color: #f44235d5;
+  border-color: #ff2c22c2;
 }
 
 .retro-board-card-chosen-for-merge {

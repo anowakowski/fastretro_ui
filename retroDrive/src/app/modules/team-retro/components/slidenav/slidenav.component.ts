@@ -7,6 +7,7 @@ import { UserWorkspace } from 'src/app/models/userWorkspace';
 import { Router } from '@angular/router';
 import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserSettings } from 'src/app/models/UserSettings';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
@@ -56,10 +57,12 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   setNoMoreHigherForBackgroundSubscription: any;
   setAllRetroBoardsListSubscription: any;
   setAllNotificationSectionSubscription: any;
+  shouldRefreshUserSettingsSubscription: any;
 
   shouldCloseSlidenav = false;
   shouldShowMoreHigherOnAllRetroBoardList = false;
   shouldShowNotificationSection: boolean;
+  userSettings: UserSettings;
 
   constructor(
     public auth: AuthService,
@@ -87,12 +90,15 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setCurrentSectionByRoute();
     this.subscribeEvents();
     this.getUserNotificationToCheckIfAnyExists();
+
+    this.getUserSettings();
   }
 
   ngOnDestroy() {
     this.setNewTeamsSubscription.unsubscribe();
     this.setRetroProcessSubscription.unsubscribe();
     this.goOutFromAllRetroBoardSubscription.unsubscribe();
+    this.shouldRefreshUserSettingsSubscription.unsubscribe();
   }
 
   isScreenSmall(): boolean {
@@ -154,6 +160,24 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       .catch(error => {
         const err = error;
       });
+  }
+
+  private getUserSettingsFromApi() {
+    this.currentUserInRetroBoardApiService.getUserSettings(this.currentUser.uid)
+      .then(response => {
+        this.userSettings = response;
+      });
+  }
+
+  private getUserSettings() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserSettingsFromApi();
+      });
+    } else {
+      this.getUserSettingsFromApi();
+    }
   }
 
   private setBasicColor() {
@@ -218,5 +242,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       .subscribe(() => this.setBtnColor(All_RETROBOARDS_LIST_SECTION));
     this.setAllNotificationSectionSubscription = this.eventService.getSetAllNotificationViewAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(ALL_NOTIFICATIONS_SECTION));
+    this.shouldRefreshUserSettingsSubscription = this.eventService.getRefreshAfterUserSettingsWasChangedEmiter()
+      .subscribe(() => this.getUserSettings());
   }
 }

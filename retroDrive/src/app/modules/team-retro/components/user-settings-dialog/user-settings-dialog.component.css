@@ -1,0 +1,138 @@
+.container {
+    display: flex; /* or inline-flex */
+    justify-content: center;
+}
+
+.container-flex-summary-step {
+  display: flex; /* or inline-flex */
+  justify-content: start;
+}
+
+  .user-settings-header-image-backgroundImage1 {
+    background: url('../../../../../assets/idea2.jpeg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage1,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage1 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  
+  .user-settings-header-image-backgroundImage2 {
+    background: url('../../../../../assets/geometric1.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage2,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage2 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+
+  .user-settings-header-image-backgroundImage3 {
+    background: url('../../../../../assets/clark-van-der-beken-IQeBZm8F-M4-unsplash.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage3,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage3 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  .user-settings-header-image-backgroundImage4 {
+    background: url('../../../../../assets/blackBackground.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage4,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage4 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  .user-settings-header-image-backgroundImage5 {
+    background: url('../../../../../assets/texture1.jpg');
+    background-size: cover;
+    width: 230px;
+    height: 150px;
+    border-radius: 3%;
+
+    transition:all 0.3s ease-in-out;
+    opacity:1;
+
+    outline: none;
+    border: 0;
+  }
+
+  .nav-user-settings-card:hover .user-settings-header-image-backgroundImage5,
+  .nav-user-settings-card:focus .user-settings-header-image-backgroundImage5 {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  .userprofile-card-chosen {
+    transform: scale(1.05);
+    opacity:0.9;
+  }
+
+  ::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+  }
+
+
+  .mat-card-header-text {
+      margin: 0 0px !important;
+  }
+
+  .backgroundImage-card-view {
+
+    border: solid 1.5px;
+    border-color: #85b0e2;
+  }
+
+  .backgroundImage-card-view-chosen {
+
+    border: solid 2px;
+    border-color: #49cc3b;
+  }
+ 

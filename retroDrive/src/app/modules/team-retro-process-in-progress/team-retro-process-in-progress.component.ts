@@ -9,6 +9,9 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { Workspace } from 'src/app/models/workspace';
 import { User } from 'firebase';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserSettings } from 'src/app/models/UserSettings';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-team-retro-process-in-progress',
@@ -21,6 +24,8 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
   shouldShowContent = false;
   private spinnerTickSubscription: any;
   private userSubscritpion: any;
+  userSettings: UserSettings;
+  shouldRefreshUserSettingsSubscription: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,21 +33,26 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     private spinnerTickService: SpinnerTickService,
     private authService: AuthService,
     private localStorageService: LocalStorageService,
-    private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService) { }
+    private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private eventService: EventsService,) { }
 
   ngOnInit() {
     this.spinnerTick();
     this.setupCurrentUserWithUserWorkspace();
+    this.subscribeShouldRefreshUserSettings();
   }
 
   ngOnDestroy(): void {
     this.unsubscribeTickService();
+    this.shouldRefreshUserSettingsSubscription.unsubscribe();
   }
 
   private setupCurrentUserWithUserWorkspace() {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setEncryptedItem(this.localStorageService.currentUserKey, currentUser);
       this.prepareUserWorkspace(currentUser);
+      this.getUserSettings(currentUser);
     });
   }
 
@@ -94,5 +104,35 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
         this.unsubscribeTickService();
       }
     });
+  }
+
+  private getUserSettingsFromApi(currentUser) {
+    this.currentUserInRetroBoardApiService.getUserSettings(currentUser.uid)
+      .then(response => {
+        this.userSettings = response;
+      });
+  }
+
+  private getUserSettings(currentUser) {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserSettingsFromApi(currentUser);
+      });
+    } else {
+      this.getUserSettingsFromApi(currentUser);
+    }
+  }
+
+  private getCurrentUserFromLocalStorage(): User {
+    return this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey) as User;
+  }
+
+  private subscribeShouldRefreshUserSettings() {
+    this.shouldRefreshUserSettingsSubscription = this.eventService.getRefreshAfterUserSettingsWasChangedEmiter()
+      .subscribe(() => {
+        const currentUser = this.getCurrentUserFromLocalStorage();
+        this.getUserSettings(currentUser);
+      });
   }
 }

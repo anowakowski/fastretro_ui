@@ -92,7 +92,9 @@ export class AllRetroboardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.retroBoardSubscriptions.unsubscribe();
+    if (this.retroBoardSubscriptions !== undefined) {
+      this.retroBoardSubscriptions.unsubscribe();
+    }
   }
 
   onRetroDetails(retroBoard: RetroBoardToSave) {

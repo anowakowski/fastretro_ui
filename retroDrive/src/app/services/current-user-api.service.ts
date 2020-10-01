@@ -18,6 +18,7 @@ import { RetroBoardCardApi } from '../models/retroBoardCardApi';
 import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 import { RetroBoardActionCardApiGet } from '../models/retroBoardActionCardApiGet';
 import { UsersInTeamsToRemoveInApi } from '../models/usersInTeamsToRemoveInApi';
+import { UserSettings } from '../models/UserSettings';
 
 @Injectable({
   providedIn: 'root'
@@ -211,6 +212,18 @@ export class CurrentUserApiService {
     return this.httpClient.get<RetroBoardActionCardApiGet[]>(url, httpOptions).toPromise();
   }
 
+  getUserSettings(userFirebaseDocId: string) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+
+    const httpOptions = {
+      headers
+    };
+
+    const url = this.baseUrl + '/getUserSettings/' + userFirebaseDocId;
+    return this.httpClient.get<UserSettings>(url, httpOptions).toPromise();
+  }
+
   prepareFreshListOfCurrentUsersInRetroBoard(currentRetroBoardId: string, currentUserId: string) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
 
@@ -355,6 +368,28 @@ export class CurrentUserApiService {
       };
 
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setUserSettings(userSettings: UserSettings) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserSettings/';
+
+      return this.httpClient.post(url, userSettings, httpOptions).toPromise();
+  }
+
+  updateUserSettings(userSettings: UserSettings) {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/updateUserSettings/';
+
+    return this.httpClient.post(url, userSettings, httpOptions).toPromise();
   }
 
   removeRetroBoardCardAction(retroBoardActionCardApiDocId: number, retroBoardActionCardFirebaseDocId: string) {
