@@ -11,6 +11,7 @@ import { User } from 'firebase';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserSettings } from 'src/app/models/UserSettings';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-team-retro-process-in-progress',
@@ -24,6 +25,7 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
   private spinnerTickSubscription: any;
   private userSubscritpion: any;
   userSettings: UserSettings;
+  shouldRefreshUserSettingsSubscription: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,15 +34,18 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private localStorageService: LocalStorageService,
     private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private eventService: EventsService,) { }
 
   ngOnInit() {
     this.spinnerTick();
     this.setupCurrentUserWithUserWorkspace();
+    this.subscribeShouldRefreshUserSettings();
   }
 
   ngOnDestroy(): void {
     this.unsubscribeTickService();
+    this.shouldRefreshUserSettingsSubscription.unsubscribe();
   }
 
   private setupCurrentUserWithUserWorkspace() {
@@ -117,5 +122,17 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     } else {
       this.getUserSettingsFromApi(currentUser);
     }
+  }
+
+  private getCurrentUserFromLocalStorage(): User {
+    return this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey) as User;
+  }
+
+  private subscribeShouldRefreshUserSettings() {
+    this.shouldRefreshUserSettingsSubscription = this.eventService.getRefreshAfterUserSettingsWasChangedEmiter()
+      .subscribe(() => {
+        const currentUser = this.getCurrentUserFromLocalStorage();
+        this.getUserSettings(currentUser);
+      });
   }
 }
