@@ -56,7 +56,6 @@ export class RegisterFormComponent implements OnInit {
           })
           .finally(() => {
             this.router.navigate(['/']);
-            // this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
           });
       })
       .catch(error => {
@@ -86,7 +85,7 @@ export class RegisterFormComponent implements OnInit {
             }
           })
           .finally(() => {
-            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
+            this.router.navigate(['/']);
           });
     }).catch(error => {
       const errorForm = error;
@@ -106,21 +105,11 @@ export class RegisterFormComponent implements OnInit {
             }
           })
           .finally(() => {
-            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
+            this.router.navigate(['/']);
           });
     }).catch(error => {
       const errorForm = error;
     });
-  }
-
-  private setUserData(userDocId: string) {
-    const userSettings: UserSettings = {
-      userFirebaseDocId: userDocId,
-      chosenImageBackgroundName: 'backgroundImage2'
-    };
-
-    return this.currentUserInRetroBoardApiService.setUserSettings(userSettings)
-
   }
 
   private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
