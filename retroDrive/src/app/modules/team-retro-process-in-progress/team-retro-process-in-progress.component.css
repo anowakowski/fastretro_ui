@@ -36,7 +36,7 @@
 }
 
 .background-retro-process-backgroundImage4 {
-  background-image: url('../../../assets/geometric2.jpg');
+  background: url("../../../assets/blackBackground.jpg"); 
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
