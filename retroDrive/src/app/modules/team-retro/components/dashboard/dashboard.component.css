@@ -49,4 +49,13 @@
     border: solid 1.5px;
     border-color: #2567b3;
   }
+
+  .teams-retro-background-img  {
+    background: url("../../../../../assets/idea2.jpeg"); 
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;  
+    margin-bottom: -65px;
+  }
  

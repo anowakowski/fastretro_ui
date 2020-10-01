@@ -21,6 +21,7 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { Workspace } from 'src/app/models/workspace';
+import { UserSettings } from 'src/app/models/UserSettings';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -415,7 +416,28 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
       workspaces: [workspacesToAddToUserWorkspace]
     };
     this.firestoreRbService.addNewUserWorkspace(userWorkspace);
-    location.reload();
+    this.setUserSettings()
+      .then(() => location.reload());
+  }
+
+  private setUserSettingsToApi() {
+    const userSettings: UserSettings = {
+      userFirebaseDocId: this.currentUser.uid,
+      chosenImageBackgroundName: 'backgroundImage2'
+    };
+
+    return this.currentUserInRetroBoardApiService.setUserSettings(userSettings);
+  }
+
+  private setUserSettings() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        return this.setUserSettingsToApi();
+      });
+    } else {
+      return this.setUserSettingsToApi();
+    }
   }
 
   private updateFindedUser(findedUsr: User, chosenAvatar: Avatar, displayName: any) {
