@@ -167,12 +167,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.firestoreRBServices.findUserTeams(this.currentUser.uid)
           .then(userTeamsSnapshot => {
             if (!userTeamsSnapshot.empty) {
-
               const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
               this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
+            } else {
+              this.dataIsLoading = false;
             }
           });
-
       });
     } else {
       this.firestoreRBServices.findUserTeams(this.currentUser.uid)
@@ -180,6 +180,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!userTeamsSnapshot.empty) {
           const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
           this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
+        } else {
+          this.dataIsLoading = false;
         }
       });
     }
