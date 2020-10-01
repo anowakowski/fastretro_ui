@@ -8,7 +8,7 @@ type = "line-scale-pulse-out"
 >
 </ngx-spinner>
 
-<div *ngIf="shouldShowContent" class="background-retro-process">
+<div *ngIf="shouldShowContent" class="background-retro-process-{{userSettings?.chosenImageBackgroundName}}">
     <app-content-drop-drag></app-content-drop-drag>
 </div>
 

@@ -9,6 +9,8 @@ import { UserWorkspaceData } from 'src/app/models/userWorkspaceData';
 import { Workspace } from 'src/app/models/workspace';
 import { User } from 'firebase';
 import { FiresrtoreRetroProcessInProgressService } from './services/firesrtore-retro-process-in-progress.service';
+import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
+import { UserSettings } from 'src/app/models/UserSettings';
 
 @Component({
   selector: 'app-team-retro-process-in-progress',
@@ -21,6 +23,7 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
   shouldShowContent = false;
   private spinnerTickSubscription: any;
   private userSubscritpion: any;
+  userSettings: UserSettings;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +31,8 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     private spinnerTickService: SpinnerTickService,
     private authService: AuthService,
     private localStorageService: LocalStorageService,
-    private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService) { }
+    private firestoreRetroInProgressService: FiresrtoreRetroProcessInProgressService,
+    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
 
   ngOnInit() {
     this.spinnerTick();
@@ -43,6 +47,7 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
     this.userSubscritpion = this.authService.user$.subscribe(currentUser => {
       this.localStorageService.setEncryptedItem(this.localStorageService.currentUserKey, currentUser);
       this.prepareUserWorkspace(currentUser);
+      this.getUserSettings(currentUser);
     });
   }
 
@@ -94,5 +99,23 @@ export class TeamRetroProcessInProgressComponent implements OnInit, OnDestroy {
         this.unsubscribeTickService();
       }
     });
+  }
+
+  private getUserSettingsFromApi(currentUser) {
+    this.currentUserInRetroBoardApiService.getUserSettings(currentUser.uid)
+      .then(response => {
+        this.userSettings = response;
+      });
+  }
+
+  private getUserSettings(currentUser) {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserSettingsFromApi(currentUser);
+      });
+    } else {
+      this.getUserSettingsFromApi(currentUser);
+    }
   }
 }
