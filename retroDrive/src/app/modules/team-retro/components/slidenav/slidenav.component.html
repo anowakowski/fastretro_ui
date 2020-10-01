@@ -42,6 +42,25 @@
         </div>
       </div>
     </div>
+
+    <!--
+    <div *ngIf="isSectionWithGreyedBackground()" 
+         [ngClass]="{'teams-retro-background-img-all-retroboard-section': isSectionWithGreyedBackground() === true,
+                     'teams-retro-background-img-all-retroboard-section-with-height': shouldShowMoreHigherOnAllRetroBoardList === true}">
+      <div class="app-sidenav-content">
+        <div class="wrapper">
+          <nav aria-label="breadcrumb">
+            <ol [ngClass]="{'breadcrumb-background-color': isSectionWithGreyedBackground() === true}" class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li *ngIf="!currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">{{currentChosenSection}}</li>
+              <li *ngIf="currentUser.isNewUser" class="breadcrumb-item active" aria-current="page">Configuration for new user</li>
+            </ol>
+          </nav>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+    -->
   </mat-drawer-container>
 
 
