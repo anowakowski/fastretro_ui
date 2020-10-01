@@ -91,7 +91,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.subscribeEvents();
     this.getUserNotificationToCheckIfAnyExists();
 
-    this.GetUserSettingsFromApi();
+    this.getUserSettings();
   }
 
   ngOnDestroy() {
@@ -162,11 +162,22 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       });
   }
 
-  private GetUserSettingsFromApi() {
+  private getUserSettingsFromApi() {
     this.currentUserInRetroBoardApiService.getUserSettings(this.currentUser.uid)
       .then(response => {
         this.userSettings = response;
       });
+  }
+
+  private getUserSettings() {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        this.getUserSettingsFromApi();
+      });
+    } else {
+      this.getUserSettingsFromApi();
+    }
   }
 
   private setBasicColor() {
@@ -232,6 +243,6 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setAllNotificationSectionSubscription = this.eventService.getSetAllNotificationViewAsDefaultSectionEmiter()
       .subscribe(() => this.setBtnColor(ALL_NOTIFICATIONS_SECTION));
     this.shouldRefreshUserSettingsSubscription = this.eventService.getRefreshAfterUserSettingsWasChangedEmiter()
-      .subscribe(() => this.GetUserSettingsFromApi());
+      .subscribe(() => this.getUserSettings());
   }
 }
