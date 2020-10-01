@@ -34,3 +34,22 @@
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 }
+
+.background-retro-process-backgroundImage4 {
+  background-image: url('../../../assets/geometric2.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.background-retro-process-backgroundImage5 {
+  background-image: url('../../../assets/texture1.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
