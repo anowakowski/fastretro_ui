@@ -52,8 +52,10 @@ export class RegisterFormComponent implements OnInit {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fbTokenService.prepareToken(userCredentials.user.refreshToken);
               this.fls.updateUsr(logedUserModel);
-              this.setAdditionalUserDataAndNavigateToNextPage(logedUserModel);
             }
+          })
+          .finally(() => {
+            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
           });
       })
       .catch(error => {
@@ -80,8 +82,10 @@ export class RegisterFormComponent implements OnInit {
             if (snapshotFindedUsr.docs.length === 0) {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fls.updateUsr(logedUserModel);
-              this.setAdditionalUserDataAndNavigateToNextPage(logedUserModel);
             }
+          })
+          .finally(() => {
+            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
           });
     }).catch(error => {
       const errorForm = error;
@@ -98,23 +102,24 @@ export class RegisterFormComponent implements OnInit {
             if (snapshotFindedUsr.docs.length === 0) {
               const logedUserModel: User = this.prepareUserModel(logedUser);
               this.fls.updateUsr(logedUserModel);
-              this.setAdditionalUserDataAndNavigateToNextPage(logedUserModel);
             }
+          })
+          .finally(() => {
+            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
           });
     }).catch(error => {
       const errorForm = error;
     });
   }
 
-  private setAdditionalUserDataAndNavigateToNextPage(logedUserModel: User) {
+  private setUserData(userDocId: string) {
     const userSettings: UserSettings = {
-      userFirebaseDocId: logedUserModel.uid,
+      userFirebaseDocId: userDocId,
       chosenImageBackgroundName: 'backgroundImage2'
     };
 
-    this.currentUserInRetroBoardApiService.setUserSettings(userSettings)
-      .then(() => this.router.navigate(['/']))
-      .catch(error => console.log(error));
+    return this.currentUserInRetroBoardApiService.setUserSettings(userSettings)
+
   }
 
   private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
