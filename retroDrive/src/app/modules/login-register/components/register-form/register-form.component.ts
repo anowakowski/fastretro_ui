@@ -28,8 +28,7 @@ export class RegisterFormComponent implements OnInit {
     private fls: FirestoreLoginRegisterService,
     private formBuilder: FormBuilder,
     private fbTokenService: FbTokenService,
-    private snackBar: MatSnackBar,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.createNewEmailPassRegisterForm();
