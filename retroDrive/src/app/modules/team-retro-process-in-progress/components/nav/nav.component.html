@@ -65,7 +65,10 @@
           </span>
         </button>          
       </div>
-    </mat-menu>       
+    </mat-menu>
+    <button mat-icon-button style="margin-left: -7px;" (click)="onUserSettings()">
+      <mat-icon>settings</mat-icon>
+    </button>           
     <span style="margin-left: 20px;">
       <span *ngIf="!shouldChangeRetroDisplayText">Retro in progress...</span>
       <span *ngIf="shouldChangeRetroDisplayText">Retro is finished</span>

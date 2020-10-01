@@ -36,6 +36,7 @@ import { TeamRetroInProgressRetroBoardOptionsDialogComponent } from './component
 import { TeamRetroInProgressShowPreviousActionsDialogComponent } from './components/team-retro-in-progress-show-previous-actions-dialog/team-retro-in-progress-show-previous-actions-dialog.component';
 import { UserNotificationDetailsDialogComponent } from './components/user-notification-details-dialog copy/user-notification-details-dialog.component';
 import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-single-elements-spinner/loadding-single-elements-spinner.component';
+import { UserSettingsDialogComponent } from './components/user-settings-dialog/user-settings-dialog.component';
 
 
 
@@ -68,7 +69,8 @@ import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-si
     TeamRetroInProgressRetroBoardOptionsDialogComponent,
     TeamRetroInProgressShowPreviousActionsDialogComponent,
     UserNotificationDetailsDialogComponent,
-    LoaddingSingleElementsSpinnerComponent
+    LoaddingSingleElementsSpinnerComponent,
+    UserSettingsDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   entryComponents: [
@@ -83,7 +85,8 @@ import { LoaddingSingleElementsSpinnerComponent } from './components/loadding-si
     TeamRetroInProgressShowAllUsersInCurrentRetroDialogComponent,
     TeamRetroInProgressRetroBoardOptionsDialogComponent,
     TeamRetroInProgressShowPreviousActionsDialogComponent,
-    UserNotificationDetailsDialogComponent
+    UserNotificationDetailsDialogComponent,
+    UserSettingsDialogComponent
   ],
   providers: [
     FiresrtoreRetroProcessInProgressService

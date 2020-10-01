@@ -10,6 +10,7 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog copy/user-notification-details-dialog.component';
+import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
 
 @Component({
   selector: 'app-nav',
@@ -38,6 +39,7 @@ export class NavComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private firestoreService: FirestoreRetroBoardService,
     private currentUserInRetroBoardApiService: CurrentUserApiService,
+    private eventsService: EventsService,
     public dialog: MatDialog,
     private router: Router) { }
 
@@ -108,6 +110,25 @@ export class NavComponent implements OnInit, OnDestroy {
   goToViewAllNotifications() {
     this.eventsServices.emitSetAllNotificationViewAsDefaultSectionEmiter();
     this.router.navigate(['/retro/all-your-notifications']);
+  }
+
+  onUserSettings() {
+    this.openUserSettingsDialogComponentDialog();
+  }
+
+  private openUserSettingsDialogComponentDialog() {
+    const dialogRef = this.dialog.open(UserSettingsDialogComponent, {
+      width: '1000px',
+      data: {
+        currentUser: this.currentUser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.shouldRefreshUserSettings) {
+        this.eventsService.emitRefreshAfterUserSettingsWasChangedEmiter();
+      }
+    });
   }
 
   private subscribeUserNotification() {

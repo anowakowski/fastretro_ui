@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>User settings</h1>
+<div mat-dialog-content>
+  <h3 style="margin-bottom: -10px;">
+    Change background image
+    <mat-divider></mat-divider>
+  </h3>
+
+  <div class="container" style="margin-top: 25px; margin-bottom: 25px;">
+    <mat-card style="margin-right: 20px; border-radius: 0;" class="nav-user-settings-card" [ngClass]="{'backgroundImage-card-view': backgroundImage.isChosen === false,
+    'backgroundImage-card-view-chosen': backgroundImage.isChosen === true}" *ngFor="let backgroundImage of backgroundImages">
+      <mat-card-header style="margin-right: -32px;">
+        <div *ngIf="backgroundImage.name" mat-card-avatar
+          [ngClass]="{'userprofile-card-chosen': backgroundImage.isChosen}"
+          class="user-settings-header-image-{{backgroundImage.name}}" 
+          (click)="onSelectBackgroundImage(backgroundImage)">
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+  <div fxFlex></div>
+  <button mat-raised-button type="submit" color="primary" (click)="onSaveSettings()">Save settings &nbsp;<mat-icon>save</mat-icon></button>
+</div>
