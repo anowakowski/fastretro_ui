@@ -124,7 +124,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   private openUserSettingsDialogComponentDialog() {
     const dialogRef = this.dialog.open(UserSettingsDialogComponent, {
-      width: '2000px',
+      width: '1000px',
       data: {
         currentUser: this.currentUser
       }
