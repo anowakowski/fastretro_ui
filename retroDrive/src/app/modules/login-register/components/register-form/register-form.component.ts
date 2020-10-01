@@ -55,7 +55,8 @@ export class RegisterFormComponent implements OnInit {
             }
           })
           .finally(() => {
-            this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
+            this.router.navigate(['/']);
+            // this.setUserData(logedUser.uid).then(() => this.router.navigate(['/']));
           });
       })
       .catch(error => {
