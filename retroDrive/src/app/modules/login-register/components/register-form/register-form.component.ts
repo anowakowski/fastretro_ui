@@ -55,7 +55,7 @@ export class RegisterFormComponent implements OnInit {
               this.setNewUserSettings(logedUserModel);
             }
           }).finally(() => {
-            this.router.navigate(['/']);
+            // this.router.navigate(['/']);
           });
       })
       .catch(error => {
@@ -120,7 +120,10 @@ export class RegisterFormComponent implements OnInit {
       chosenImageBackgroundName: 'backgroundImage2'
     };
 
-    this.currentUserInRetroBoardApiService.setUserSettings(userSettings);
+    this.currentUserInRetroBoardApiService.setUserSettings(userSettings)
+      .then(() => {
+        this.router.navigate(['/']);
+      });
   }
 
   private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
