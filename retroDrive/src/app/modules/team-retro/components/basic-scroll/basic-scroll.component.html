@@ -4,9 +4,14 @@
   </li>
 </cdk-virtual-scroll-viewport> -->
 
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
+
 <ng-container *ngIf="infinite | async as people">
   <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, (people[people.length - 1].name))">
-    <li *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx" class="animated slideInRighht">
+    <li *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx" class="animate__animated animate__slideInRight">
       {{ person.name }}
     </li>
   </cdk-virtual-scroll-viewport>
