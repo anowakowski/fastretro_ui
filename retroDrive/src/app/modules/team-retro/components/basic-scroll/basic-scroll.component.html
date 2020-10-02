@@ -1,0 +1,14 @@
+<!-- <cdk-virtual-scroll-viewport itemSize="100" >
+  <li *cdkVirtualFor="let person of people" class="animated slideInRighht">
+    {{ person }}
+  </li>
+</cdk-virtual-scroll-viewport> -->
+
+<ng-container *ngIf="infinite | async as people">
+  <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, (people[people.length - 1].name))">
+    <li *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx" class="animated slideInRighht">
+      {{ person.name }}
+    </li>
+  </cdk-virtual-scroll-viewport>
+</ng-container>
+

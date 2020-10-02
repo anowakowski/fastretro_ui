@@ -6,6 +6,7 @@ import { TeamsComponent } from './components/teams/teams.component';
 import { RetroProcessComponent } from './components/retro-process/retro-process.component';
 import { AllRetroboardListComponent } from './components/all-retroboard-list/all-retroboard-list.component';
 import { ViewAllNotificationsComponent } from './components/view-all-notifications/view-all-notifications.component';
+import { BasicScrollComponent } from './components/basic-scroll/basic-scroll.component';
 
 
 
@@ -18,7 +19,8 @@ const routes: Routes = [
       {path: 'teams', component: TeamsComponent},
       {path: 'process', component: RetroProcessComponent},
       {path: 'all-retroboard-list', component: AllRetroboardListComponent},
-      {path: 'all-your-notifications', component: ViewAllNotificationsComponent}
+      {path: 'all-your-notifications', component: ViewAllNotificationsComponent},
+      {path: 'basic-scroll', component: BasicScrollComponent}
     ]
   }
 ];
