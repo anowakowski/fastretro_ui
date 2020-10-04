@@ -120,15 +120,15 @@
 </div>    
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<ng-container *ngIf="infinite | async as people">
+<ng-container *ngIf="infinite | async as retroBoards">
   <cdk-virtual-scroll-viewport itemSize="100"
-    (scrolledIndexChange)="nextBatch($event, (people[people.length - 1].name))">
+    (scrolledIndexChange)="nextBatch($event, (retroBoards[retroBoards.length - 1].creationDate))">
 
-    <mat-card *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx"
+    <mat-card *cdkVirtualFor="let retroBoard of retroBoards; let i = index; trackBy: trackByIdx"
       style="opacity: 0.985; margin-bottom: 20px;" class="animate__animated animate__slideInRight">
       <mat-card-header>
         <mat-card-title>
-          #team <b>{{person.name}}</b>
+          #team <b>{{retroBoard.creationDate}}</b>
         </mat-card-title>
         <mat-card-subtitle>
           <span>Retro currently is Open</span>

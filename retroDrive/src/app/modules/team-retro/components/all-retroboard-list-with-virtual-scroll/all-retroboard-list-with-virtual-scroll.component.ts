@@ -55,20 +55,11 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     private spinnerTickService: SpinnerTickService,
     private eventsService: EventsService,
     private db: AngularFirestore) {
-
-      const batchMap = this.offset.pipe(
-        throttleTime(500),
-        mergeMap(n => this.getBatch(n)),
-        scan((acc, batch) => {
-          return { ...acc, ...batch };
-        }, {})
-      );
-
-      this.infinite = batchMap.pipe(map(v => Object.values(v)));
      }
 
-  retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
+  //retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
   people: any[];
+  retroBoards: any[];
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -99,23 +90,33 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   public pieChartPlugins = [];
 
   ngOnInit() {
-    // this.dataIsLoading = true;
+    this.dataIsLoading = true;
 
-    // this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
+    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
-    // if (this.currentUser === undefined) {
-    //   this.authService.signOut();
-    // } else {
-    //   if (!this.currentUser.isNewUser) {
-    //     this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
-    //     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+    if (this.currentUser === undefined) {
+      this.authService.signOut();
+    } else {
+      if (!this.currentUser.isNewUser) {
+        this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
+        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
-    //     this.prepreRetroBoardForCurrentWorkspace();
-    //     this.prepareTeams();
-    //     this.sortByData.push('name');
-    //     this.sortByData.push('creation date');
-    //   }
-    // }
+        this.prepreRetroBoardForCurrentWorkspace();
+        this.prepareTeams();
+        this.sortByData.push('name');
+        this.sortByData.push('creation date');
+
+        const batchMap = this.offset.pipe(
+          throttleTime(500),
+          mergeMap(n => this.getBatch(n)),
+          scan((acc, batch) => {
+            return { ...acc, ...batch };
+          }, {})
+        );
+
+        this.infinite = batchMap.pipe(map(v => Object.values(v)));
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -125,9 +126,9 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   }
 
   getBatch(lastSeen: string) {
-    return this.db.collection('people', ref =>
+    return this.db.collection('/retroBoards/', ref =>
       ref
-        .orderBy('name')
+        .orderBy('creationDate')
         .startAfter(lastSeen)
         .limit(batchSize)
     )
