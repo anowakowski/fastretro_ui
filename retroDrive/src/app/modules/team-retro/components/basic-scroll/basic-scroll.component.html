@@ -1,0 +1,40 @@
+<!-- <cdk-virtual-scroll-viewport itemSize="100" >
+  <li *cdkVirtualFor="let person of people" class="animated slideInRighht">
+    {{ person }}
+  </li>
+</cdk-virtual-scroll-viewport> -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<!-- <ng-container *ngIf="infinite | async as people">
+  <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, (people[people.length - 1].name))">
+    <li *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx" class="animate__animated animate__slideInRight">
+      {{ person.name }}
+    </li>
+  </cdk-virtual-scroll-viewport>
+</ng-container> -->
+
+<ng-container *ngIf="infinite | async as people">
+  <cdk-virtual-scroll-viewport itemSize="100"
+    (scrolledIndexChange)="nextBatch($event, (people[people.length - 1].name))">
+
+    <mat-card *cdkVirtualFor="let person of people; let i = index; trackBy: trackByIdx"
+      style="opacity: 0.985; margin-bottom: 20px;" class="animate__animated animate__slideInRight">
+      <mat-card-header>
+        <mat-card-title>
+          #team <b>{{person.name}}</b>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <span>Retro currently is Open</span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          <h3 style="margin-top: 15px;">Retro in progress...</h3>
+          <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </cdk-virtual-scroll-viewport>
+</ng-container>

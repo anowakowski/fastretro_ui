@@ -43,6 +43,7 @@ import { CreateNewWorkspaceBottomsheetComponent } from './components/create-new-
 import { SettingsWorkspaceDialogComponent } from './components/settings-workspace-dialog/settings-workspace-dialog.component';
 import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-team-dialog.component';
 import { UserSettingsDialogComponent } from './components/user-settings-dialog/user-settings-dialog.component';
+import { BasicScrollComponent } from './components/basic-scroll/basic-scroll.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import { UserSettingsDialogComponent } from './components/user-settings-dialog/u
     CreateNewWorkspaceBottomsheetComponent,
     SettingsWorkspaceDialogComponent,
     LeaveTeamDialogComponent,
-    UserSettingsDialogComponent
+    UserSettingsDialogComponent,
+    BasicScrollComponent
   ],
   entryComponents: [
     AddNewRetroBoardBottomsheetComponent,

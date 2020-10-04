@@ -59,24 +59,43 @@ export class JoinToExistingWorkspaceDialogComponent implements OnInit {
           if (!findedWorkspace.isWithRequireAccess) {
             this.addToUserWorkspaces(this.data.currentUser, workspaceId, this.data.userWorkspace);
           } else {
-            this.currentUserInRetroBoardApiService.getIsExistingUserWaitingToApproveWorkspace( this.data.currentUser.uid, workspaceId)
-              .then(response => {
-                const isExistingWaitingToApprovalWorkspace = response;
-                if (isExistingWaitingToApprovalWorkspace !== null && isExistingWaitingToApprovalWorkspace !== undefined) {
-                  if (isExistingWaitingToApprovalWorkspace) {
-                    this.openSnackbar('you are currently send request to join for this workspace');
-                  } else {
-                    this.setNotification(findedWorkspace, workspaceId, workspaceName);
-                  }
-                }
-              })
-              .catch(error => {
-                const err = error;
-              });
+            this.sendUserNotificationProcess(workspaceId, findedWorkspace, workspaceName);
           }
         }
       });
     }
+  }
+
+  private sendUserNotificationProcess(workspaceId: string, findedWorkspace, workspaceName: any) {
+    this.firestoreService.findUserWorkspacesById(this.data.userWorkspace.id).then(userWorkspaceSnapshot => {
+      const findedUserWorkspace = userWorkspaceSnapshot.data() as UserWorkspaceToSave;
+      const workspaces = findedUserWorkspace.workspaces;
+      const checkIfUserIsJoinedToWorkspace = workspaces.some(x => x.workspace.id === workspaceId);
+
+      if (checkIfUserIsJoinedToWorkspace) {
+        // tslint:disable-next-line:object-literal-key-quotes
+        this.existingWorkspaceNameFormControl.setErrors({ 'userisjoinedtoworkspace': true });
+      } else {
+        this.sendUserNotificationForRequiredAccess(workspaceId, findedWorkspace, workspaceName);
+      }
+    });
+  }
+
+  private sendUserNotificationForRequiredAccess(workspaceId: string, findedWorkspace, workspaceName: any) {
+    this.currentUserInRetroBoardApiService.getIsExistingUserWaitingToApproveWorkspace(this.data.currentUser.uid, workspaceId)
+      .then(response => {
+        const isExistingWaitingToApprovalWorkspace = response;
+        if (isExistingWaitingToApprovalWorkspace !== null && isExistingWaitingToApprovalWorkspace !== undefined) {
+          if (isExistingWaitingToApprovalWorkspace) {
+            this.openSnackbar('you are currently send request to join for this workspace');
+          } else {
+            this.setNotification(findedWorkspace, workspaceId, workspaceName);
+          }
+        }
+      })
+      .catch(error => {
+        const err = error;
+      });
   }
 
   onNoClick(): void {

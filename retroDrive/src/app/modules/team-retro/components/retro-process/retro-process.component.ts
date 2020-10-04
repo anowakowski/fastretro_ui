@@ -153,10 +153,8 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
                 });
               });
             });
-
           } else {
             this.showRetroBoardWhenUserJoinedToAnyTeam = false;
-
           }
         }
       });

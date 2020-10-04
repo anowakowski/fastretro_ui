@@ -12,13 +12,14 @@
     </button>
     <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
-    
-    <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName!=='socialMediaAvatar'" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
-    <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName==='socialMediaAvatar'" [src]="currentUser.photoURL" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; margin-right: 5px; border-radius: 50%;" alt="logo">
-    <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
-
+ 
+    <span style="margin-right: 3px;">
+      <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName!=='socialMediaAvatar'" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
+      <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName==='socialMediaAvatar'" [src]="currentUser.photoURL" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; margin-right: 5px; border-radius: 50%;" alt="logo">
+      <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
+    </span>
     <span
-      style="cursor: pointer; margin-top: 7px;"
+      style="cursor: pointer; margin-top: 8px;"
       *ngIf="currentUserNotifications.length === 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    
@@ -26,14 +27,14 @@
       [matMenuTriggerFor]="menu"
       matBadge="0"
       matBadgeColor="warn"
-      style="cursor: pointer; margin-top: 7px;"
+      style="cursor: pointer; margin-top: 8px;"
       class="hide-text" 
       *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>
     <span 
       [matMenuTriggerFor]="menu"
-      style="cursor: pointer; margin-top: 7px;"
+      style="cursor: pointer; margin-top: 8px;"
       *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    

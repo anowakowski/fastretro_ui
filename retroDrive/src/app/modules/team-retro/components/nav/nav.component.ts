@@ -131,8 +131,10 @@ export class NavComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.shouldRefreshUserSettings) {
-        this.eventsService.emitRefreshAfterUserSettingsWasChangedEmiter();
+      if (result !== undefined) {
+        if (result.shouldRefreshUserSettings) {
+          this.eventsService.emitRefreshAfterUserSettingsWasChangedEmiter();
+        }
       }
     });
   }
