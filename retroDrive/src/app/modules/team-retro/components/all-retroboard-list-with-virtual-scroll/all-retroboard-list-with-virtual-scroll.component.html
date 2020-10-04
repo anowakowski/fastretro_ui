@@ -1,0 +1,120 @@
+<div>
+    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
+        <span style="margin-top: 10px;">All of your Retro Boards </span>
+        <mat-form-field style="width: 100px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
+          <mat-label>Sort by</mat-label>
+          <mat-select (selectionChange)="onChangeSort($event.value)">
+            <mat-option>none</mat-option>
+            <mat-divider></mat-divider>
+            <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div fxFlex></div>
+        <span style="margin-right: 10px; margin-top: 10px;">Filters: </span>
+        <mat-chip-list color="primary" style="margin-top: 3.5px; margin-right: -8px;">
+            <mat-chip 
+                (click)="showOnlyOpenedRetro()"
+                [ngClass]="{'chip-chosen-active': showOnlyOpenedIsFiltered === true,
+                            'chip-not-chosen': showOnlyOpenedIsFiltered === false}"> Show all opened retro boards
+            </mat-chip>
+            <mat-chip 
+                (click)="showOnlyFinishedRetro()"
+                [ngClass]="{'chip-chosen-active': showOnlyFinishedIsFiltered === true,
+                        'chip-not-chosen': showOnlyFinishedIsFiltered === false}"
+                >Show all finished retro boards
+            </mat-chip>
+        </mat-chip-list>      
+        <mat-form-field style="width: 120px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
+          <mat-label>Choose Teams</mat-label>
+          <mat-select (selectionChange)="onChangeTeams($event.value)" multiple>
+          <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-divider [vertical]="true" style="margin-left: 15px; margin-right: 15px;"></mat-divider>
+        <mat-form-field style="width: 135px; margin-top: -7px; margin-bottom: -20px;">
+          <mat-label>Create Date from</mat-label>
+          <input matInput [matDatepicker]="pickerDateFrom" [formControl]="createDateFromFormControl">
+          <mat-datepicker-toggle matSuffix [for]="pickerDateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDateFrom></mat-datepicker>
+          <mat-error *ngIf="createDateFromFormControl.hasError('matDatepickerParse')">
+            date format is incorrect
+          </mat-error>               
+        </mat-form-field>
+        <mat-form-field style="width: 135px; margin-top: -7px; margin-left: 5px; margin-bottom: -20px;">
+          <mat-label>Create Date to</mat-label>
+          <input matInput [matDatepicker]="pickerDateTo" [formControl]="createDateToFormControl">
+          <mat-datepicker-toggle matSuffix [for]="pickerDateTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDateTo></mat-datepicker>
+          <mat-error *ngIf="createDateToFormControl.hasError('matDatepickerParse')">
+            date format is incorrect
+          </mat-error>             
+        </mat-form-field>
+        <button
+          mat-raised-button 
+          color="primary"
+          style="margin-left: 18px; height: 35px;"
+          (click)="filterByCreateDate()"
+          [disabled]="shouldDisabledWhenCreateDateFilterValueNotExisit()">
+            <mat-icon>filter_list</mat-icon>
+        </button>
+        <button
+          *ngIf="shouldFilterByCreateDate"
+          mat-raised-button 
+          color="warn"
+          style="margin-left: 10px; height: 35px;"
+          (click)="clearFilteredByCreateDate()">
+            <mat-icon>clear</mat-icon>
+        </button>                
+    </mat-card>
+    <div *ngIf="retroBoards.length > 0">
+      <div *ngFor="let retroBoard of retroBoards">
+        <mat-card class="example-card" style="opacity: 0.985;">
+          <mat-card-header>
+            <mat-card-title>
+              <span *ngIf="retroBoard.isFinished"><b>Finished Retro Board</b> for </span>
+              <span *ngIf="!retroBoard.isFinished"><b>Opened Retro Board</b> for </span>
+              #team <b>{{retroBoard.team.name}}</b>
+            </mat-card-title>
+            <mat-card-subtitle>
+              <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+              <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
+              <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+              <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(retroBoard.chartData)">
+            <div class="chart-wrapper">
+              <canvas baseChart height="20" [data]="retroBoard.chartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+              </canvas>
+            </div>
+          </mat-card-content>
+          <mat-card-content *ngIf="!retroBoard.isFinished">
+            <div>
+              <h3 style="margin-top: 15px;">Retro in progress...</h3>
+              <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 40px;" *ngIf="retroBoard.isFinished">
+          <mat-card-actions style="margin-top: -14px;">
+            <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+              Board Details <mat-icon>vertical_split</mat-icon></button>
+          </mat-card-actions>
+        </mat-card>
+        <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 40px;" *ngIf="!retroBoard.isFinished">
+          <mat-card-actions style="margin-top: -14px;">
+            <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+              <mat-icon>arrow_right_alt</mat-icon></button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
+    </div>
+
+    
+    <div style="margin-top: 50px; margin-left: 22px;">
+        <app-loadding-single-elements-spinner *ngIf="dataIsLoading"></app-loadding-single-elements-spinner>
+    </div>
+</div>    
+

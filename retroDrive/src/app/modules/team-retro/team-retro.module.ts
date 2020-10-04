@@ -44,6 +44,8 @@ import { SettingsWorkspaceDialogComponent } from './components/settings-workspac
 import { LeaveTeamDialogComponent } from './components/leave-team-dialog/leave-team-dialog.component';
 import { UserSettingsDialogComponent } from './components/user-settings-dialog/user-settings-dialog.component';
 import { BasicScrollComponent } from './components/basic-scroll/basic-scroll.component';
+// tslint:disable-next-line:max-line-length
+import { AllRetroBoardListWithVirtualScrollComponent } from './components/all-retroboard-list-with-virtual-scroll/all-retroboard-list-with-virtual-scroll.component';
 
 @NgModule({
   imports: [
@@ -75,6 +77,7 @@ import { BasicScrollComponent } from './components/basic-scroll/basic-scroll.com
     ValueDataValidator,
     CreateNewTeamBottomsheetComponent,
     AllRetroboardListComponent,
+    AllRetroBoardListWithVirtualScrollComponent,
     JoinToExistingWorkspaceDialogComponent,
     ChangeCurrentUserWorksapceDialogComponent,
     UserNotificationDetailsDialogComponent,
