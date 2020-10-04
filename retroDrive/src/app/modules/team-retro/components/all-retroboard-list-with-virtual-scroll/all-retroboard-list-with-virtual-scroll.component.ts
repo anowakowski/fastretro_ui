@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ChartType, ChartOptions } from 'chart.js';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { RetroBoard } from 'src/app/models/retroBoard';
@@ -19,17 +19,31 @@ import { EventsService } from 'src/app/services/events.service';
 import { Team } from 'src/app/models/team';
 import { FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, mergeMap, scan, tap, throttleTime } from 'rxjs/operators';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+
+const batchSize = 20;
 
 @Component({
   selector: 'app-all-retroboard-list-with-virtual-scroll',
   templateUrl: './all-retroboard-list-with-virtual-scroll.component.html',
-  styleUrls: ['./all-retroboard-list-with-virtual-scroll.component.css']
+  styleUrls: ['./all-retroboard-list-with-virtual-scroll.component.scss']
 })
 export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDestroy {
+  @ViewChild(CdkVirtualScrollViewport)
+  viewport: CdkVirtualScrollViewport;
+
   chosenTeamsFiltered: Teams[];
   formatedDateFrom: string;
   formatedDateTo: string;
   shouldFilterByCreateDate: boolean;
+
+  theEnd = false;
+
+  offset = new BehaviorSubject(null);
+  infinite: Observable<any[]>;
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -39,9 +53,22 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     private router: Router,
     private spinner: NgxSpinnerService,
     private spinnerTickService: SpinnerTickService,
-    private eventsService: EventsService) { }
+    private eventsService: EventsService,
+    private db: AngularFirestore) {
+
+      const batchMap = this.offset.pipe(
+        throttleTime(500),
+        mergeMap(n => this.getBatch(n)),
+        scan((acc, batch) => {
+          return { ...acc, ...batch };
+        }, {})
+      );
+
+      this.infinite = batchMap.pipe(map(v => Object.values(v)));
+     }
 
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
+  people: any[];
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -72,29 +99,67 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   public pieChartPlugins = [];
 
   ngOnInit() {
-    this.dataIsLoading = true;
+    // this.dataIsLoading = true;
 
-    this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
+    // this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
-    if (this.currentUser === undefined) {
-      this.authService.signOut();
-    } else {
-      if (!this.currentUser.isNewUser) {
-        this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
-        this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
+    // if (this.currentUser === undefined) {
+    //   this.authService.signOut();
+    // } else {
+    //   if (!this.currentUser.isNewUser) {
+    //     this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
+    //     this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
-        this.prepreRetroBoardForCurrentWorkspace();
-        this.prepareTeams();
-        this.sortByData.push('name');
-        this.sortByData.push('creation date');
-      }
-    }
+    //     this.prepreRetroBoardForCurrentWorkspace();
+    //     this.prepareTeams();
+    //     this.sortByData.push('name');
+    //     this.sortByData.push('creation date');
+    //   }
+    // }
   }
 
   ngOnDestroy() {
     if (this.retroBoardSubscriptions !== undefined) {
       this.retroBoardSubscriptions.unsubscribe();
     }
+  }
+
+  getBatch(lastSeen: string) {
+    return this.db.collection('people', ref =>
+      ref
+        .orderBy('name')
+        .startAfter(lastSeen)
+        .limit(batchSize)
+    )
+    .snapshotChanges()
+    .pipe(
+      tap(arr => (arr.length ? null : (this.theEnd = true))),
+      map(arr => {
+        return arr.reduce((acc, cur) => {
+          const id = cur.payload.doc.id;
+          const data = cur.payload.doc.data();
+          return { ...acc, [id]: data };
+        }, {});
+      })
+
+    );
+  }
+
+  nextBatch(e, offset) {
+    if (this.theEnd) {
+      return;
+    }
+
+    const end = this.viewport.getRenderedRange().end;
+    const total = this.viewport.getDataLength();
+
+    if (end === total) {
+      this.offset.next(offset);
+    }
+  }
+
+  trackByIdx(i) {
+    return i;
   }
 
   onRetroDetails(retroBoard: RetroBoardToSave) {
