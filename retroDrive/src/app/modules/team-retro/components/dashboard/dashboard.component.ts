@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   dataIsLoading = true;
   retroBoardsDashboardSubscritpiton: any;
+  shouldShowInfoAboutNotExistingTeamsAndRetroBoards = false;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -169,6 +170,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
             } else {
               this.dataIsLoading = false;
+              this.checkIfUserHasExistingRetroBoardsAndShowInfo();
             }
           });
       });
@@ -180,6 +182,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
         } else {
           this.dataIsLoading = false;
+          this.checkIfUserHasExistingRetroBoardsAndShowInfo();
         }
       });
     }
@@ -212,6 +215,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 this.addToRetroBoards(findedLastOpenedRB, false);
               } else {
                 this.dataIsLoading = false;
+                this.checkIfUserHasExistingRetroBoardsAndShowInfo();
               }
             });
         }
@@ -241,6 +245,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     this.addToRetroBoards(findedLastFinishedRetroBorad, true);
                   } else {
                     this.dataIsLoading = false;
+                    this.checkIfUserHasExistingRetroBoardsAndShowInfo();
                   }
                 });
             }
@@ -249,6 +254,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if ((response.lastRetroBoardOpened === null || response.lastRetroBoardOpened === '') &&
             (response.lastRetroBoardFinished === null || response.lastRetroBoardFinished === '')) {
           this.dataIsLoading = false;
+          this.checkIfUserHasExistingRetroBoardsAndShowInfo();
         }
       }
     });
@@ -263,9 +269,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.retroBoards.push(retroboardToAdd as RetroBoard);
       } else {
         this.dataIsLoading = false;
+        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       }
     }
     this.dataIsLoading = false;
+    this.checkIfUserHasExistingRetroBoardsAndShowInfo();
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
@@ -286,8 +294,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
       } else {
         this.dataIsLoading = false;
+        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       }
     });
+  }
+
+  private checkIfUserHasExistingRetroBoardsAndShowInfo() {
+    this.shouldShowInfoAboutNotExistingTeamsAndRetroBoards = this.retroBoards.length === 0;
   }
 
   private prepareChartForFinishedRetroBoardActions(finiszedRetroBoardActions: RetroBoardCardActions[]) {
