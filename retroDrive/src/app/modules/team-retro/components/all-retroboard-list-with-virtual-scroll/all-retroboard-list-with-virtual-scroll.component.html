@@ -66,35 +66,37 @@
             <mat-icon>clear</mat-icon>
         </button>                
     </mat-card>
-    <!-- <div *ngIf="retroBoards.length > 0">
-      <div *ngFor="let retroBoard of retroBoards">
-        <mat-card class="example-card" style="opacity: 0.985;">
-          <mat-card-header>
-            <mat-card-title>
-              <span *ngIf="retroBoard.isFinished"><b>Finished Retro Board</b> for </span>
-              <span *ngIf="!retroBoard.isFinished"><b>Opened Retro Board</b> for </span>
-              #team <b>{{retroBoard.team.name}}</b>
-            </mat-card-title>
-            <mat-card-subtitle>
-              <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
-              <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
-              <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
-              <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
-            </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(retroBoard.chartData)">
-            <div class="chart-wrapper">
-              <canvas baseChart height="20" [data]="retroBoard.chartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-                [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
-              </canvas>
-            </div>
-          </mat-card-content>
-          <mat-card-content *ngIf="!retroBoard.isFinished">
-            <div>
-              <h3 style="margin-top: 15px;">Retro in progress...</h3>
-              <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
-            </div>
-          </mat-card-content>
+
+    <ng-container *ngIf="infinite | async as retroBoards">
+      <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, (retroBoards[retroBoards.length - 1].creationDate))">
+      <div class="animate__animated animate__slideInRight" *cdkVirtualFor="let retroBoard of retroBoards; let i = index; trackBy: trackByIdx">
+        <mat-card  style="opacity: 0.985;" >
+        <mat-card-header>
+          <mat-card-title>
+            <span *ngIf="retroBoard.isFinished"><b>Finished Retro Board</b> for </span>
+            <span *ngIf="!retroBoard.isFinished"><b>Opened Retro Board</b> for </span>
+            #team <b>{{retroBoard.team.name}}</b>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+            <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
+            <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+            <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <!-- <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(retroBoard.chartData)">
+          <div class="chart-wrapper">
+            <canvas baseChart height="20" [data]="retroBoard.chartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+              [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+            </canvas>
+          </div>
+        </mat-card-content> -->
+        <mat-card-content *ngIf="!retroBoard.isFinished">
+          <div>
+            <h3 style="margin-top: 15px;">Retro in progress...</h3>
+            <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
+          </div>
+        </mat-card-content>          
         </mat-card>
         <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 40px;" *ngIf="retroBoard.isFinished">
           <mat-card-actions style="margin-top: -14px;">
@@ -109,9 +111,10 @@
           </mat-card-actions>
         </mat-card>
       </div>
-      <mat-divider style="margin-top: 10px;" [vertical]="true"></mat-divider>
-    </div> -->
 
+    
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
 
     
     <!-- <div style="margin-top: 50px; margin-left: 22px;">
@@ -120,28 +123,5 @@
 </div>    
 
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> -->
-<ng-container *ngIf="infinite | async as retroBoards">
-  <cdk-virtual-scroll-viewport itemSize="100"
-    (scrolledIndexChange)="nextBatch($event, (retroBoards[retroBoards.length - 1].creationDate))">
 
-    <mat-card *cdkVirtualFor="let retroBoard of retroBoards; let i = index; trackBy: trackByIdx"
-      style="opacity: 0.985; margin-bottom: 20px;" class="animate__animated animate__slideInRight">
-      <mat-card-header>
-        <mat-card-title>
-          #team <b>{{retroBoard.creationDate}}</b>
-        </mat-card-title>
-        <mat-card-subtitle>
-          <span>Retro currently is Open</span>
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div>
-          <h3 style="margin-top: 15px;">Retro in progress...</h3>
-          <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-  </cdk-virtual-scroll-viewport>
-</ng-container>
 

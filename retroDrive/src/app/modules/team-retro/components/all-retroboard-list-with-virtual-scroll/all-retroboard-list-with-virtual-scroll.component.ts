@@ -106,15 +106,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.sortByData.push('name');
         this.sortByData.push('creation date');
 
-        const batchMap = this.offset.pipe(
-          throttleTime(500),
-          mergeMap(n => this.getBatch(n)),
-          scan((acc, batch) => {
-            return { ...acc, ...batch };
-          }, {})
-        );
-
-        this.infinite = batchMap.pipe(map(v => Object.values(v)));
+        this.prepareBatchProcessing();
       }
     }
   }
@@ -184,6 +176,18 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
   checkIfChartDataExists(chartData: any[]) {
     return chartData.some(x => x > 0);
+  }
+
+  private prepareBatchProcessing() {
+    const batchMap = this.offset.pipe(
+      throttleTime(500),
+      mergeMap(n => this.getBatch(n)),
+      scan((acc, batch) => {
+        return { ...acc, ...batch };
+      }, {})
+    );
+
+    this.infinite = batchMap.pipe(map(v => Object.values(v)));
   }
 
   showOnlyOpenedRetro() {
