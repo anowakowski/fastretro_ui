@@ -145,8 +145,8 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         map(arr => {
           return arr.reduce((acc, cur) => {
             const id = cur.payload.doc.id;
-            const data = cur.payload.doc.data();
-            return { ...acc, [id]: data };
+            const retroBoardData = cur.payload.doc.data();
+            return { ...acc, [id]: retroBoardData };
           }, {});
         })
       );
