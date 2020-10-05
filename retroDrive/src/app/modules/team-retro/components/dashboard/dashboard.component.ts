@@ -126,8 +126,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.openRetroBoards = new Array<RetroBoardToSave>();
 
         this.prepareRetroBoardForDashboard(retroBoardsSnapshot);
-
-
         retroBoardsSnapshot.forEach(retroBoardSnapshot => {
           const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
           retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;

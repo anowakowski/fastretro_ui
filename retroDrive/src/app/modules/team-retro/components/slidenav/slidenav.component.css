@@ -104,8 +104,8 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;   */
+  /* margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage3  {
@@ -113,8 +113,8 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage4  {
@@ -122,8 +122,8 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage5  {
@@ -131,16 +131,16 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-all-retroboard-section  {
   background-color: #dddddd;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-all-retroboard-section-with-height  {
