@@ -119,7 +119,7 @@
     </div>
 </div>    
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> -->
 <ng-container *ngIf="infinite | async as retroBoards">
   <cdk-virtual-scroll-viewport itemSize="100"
     (scrolledIndexChange)="nextBatch($event, (retroBoards[retroBoards.length - 1].creationDate))">
