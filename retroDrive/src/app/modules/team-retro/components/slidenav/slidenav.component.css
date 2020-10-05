@@ -101,11 +101,11 @@
 
 .teams-retro-background-img-backgroundImage2  {
   background: url("../../../../../assets/geometric1.jpg"); 
-  height: 100%;
+  /* height: 100%; */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;  
-  margin-bottom: -65px;
+  /* margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage3  {
