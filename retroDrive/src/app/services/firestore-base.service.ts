@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference, FieldPath, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { tap } from 'rxjs/operators';
 import { ConditionQueryData } from '../helpers/conditionQueryData';
 import { User } from '../models/user';
 
@@ -48,6 +49,19 @@ export class FirestoreBaseService {
     return this.afs.collection(
         collectionName,
         ref => ref.where(condition.fieldName, condition.conditionOperator, condition.value))
+      .snapshotChanges();
+  }
+
+  getFilteredSnapshotChangesForBatch(collectionName: string, condition: ConditionQueryData, batchSize, lastSeen) {
+    return this.afs.collection(
+        collectionName,
+        ref =>
+          ref
+            .where(condition.fieldName, condition.conditionOperator, condition.value)
+            .orderBy('creationDate')
+            .startAfter(lastSeen)
+            .limit(batchSize)
+      )
       .snapshotChanges();
   }
 

@@ -136,6 +136,16 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
+  retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(workspaceId: string, batchSize, lastSeen) {
+    const condition: ConditionQueryData = {
+      fieldName: 'workspaceId',
+      conditionOperator: '==',
+      value: workspaceId
+    };
+
+    return this.firestoreBase.getFilteredSnapshotChangesForBatch('/retroBoards/', condition, batchSize, lastSeen);
+  }
+
   retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'retroBoardId',
