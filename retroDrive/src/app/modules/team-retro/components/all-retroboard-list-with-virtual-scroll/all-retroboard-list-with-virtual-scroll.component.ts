@@ -117,40 +117,40 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
   }
 
-  getBatch(lastSeen: string) {
-    return this.db.collection('/retroBoards/', ref =>
-      ref
-        .orderBy('creationDate')
-        .startAfter(lastSeen)
-        .limit(batchSize)
-    )
-    .snapshotChanges()
-    .pipe(
-      tap(arr => (arr.length ? null : (this.theEnd = true))),
-      map(arr => {
-        return arr.reduce((acc, cur) => {
-          const id = cur.payload.doc.id;
-          const data = cur.payload.doc.data();
-          return { ...acc, [id]: data };
-        }, {});
-      })
-
-    );
-  }
-
   // getBatch(lastSeen: string) {
-  //   return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(this.currentWorkspace.id, batchSize, lastSeen)
-  //     .pipe(
-  //       tap(arr => (arr.length ? null : (this.theEnd = true))),
-  //       map(arr => {
-  //         return arr.reduce((acc, cur) => {
-  //           const id = cur.payload.doc.id;
-  //           const data = cur.payload.doc.data();
-  //           return { ...acc, [id]: data };
-  //         }, {});
-  //       })
-  //     );
+  //   return this.db.collection('/retroBoards/', ref =>
+  //     ref
+  //       .orderBy('creationDate')
+  //       .startAfter(lastSeen)
+  //       .limit(batchSize)
+  //   )
+  //   .snapshotChanges()
+  //   .pipe(
+  //     tap(arr => (arr.length ? null : (this.theEnd = true))),
+  //     map(arr => {
+  //       return arr.reduce((acc, cur) => {
+  //         const id = cur.payload.doc.id;
+  //         const data = cur.payload.doc.data();
+  //         return { ...acc, [id]: data };
+  //       }, {});
+  //     })
+
+  //   );
   // }
+
+  getBatch(lastSeen: string) {
+    return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(this.currentWorkspace.id, batchSize, lastSeen)
+      .pipe(
+        tap(arr => (arr.length ? null : (this.theEnd = true))),
+        map(arr => {
+          return arr.reduce((acc, cur) => {
+            const id = cur.payload.doc.id;
+            const data = cur.payload.doc.data();
+            return { ...acc, [id]: data };
+          }, {});
+        })
+      );
+  }
 
   nextBatch(e, offset) {
     if (this.theEnd) {
