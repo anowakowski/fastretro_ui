@@ -138,14 +138,36 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   //   );
   // }
 
-  getBatch(lastSeen: string) {
+  getBatch(lastSeen: string, showOnlyOpenedRetro = false, showOnlyFinishedRetro = false, chosenTeams: Teams[] = null) {
     return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(this.currentWorkspace.id, batchSize, lastSeen)
       .pipe(
         tap(arr => (arr.length ? null : (this.theEnd = true))),
         map(arr => {
           return arr.reduce((acc, cur) => {
             const id = cur.payload.doc.id;
-            const retroBoardData = cur.payload.doc.data();
+            const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
+
+            // retroBoardData.team.get().then(teamSnapshot => {
+            //   const team = teamSnapshot.data();
+            //   const teamId = teamSnapshot.id;
+            //   retroBoardData.team = team;
+            //   retroBoardData.team.id = teamId;
+            //   if (retroBoardData.isStarted) {
+            //     if (showOnlyOpenedRetro) {
+            //       if (!retroBoardData.isFinished) {
+            //         this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
+            //       }
+            //     } else if (showOnlyFinishedRetro) {
+            //       if (retroBoardData.isFinished) {
+            //         this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
+            //       }
+            //     } else {
+            //       this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
+            //     }
+            //   }
+            // });
+
+
             return { ...acc, [id]: retroBoardData };
           }, {});
         })
