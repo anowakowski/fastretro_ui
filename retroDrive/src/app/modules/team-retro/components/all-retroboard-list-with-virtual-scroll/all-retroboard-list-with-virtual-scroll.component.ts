@@ -102,10 +102,10 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
-        this.prepreRetroBoardForCurrentWorkspace();
-        this.prepareTeams();
-        this.sortByData.push('name');
-        this.sortByData.push('creation date');
+        //this.prepreRetroBoardForCurrentWorkspace();
+        //this.prepareTeams();
+        //this.sortByData.push('name');
+        //this.sortByData.push('creation date');
 
         this.prepareBatchProcessing();
       }
@@ -213,10 +213,12 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
+      this.offset = new BehaviorSubject(null);
       this.prepareBatchProcessing();
     } else {
       this.showOnlyOpenedIsFiltered = true;
       this.showOnlyFinishedIsFiltered = false;
+      this.offset = new BehaviorSubject(null);
       this.prepareBatchProcessing();
     }
   }
@@ -227,11 +229,13 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     if (this.showOnlyFinishedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+      this.offset = new BehaviorSubject(null);
+      this.prepareBatchProcessing();
     } else {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = true;
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+      this.offset = new BehaviorSubject(null);
+      this.prepareBatchProcessing();
     }
   }
 
