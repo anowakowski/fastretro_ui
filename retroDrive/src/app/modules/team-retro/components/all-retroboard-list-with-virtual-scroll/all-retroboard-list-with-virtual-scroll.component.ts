@@ -44,6 +44,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
   offset = new BehaviorSubject(null);
   infinite: Observable<any[]>;
+  filters: any[];
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -138,8 +139,10 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   //   );
   // }
 
-  getBatch(lastSeen: string, showOnlyOpenedRetro = false, showOnlyFinishedRetro = false, chosenTeams: Teams[] = null) {
-    return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(this.currentWorkspace.id, batchSize, lastSeen)
+  getBatch(lastSeen: string) {
+    this.prepareFilters();
+    return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
+      this.currentWorkspace.id, batchSize, lastSeen, this.filters)
       .pipe(
         tap(arr => (arr.length ? null : (this.theEnd = true))),
         map(arr => {
@@ -147,31 +150,24 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
             const id = cur.payload.doc.id;
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
 
-            // retroBoardData.team.get().then(teamSnapshot => {
-            //   const team = teamSnapshot.data();
-            //   const teamId = teamSnapshot.id;
-            //   retroBoardData.team = team;
-            //   retroBoardData.team.id = teamId;
-            //   if (retroBoardData.isStarted) {
-            //     if (showOnlyOpenedRetro) {
-            //       if (!retroBoardData.isFinished) {
-            //         this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-            //       }
-            //     } else if (showOnlyFinishedRetro) {
-            //       if (retroBoardData.isFinished) {
-            //         this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-            //       }
-            //     } else {
-            //       this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-            //     }
-            //   }
-            // });
-
-
             return { ...acc, [id]: retroBoardData };
           }, {});
         })
       );
+  }
+  prepareFilters() {
+    this.filters = [];
+    const filterShouldShowOnlyFinished = {
+      name: 'shouldShowOnlyFinished',
+      value: this.showOnlyFinishedIsFiltered
+    };
+    const filterShouldShowOnlyOpened = {
+      name: 'showOnlyOpenedIsFiltered',
+      value: this.showOnlyOpenedIsFiltered
+    };
+
+    this.filters.push(filterShouldShowOnlyFinished);
+    this.filters.push(filterShouldShowOnlyOpened);
   }
 
   nextBatch(e, offset) {
@@ -214,15 +210,14 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
   showOnlyOpenedRetro() {
     this.dataIsLoading = true;
-    this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+      this.prepareBatchProcessing();
     } else {
       this.showOnlyOpenedIsFiltered = true;
       this.showOnlyFinishedIsFiltered = false;
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+      this.prepareBatchProcessing();
     }
   }
 

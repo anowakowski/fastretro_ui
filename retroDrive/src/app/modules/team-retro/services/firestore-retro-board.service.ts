@@ -137,21 +137,31 @@ export class FirestoreRetroBoardService {
   }
 
   retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
-    workspaceId: string, batchSize, lastSeen, shouldUseFilters = false, additionalFilterIsFinished = false) {
+    workspaceId: string,
+    batchSize,
+    lastSeen,
+    filters) {
       const condition: ConditionQueryData = {
         fieldName: 'workspaceId',
         conditionOperator: '==',
         value: workspaceId
       };
+      let shouldUseFilters = false;
 
-      const additionalCondition: ConditionQueryData = {
-        fieldName: 'isFinished',
-        conditionOperator: '==',
-        value: additionalFilterIsFinished
-      };
-
-      return this.firestoreBase.getFilteredSnapshotChangesForBatch(
-        '/retroBoards/', condition, batchSize, lastSeen, shouldUseFilters, additionalCondition);
+      if (filters.some(x => x.value === true)) {
+        shouldUseFilters = true;
+        const filterValue = filters.find(f => f.name === 'shouldShowOnlyFinished').value;
+        const additionalCondition: ConditionQueryData = {
+          fieldName: 'isFinished',
+          conditionOperator: '==',
+          value: filterValue
+        };
+        return this.firestoreBase.getBaseBatchWithFilters(
+          '/retroBoards/', condition, lastSeen, batchSize, additionalCondition);
+      } else {
+        return this.firestoreBase.getBaseBatchWithoutFilters(
+          '/retroBoards/', condition, lastSeen, batchSize);
+      }
   }
 
   retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {

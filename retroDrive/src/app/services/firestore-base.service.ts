@@ -59,7 +59,6 @@ export class FirestoreBaseService {
     lastSeen,
     shouldUseFilters = false,
     additionalCondition: ConditionQueryData) {
-
       if (shouldUseFilters) {
         return this.getBaseBatchWithFilters(collectionName, condition, lastSeen, batchSize, additionalCondition);
       } else {

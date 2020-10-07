@@ -11,7 +11,7 @@
         </mat-form-field>
         <div fxFlex></div>
         <span style="margin-right: 10px; margin-top: 10px;">Filters: </span>
-        <mat-chip-list color="primary" style="margin-top: 3.5px; margin-right: -8px;">
+        <mat-chip-list color="primary" style="margin-top: 3.5px;">
             <mat-chip 
                 (click)="showOnlyOpenedRetro()"
                 [ngClass]="{'chip-chosen-active': showOnlyOpenedIsFiltered === true,
@@ -24,7 +24,7 @@
                 >Show all finished retro boards
             </mat-chip>
         </mat-chip-list>      
-        <mat-form-field style="width: 120px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
+        <!-- <mat-form-field style="width: 120px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
           <mat-label>Choose Teams</mat-label>
           <mat-select (selectionChange)="onChangeTeams($event.value)" multiple>
           <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
@@ -64,7 +64,7 @@
           style="margin-left: 10px; height: 35px;"
           (click)="clearFilteredByCreateDate()">
             <mat-icon>clear</mat-icon>
-        </button>                
+        </button>                 -->
     </mat-card>
 
     <ng-container *ngIf="infinite | async as retroBoards">
