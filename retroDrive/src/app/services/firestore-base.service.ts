@@ -52,16 +52,44 @@ export class FirestoreBaseService {
       .snapshotChanges();
   }
 
-  getFilteredSnapshotChangesForBatch(collectionName: string, condition: ConditionQueryData, batchSize, lastSeen) {
+  getFilteredSnapshotChangesForBatch(
+    collectionName: string,
+    condition: ConditionQueryData,
+    batchSize,
+    lastSeen,
+    shouldUseFilters = false,
+    additionalCondition: ConditionQueryData) {
+
+      if (shouldUseFilters) {
+        return this.getBaseBatchWithFilters(collectionName, condition, lastSeen, batchSize, additionalCondition);
+      } else {
+        return this.getBaseBatchWithoutFilters(collectionName, condition, lastSeen, batchSize);
+      }
+  }
+
+  getBaseBatchWithoutFilters(collectionName: string, condition: ConditionQueryData, lastSeen: any, batchSize: any) {
     return this.afs.collection(
-        collectionName,
-        ref =>
-          ref
-            .where(condition.fieldName, condition.conditionOperator, condition.value)
-            .orderBy('creationDate')
-            .startAfter(lastSeen)
-            .limit(batchSize)
-      )
+      collectionName,
+      ref => ref
+        .where(condition.fieldName, condition.conditionOperator, condition.value)
+        .orderBy('creationDate')
+        .startAfter(lastSeen)
+        .limit(batchSize)
+    )
+      .snapshotChanges();
+  }
+
+  getBaseBatchWithFilters(
+    collectionName: string, baseCondition: ConditionQueryData, lastSeen: any, batchSize: any, additionalCondition: ConditionQueryData) {
+    return this.afs.collection(
+      collectionName,
+      ref => ref
+        .where(baseCondition.fieldName, baseCondition.conditionOperator, baseCondition.value)
+        .where(additionalCondition.fieldName, additionalCondition.conditionOperator, additionalCondition.value)
+        .orderBy('creationDate')
+        .startAfter(lastSeen)
+        .limit(batchSize)
+    )
       .snapshotChanges();
   }
 

@@ -136,14 +136,22 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
-  retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(workspaceId: string, batchSize, lastSeen) {
-    const condition: ConditionQueryData = {
-      fieldName: 'workspaceId',
-      conditionOperator: '==',
-      value: workspaceId
-    };
+  retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
+    workspaceId: string, batchSize, lastSeen, shouldUseFilters = false, additionalFilterIsFinished = false) {
+      const condition: ConditionQueryData = {
+        fieldName: 'workspaceId',
+        conditionOperator: '==',
+        value: workspaceId
+      };
 
-    return this.firestoreBase.getFilteredSnapshotChangesForBatch('/retroBoards/', condition, batchSize, lastSeen);
+      const additionalCondition: ConditionQueryData = {
+        fieldName: 'isFinished',
+        conditionOperator: '==',
+        value: additionalFilterIsFinished
+      };
+
+      return this.firestoreBase.getFilteredSnapshotChangesForBatch(
+        '/retroBoards/', condition, batchSize, lastSeen, shouldUseFilters, additionalCondition);
   }
 
   retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
