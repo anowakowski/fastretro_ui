@@ -47,6 +47,10 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   infinite: Observable<any[]>;
   filters: any[];
 
+  private readonly shouldShowOnlyFinishedFilterName = 'shouldShowOnlyFinished';
+
+  private readonly shouldShowOnlyOpenedFilterName = 'shouldShowOnlyOpened';
+
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
     private allRetroBoardListDataService: AllRetroBoardListDataSerivceService,
@@ -127,20 +131,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         })
       );
   }
-  prepareFilters() {
-    this.filters = [];
-    const filterShouldShowOnlyFinished = {
-      name: 'shouldShowOnlyFinished',
-      value: this.showOnlyFinishedIsFiltered
-    };
-    const filterShouldShowOnlyOpened = {
-      name: 'shouldShowOnlyOpened',
-      value: this.showOnlyOpenedIsFiltered
-    };
-
-    this.filters.push(filterShouldShowOnlyFinished);
-    this.filters.push(filterShouldShowOnlyOpened);
-  }
 
   nextBatch(e, offset) {
     if (this.theEnd) {
@@ -185,14 +175,18 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     if (this.showOnlyOpenedIsFiltered) {
       this.showOnlyOpenedIsFiltered = false;
       this.showOnlyFinishedIsFiltered = false;
-      this.offset = new BehaviorSubject(null);
+      this.clearOffset();
       this.prepareBatchProcessing();
     } else {
       this.showOnlyOpenedIsFiltered = true;
       this.showOnlyFinishedIsFiltered = false;
-      this.offset = new BehaviorSubject(null);
+      this.clearOffset();
       this.prepareBatchProcessing();
     }
+  }
+
+  private clearOffset() {
+    this.offset = new BehaviorSubject(null);
   }
 
   showOnlyFinishedRetro() {
@@ -211,94 +205,19 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
   }
 
-  onChangeTeams(eventValue) {
-    if (eventValue !== null) {
-      this.chosenTeamsFiltered = eventValue as Teams[];
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
-    }
-  }
+  private prepareFilters() {
+    this.filters = [];
+    const filterShouldShowOnlyFinished = {
+      name: this.shouldShowOnlyFinishedFilterName,
+      value: this.showOnlyFinishedIsFiltered
+    };
+    const filterShouldShowOnlyOpened = {
+      name: this.shouldShowOnlyOpenedFilterName,
+      value: this.showOnlyOpenedIsFiltered
+    };
 
-  onChangeSort(eventValue) {
-    if (eventValue !== undefined && eventValue !== null) {
-      const sortByValue = eventValue as string;
-
-      if (sortByValue !== null) {
-        if (sortByValue === 'name') {
-          this.sortByAsc();
-        } else if (sortByValue === 'creation date') {
-          this.sortByCreationDateAsc();
-        }
-      }
-    } else {
-      this.sortByIsFinishedValue();
-    }
-  }
-
-  sortByDesc() {
-    this.retroBoards.sort((leftSide, rightSide): number => {
-      if (leftSide.retroName > rightSide.retroName) { return -1; }
-      if (leftSide.retroName < rightSide.retroName) { return 1; }
-
-      return 0;
-    });
-  }
-
-  sortByAsc() {
-    this.retroBoards.sort((leftSide, rightSide): number => {
-      if (leftSide.retroName < rightSide.retroName) { return -1; }
-      if (leftSide.retroName > rightSide.retroName) { return 1; }
-
-      return 0;
-    });
-  }
-
-  sortByCreationDateAsc() {
-    this.retroBoards.sort((leftSide, rightSide): number => {
-      if (leftSide.creationDate < rightSide.creationDate) { return -1; }
-      if (leftSide.creationDate > rightSide.creationDate) { return 1; }
-
-      return 0;
-    });
-  }
-
-  sortByIsFinishedValue() {
-    this.retroBoards.sort((a, b) => {
-      // tslint:disable-next-line:no-angle-bracket-type-assertion
-      return <any> a.isFinished - <any> b.isFinished;
-    });
-  }
-
-  shouldDisabledWhenCreateDateFilterValueNotExisit() {
-    if (this.createDateFromFormControl.value !== null && this.createDateToFormControl.value !== null) {
-      return false;
-    }
-    return true;
-  }
-
-  filterByCreateDate() {
-    if (!this.shouldDisabledWhenCreateDateFilterValueNotExisit()) {
-      this.dataIsLoading = true;
-      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
-      const dateFromValue = this.createDateFromFormControl.value;
-      const dateToValue = this.createDateToFormControl.value;
-
-      this.formatedDateFrom = this.formatCreationDate(dateFromValue);
-      this.formatedDateTo = this.formatCreationDate(dateToValue);
-
-      this.shouldFilterByCreateDate = true;
-
-      // tslint:disable-next-line:max-line-length
-      this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
-    }
-  }
-
-  clearFilteredByCreateDate() {
-    this.dataIsLoading = true;
-    this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
-    this.createDateFromFormControl.reset();
-    this.createDateToFormControl.reset();
-    this.shouldFilterByCreateDate = false;
-    this.prepreRetroBoardForCurrentWorkspace(this.showOnlyOpenedIsFiltered, this.showOnlyFinishedIsFiltered, this.chosenTeamsFiltered);
+    this.filters.push(filterShouldShowOnlyFinished);
+    this.filters.push(filterShouldShowOnlyOpened);
   }
 
   private formatCreationDate(dateFromValue: any) {
