@@ -23,6 +23,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, mergeMap, scan, tap, throttleTime } from 'rxjs/operators';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { AllRetroBoardListDataSerivceService } from './all-retro-board-list-data-serivce.service';
 
 const batchSize = 20;
 
@@ -48,17 +49,14 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
+    private allRetroBoardListDataService: AllRetroBoardListDataSerivceService,
     private authService: AuthService,
     private localStorageService: LocalStorageService,
     private dataPassingService: DataPassingService,
     private router: Router,
-    private spinner: NgxSpinnerService,
-    private spinnerTickService: SpinnerTickService,
-    private eventsService: EventsService,
-    private db: AngularFirestore) {
+    private eventsService: EventsService) {
      }
 
-  //retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
   people: any[];
   retroBoards: any[];
 
@@ -115,7 +113,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
   getBatch(lastSeen: string) {
     this.prepareFilters();
-    return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
+    return this.allRetroBoardListDataService.getRetroBoardSnapshotChangesForBatch(
       this.currentWorkspace.id, batchSize, lastSeen, this.filters)
       .pipe(
         tap(arr => (arr.length ? null : (this.theEnd = true))),
@@ -136,7 +134,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       value: this.showOnlyFinishedIsFiltered
     };
     const filterShouldShowOnlyOpened = {
-      name: 'showOnlyOpenedIsFiltered',
+      name: 'shouldShowOnlyOpened',
       value: this.showOnlyOpenedIsFiltered
     };
 

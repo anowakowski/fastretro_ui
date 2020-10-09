@@ -9,7 +9,7 @@ export class AllRetroBoardListDataSerivceService {
 
   constructor(private firestoreRBServices: FirestoreRetroBoardService) { }
 
-  retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
+  getRetroBoardSnapshotChangesForBatch(
     workspaceId: string,
     batchSize,
     lastSeen,
@@ -25,7 +25,7 @@ export class AllRetroBoardListDataSerivceService {
 
         return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdAndIsFinishedFiltersSnapshotChangesForBatch(
           workspaceId, batchSize, lastSeen, additionalCondition);
-      } else if (this.checkIfFilterExist(filters, '')) {
+      } else if (this.checkIfFilterExist(filters, 'shouldShowOnlyOpened')) {
         const additionalCondition: ConditionQueryData = {
           fieldName: 'isFinished',
           conditionOperator: '==',
@@ -34,14 +34,12 @@ export class AllRetroBoardListDataSerivceService {
 
         return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdAndIsFinishedFiltersSnapshotChangesForBatch(
           workspaceId, batchSize, lastSeen, additionalCondition);
-      } else {
-        return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
-          workspaceId, batchSize, lastSeen);
       }
     }
+    return this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(workspaceId, batchSize, lastSeen);
   }
 
   private checkIfFilterExist(filters: any, filterName: string) {
-    return filters.some(f => f.name === filterName);
+    return filters.some(f => f.name === filterName && f.value);
   }
 }
