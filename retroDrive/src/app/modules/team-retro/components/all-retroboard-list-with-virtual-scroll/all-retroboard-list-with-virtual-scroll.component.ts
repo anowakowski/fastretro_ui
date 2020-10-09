@@ -125,6 +125,11 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
           return arr.reduce((acc, cur) => {
             const id = cur.payload.doc.id;
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
+            retroBoardData.id = id;
+
+            if (retroBoardData.isFinished) {
+              this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
+            }
 
             return { ...acc, [id]: retroBoardData };
           }, {});
@@ -155,19 +160,10 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   }
 
   checkIfChartDataExists(chartData: any[]) {
+    if (chartData === undefined) {
+      return false;
+    }
     return chartData.some(x => x > 0);
-  }
-
-  private prepareBatchProcessing() {
-    const batchMap = this.offset.pipe(
-      throttleTime(500),
-      mergeMap(n => this.getBatch(n)),
-      scan((acc, batch) => {
-        return { ...acc, ...batch };
-      }, {})
-    );
-
-    this.infinite = batchMap.pipe(map(v => Object.values(v)));
   }
 
   showOnlyOpenedRetro() {
@@ -183,10 +179,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       this.clearOffset();
       this.prepareBatchProcessing();
     }
-  }
-
-  private clearOffset() {
-    this.offset = new BehaviorSubject(null);
   }
 
   showOnlyFinishedRetro() {
@@ -205,6 +197,23 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
   }
 
+  private prepareBatchProcessing() {
+    const batchMap = this.offset.pipe(
+      throttleTime(500),
+      mergeMap(n => this.getBatch(n)),
+      scan((acc, batch) => {
+        return { ...acc, ...batch };
+      }, {})
+    );
+
+    this.infinite = batchMap.pipe(map(v => Object.values(v)));
+  }
+
+  private clearOffset() {
+    this.offset = new BehaviorSubject(null);
+  }
+
+
   private prepareFilters() {
     this.filters = [];
     const filterShouldShowOnlyFinished = {
@@ -218,111 +227,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
     this.filters.push(filterShouldShowOnlyFinished);
     this.filters.push(filterShouldShowOnlyOpened);
-  }
-
-  private formatCreationDate(dateFromValue: any) {
-    return formatDate(dateFromValue, 'yyyy/MM/dd', 'en');
-  }
-
-  private prepreRetroBoardForCurrentWorkspace(
-    showOnlyOpenedRetro = false,
-    showOnlyFinishedRetro = false,
-    chosenTeams: Teams[] = null) {
-    this.retroBoardSubscriptions =
-      this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
-      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
-      this.retroBoards = new Array<RetroBoard>();
-
-      let currentLenghtIndex = 1;
-
-      retroBoardsSnapshot.forEach(retroBoardSnapshot => {
-        const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
-        retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
-
-        retroBoardData.team.get().then(teamSnapshot => {
-          const team = teamSnapshot.data();
-          const teamId = teamSnapshot.id;
-          retroBoardData.team = team;
-          retroBoardData.team.id = teamId;
-          if (retroBoardData.isStarted) {
-
-            if (showOnlyOpenedRetro) {
-              if (!retroBoardData.isFinished) {
-                this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-              }
-            } else if (showOnlyFinishedRetro) {
-              if (retroBoardData.isFinished) {
-                this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-              }
-            } else {
-              this.filterRertroBoardDataWithRules(chosenTeams, retroBoardData);
-            }
-
-            this.sortByIsFinishedValue();
-
-            if (currentLenghtIndex === retroBoardsSnapshot.length) {
-              const isFinishedIsExisting = retroBoardsSnapshot.some(rbSnap => (rbSnap.payload.doc.data() as RetroBoardToSave).isFinished);
-              if (showOnlyOpenedRetro || !isFinishedIsExisting) {
-                this.dataIsLoading = false;
-                this.emitSetMoreHigherForBackground();
-              }
-              if (this.shouldFilterByCreateDate && !isFinishedIsExisting || (this.shouldFilterByCreateDate && showOnlyOpenedRetro)) {
-                this.filteredByCreatedDate();
-                this.emitSetMoreHigherForBackground();
-              }
-            }
-          }
-          currentLenghtIndex++;
-        });
-      });
-
-    });
-  }
-
-  private filterRertroBoardDataWithRules(
-    chosenTeams: Teams[],
-    retroBoardData: RetroBoardToSave) {
-    if (this.shouldUseChosenTeamsParam(chosenTeams)) {
-      if (this.teamIsInChosenTeamsParam(chosenTeams, retroBoardData)) {
-        this.addToRetroBoards(retroBoardData);
-      }
-    } else {
-      this.addToRetroBoards(retroBoardData);
-    }
-  }
-
-  private teamIsInChosenTeamsParam(chosenTeams: Teams[], retroBoardData: RetroBoardToSave): boolean {
-    if (chosenTeams.some(t => t.id === retroBoardData.team.id)) {
-      return true;
-    }
-    return false;
-  }
-
-  private shouldUseChosenTeamsParam(chosenTeams: Teams[]): boolean {
-    let result = false;
-    if (chosenTeams !== undefined && chosenTeams !== null) {
-      if (chosenTeams.length > 0) {
-        result = true;
-      }
-    }
-    return result;
-  }
-
-  private emitSetMoreHigherForBackground() {
-    if (this.retroBoards.length > 0 && this.retroBoards.length < 3) {
-      this.eventsService.emitSetAllRetroBoardBackgroudnMoreHigherEmiter();
-    } else if (this.retroBoards.length >= 3) {
-      this.eventsService.emitSetAllRetroBoardBackgroudnNoMoreHigherEmiter();
-    }
-  }
-
-  private addToRetroBoards(retroBoard: RetroBoardToSave) {
-    if (retroBoard.isFinished) {
-      this.prepareActionForFinishedRetroBoardCards(retroBoard as RetroBoard);
-    } else {
-      this.retroBoards.push(retroBoard as RetroBoard);
-
-    }
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
@@ -356,20 +260,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
 
     const pieChartDataToAdd: SingleDataSet = [toImproveActionsCount, wentWellActionsCount, 0];
     finishedRetroBoard.chartData = pieChartDataToAdd;
-    this.retroBoards.push(finishedRetroBoard);
-    if (this.shouldFilterByCreateDate) {
-      // tslint:disable-next-line:max-line-length
-      this.filteredByCreatedDate();
-    }
-    this.dataIsLoading = false;
-    this.emitSetMoreHigherForBackground();
-    // this.pieChartData = [toImproveActionsCount, wentWellActionsCount, 0];
-  }
-
-  private filteredByCreatedDate() {
-    const filteredRetroBoards = this.retroBoards.filter(rb => this.formatCreationDate(rb.creationDate) >= this.formatedDateFrom
-      && this.formatCreationDate(rb.creationDate) <= this.formatedDateTo);
-    this.retroBoards = filteredRetroBoards;
   }
 
   private prepareCorrectValueForChartPieData(value: number) {
@@ -378,19 +268,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
 
     return value;
-  }
-
-  private prepareTeams() {
-    this.teams = new Array<Teams>();
-    this.firestoreRBServices.getTeamsFiltered(this.currentWorkspace.id).then(snapshotTeams => {
-      snapshotTeams.docs.forEach(doc => {
-        const team: Teams = {
-          id: doc.id,
-          name: doc.data().name
-        };
-        this.teams.push(team);
-      });
-    });
   }
 
   private unsubscribeTickService() {
