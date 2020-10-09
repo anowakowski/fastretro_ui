@@ -105,6 +105,9 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
         this.prepareBatchProcessing();
+
+        this.sortByData.push('name');
+        this.sortByData.push('creation date');
       }
     }
   }
@@ -195,6 +198,47 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       this.offset = new BehaviorSubject(null);
       this.prepareBatchProcessing();
     }
+  }
+
+  onChangeSort(eventValue) {
+    if (eventValue !== undefined && eventValue !== null) {
+      const sortByValue = eventValue as string;
+
+      if (sortByValue !== null) {
+        if (sortByValue === 'name') {
+          this.sortByAsc();
+        } else if (sortByValue === 'creation date') {
+          this.sortByCreationDateAsc();
+        }
+      }
+    } else {
+      this.sortByIsFinishedValue();
+    }
+  }
+
+  private sortByAsc() {
+    this.retroBoards.sort((leftSide, rightSide): number => {
+      if (leftSide.retroName < rightSide.retroName) { return -1; }
+      if (leftSide.retroName > rightSide.retroName) { return 1; }
+
+      return 0;
+    });
+  }
+
+  private sortByCreationDateAsc() {
+    this.retroBoards.sort((leftSide, rightSide): number => {
+      if (leftSide.creationDate < rightSide.creationDate) { return -1; }
+      if (leftSide.creationDate > rightSide.creationDate) { return 1; }
+
+      return 0;
+    });
+  }
+
+  private sortByIsFinishedValue() {
+    this.retroBoards.sort((a, b) => {
+      // tslint:disable-next-line:no-angle-bracket-type-assertion
+      return <any> a.isFinished - <any> b.isFinished;
+    });
   }
 
   private prepareBatchProcessing() {
