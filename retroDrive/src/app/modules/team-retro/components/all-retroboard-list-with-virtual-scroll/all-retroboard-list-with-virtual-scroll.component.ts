@@ -213,7 +213,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
   }
 
-
   onChangeTeams(eventValue) {
     if (eventValue !== null) {
       this.chosenTeamsFiltered = eventValue as Teams[];
