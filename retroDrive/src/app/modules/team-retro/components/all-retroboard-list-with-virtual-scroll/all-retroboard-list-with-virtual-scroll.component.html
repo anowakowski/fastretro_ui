@@ -1,14 +1,14 @@
 <div>
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
         <span style="margin-top: 10px;">All of your Retro Boards </span>
-        <mat-form-field style="width: 100px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
+        <!-- <mat-form-field style="width: 100px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
           <mat-label>Sort by</mat-label>
           <mat-select (selectionChange)="onChangeSort($event.value)">
             <mat-option>none</mat-option>
             <mat-divider></mat-divider>
             <mat-option *ngFor="let sortData of sortByData" [value]="sortData">{{sortData}}</mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
         <div fxFlex></div>
         <span style="margin-right: 10px; margin-top: 10px;">Filters: </span>
         <mat-chip-list color="primary" style="margin-top: 3.5px;">
@@ -24,47 +24,6 @@
                 >Show all finished retro boards
             </mat-chip>
         </mat-chip-list>      
-        <!-- <mat-form-field style="width: 120px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
-          <mat-label>Choose Teams</mat-label>
-          <mat-select (selectionChange)="onChangeTeams($event.value)" multiple>
-          <mat-option *ngFor="let team of teams" [value]="team">{{team.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-divider [vertical]="true" style="margin-left: 15px; margin-right: 15px;"></mat-divider>
-        <mat-form-field style="width: 135px; margin-top: -7px; margin-bottom: -20px;">
-          <mat-label>Create Date from</mat-label>
-          <input matInput [matDatepicker]="pickerDateFrom" [formControl]="createDateFromFormControl">
-          <mat-datepicker-toggle matSuffix [for]="pickerDateFrom"></mat-datepicker-toggle>
-          <mat-datepicker #pickerDateFrom></mat-datepicker>
-          <mat-error *ngIf="createDateFromFormControl.hasError('matDatepickerParse')">
-            date format is incorrect
-          </mat-error>               
-        </mat-form-field>
-        <mat-form-field style="width: 135px; margin-top: -7px; margin-left: 5px; margin-bottom: -20px;">
-          <mat-label>Create Date to</mat-label>
-          <input matInput [matDatepicker]="pickerDateTo" [formControl]="createDateToFormControl">
-          <mat-datepicker-toggle matSuffix [for]="pickerDateTo"></mat-datepicker-toggle>
-          <mat-datepicker #pickerDateTo></mat-datepicker>
-          <mat-error *ngIf="createDateToFormControl.hasError('matDatepickerParse')">
-            date format is incorrect
-          </mat-error>             
-        </mat-form-field>
-        <button
-          mat-raised-button 
-          color="primary"
-          style="margin-left: 18px; height: 35px;"
-          (click)="filterByCreateDate()"
-          [disabled]="shouldDisabledWhenCreateDateFilterValueNotExisit()">
-            <mat-icon>filter_list</mat-icon>
-        </button>
-        <button
-          *ngIf="shouldFilterByCreateDate"
-          mat-raised-button 
-          color="warn"
-          style="margin-left: 10px; height: 35px;"
-          (click)="clearFilteredByCreateDate()">
-            <mat-icon>clear</mat-icon>
-        </button>                 -->
     </mat-card>
 
     <ng-container *ngIf="infinite | async as retroBoards">

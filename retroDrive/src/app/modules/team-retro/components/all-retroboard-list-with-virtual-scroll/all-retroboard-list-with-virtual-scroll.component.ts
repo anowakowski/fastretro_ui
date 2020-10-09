@@ -102,11 +102,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
-        //this.prepreRetroBoardForCurrentWorkspace();
-        //this.prepareTeams();
-        //this.sortByData.push('name');
-        //this.sortByData.push('creation date');
-
         this.prepareBatchProcessing();
       }
     }
@@ -117,27 +112,6 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       this.retroBoardSubscriptions.unsubscribe();
     }
   }
-
-  // getBatch(lastSeen: string) {
-  //   return this.db.collection('/retroBoards/', ref =>
-  //     ref
-  //       .orderBy('creationDate')
-  //       .startAfter(lastSeen)
-  //       .limit(batchSize)
-  //   )
-  //   .snapshotChanges()
-  //   .pipe(
-  //     tap(arr => (arr.length ? null : (this.theEnd = true))),
-  //     map(arr => {
-  //       return arr.reduce((acc, cur) => {
-  //         const id = cur.payload.doc.id;
-  //         const data = cur.payload.doc.data();
-  //         return { ...acc, [id]: data };
-  //       }, {});
-  //     })
-
-  //   );
-  // }
 
   getBatch(lastSeen: string) {
     this.prepareFilters();
