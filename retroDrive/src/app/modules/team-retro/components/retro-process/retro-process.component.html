@@ -11,7 +11,6 @@
     </button>
   </mat-card>
 </div>
-
 <div class="example-button-row">
   <button style="width: 170px; height: 170px;" mat-fab color="primary" (click)="openBottomSheet()" [disabled]="!showRetroBoardWhenUserJoinedToAnyTeam">
     <span style="font-size: 18px;">Create</span> <br />
@@ -19,12 +18,11 @@
     <mat-icon style="font-size: 50px; width: 50px; height: 50px;">add</mat-icon>
   </button>
 </div>
-
 <div *ngIf="!dataIsLoading && showRetroBoardWhenUserJoinedToAnyTeam">
   <div *ngIf="shouldShowRetroBoardElements()" style="margin-top: 40px;">
     <mat-card style="margin-bottom: 40px; opacity: 0.9;">List of not started retro board</mat-card>
-    <div *ngFor="let retroBoard of retroBoards">
-      <mat-card style="margin-top: 20px; opacity: 0.97;" class="example-card">
+    <div class="animate__animated animate__slideInRight" *ngFor="let retroBoard of retroBoards">
+      <mat-card style="margin-top: 20px; opacity: 0.97;" class="example-card ">
         <mat-card-header>
           <div fxFlex></div>
           <button style="height: 40px; margin-right: -7px;" mat-raised-button color="warn" (click)="deleteRetroBoard(retroBoard)">
@@ -50,7 +48,6 @@
     </div>
   </div>
 </div>
-
 <div style="margin-top: 50px; margin-left: 22px;">
   <app-loadding-single-elements-spinner *ngIf="dataIsLoading"></app-loadding-single-elements-spinner>
 </div>

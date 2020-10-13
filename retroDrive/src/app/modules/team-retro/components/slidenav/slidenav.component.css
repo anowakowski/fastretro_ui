@@ -95,8 +95,8 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage2  {
@@ -104,26 +104,26 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;   */
+  /* margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage3  {
   background: url("../../../../../assets/clark-van-der-beken-IQeBZm8F-M4-unsplash.jpg"); 
-  height: 100%;
+  height: 95.2%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage4  {
   background: url("../../../../../assets/blackBackground.jpg"); 
-  height: 100%;
+  height: 96%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-backgroundImage5  {
@@ -131,16 +131,16 @@
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-all-retroboard-section  {
   background-color: #dddddd;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;  
-  margin-bottom: -65px;
+  /* background-position: center;  
+  margin-bottom: -65px; */
 }
 
 .teams-retro-background-img-all-retroboard-section-with-height  {

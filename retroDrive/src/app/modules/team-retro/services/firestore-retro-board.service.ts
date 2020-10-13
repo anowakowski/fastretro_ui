@@ -136,6 +136,35 @@ export class FirestoreRetroBoardService {
     return this.firestoreBase.getFilteredSnapshotChanges('/retroBoards/', condition);
   }
 
+  retroBoardFilteredByWorkspaceIdSnapshotChangesForBatch(
+    workspaceId: string,
+    batchSize,
+    lastSeen) {
+      const condition: ConditionQueryData = {
+        fieldName: 'workspaceId',
+        conditionOperator: '==',
+        value: workspaceId
+      };
+
+      return this.firestoreBase.getBaseBatchWithoutFilters(
+          '/retroBoards/', condition, lastSeen, batchSize);
+  }
+
+  retroBoardFilteredByWorkspaceIdAndIsFinishedFiltersSnapshotChangesForBatch(
+    workspaceId: string,
+    batchSize,
+    lastSeen,
+    additionalCondition: ConditionQueryData) {
+      const condition: ConditionQueryData = {
+        fieldName: 'workspaceId',
+        conditionOperator: '==',
+        value: workspaceId
+      };
+
+      return this.firestoreBase.getBaseBatchWithFilters(
+          '/retroBoards/', condition, lastSeen, batchSize, additionalCondition);
+  }
+
   retroBoardCardActionsFilteredByRetroBoardId(retroBoardId: string) {
     const condition: ConditionQueryData = {
       fieldName: 'retroBoardId',
