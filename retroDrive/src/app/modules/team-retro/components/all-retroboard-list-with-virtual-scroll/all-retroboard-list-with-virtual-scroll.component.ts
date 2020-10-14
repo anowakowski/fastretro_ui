@@ -140,10 +140,12 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       );
   }
 
-  nextBatch(e, offset) {
-    if (this.theEnd) {
+  nextBatch(e, retroBoards) {
+    if (this.theEnd || retroBoards.length === 0) {
       return;
     }
+
+    const offset = (retroBoards[retroBoards.length - 1].creationDate);
 
     const end = this.viewport.getRenderedRange().end;
     const total = this.viewport.getDataLength();
