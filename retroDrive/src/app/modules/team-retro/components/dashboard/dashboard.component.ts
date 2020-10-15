@@ -243,6 +243,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   findedLastFinishedRetroBorad.team.id = teamSnapshot.id;
                   if (userTeams.teams.some(ut => ut.id === findedLastFinishedRetroBorad.team.id)) {
                     this.addToRetroBoards(findedLastFinishedRetroBorad, true);
+                    this.checkIfUserHasExistingRetroBoardsAndShowInfo();
                   } else {
                     this.dataIsLoading = false;
                     this.checkIfUserHasExistingRetroBoardsAndShowInfo();
@@ -267,6 +268,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!isFinished) {
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== retroboardToAdd.id)) {
         this.retroBoards.push(retroboardToAdd as RetroBoard);
+        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       } else {
         this.dataIsLoading = false;
         this.checkIfUserHasExistingRetroBoardsAndShowInfo();
@@ -286,12 +288,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
           const dataRetroBoardCardAction = retroBoardCardSnapshot.data() as RetroBoardCardActions;
           dataRetroBoardCardAction.text = retroBoardCardSnapshot.id as string;
           finishedRetroBoard.actions.push(dataRetroBoardCardAction);
-
+          this.checkIfUserHasExistingRetroBoardsAndShowInfo();
         });
       }
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== finishedRetroBoard.id)) {
         this.retroBoards.push(finishedRetroBoard);
         this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
+        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       } else {
         this.dataIsLoading = false;
         this.checkIfUserHasExistingRetroBoardsAndShowInfo();
