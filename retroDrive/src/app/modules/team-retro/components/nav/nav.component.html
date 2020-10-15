@@ -39,7 +39,7 @@
         <mat-icon>notifications</mat-icon>
     </span>    
     <mat-menu class="more-width-mat-menu" #menu="matMenu">
-      <div *ngIf="currentUserNotifications.length > 0">
+      <div *ngIf="currentUserNotifications.length > 0 || newUserNotification">
         <div *ngFor="let userNotification of currentUserNotifications">
           <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccess'">
             <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
@@ -65,6 +65,12 @@
             </button>              
           </div>
         </div>
+        <div *ngIf="newUserNotification">
+          <button mat-menu-item>
+            <mat-icon color="warn">stop_circle</mat-icon>
+            <span style="font-size: 15px;">Welcome on fastretro.org</span>
+          </button>
+        </div>        
         <mat-divider></mat-divider>
         <button style="text-align: center; margin-top: -5px; margin-bottom: -8px;" (click)="goToViewAllNotifications()"  mat-menu-item>
           <span>

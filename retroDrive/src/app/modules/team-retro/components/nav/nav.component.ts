@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
+import { UserNotificationNewUser } from 'src/app/models/UserNotificationNewUser';
 
 @Component({
   selector: 'app-nav',
@@ -34,6 +35,7 @@ export class NavComponent implements OnInit, OnDestroy {
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
   notificationCount: number;
+  newUserNotification: UserNotificationNewUser;
 
   constructor(
     public auth: AuthService,
@@ -190,6 +192,9 @@ export class NavComponent implements OnInit, OnDestroy {
           this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccessResponse);
         });
       }
+    }
+    if (response.newUserNotification !== undefined && response.newUserNotification !== null) {
+      this.newUserNotification = response.newUserNotification as UserNotificationNewUser;
     }
     this.notificationCount = this.currentUserNotifications.length;
     this.sortCurrentUserNoitficationByCreationDateDesc();
