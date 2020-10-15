@@ -22,6 +22,7 @@ import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { Workspace } from 'src/app/models/workspace';
 import { UserSettings } from 'src/app/models/UserSettings';
+import { UserNotificationNewUser } from 'src/app/models/UserNotificationNewUser';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -416,8 +417,40 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
       workspaces: [workspacesToAddToUserWorkspace]
     };
     this.firestoreRbService.addNewUserWorkspace(userWorkspace);
-    this.setUserSettings()
-      .then(() => location.reload());
+    this.setAdditionalNewUserSettingsWithNotificationAndReload();
+  }
+
+  private setAdditionalNewUserSettingsWithNotificationAndReload() {
+    const currentDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+    const usrNotificationToSave = { creationDate: currentDate, userId: this.currentUser.uid };
+    this.firestoreRbService.addNewUserNotification(usrNotificationToSave).then(userNotificationSnapshot => {
+      const userNotificationDocId = userNotificationSnapshot.id;
+      this.setNewUserNotification(userNotificationDocId)
+        .then(() => {
+          this.setUserSettings()
+            .then(() => location.reload());
+        });
+    });
+  }
+
+  private setNewUserNotification(userNotificationDocId) {
+    if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
+      this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
+        this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
+        return this.setNewUserNotificationToApi(userNotificationDocId);
+      });
+    } else {
+      return this.setNewUserNotificationToApi(userNotificationDocId);
+    }
+  }
+
+  private setNewUserNotificationToApi(userNotificationDocId): any {
+    const newUserNotification: UserNotificationNewUser = {
+      userFirebaseDocId: this.currentUser.uid,
+      userNotificationFirebaseDocId: userNotificationDocId
+    };
+
+    return this.currentUserInRetroBoardApiService.setNewUserNotification(newUserNotification);
   }
 
   private setUserSettingsToApi() {

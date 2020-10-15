@@ -19,6 +19,7 @@ import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 import { RetroBoardActionCardApiGet } from '../models/retroBoardActionCardApiGet';
 import { UsersInTeamsToRemoveInApi } from '../models/usersInTeamsToRemoveInApi';
 import { UserSettings } from '../models/UserSettings';
+import { UserNotificationNewUser } from '../models/UserNotificationNewUser';
 
 @Injectable({
   providedIn: 'root'
@@ -663,6 +664,17 @@ export class CurrentUserApiService {
         userNotificationDocId
       };
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setNewUserNotification(newUserNotification: UserNotificationNewUser): any {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setNewUserNotification/';
+
+    return this.httpClient.post(url, newUserNotification, httpOptions).toPromise();
   }
 
   addRetroBoardAdditionalInfoWithActionCount(
