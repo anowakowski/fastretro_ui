@@ -637,6 +637,22 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setNewUserNotificationAsRead(
+    userNotificationId: number
+  ) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserNotificationNewUserAsRead/';
+
+      const dataToPost = {
+        userNotificationId
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotificationId: number) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);

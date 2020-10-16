@@ -172,6 +172,18 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       });
   }
 
+  private setNewUserNotificationAsRead() {
+    this.currentUserApiService.setNewUserNotificationAsRead(
+      this.newUserNotification.id
+    )
+    .then(() => {
+      this.eventsService.emitSetRefreshNotificationEmiter();
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
   private setNotificationContentToDisplay() {
     if (this.userNotificationWorkspaceWithRequiredAccess !== undefined) {
       if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
@@ -190,8 +202,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
             });
       }
     } else if (this.newUserNotification) {
-
+      this.setNewUserNotificationAsRead();
     }
-
   }
 }
