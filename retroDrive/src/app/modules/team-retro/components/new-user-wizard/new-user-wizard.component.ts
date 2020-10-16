@@ -22,7 +22,7 @@ import { UserNotificationToSave } from 'src/app/models/UserNotificationToSave';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { Workspace } from 'src/app/models/workspace';
 import { UserSettings } from 'src/app/models/UserSettings';
-import { UserNotificationNewUser } from 'src/app/models/UserNotificationNewUser';
+import { UserNotificationNewUserToSave } from 'src/app/models/UserNotificationNewUserToSave';
 
 @Component({
   selector: 'app-new-user-wizard',
@@ -445,7 +445,7 @@ export class NewUserWizardComponent implements OnInit, OnDestroy {
   }
 
   private setNewUserNotificationToApi(userNotificationDocId): any {
-    const newUserNotification: UserNotificationNewUser = {
+    const newUserNotification: UserNotificationNewUserToSave = {
       userFirebaseDocId: this.currentUser.uid,
       userNotificationFirebaseDocId: userNotificationDocId
     };

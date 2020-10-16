@@ -15,7 +15,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
-import { UserNotificationNewUser } from 'src/app/models/UserNotificationNewUser';
+import { UserNotificationNewUserToSave } from 'src/app/models/UserNotificationNewUserToSave';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-nav',
@@ -35,7 +36,7 @@ export class NavComponent implements OnInit, OnDestroy {
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
   notificationCount: number;
-  newUserNotification: UserNotificationNewUser;
+  newUserNotification: UserNotification;
 
   constructor(
     public auth: AuthService,
@@ -104,7 +105,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   userNotifictaionHasNoReadNotify() {
-    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead) || !this.newUserNotification.isRead;
   }
 
   isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess): boolean {
@@ -194,7 +195,7 @@ export class NavComponent implements OnInit, OnDestroy {
       }
     }
     if (response.newUserNotification !== undefined && response.newUserNotification !== null) {
-      this.newUserNotification = response.newUserNotification as UserNotificationNewUser;
+      this.newUserNotification = response.newUserNotification as UserNotification;
     }
     this.notificationCount = this.currentUserNotifications.length;
     this.sortCurrentUserNoitficationByCreationDateDesc();

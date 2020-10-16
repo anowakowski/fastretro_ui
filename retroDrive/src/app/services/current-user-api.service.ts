@@ -19,7 +19,7 @@ import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 import { RetroBoardActionCardApiGet } from '../models/retroBoardActionCardApiGet';
 import { UsersInTeamsToRemoveInApi } from '../models/usersInTeamsToRemoveInApi';
 import { UserSettings } from '../models/UserSettings';
-import { UserNotificationNewUser } from '../models/UserNotificationNewUser';
+import { UserNotificationNewUserToSave } from '../models/UserNotificationNewUserToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -666,7 +666,7 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
-  setNewUserNotification(newUserNotification: UserNotificationNewUser): any {
+  setNewUserNotification(newUserNotification: UserNotificationNewUserToSave): any {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
     const httpOptions = {

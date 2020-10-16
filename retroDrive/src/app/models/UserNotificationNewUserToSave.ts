@@ -1,4 +1,4 @@
-export class UserNotificationNewUser {
+export class UserNotificationNewUserToSave {
     public userFirebaseDocId: string;
     public userNotificationFirebaseDocId: string;
 }
