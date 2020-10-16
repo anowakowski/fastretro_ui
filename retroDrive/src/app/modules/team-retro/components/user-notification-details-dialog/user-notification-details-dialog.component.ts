@@ -173,22 +173,25 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   }
 
   private setNotificationContentToDisplay() {
-    if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
-      this.getIsUserApprovedRequest();
-      this.setNotificationAsRead();
-    } else if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType ===
-        this.workspaceWithRequiredAccessResponseName) {
-          this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
-            this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
-          )
-          .then(() => {
-            this.eventsService.emitSetRefreshNotificationEmiter();
-          })
-          .catch(error => {
-            const err = error;
-          });
+    if (this.userNotificationWorkspaceWithRequiredAccess !== undefined) {
+      if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
+        this.getIsUserApprovedRequest();
+        this.setNotificationAsRead();
+      } else if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType ===
+          this.workspaceWithRequiredAccessResponseName) {
+            this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
+              this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
+            )
+            .then(() => {
+              this.eventsService.emitSetRefreshNotificationEmiter();
+            })
+            .catch(error => {
+              const err = error;
+            });
+      }
     } else if (this.newUserNotification) {
-      // set as read
+
     }
+
   }
 }

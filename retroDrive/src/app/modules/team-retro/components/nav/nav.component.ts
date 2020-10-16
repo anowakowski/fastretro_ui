@@ -77,13 +77,25 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   goToNotifyDetail(userNotification: any) {
+    let data = {};
+
+    if (userNotification.notyficationType !== undefined) {
+      if (userNotification.notyficationType === 'NewUserNotification') {
+        data = {
+          newUserNotification: userNotification,
+          currentUser: this.currentUser
+        };
+      }
+    } else if (userNotification.notyficationType === undefined && userNotification.userNotification !== undefined) {
+      data = {
+        userNotificationWorkspaceWithRequiredAccess: userNotification,
+        currentUser: this.currentUser
+      };
+    }
+
     const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
       width: '600px',
-      data: {
-        userNotificationWorkspaceWithRequiredAccess: userNotification,
-        newUserNotification: userNotification,
-        currentUser: this.currentUser
-      }
+      data
     });
 
     dialogRef.afterClosed().subscribe(result => {
