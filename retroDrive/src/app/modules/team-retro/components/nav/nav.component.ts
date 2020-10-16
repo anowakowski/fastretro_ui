@@ -76,11 +76,12 @@ export class NavComponent implements OnInit, OnDestroy {
     this.unsubscribeEvents();
   }
 
-  goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
+  goToNotifyDetail(userNotification: any) {
     const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
       width: '600px',
       data: {
         userNotificationWorkspaceWithRequiredAccess: userNotification,
+        newUserNotification: userNotification,
         currentUser: this.currentUser
       }
     });
@@ -105,7 +106,15 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   userNotifictaionHasNoReadNotify() {
-    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead) || !this.newUserNotification.isRead;
+    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead) || this.isNewUserNotifictaionHasNoReadNotify();
+  }
+
+  private isNewUserNotifictaionHasNoReadNotify() {
+    if (this.newUserNotification === undefined) {
+      return false;
+    }
+
+    return !this.newUserNotification.isRead;
   }
 
   isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess): boolean {

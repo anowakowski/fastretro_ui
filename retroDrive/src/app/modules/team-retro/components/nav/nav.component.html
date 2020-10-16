@@ -67,13 +67,13 @@
         </div>
         <div *ngIf="newUserNotification">
           <div *ngIf="!newUserNotification.isRead">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
               <mat-icon color="warn">stop_circle</mat-icon>
               <span style="font-size: 15px;">Welcome on fastretro.org</span>
             </button>
           </div>
           <div *ngIf="newUserNotification.isRead">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
               <mat-icon color="warn">dialpad</mat-icon>
               <span style="font-size: 14px; color: #696969;">Welcome on fastretro.org</span>
             </button>

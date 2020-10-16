@@ -35,7 +35,7 @@
     <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
   </div>
 </div>
-<div *ngIf="!isNotificationForApproval()">
+<div *ngIf="!isNotificationForApproval() && !newUserNotification">
   <div  mat-dialog-content>
     <h3>
       Your request has been approved
@@ -57,6 +57,21 @@
         <span style="font-size: 17px;">Change your current workspace </span> 
         to select your new workspace.
       </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="basic" (click)="onNoClick()">Close</button>
+  </div>
+</div>
+<div *ngIf="!isNotificationForApproval() && newUserNotification">
+  <div  mat-dialog-content>
+    <h3>
+      Welcome on fastretro.org
+      <mat-divider></mat-divider>
+    </h3>
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+      <p>Have fun and make retro :)</p>
+
     </div>
   </div>
   <div mat-dialog-actions>

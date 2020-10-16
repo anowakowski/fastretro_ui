@@ -12,6 +12,7 @@ import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/user
 import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave';
 import { EventsService } from 'src/app/services/events.service';
 import { formatDate } from '@angular/common';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-user-notification-details-dialog',
@@ -26,6 +27,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   currentUser: User;
   userNotificationWorkspaceWithRequiredAccess: UserNotificationWorkspaceWithRequiredAccess;
   isApprovedRequest: boolean;
+  newUserNotification: UserNotification;
 
   constructor(
     public dialogRef: MatDialogRef<UserNotificationDetailsDialogComponent>,
@@ -39,6 +41,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
     this.currentUser = this.data.currentUser as User;
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
+    this.newUserNotification = this.data.newUserNotification as UserNotification;
     this.setNotificationContentToDisplay();
   }
 
@@ -58,8 +61,12 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   }
 
   isNotificationForApproval() {
-    // tslint:disable-next-line:max-line-length
-    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName;
+    if (this.userNotificationWorkspaceWithRequiredAccess === undefined || this.userNotificationWorkspaceWithRequiredAccess === null) {
+      return false;
+    }
+
+    return this.userNotificationWorkspaceWithRequiredAccess
+      .userNotification.notyficationType === this.workspaceWithRequiredAccessName;
   }
 
   getIsUserApprovedRequest() {
@@ -180,6 +187,8 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
           .catch(error => {
             const err = error;
           });
+    } else if (this.newUserNotification) {
+      // set as read
     }
   }
 }
