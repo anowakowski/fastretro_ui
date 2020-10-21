@@ -60,6 +60,20 @@
             </button>              
           </div>
         </div>
+        <div *ngIf="newUserNotification">
+          <div *ngIf="!newUserNotification.isRead">
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">Welcome to fastretro.org</span>
+            </button>
+          </div>
+          <div *ngIf="newUserNotification.isRead">
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
+              <mat-icon color="warn">dialpad</mat-icon>
+              <span style="font-size: 14px; color: #696969;">Welcome to fastretro.org</span>
+            </button>
+          </div>   
+        </div>        
         <mat-divider></mat-divider>
         <button style="text-align: center; margin-top: -5px; margin-bottom: -8px;" (click)="goToViewAllNotifications()"  mat-menu-item>
           <span>
