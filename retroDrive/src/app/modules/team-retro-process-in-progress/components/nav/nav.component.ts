@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog copy/user-notification-details-dialog.component';
 import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-nav',
@@ -33,6 +34,7 @@ export class NavComponent implements OnInit, OnDestroy {
   public userWorkspace: UserWorkspace;
   public currentUserWorkspaceName: string;
   public currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
+  newUserNotification: UserNotification;
 
   constructor(
     private eventsServices: EventsService,
@@ -59,13 +61,27 @@ export class NavComponent implements OnInit, OnDestroy {
     this.setCurrentWorkspaceSubscriptions.unsubscribe();
   }
 
-  goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
-    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
-      width: '600px',
-      data: {
+  goToNotifyDetail(userNotification: any) {
+
+    let data = {};
+
+    if (userNotification.notyficationType !== undefined) {
+      if (userNotification.notyficationType === 'NewUserNotification') {
+        data = {
+          newUserNotification: userNotification,
+          currentUser: this.currentUser
+        };
+      }
+    } else if (userNotification.notyficationType === undefined && userNotification.userNotification !== undefined) {
+      data = {
         userNotificationWorkspaceWithRequiredAccess: userNotification,
         currentUser: this.currentUser
-      }
+      };
+    }
+
+    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
+      width: '600px',
+      data
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -184,6 +200,9 @@ export class NavComponent implements OnInit, OnDestroy {
           this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccessResponse);
         });
       }
+    }
+    if (response.newUserNotification !== undefined && response.newUserNotification !== null) {
+      this.newUserNotification = response.newUserNotification as UserNotification;
     }
     this.sortCurrentUserNoitficationByIsReadByAsc();
   }

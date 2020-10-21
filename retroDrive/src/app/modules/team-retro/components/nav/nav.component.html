@@ -20,7 +20,7 @@
     </span>
     <span
       style="cursor: pointer; margin-top: 8px;"
-      *ngIf="currentUserNotifications.length === 0 && !currentUser.isNewUser">
+      *ngIf="(currentUserNotifications.length === 0 && newUserNotification === null) && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    
     <span
@@ -29,17 +29,17 @@
       matBadgeColor="warn"
       style="cursor: pointer; margin-top: 8px;"
       class="hide-text" 
-      *ngIf="userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+      *ngIf="userNotifictaionHasNoReadNotify() && (currentUserNotifications.length > 0 || newUserNotification) && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>
     <span 
       [matMenuTriggerFor]="menu"
       style="cursor: pointer; margin-top: 8px;"
-      *ngIf="!userNotifictaionHasNoReadNotify() && currentUserNotifications.length > 0 && !currentUser.isNewUser">
+      *ngIf="!userNotifictaionHasNoReadNotify() && (currentUserNotifications.length > 0 || newUserNotification) && !currentUser.isNewUser">
         <mat-icon>notifications</mat-icon>
     </span>    
     <mat-menu class="more-width-mat-menu" #menu="matMenu">
-      <div *ngIf="currentUserNotifications.length > 0">
+      <div *ngIf="currentUserNotifications.length > 0 || newUserNotification">
         <div *ngFor="let userNotification of currentUserNotifications">
           <div *ngIf="userNotification.userNotification.notyficationType === 'WorkspaceWithRequiredAccess'">
             <button *ngIf="!userNotification.userNotification.isRead" (click)="goToNotifyDetail(userNotification)" mat-menu-item>
@@ -65,6 +65,20 @@
             </button>              
           </div>
         </div>
+        <div *ngIf="newUserNotification">
+          <div *ngIf="!newUserNotification.isRead">
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
+              <mat-icon color="warn">stop_circle</mat-icon>
+              <span style="font-size: 15px;">Welcome to fastretro.org</span>
+            </button>
+          </div>
+          <div *ngIf="newUserNotification.isRead">
+            <button mat-menu-item (click)="goToNotifyDetail(newUserNotification)">
+              <mat-icon>dialpad</mat-icon>
+              <span style="font-size: 14px; color: #696969;">Welcome to fastretro.org</span>
+            </button>
+          </div>   
+        </div>
         <mat-divider></mat-divider>
         <button style="text-align: center; margin-top: -5px; margin-bottom: -8px;" (click)="goToViewAllNotifications()"  mat-menu-item>
           <span>
@@ -73,7 +87,7 @@
         </button>         
       </div>
     </mat-menu>
-    <button mat-icon-button style="margin-left: -5px;" (click)="onUserSettings()">
+    <button mat-icon-button style="margin-left: -3px;" (click)="onUserSettings()">
       <mat-icon>settings</mat-icon>
     </button>    
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>

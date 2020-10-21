@@ -19,6 +19,7 @@ import { RetroBoardCardApiToSave } from '../models/retroBoardCardApiToSave';
 import { RetroBoardActionCardApiGet } from '../models/retroBoardActionCardApiGet';
 import { UsersInTeamsToRemoveInApi } from '../models/usersInTeamsToRemoveInApi';
 import { UserSettings } from '../models/UserSettings';
+import { UserNotificationNewUserToSave } from '../models/UserNotificationNewUserToSave';
 
 @Injectable({
   providedIn: 'root'
@@ -636,6 +637,22 @@ export class CurrentUserApiService {
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
   }
 
+  setNewUserNotificationAsRead(
+    userNotificationId: number
+  ) {
+      const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+      const httpOptions = {
+        headers
+      };
+      const url = this.baseUrl + '/setUserNotificationNewUserAsRead/';
+
+      const dataToPost = {
+        userNotificationId
+      };
+      return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
   setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(userNotificationId: number) {
     const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
@@ -663,6 +680,17 @@ export class CurrentUserApiService {
         userNotificationDocId
       };
       return this.httpClient.post(url, dataToPost, httpOptions).toPromise();
+  }
+
+  setNewUserNotification(newUserNotification: UserNotificationNewUserToSave): any {
+    const fbToken = this.localStorageService.getDecryptedItem(this.localStorageService.tokenKey) as FbToken;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + fbToken.token);
+    const httpOptions = {
+      headers
+    };
+    const url = this.baseUrl + '/setNewUserNotification/';
+
+    return this.httpClient.post(url, newUserNotification, httpOptions).toPromise();
   }
 
   addRetroBoardAdditionalInfoWithActionCount(

@@ -12,6 +12,7 @@ import { UserWorkspaceDataToSave } from 'src/app/models/userWorkspaceDataToSave'
 import { EventsService } from 'src/app/services/events.service';
 import { formatDate } from '@angular/common';
 import { FirestoreRetroBoardService } from 'src/app/modules/team-retro/services/firestore-retro-board.service';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-user-notification-details-dialog',
@@ -26,6 +27,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   currentUser: User;
   userNotificationWorkspaceWithRequiredAccess: UserNotificationWorkspaceWithRequiredAccess;
   isApprovedRequest: boolean;
+  newUserNotification: UserNotification;
 
   constructor(
     public dialogRef: MatDialogRef<UserNotificationDetailsDialogComponent>,
@@ -39,6 +41,7 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
     this.currentUser = this.data.currentUser as User;
     this.userNotificationWorkspaceWithRequiredAccess =
       this.data.userNotificationWorkspaceWithRequiredAccess as UserNotificationWorkspaceWithRequiredAccess;
+    this.newUserNotification = this.data.newUserNotification as UserNotification;
     this.setNotificationContentToDisplay();
   }
 
@@ -58,8 +61,12 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
   }
 
   isNotificationForApproval() {
-    // tslint:disable-next-line:max-line-length
-    return this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName;
+    if (this.userNotificationWorkspaceWithRequiredAccess === undefined || this.userNotificationWorkspaceWithRequiredAccess === null) {
+      return false;
+    }
+
+    return this.userNotificationWorkspaceWithRequiredAccess
+      .userNotification.notyficationType === this.workspaceWithRequiredAccessName;
   }
 
   getIsUserApprovedRequest() {
@@ -165,21 +172,37 @@ export class UserNotificationDetailsDialogComponent implements OnInit {
       });
   }
 
+  private setNewUserNotificationAsRead() {
+    this.currentUserApiService.setNewUserNotificationAsRead(
+      this.newUserNotification.id
+    )
+    .then(() => {
+      this.eventsService.emitSetRefreshNotificationEmiter();
+    })
+    .catch(error => {
+      const err = error;
+    });
+  }
+
   private setNotificationContentToDisplay() {
-    if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
-      this.getIsUserApprovedRequest();
-      this.setNotificationAsRead();
-    } else if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType ===
-        this.workspaceWithRequiredAccessResponseName) {
-          this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
-            this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
-          )
-          .then(() => {
-            this.eventsService.emitSetRefreshNotificationEmiter();
-          })
-          .catch(error => {
-            const err = error;
-          });
+    if (this.userNotificationWorkspaceWithRequiredAccess !== undefined) {
+      if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType === this.workspaceWithRequiredAccessName) {
+        this.getIsUserApprovedRequest();
+        this.setNotificationAsRead();
+      } else if (this.userNotificationWorkspaceWithRequiredAccess.userNotification.notyficationType ===
+          this.workspaceWithRequiredAccessResponseName) {
+            this.currentUserApiService.setUserNotificationAsReadForWorkspaceWithRequiredAccessResponse(
+              this.userNotificationWorkspaceWithRequiredAccess.userNotification.id
+            )
+            .then(() => {
+              this.eventsService.emitSetRefreshNotificationEmiter();
+            })
+            .catch(error => {
+              const err = error;
+            });
+      }
+    } else if (this.newUserNotification) {
+      this.setNewUserNotificationAsRead();
     }
   }
 }

@@ -15,6 +15,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog/user-notification-details-dialog.component';
 import { FirestoreRetroBoardService } from '../../services/firestore-retro-board.service';
 import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
+import { UserNotificationNewUserToSave } from 'src/app/models/UserNotificationNewUserToSave';
+import { UserNotification } from 'src/app/models/userNotification';
 
 @Component({
   selector: 'app-nav',
@@ -34,6 +36,7 @@ export class NavComponent implements OnInit, OnDestroy {
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
   notificationCount: number;
+  newUserNotification: UserNotification;
 
   constructor(
     public auth: AuthService,
@@ -73,13 +76,26 @@ export class NavComponent implements OnInit, OnDestroy {
     this.unsubscribeEvents();
   }
 
-  goToNotifyDetail(userNotification: UserNotificationWorkspaceWithRequiredAccess) {
-    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
-      width: '600px',
-      data: {
+  goToNotifyDetail(userNotification: any) {
+    let data = {};
+
+    if (userNotification.notyficationType !== undefined) {
+      if (userNotification.notyficationType === 'NewUserNotification') {
+        data = {
+          newUserNotification: userNotification,
+          currentUser: this.currentUser
+        };
+      }
+    } else if (userNotification.notyficationType === undefined && userNotification.userNotification !== undefined) {
+      data = {
         userNotificationWorkspaceWithRequiredAccess: userNotification,
         currentUser: this.currentUser
-      }
+      };
+    }
+
+    const dialogRef = this.dialog.open(UserNotificationDetailsDialogComponent, {
+      width: '600px',
+      data
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -102,7 +118,15 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   userNotifictaionHasNoReadNotify() {
-    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead);
+    return this.currentUserNotifications.some(cun => !cun.userNotification.isRead) || this.isNewUserNotifictaionHasNoReadNotify();
+  }
+
+  private isNewUserNotifictaionHasNoReadNotify() {
+    if (this.newUserNotification === undefined) {
+      return false;
+    }
+
+    return !this.newUserNotification.isRead;
   }
 
   isAceptedByOwnerAndIsApproved(userNotification: UserNotificationWorkspaceWithRequiredAccess): boolean {
@@ -190,6 +214,9 @@ export class NavComponent implements OnInit, OnDestroy {
           this.currentUserNotifications.push(userNotificationWorkspaceWithRequiredAccessResponse);
         });
       }
+    }
+    if (response.newUserNotification !== undefined && response.newUserNotification !== null) {
+      this.newUserNotification = response.newUserNotification as UserNotification;
     }
     this.notificationCount = this.currentUserNotifications.length;
     this.sortCurrentUserNoitficationByCreationDateDesc();
