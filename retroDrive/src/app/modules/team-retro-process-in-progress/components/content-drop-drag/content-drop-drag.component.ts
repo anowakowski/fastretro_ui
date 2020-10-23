@@ -90,7 +90,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   shouldShowPreviousActionBtn: boolean;
   spinnerTickSubscription: any;
   timerIsRunningForBottomNavbarBtnSunscriptions: any;
-  freshRetroBoardCards: RetroBoardCard[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -871,6 +870,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   removeRetroBoardCard(currentCard: RetroBoardCard) {
     currentCard.isInDeleting = true;
+    if (currentCard.isWentWellRetroBoradCol) {
+      this.removeLocalCardFromArray(currentCard, WENT_WELL);
+    } else {
+      this.removeLocalCardFromArray(currentCard, TO_IMPROVE);
+    }
     this.firestoreRetroInProgressService.removeRetroBoardCard(currentCard.id).finally(() => {
       this.currentUserInRetroBoardApiService.setRemoveRetroBoardCardsToUnMerge(currentCard.retoBoardCardApiId, currentCard.id)
         .then(() => {})
@@ -1290,7 +1294,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
           // }
 
-          this.freshRetroBoardCards = new Array<RetroBoardCard>();
+          const freshRetroBoardCards = new Array<RetroBoardCard>();
 
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
           .then(response => {
@@ -1313,24 +1317,27 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                   this.addRetroBoardCardToCorrectColumn(retroBoardCard);
                 }
 
-                this.freshRetroBoardCards.push(retroBoardCard);
+                freshRetroBoardCards.push(retroBoardCard);
 
               });
               this.setIsExistingSomeRetroBoardCardActions();
-
-              this.wnetWellRetroBoardCol.retroBoardCards.forEach(rbc => {
-                if (!this.freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
-                  this.removeLocalCardFromArray(rbc, WENT_WELL);
-                }
-              });
-              this.toImproveRetroBoardCol.retroBoardCards.forEach(rbc => {
-                if (!this.freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
-                  this.removeLocalCardFromArray(rbc, TO_IMPROVE);
-                }
-              });
+              this.removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards);
             }
           });
       });
+  }
+
+  private removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards: RetroBoardCard[]) {
+    this.wnetWellRetroBoardCol.retroBoardCards.forEach(rbc => {
+      if (!freshRetroBoardCards.some(frbc => frbc.id === rbc.id) && rbc.isNewItem === false && rbc.isEdit === false) {
+        this.removeLocalCardFromArray(rbc, WENT_WELL);
+      }
+    });
+    this.toImproveRetroBoardCol.retroBoardCards.forEach(rbc => {
+      if (!freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
+        this.removeLocalCardFromArray(rbc, TO_IMPROVE);
+      }
+    });
   }
 
   private isCurrentlyNotAddedToRetroBoardCards(retroBoardCard) {
