@@ -1273,23 +1273,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardCardsSubscriptions =
       this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
         .subscribe(retroBoardCardsSnapshot => {
-
-          // if (this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
-          //   const findedEditedRBCard = this.wnetWellRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
-          //   // this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          //   this.wnetWellRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
-          // } else {
-          //   // this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          // }
-
-          // if (this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
-          //   const findedEditedRBCard = this.toImproveRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
-          //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          //   this.toImproveRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
-          // } else {
-          //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          // }
-
           const freshRetroBoardCards = new Array<RetroBoardCard>();
 
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
