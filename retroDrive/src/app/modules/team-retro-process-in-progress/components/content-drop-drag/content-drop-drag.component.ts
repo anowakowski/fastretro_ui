@@ -1273,21 +1273,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
         .subscribe(retroBoardCardsSnapshot => {
 
-          if (this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
-            const findedEditedRBCard = this.wnetWellRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
-            this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-            this.wnetWellRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
-          } else {
-            this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          }
+          // if (this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
+          //   const findedEditedRBCard = this.wnetWellRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
+          //   // this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          //   this.wnetWellRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
+          // } else {
+          //   // this.wnetWellRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          // }
 
-          if (this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
-            const findedEditedRBCard = this.toImproveRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
-            this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-            this.toImproveRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
-          } else {
-            this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
-          }
+          // if (this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.isEdit && !rbc.isInDeleting)) {
+          //   const findedEditedRBCard = this.toImproveRetroBoardCol.retroBoardCards.find(rbc => rbc.isEdit);
+          //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          //   this.toImproveRetroBoardCol.retroBoardCards.push(findedEditedRBCard);
+          // } else {
+          //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
+          // }
 
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
           .then(response => {
@@ -1299,18 +1299,28 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 retroBoardCard.id = retroBoardCardDocId;
 
                 const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardApiId === retroBoardCard.retoBoardCardApiId);
-                if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
-                  retroBoardCard.name = findedRetroBoardCardApi.text;
-                  if (findedRetroBoardCardApi.isMerged) {
-                    retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
+
+                if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
+                  if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
+                    retroBoardCard.name = findedRetroBoardCardApi.text;
+                    if (findedRetroBoardCardApi.isMerged) {
+                      retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
+                    }
                   }
+                  this.addRetroBoardCardToCorrectColumn(retroBoardCard);
                 }
-                this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+
+
               });
               this.setIsExistingSomeRetroBoardCardActions();
             }
           });
       });
+  }
+
+  private isCurrentlyNotAddedToRetroBoardCards(retroBoardCard) {
+    return !this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id) &&
+      !this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id);
   }
 
   setIsExistingSomeRetroBoardCardActions() {
