@@ -454,8 +454,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         .catch(error => {
           const err = error;
         });
-
-        this.removeLocalCardFromArray(card, colName);
       } else if (!card.isNewItem && card.isEdit) {
         this.firestoreRetroInProgressService.findRetroBoardCardById(card.id).then(retroBoardCardSnapshot => {
           if (retroBoardCardSnapshot.exists) {
@@ -480,8 +478,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             .catch(error => {
               const err = error;
             });
-
-            this.removeLocalCardFromArray(card, colName);
           }
         });
       }
@@ -1306,14 +1302,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 retroBoardCard.id = retroBoardCardDocId;
 
                 const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardApiId === retroBoardCard.retoBoardCardApiId);
+                if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
+                  retroBoardCard.name = findedRetroBoardCardApi.text;
+                  if (findedRetroBoardCardApi.isMerged) {
+                    retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
+                  }
+                }
 
                 if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
-                  if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
-                    retroBoardCard.name = findedRetroBoardCardApi.text;
-                    if (findedRetroBoardCardApi.isMerged) {
-                      retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
-                    }
-                  }
                   this.addRetroBoardCardToCorrectColumn(retroBoardCard);
                 }
 
@@ -1334,7 +1330,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       }
     });
     this.toImproveRetroBoardCol.retroBoardCards.forEach(rbc => {
-      if (!freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
+      if (!freshRetroBoardCards.some(frbc => frbc.id === rbc.id) && rbc.isNewItem === false && rbc.isEdit === false) {
         this.removeLocalCardFromArray(rbc, TO_IMPROVE);
       }
     });
@@ -1342,7 +1338,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   private isCurrentlyNotAddedToRetroBoardCards(retroBoardCard) {
     return !this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id) &&
-      !this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id);
+          !this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id);
   }
 
   setIsExistingSomeRetroBoardCardActions() {
