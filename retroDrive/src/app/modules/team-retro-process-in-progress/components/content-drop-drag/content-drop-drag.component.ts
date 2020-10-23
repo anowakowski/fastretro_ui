@@ -1311,16 +1311,38 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
                 if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
                   this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+                } else if (this.isCardToUpdate(retroBoardCard)) {
+                  if (retroBoardCard.isWentWellRetroBoradCol) {
+                    this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+                  } else {
+                    this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+                  }
                 }
-
                 freshRetroBoardCards.push(retroBoardCard);
-
               });
               this.setIsExistingSomeRetroBoardCardActions();
               this.removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards);
             }
           });
       });
+  }
+
+  private updateLocalRetroBoardCardAfterChangeName(retroBoardCard: RetroBoardCard, retroBoardCards: RetroBoardCard[]) {
+    const findedRetroBoardToUpdate = retroBoardCards.find(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name);
+
+    findedRetroBoardToUpdate.name = retroBoardCard.name;
+
+    const index = this.getArrayIndex(findedRetroBoardToUpdate, retroBoardCards);
+    this.updateLocalRetroBoardCard(index, findedRetroBoardToUpdate, retroBoardCards);
+  }
+
+  private isCardToUpdate(retroBoardCard: RetroBoardCard) {
+    const isCurrentlyAdded = !this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard);
+    const shoudlUpdateName =
+      this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name) ||
+      this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name);
+
+    return isCurrentlyAdded && shoudlUpdateName;
   }
 
   private removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards: RetroBoardCard[]) {
