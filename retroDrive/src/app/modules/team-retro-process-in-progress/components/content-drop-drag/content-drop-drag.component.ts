@@ -1270,9 +1270,11 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private setRetroBoardCardSubscription(retroBoardId: string) {
+
     this.retroBoardCardsSubscriptions =
       this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
         .subscribe(retroBoardCardsSnapshot => {
+          this.dataIsLoading = true;
           const freshRetroBoardCards = new Array<RetroBoardCard>();
 
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
@@ -1303,8 +1305,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 }
                 freshRetroBoardCards.push(retroBoardCard);
               });
+
               this.setIsExistingSomeRetroBoardCardActions();
               this.removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards);
+              this.dataIsLoading = false;
             }
           });
       });
@@ -1346,7 +1350,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           !this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id);
   }
 
-  setIsExistingSomeRetroBoardCardActions() {
+  private setIsExistingSomeRetroBoardCardActions() {
     this.isExistingSomeRetroBoardCardAction = false;
 
     const isExistingActionInWentWell = this.wnetWellRetroBoardCol.retroBoardCards.some(x => x.actions.length > 0);
@@ -1679,7 +1683,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     currentCard: RetroBoardCard,
     findedCurrentRetroBoardCard: RetroBoardCard) {
       if (this.isPosibleToMerge(findedFromMergedCart, currentCard)) {
-        this.dataIsLoading = true;
+        // this.dataIsLoading = true;
         this.saveNewMergeRetroBoardCard(findedFromMergedCart, findedCurrentRetroBoardCard);
         this.removeUserVoteOnCardForMerge(findedFromMergedCart);
         this.removeUserVoteOnCardForMerge(findedCurrentRetroBoardCard);
@@ -1821,12 +1825,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
         const err = error;
       })
       .finally(() => {
-        this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(90).subscribe((interval) => {
-          if (interval === 1) {
-            this.dataIsLoading = false;
-            this.spinnerTickSubscription.unsubscribe();
-          }
-        });
+        // this.spinnerTickSubscription = this.spinnerTickService.runNewTimer(90).subscribe((interval) => {
+        //   if (interval === 1) {
+        //     this.dataIsLoading = false;
+        //     this.spinnerTickSubscription.unsubscribe();
+        //   }
+        // });
       });
   }
 
