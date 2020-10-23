@@ -1313,7 +1313,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       });
   }
 
-
   setIsExistingSomeRetroBoardCardActions() {
     this.isExistingSomeRetroBoardCardAction = false;
 
