@@ -90,6 +90,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   shouldShowPreviousActionBtn: boolean;
   spinnerTickSubscription: any;
   timerIsRunningForBottomNavbarBtnSunscriptions: any;
+  freshRetroBoardCards: RetroBoardCard[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -1289,6 +1290,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           //   // this.toImproveRetroBoardCol.retroBoardCards = this.clearRetroBoardCardsLocalArray();
           // }
 
+          this.freshRetroBoardCards = new Array<RetroBoardCard>();
+
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
           .then(response => {
             if (response !== undefined && response !== null) {
@@ -1310,9 +1313,21 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                   this.addRetroBoardCardToCorrectColumn(retroBoardCard);
                 }
 
+                this.freshRetroBoardCards.push(retroBoardCard);
 
               });
               this.setIsExistingSomeRetroBoardCardActions();
+
+              this.wnetWellRetroBoardCol.retroBoardCards.forEach(rbc => {
+                if (!this.freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
+                  this.removeLocalCardFromArray(rbc, WENT_WELL);
+                }
+              });
+              this.toImproveRetroBoardCol.retroBoardCards.forEach(rbc => {
+                if (!this.freshRetroBoardCards.some(frbc => frbc.id === rbc.id)) {
+                  this.removeLocalCardFromArray(rbc, TO_IMPROVE);
+                }
+              });
             }
           });
       });
