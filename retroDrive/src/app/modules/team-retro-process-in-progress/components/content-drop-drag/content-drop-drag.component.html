@@ -92,7 +92,7 @@
                 'retro-board-card-new-item-to-improve': item.isEdit === true && column.name === 'To Improve',
                 'retro-board-card-chosen-for-merge': item.isInMerge === true,
                 'retro-board-card-chosen-to-add-action': item.isInAddedToAction === true,
-                'animate__animated animate__zoomInLeft': item.isEdit === true
+                'animate__animated animate__zoomIn': item.isEdit === true
               }" 
               *ngFor="let item of column.retroBoardCards"
               cdkDrag

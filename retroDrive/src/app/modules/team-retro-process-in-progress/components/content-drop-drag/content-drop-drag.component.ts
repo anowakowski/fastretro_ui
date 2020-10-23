@@ -1274,7 +1274,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.retroBoardCardsSubscriptions =
       this.firestoreRetroInProgressService.retroBoardCardsFilteredByRetroBoardIdSnapshotChanges(retroBoardId)
         .subscribe(retroBoardCardsSnapshot => {
-          this.dataIsLoading = true;
           const freshRetroBoardCards = new Array<RetroBoardCard>();
 
           this.currentUserInRetroBoardApiService.getRetroBoardCards(this.retroBoardToProcess.id)
@@ -1308,7 +1307,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
               this.setIsExistingSomeRetroBoardCardActions();
               this.removeRetroBoardCardFromArrayWhenIsNotExistingCard(freshRetroBoardCards);
-              this.dataIsLoading = false;
             }
           });
       });
