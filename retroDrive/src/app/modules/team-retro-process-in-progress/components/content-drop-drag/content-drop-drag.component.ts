@@ -1286,32 +1286,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 retroBoardCard.id = retroBoardCardDocId;
 
                 const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardApiId === retroBoardCard.retoBoardCardApiId);
-                if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
-                  retroBoardCard.name = findedRetroBoardCardApi.text;
-                  if (findedRetroBoardCardApi.isMerged) {
-                    retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
-                  }
-                }
+                this.setCorrectretroBoardCardText(findedRetroBoardCardApi, retroBoardCard);
 
-                if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
-                  this.addRetroBoardCardToCorrectColumn(retroBoardCard);
-                } else if (this.isCardToUpdateName(retroBoardCard)) {
-                  if (retroBoardCard.isWentWellRetroBoradCol) {
-                    this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
-                  } else {
-                    this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
-                  }
-                } else if (this.isCardToUpdateColumn(retroBoardCard)) {
-                  const freshRetroBoardIsInWentWellCol = retroBoardCard.isWentWellRetroBoradCol;
-
-                  if (freshRetroBoardIsInWentWellCol) {
-                    // tslint:disable-next-line:max-line-length
-                    this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards, TO_IMPROVE);
-                  } else {
-                    this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards, WENT_WELL);
-                  }
-                }
-                freshRetroBoardCards.push(retroBoardCard);
+                this.retroBoardCardProcessing(retroBoardCard);
+                this.addTofreshRetroBoard(freshRetroBoardCards, retroBoardCard);
               });
 
               this.setIsExistingSomeRetroBoardCardActions();
@@ -1319,6 +1297,40 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
             }
           });
       });
+  }
+
+  private setCorrectretroBoardCardText(findedRetroBoardCardApi: RetroBoardCardApi, retroBoardCard: RetroBoardCard) {
+    if (findedRetroBoardCardApi !== undefined && findedRetroBoardCardApi !== null) {
+      retroBoardCard.name = findedRetroBoardCardApi.text;
+      if (findedRetroBoardCardApi.isMerged) {
+        retroBoardCard.mergedContent = findedRetroBoardCardApi.mergedContent;
+      }
+    }
+  }
+
+  private addTofreshRetroBoard(freshRetroBoardCards: RetroBoardCard[], retroBoardCard: RetroBoardCard) {
+    freshRetroBoardCards.push(retroBoardCard);
+  }
+
+  private retroBoardCardProcessing(retroBoardCard: RetroBoardCard) {
+    if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
+      this.addRetroBoardCardToCorrectColumn(retroBoardCard);
+    } else if (this.isCardToUpdateName(retroBoardCard)) {
+      if (retroBoardCard.isWentWellRetroBoradCol) {
+        this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      } else {
+        this.updateLocalRetroBoardCardAfterChangeName(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
+      }
+    } else if (this.isCardToUpdateColumn(retroBoardCard)) {
+      const freshRetroBoardIsInWentWellCol = retroBoardCard.isWentWellRetroBoradCol;
+
+      if (freshRetroBoardIsInWentWellCol) {
+        // tslint:disable-next-line:max-line-length
+        this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards, TO_IMPROVE);
+      } else {
+        this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards, WENT_WELL);
+      }
+    }
   }
 
   private updateLocalRetroBoardCardAfterChangeName(retroBoardCard: RetroBoardCard, retroBoardCards: RetroBoardCard[]) {
