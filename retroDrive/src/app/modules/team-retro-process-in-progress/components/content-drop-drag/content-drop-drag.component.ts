@@ -1288,7 +1288,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
                 const findedRetroBoardCardApi = retroBoardCards.find(rbc => rbc.retroBoardCardApiId === retroBoardCard.retoBoardCardApiId);
                 this.setCorrectretroBoardCardText(findedRetroBoardCardApi, retroBoardCard);
 
-                this.retroBoardCardProcessing(retroBoardCard);
+                this.retroBoardCardsProcessing(retroBoardCard);
                 this.addTofreshRetroBoard(freshRetroBoardCards, retroBoardCard);
               });
 
@@ -1312,7 +1312,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     freshRetroBoardCards.push(retroBoardCard);
   }
 
-  private retroBoardCardProcessing(retroBoardCard: RetroBoardCard) {
+  private retroBoardCardsProcessing(retroBoardCard: RetroBoardCard) {
     if (this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard)) {
       this.addRetroBoardCardToCorrectColumn(retroBoardCard);
     } else if (this.isCardToUpdateName(retroBoardCard)) {
