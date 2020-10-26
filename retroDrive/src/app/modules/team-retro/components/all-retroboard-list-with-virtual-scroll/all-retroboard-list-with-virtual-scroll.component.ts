@@ -130,6 +130,13 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
             retroBoardData.id = id;
 
+            retroBoardData.team.get().then(teamSnapshot => {
+              const team = teamSnapshot.data();
+              const teamId = teamSnapshot.id;
+              retroBoardData.team = team;
+              retroBoardData.team.id = teamId;
+            });
+
             if (retroBoardData.isFinished) {
               this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
             }
