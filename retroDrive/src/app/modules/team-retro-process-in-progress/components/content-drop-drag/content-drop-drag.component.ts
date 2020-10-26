@@ -1323,12 +1323,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       }
     } else if (this.isCardToUpdateColumn(retroBoardCard)) {
       const freshRetroBoardIsInWentWellCol = retroBoardCard.isWentWellRetroBoradCol;
-
       if (freshRetroBoardIsInWentWellCol) {
         // tslint:disable-next-line:max-line-length
         this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards, TO_IMPROVE);
       } else {
         this.updateLocalRetroBoardCardAfterChangeColumn(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards, WENT_WELL);
+      }
+    } else if (this.isCardToUpdateVoteCount(retroBoardCard)) {
+      if (retroBoardCard.isWentWellRetroBoradCol) {
+        this.updateLocalRetroBoardCardAfterChangeVouteCount(retroBoardCard, this.wnetWellRetroBoardCol.retroBoardCards);
+      } else {
+        this.updateLocalRetroBoardCardAfterChangeVouteCount(retroBoardCard, this.toImproveRetroBoardCol.retroBoardCards);
       }
     }
   }
@@ -1337,6 +1342,16 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const findedRetroBoardToUpdate = retroBoardCards.find(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name);
 
     findedRetroBoardToUpdate.name = retroBoardCard.name;
+
+    const index = this.getArrayIndex(findedRetroBoardToUpdate, retroBoardCards);
+    this.updateLocalRetroBoardCard(index, findedRetroBoardToUpdate, retroBoardCards);
+  }
+
+  private updateLocalRetroBoardCardAfterChangeVouteCount(retroBoardCard: RetroBoardCard, retroBoardCards: RetroBoardCard[]) {
+    // tslint:disable-next-line:max-line-length
+    const findedRetroBoardToUpdate = retroBoardCards.find(rbc => rbc.id === retroBoardCard.id && rbc.voteCount !== retroBoardCard.voteCount);
+
+    findedRetroBoardToUpdate.voteCount = retroBoardCard.voteCount;
 
     const index = this.getArrayIndex(findedRetroBoardToUpdate, retroBoardCards);
     this.updateLocalRetroBoardCard(index, findedRetroBoardToUpdate, retroBoardCards);
@@ -1359,6 +1374,15 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     const shoudlUpdateName =
       this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name) ||
       this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.name !== retroBoardCard.name);
+
+    return isCurrentlyAdded && shoudlUpdateName;
+  }
+
+  private isCardToUpdateVoteCount(retroBoardCard: RetroBoardCard) {
+    const isCurrentlyAdded = !this.isCurrentlyNotAddedToRetroBoardCards(retroBoardCard);
+    const shoudlUpdateName =
+      this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.voteCount !== retroBoardCard.voteCount) ||
+      this.toImproveRetroBoardCol.retroBoardCards.some(rbc => rbc.id === retroBoardCard.id && rbc.voteCount !== retroBoardCard.voteCount);
 
     return isCurrentlyAdded && shoudlUpdateName;
   }
