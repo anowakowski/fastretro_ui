@@ -24,6 +24,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, mergeMap, scan, tap, throttleTime } from 'rxjs/operators';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AllRetroBoardListDataSerivceService } from './all-retro-board-list-data-serivce.service';
+import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
 const batchSize = 20;
 
@@ -125,6 +126,14 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       .pipe(
         tap(arr => (arr.length ? null : (this.theEnd = true))),
         map(arr => {
+
+          const retroBoards = arr;
+
+          this.firestoreRBServices.findUserTeams(this.currentUser.uid)
+            .then(userTeamsSnapshot => {
+              const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+            });
+
           return arr.reduce((acc, cur) => {
             const id = cur.payload.doc.id;
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
