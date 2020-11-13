@@ -25,6 +25,7 @@ import { map, mergeMap, scan, tap, throttleTime } from 'rxjs/operators';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AllRetroBoardListDataSerivceService } from './all-retro-board-list-data-serivce.service';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
+import { UserTeams } from 'src/app/models/userTeams';
 
 const batchSize = 20;
 
@@ -51,6 +52,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   private readonly shouldShowOnlyFinishedFilterName = 'shouldShowOnlyFinished';
 
   private readonly shouldShowOnlyOpenedFilterName = 'shouldShowOnlyOpened';
+  currentUserTeams: UserTeamsToSave;
 
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
@@ -105,6 +107,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
+        this.preapareCurrentUserTeams();
         this.prepareBatchProcessing();
 
         this.sortByData.push('name');
@@ -126,15 +129,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
       .pipe(
         tap(arr => (arr.length ? null : (this.theEnd = true))),
         map(arr => {
-
-          const retroBoards = arr;
-
-          this.firestoreRBServices.findUserTeams(this.currentUser.uid)
-            .then(userTeamsSnapshot => {
-              const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-            });
-
-          return arr.reduce((acc, cur) => {
+          const payloadedRetroBoards = arr.reduce((acc, cur) => {
             const id = cur.payload.doc.id;
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
             retroBoardData.id = id;
@@ -144,14 +139,20 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
               const teamId = teamSnapshot.id;
               retroBoardData.team = team;
               retroBoardData.team.id = teamId;
+
+              if (retroBoardData.isFinished) {
+                this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
+              }
             });
 
-            if (retroBoardData.isFinished) {
-              this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
+            if (this.currentUserTeams.teams.some(t => t.id === retroBoardData.team.id)) {
+              return { ...acc, [id]: retroBoardData };
             }
 
-            return { ...acc, [id]: retroBoardData };
+            return acc;
           }, {});
+
+          return payloadedRetroBoards;
         })
       );
   }
@@ -232,6 +233,16 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     } else {
       this.sortByIsFinishedValue();
     }
+  }
+
+  private preapareCurrentUserTeams() {
+    this.firestoreRBServices.findUserTeams(this.currentUser.uid)
+      .then(userTeamsSnapshot => {
+        if (!userTeamsSnapshot.empty) {
+          const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+          this.currentUserTeams = userTeams;
+        }
+      });
   }
 
   private sortByAsc() {
