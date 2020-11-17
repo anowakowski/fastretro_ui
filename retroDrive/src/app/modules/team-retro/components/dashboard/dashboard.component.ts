@@ -120,6 +120,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+  prepareCountForRertroBoardsByIsFinished(isFinishedRetroBoard: boolean) {
+    if (this.retroBoards !== undefined || this.retroBoards.length > 0) {
+      const filteredRetroBoards = this.retroBoards.filter(x => x.isFinished === isFinishedRetroBoard);
+      return filteredRetroBoards.length;
+    }
+  }
+
   private prepreRetroBoardForCurrentWorkspace() {
     this.retroBoardsDashboardSubscritpiton =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
