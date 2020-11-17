@@ -110,8 +110,7 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
         this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
         this.currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
 
-        this.preapareCurrentUserTeams();
-        this.prepareBatchProcessing();
+        this.prepareBaseRetroBoardsData();
 
         this.sortByData.push('name');
         this.sortByData.push('creation date');
@@ -230,6 +229,19 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     }
   }
 
+  private prepareBaseRetroBoardsData() {
+    this.getUserTeams()
+      .then(userTeamsSnapshot => this.preapareCurrentUserTeams(userTeamsSnapshot))
+      .finally(() => this.prepareBatchProcessing());
+  }
+
+  private preapareCurrentUserTeams(userTeamsSnapshot) {
+    if (!userTeamsSnapshot.empty) {
+      const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+      this.currentUserTeams = userTeams;
+    }
+  }
+
   private getRetroBoardDataFromApi(retroBoardId: string, retroBoardData: RetroBoardToSave) {
     this.currentUserInRetroBoardApiService.getRetroBoard(retroBoardId)
       .then(response => {
@@ -255,14 +267,8 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     });
   }
 
-  private preapareCurrentUserTeams() {
-    this.firestoreRBServices.findUserTeams(this.currentUser.uid)
-      .then(userTeamsSnapshot => {
-        if (!userTeamsSnapshot.empty) {
-          const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-          this.currentUserTeams = userTeams;
-        }
-      });
+  private getUserTeams() {
+   return this.firestoreRBServices.findUserTeams(this.currentUser.uid);
   }
 
   private sortByAsc() {
