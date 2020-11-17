@@ -137,26 +137,8 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
             const retroBoardData = cur.payload.doc.data() as RetroBoardToSave;
             retroBoardData.id = id;
 
-            retroBoardData.team.get().then(teamSnapshot => {
-              const team = teamSnapshot.data();
-              const teamId = teamSnapshot.id;
-              retroBoardData.team = team;
-              retroBoardData.team.id = teamId;
-
-              if (retroBoardData.isFinished) {
-                this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
-              }
-            });
-
-            this.currentUserInRetroBoardApiService.getRetroBoard(id)
-              .then(response => {
-                const retroBoardDataFromApi = response as RetroBoardApi;
-                retroBoardData.retroName = retroBoardDataFromApi.retroBoardName;
-                retroBoardData.sprintNumber = retroBoardDataFromApi.sprintNumber;
-              })
-              .catch(error => {
-                const err = error;
-              });
+            this.getTeamsForretroBoard(retroBoardData);
+            this.getRetroBoardDataFromApi(id, retroBoardData);
 
             if (this.currentUserTeams.teams.some(t => t.id === retroBoardData.team.id)) {
               return { ...acc, [id]: retroBoardData };
@@ -246,6 +228,31 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     } else {
       this.sortByIsFinishedValue();
     }
+  }
+
+  private getRetroBoardDataFromApi(retroBoardId: string, retroBoardData: RetroBoardToSave) {
+    this.currentUserInRetroBoardApiService.getRetroBoard(retroBoardId)
+      .then(response => {
+        const retroBoardDataFromApi = response as RetroBoardApi;
+        retroBoardData.retroName = retroBoardDataFromApi.retroBoardName;
+        retroBoardData.sprintNumber = retroBoardDataFromApi.sprintNumber;
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private getTeamsForretroBoard(retroBoardData: RetroBoardToSave) {
+    retroBoardData.team.get().then(teamSnapshot => {
+      const team = teamSnapshot.data();
+      const teamId = teamSnapshot.id;
+      retroBoardData.team = team;
+      retroBoardData.team.id = teamId;
+
+      if (retroBoardData.isFinished) {
+        this.prepareActionForFinishedRetroBoardCards(retroBoardData as RetroBoard);
+      }
+    });
   }
 
   private preapareCurrentUserTeams() {
