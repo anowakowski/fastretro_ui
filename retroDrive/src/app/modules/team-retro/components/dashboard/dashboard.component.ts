@@ -266,14 +266,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.prepareActionForFinishedRetroBoardCards(retroboardToAdd as RetroBoard);
     } else {
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== retroboardToAdd.id)) {
-        this.currentUserInRetroBoardApiService.getRetroBoard(retroboardToAdd.id)
-          .then(response => {
-            this.addToRetroBoardWithRbName(response, retroboardToAdd);
-            this.checkIfUserHasExistingRetroBoardsAndShowInfo();
-          })
-          .catch(error => {
-            const err = error;
-          });
+        this.prepareRetroBoardWithaDataFromApi(retroboardToAdd);
 
       } else {
         this.dataIsLoading = false;
@@ -283,8 +276,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dataIsLoading = false;
   }
 
-  private addToRetroBoardWithRbName(response: any, retroboardToAdd: RetroBoardToSave) {
-    const retroBoardDataFromApi = response as RetroBoardApi;
+  private prepareRetroBoardWithaDataFromApi(retroboardToAdd: RetroBoardToSave) {
+    this.currentUserInRetroBoardApiService.getRetroBoard(retroboardToAdd.id)
+      .then(response => {
+        this.addToRetroBoardWithRbName(response, retroboardToAdd);
+        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
+      })
+      .catch(error => {
+        const err = error;
+      });
+  }
+
+  private addToRetroBoardWithRbName(rbResponse: any, retroboardToAdd: RetroBoardToSave) {
+    const retroBoardDataFromApi = rbResponse as RetroBoardApi;
     const rb = retroboardToAdd as RetroBoard;
 
     rb.retroName = retroBoardDataFromApi.retroBoardName;
@@ -307,7 +311,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
       }
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== finishedRetroBoard.id)) {
-        this.retroBoards.push(finishedRetroBoard);
+        this.prepareRetroBoardWithaDataFromApi(finishedRetroBoard);
         this.prepareChartForFinishedRetroBoardActions(finishedRetroBoard.actions);
         this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       } else {
