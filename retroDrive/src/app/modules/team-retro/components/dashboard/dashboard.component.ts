@@ -25,6 +25,7 @@ import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 import { UserTeams } from 'src/app/models/userTeams';
 import { find } from 'rxjs/operators';
 import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
+import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
 @Component({
   selector: 'app-dashboard',
@@ -263,17 +264,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private addToRetroBoards(retroboardToAdd: RetroBoardToSave, isFinished: boolean) {
     if (isFinished) {
       this.prepareActionForFinishedRetroBoardCards(retroboardToAdd as RetroBoard);
-    }
-    if (!isFinished) {
+    } else {
       if (this.retroBoards.length === 0 || this.retroBoards.some(rb => rb.id !== retroboardToAdd.id)) {
-        this.retroBoards.push(retroboardToAdd as RetroBoard);
-        this.checkIfUserHasExistingRetroBoardsAndShowInfo();
+        this.currentUserInRetroBoardApiService.getRetroBoard(retroboardToAdd.id)
+          .then(response => {
+            this.addToRetroBoardWithRbName(response, retroboardToAdd);
+            this.checkIfUserHasExistingRetroBoardsAndShowInfo();
+          })
+          .catch(error => {
+            const err = error;
+          });
+
       } else {
         this.dataIsLoading = false;
         this.checkIfUserHasExistingRetroBoardsAndShowInfo();
       }
     }
     this.dataIsLoading = false;
+  }
+
+  private addToRetroBoardWithRbName(response: any, retroboardToAdd: RetroBoardToSave) {
+    const retroBoardDataFromApi = response as RetroBoardApi;
+    const rb = retroboardToAdd as RetroBoard;
+
+    rb.retroName = retroBoardDataFromApi.retroBoardName;
+    rb.sprintNumber = retroBoardDataFromApi.sprintNumber;
+
+    this.retroBoards.push(rb);
   }
 
   private prepareActionForFinishedRetroBoardCards(finishedRetroBoard: RetroBoard) {
