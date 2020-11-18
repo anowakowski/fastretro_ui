@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   simpleRetroBoardCards: any[];
   finishedRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
   openRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
+  nonStartedRetroBoards: RetroBoardToSave[] = new Array<RetroBoardToSave>();
 
   dataIsLoading = true;
   retroBoardsDashboardSubscritpiton: any;
@@ -131,22 +132,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private prepreRetroBoardForCurrentWorkspace() {
     this.retroBoardsDashboardSubscritpiton =
       this.firestoreRBServices.retroBoardFilteredByWorkspaceIdSnapshotChanges(this.currentWorkspace.id).subscribe(retroBoardsSnapshot => {
-        this.retroBoards = new Array<RetroBoard>();
-        this.finishedRetroBoards = new Array<RetroBoardToSave>();
-        this.openRetroBoards = new Array<RetroBoardToSave>();
 
-        this.prepareRetroBoardForDashboard(retroBoardsSnapshot);
-        retroBoardsSnapshot.forEach(retroBoardSnapshot => {
-          const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
-          retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
-          if (retroBoardData.isStarted) {
-            if (retroBoardData.isFinished) {
-              this.finishedRetroBoards.push(retroBoardData);
+        this.getUserTeams()
+          .then(userTeamsSnapshot => {
+            if (!userTeamsSnapshot.empty) {
+              const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
+              this.prepareRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
+              this.prepareCountForDashboardSummary(retroBoardsSnapshot, userTeams);
             } else {
-              this.openRetroBoards.push(retroBoardData);
+              this.dataIsLoading = false;
+              this.checkIfUserHasExistingRetroBoardsAndShowInfo();
             }
-          }
-        });
+          });
       });
   }
 
@@ -165,35 +162,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.router.navigate(['/retro/all-retroboard-list']);
   }
 
-  saveAsExcel(retroBoard: RetroBoard) {}
+  private prepareCountForDashboardSummary(retroBoardsSnapshot, userTeams) {
+    retroBoardsSnapshot.forEach(retroBoardSnapshot => {
+      const retroBoardData = retroBoardSnapshot.payload.doc.data() as RetroBoardToSave;
+      retroBoardData.id = retroBoardSnapshot.payload.doc.id as string;
+      retroBoardData.team.get().then(teamSnapshot => {
+        const retroBoardTeam = teamSnapshot.data();
+        retroBoardTeam.id = teamSnapshot.id;
+        if (userTeams.teams.some(ut => ut.id === retroBoardTeam.id)) {
+          if (retroBoardData.isStarted && retroBoardData.isFinished) {
+            this.finishedRetroBoards.push(retroBoardData);
+          } else if (retroBoardData.isStarted && !retroBoardData.isFinished) {
+            this.openRetroBoards.push(retroBoardData);
+          } else if (!retroBoardData.isStarted) {
+            this.nonStartedRetroBoards.push(retroBoardData);
+          }
+        }
+      });
+    });
+  }
 
-  private prepareRetroBoardForDashboard(retroBoardsSnapshot) {
+  private getUserTeams() {
+    return this.firestoreRBServices.findUserTeams(this.currentUser.uid);
+   }
+
+  private prepareRetroBoardForDashboard(retroBoardsSnapshot, userTeams) {
     if (this.currentUserInRetroBoardApiService.isTokenExpired()) {
       this.currentUserInRetroBoardApiService.regeneraTokenPromise().then(refreshedTokenResponse => {
         this.currentUserInRetroBoardApiService.setRegeneratedToken(refreshedTokenResponse);
-
-        this.firestoreRBServices.findUserTeams(this.currentUser.uid)
-          .then(userTeamsSnapshot => {
-            if (!userTeamsSnapshot.empty) {
-              const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-              this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
-            } else {
-              this.dataIsLoading = false;
-              this.checkIfUserHasExistingRetroBoardsAndShowInfo();
-            }
-          });
+        this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
       });
     } else {
-      this.firestoreRBServices.findUserTeams(this.currentUser.uid)
-      .then(userTeamsSnapshot => {
-        if (!userTeamsSnapshot.empty) {
-          const userTeams = userTeamsSnapshot.docs[0].data() as UserTeamsToSave;
-          this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
-        } else {
-          this.dataIsLoading = false;
-          this.checkIfUserHasExistingRetroBoardsAndShowInfo();
-        }
-      });
+      this.getUserLastRetroBoardForDashboard(retroBoardsSnapshot, userTeams);
     }
   }
 
