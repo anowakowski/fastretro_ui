@@ -15,6 +15,9 @@ export class LoginRegisterErrorHandlingService {
 
   private readonly messageInvalidEmail = 'The email address is not valid';
   private readonly messageUserNotFound = 'User with given email not exist';
+  private readonly messageUserISCurrentlyInUse = 'User with given email is currently exist';
+
+  private readonly messageSystemError = 'Internal system error - contact with administration.';
 
   constructor() { }
 
@@ -22,7 +25,7 @@ export class LoginRegisterErrorHandlingService {
     let messeage;
     switch (firebaseAuthCode) {
       case this.emailArledyExists: {
-        messeage = '';
+        messeage = this.messageUserISCurrentlyInUse;
         break;
       }
       case this.userNotFound: {
@@ -30,15 +33,15 @@ export class LoginRegisterErrorHandlingService {
         break;
       }
       case this.insufficientPermission: {
-        //
+        messeage = this.messageSystemError;
         break;
       }
       case this.internalError: {
-        //
+        messeage = this.messageSystemError;
         break;
       }
       case this.invalidCredential: {
-        //
+        messeage = this.messageSystemError;
         break;
       }
       case this.invalidEmail: {
@@ -46,11 +49,11 @@ export class LoginRegisterErrorHandlingService {
         break;
       }
       case this.invalidPassword: {
-        //
+        messeage = this.messageSystemError;
         break;
       }
       default: {
-        //
+        messeage = this.messageSystemError;
         break;
       }
     }
