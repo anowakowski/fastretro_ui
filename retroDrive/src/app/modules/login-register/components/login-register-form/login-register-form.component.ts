@@ -7,6 +7,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snackbar.component';
 import { FbTokenService } from 'src/app/services/fb-token.service';
+import { LoginRegisterErrorHandlingService } from '../../services/login-register-error-handling.service';
 
 @Component({
   selector: 'app-login-register-form',
@@ -24,6 +25,7 @@ export class LoginRegisterFormComponent implements OnInit {
     private router: Router,
     private fls: FirestoreLoginRegisterService,
     private fbTokenService: FbTokenService,
+    private loginRegisterErrorHandlingService: LoginRegisterErrorHandlingService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
   ) {}
@@ -99,7 +101,8 @@ export class LoginRegisterFormComponent implements OnInit {
               }
             });
       }).catch(error => {
-        this.openInfoSnackBar(true);
+        const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+        this.openInfoSnackBar(message, true);
       });
     }
   }
@@ -122,12 +125,13 @@ export class LoginRegisterFormComponent implements OnInit {
     };
   }
 
-  private openInfoSnackBar(shouldShowUserNotExistError: boolean) {
+  private openInfoSnackBar(message: string, isWarrning: boolean) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
-        shouldShowUserNotExistError
+        isWarrning,
+        message
       }
     });
   }
