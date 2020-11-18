@@ -1,7 +1,12 @@
-<span class="info-warrning-snackbar-user-not-exist" *ngIf="this.data.shouldShowUserNotExistError">
+<!-- <span class="info-warrning-snackbar-user-not-exist" *ngIf="this.data.shouldShowUserNotExistError">
   <span><i class="fa fa-exclamation-triangle info-icon-warrning-sncakbar"></i>&nbsp; User with given email not exist</span>
 </span>
 
 <span class="info-warrning-snackbar-user-currently-exist" *ngIf="this.data.shouldShowUserIsCurrentlyExistsError">
   <span><i class="fa fa-exclamation-triangle info-icon-warrning-sncakbar"></i>&nbsp; User with given email is currently exist</span>
+</span> -->
+
+
+<span class="info-warrning-snackbar-user-currently-exist">
+  <span><i class="fa fa-exclamation-triangle info-icon-warrning-sncakbar"></i>&nbsp; {{data.message}}</span>
 </span>
