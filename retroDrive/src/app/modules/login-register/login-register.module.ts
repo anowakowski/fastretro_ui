@@ -12,6 +12,7 @@ import { LoginRegisterFormComponent } from './components/login-register-form/log
 import { FirestoreLoginRegisterService } from './services/firestore-login-register.service';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 import { ShowInfoSnackbarComponent } from './components/show-info-snackbar/show-info-snackbar.component';
+import { LoginRegisterErrorHandlingService } from './services/login-register-error-handling.service';
 
 
 
@@ -26,7 +27,8 @@ import { ShowInfoSnackbarComponent } from './components/show-info-snackbar/show-
   ],
   declarations: [LoginRegisterComponent, NavComponent, LoginRegisterFormComponent, RegisterFormComponent, ShowInfoSnackbarComponent],
   providers: [
-    FirestoreLoginRegisterService
+    FirestoreLoginRegisterService,
+    LoginRegisterErrorHandlingService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   entryComponents: [
