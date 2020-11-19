@@ -9,6 +9,7 @@ import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snack
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserSettings } from 'src/app/models/UserSettings';
+import { LoginRegisterErrorHandlingService } from '../../services/login-register-error-handling.service';
 
 @Component({
   selector: 'app-register-form',
@@ -18,7 +19,7 @@ import { UserSettings } from 'src/app/models/UserSettings';
 export class RegisterFormComponent implements OnInit {
   addNewEmailPassRegisterForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  passFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
 
   shouldHideChoseLoginOptionForm = false;
 
@@ -28,6 +29,7 @@ export class RegisterFormComponent implements OnInit {
     private fls: FirestoreLoginRegisterService,
     private formBuilder: FormBuilder,
     private fbTokenService: FbTokenService,
+    private loginRegisterErrorHandlingService: LoginRegisterErrorHandlingService,
     private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -58,9 +60,8 @@ export class RegisterFormComponent implements OnInit {
           });
       })
       .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          this.openInfoSnackBar(true);
-        }
+        const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+        this.openInfoSnackBar(message, true);
       });
   }
 
@@ -83,11 +84,16 @@ export class RegisterFormComponent implements OnInit {
               this.fls.updateUsr(logedUserModel);
             }
           })
+          .catch(error => {
+            const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+            this.openInfoSnackBar(message, true);
+          })
           .finally(() => {
             this.router.navigate(['/']);
           });
     }).catch(error => {
-      const errorForm = error;
+      const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+      this.openInfoSnackBar(message, true);
     });
   }
 
@@ -107,16 +113,18 @@ export class RegisterFormComponent implements OnInit {
             this.router.navigate(['/']);
           });
     }).catch(error => {
-      const errorForm = error;
+      const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+      this.openInfoSnackBar(message, true);
     });
   }
 
-  private openInfoSnackBar(shouldShowUserIsCurrentlyExistsError: boolean) {
+  private openInfoSnackBar(message: string, isWarrning: boolean) {
     const durationInSeconds = 5;
     this.snackBar.openFromComponent(ShowInfoSnackbarComponent, {
       duration: durationInSeconds * 1000,
       data: {
-        shouldShowUserIsCurrentlyExistsError
+        isWarrning,
+        message
       }
     });
   }
