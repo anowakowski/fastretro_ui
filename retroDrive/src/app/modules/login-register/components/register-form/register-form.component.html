@@ -14,9 +14,10 @@
 
     <mat-card-content>
       <div style="margin-top: 20px;">
-        <button style="width: 100%;" mat-raised-button color="primary" (click)="loginByFacebook()"><i class="fa fa-facebook" style="margin-bottom: 3px;"></i>&nbsp; Continue with Facebook</button> <br />
+        <button mat-raised-button style="background-color: #6179ff; color: white; margin-bottom: 10px;" class="btn-block" type="submit" (click)="continueWithMail()"><i class="fa fa-envelope-o" aria-hidden="true" style="margin-bottom: 3px;"></i>&nbsp; Continue with mail</button>
+        <mat-divider></mat-divider>
+        <button style="width: 100%; margin-top: 10px;" mat-raised-button color="primary" (click)="loginByFacebook()"><i class="fa fa-facebook" style="margin-bottom: 3px;"></i>&nbsp; Continue with Facebook</button> <br />
         <button style="width: 100%; margin-top: 10px;" mat-raised-button color="accent" (click)="loginByGoogle()"><i class="fa fa-google" style="margin-bottom: 3px;"></i>&nbsp; Continue with Google</button>
-        <button mat-raised-button style="background-color: #6179ff; color: white; margin-top: 10px;" class="btn-block" type="submit" (click)="continueWithMail()"><i class="fa fa-envelope-o" aria-hidden="true" style="margin-bottom: 3px;"></i>&nbsp; Continue with mail</button>
       </div>
     </mat-card-content>
 
