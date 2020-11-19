@@ -19,7 +19,7 @@ import { LoginRegisterErrorHandlingService } from '../../services/login-register
 export class RegisterFormComponent implements OnInit {
   addNewEmailPassRegisterForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  passFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  passFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
 
   shouldHideChoseLoginOptionForm = false;
 
