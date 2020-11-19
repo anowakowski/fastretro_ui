@@ -15,13 +15,13 @@ export class LoginRegisterErrorHandlingService {
   private readonly invalidEmailCode = 'auth/invalid-email';
   private readonly invalidPasswordCode = 'auth/invalid-password';
   private readonly wrongPasswordCode = 'auth/wrong-password';
-
-  
+  private readonly weakPasswordCode = 'auth/weak-password';
 
   private readonly messageInvalidEmail = 'The email address is not valid';
   private readonly messageUserNotFound = 'User with given email not exist';
   private readonly messageUserIsCurrentlyInUse = 'User with given email is currently exist';
   private readonly messageInvalidUserOrPass = 'Invalid user or password';
+  private readonly messagePasswordIsWeak = 'Password should be at least 6 characters';
 
   private readonly messageSystemError = 'System error.';
 
@@ -64,6 +64,10 @@ export class LoginRegisterErrorHandlingService {
       }
       case this.wrongPasswordCode: {
         messeage = this.messageInvalidUserOrPass;
+        break;
+      }
+      case this.weakPasswordCode: {
+        messeage = this.messagePasswordIsWeak;
         break;
       }
       default: {
