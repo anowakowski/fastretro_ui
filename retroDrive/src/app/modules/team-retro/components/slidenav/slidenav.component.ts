@@ -9,6 +9,10 @@ import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserSettings } from 'src/app/models/UserSettings';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
+
 const SMALL_WIDTH_BREAKPOINT = 720;
 const CURRENT_BTN_COLOR = 'warn';
 const BASIC_BTN_COLOR = 'primary';
@@ -64,16 +68,22 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   shouldShowNotificationSection: boolean;
   userSettings: UserSettings;
 
+  mediaSub: Subscription;
+
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     public router: Router,
     private eventService: EventsService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) { }
 
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      console.log(result.mqAlias);
+    });
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;
 
@@ -99,6 +109,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setRetroProcessSubscription.unsubscribe();
     this.goOutFromAllRetroBoardSubscription.unsubscribe();
     this.shouldRefreshUserSettingsSubscription.unsubscribe();
+
+    this.mediaSub.unsubscribe();
   }
 
   isScreenSmall(): boolean {
