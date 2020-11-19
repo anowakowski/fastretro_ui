@@ -5,51 +5,57 @@ import { Injectable } from '@angular/core';
 })
 export class LoginRegisterErrorHandlingService {
 
-  private readonly emailArledyExists = 'auth/email-already-exists';
-  private readonly userNotFound = 'auth/user-not-found';
-  private readonly insufficientPermission = 'auth/insufficient-permission';
-  private readonly internalError = 'auth/internal-error';
-  private readonly invalidCredential = 'auth/invalid-credential';
-  private readonly invalidEmail = 'auth/invalid-email';
-  private readonly invalidPassword = 'auth/invalid-password';
+  private readonly emailArledyExistsCode = 'auth/email-already-exists';
+  private readonly userNotFoundCode = 'auth/user-not-found';
+  private readonly insufficientPermissionCode = 'auth/insufficient-permission';
+  private readonly internalErrorCode = 'auth/internal-error';
+  private readonly invalidCredentialCode = 'auth/invalid-credential';
+  private readonly invalidEmailCode = 'auth/invalid-email';
+  private readonly invalidPasswordCode = 'auth/invalid-password';
+  private readonly wrongPasswordCode = 'auth/wrong-password';
 
   private readonly messageInvalidEmail = 'The email address is not valid';
   private readonly messageUserNotFound = 'User with given email not exist';
   private readonly messageUserISCurrentlyInUse = 'User with given email is currently exist';
+  private readonly messageInvalidUserOrPass = 'Invalid user or password';
 
-  private readonly messageSystemError = 'Internal system error - contact with administration.';
+  private readonly messageSystemError = 'System error.';
 
   constructor() { }
 
   getErrorMessage(firebaseAuthCode: string): string {
     let messeage;
     switch (firebaseAuthCode) {
-      case this.emailArledyExists: {
+      case this.emailArledyExistsCode: {
         messeage = this.messageUserISCurrentlyInUse;
         break;
       }
-      case this.userNotFound: {
+      case this.userNotFoundCode: {
         messeage = this.messageUserNotFound;
         break;
       }
-      case this.insufficientPermission: {
+      case this.insufficientPermissionCode: {
         messeage = this.messageSystemError;
         break;
       }
-      case this.internalError: {
+      case this.internalErrorCode: {
         messeage = this.messageSystemError;
         break;
       }
-      case this.invalidCredential: {
+      case this.invalidCredentialCode: {
         messeage = this.messageSystemError;
         break;
       }
-      case this.invalidEmail: {
+      case this.invalidEmailCode: {
         messeage = this.messageInvalidEmail;
         break;
       }
-      case this.invalidPassword: {
-        messeage = this.messageSystemError;
+      case this.invalidPasswordCode: {
+        messeage = this.messageInvalidUserOrPass;
+        break;
+      }
+      case this.wrongPasswordCode: {
+        messeage = this.messageInvalidUserOrPass;
         break;
       }
       default: {
