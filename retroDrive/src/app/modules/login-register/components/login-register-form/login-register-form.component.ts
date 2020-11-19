@@ -93,6 +93,10 @@ export class LoginRegisterFormComponent implements OnInit {
                 this.fls.updateUsr(logedUserModel);
               }
             })
+            .catch(error => {
+              const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+              this.openInfoSnackBar(message, true);
+            })
             .finally(() => {
               if (this.auth.urlToRedirect) {
                 this.router.navigate([this.auth.urlToRedirect]);
