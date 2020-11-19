@@ -84,11 +84,16 @@ export class RegisterFormComponent implements OnInit {
               this.fls.updateUsr(logedUserModel);
             }
           })
+          .catch(error => {
+            const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+            this.openInfoSnackBar(message, true);
+          })
           .finally(() => {
             this.router.navigate(['/']);
           });
     }).catch(error => {
-      const errorForm = error;
+      const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+      this.openInfoSnackBar(message, true);
     });
   }
 
@@ -108,7 +113,8 @@ export class RegisterFormComponent implements OnInit {
             this.router.navigate(['/']);
           });
     }).catch(error => {
-      const errorForm = error;
+      const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
+      this.openInfoSnackBar(message, true);
     });
   }
 
