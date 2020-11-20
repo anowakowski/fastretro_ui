@@ -1,4 +1,4 @@
-<app-nav (toggleSidenav)="drawer.toggle()" [shouldShowBackToDashboard]="shouldCloseSlidenav"></app-nav>
+<app-nav (toggleSidenav)="drawer.toggle()" [shouldShowBackToDashboard]="shouldCloseSlidenav" [shouldHideWorkspaceName]="devicesXs || devicesSm"></app-nav>
   <mat-drawer-container class="app-container" autosize>
     <mat-drawer 
       #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
