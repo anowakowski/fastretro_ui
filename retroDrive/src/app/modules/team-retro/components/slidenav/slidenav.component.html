@@ -1,7 +1,8 @@
 <app-nav 
   (toggleSidenav)="drawer.toggle()" 
   [shouldShowBackToDashboard]="shouldCloseSlidenav" 
-  [shouldHideElementsInSmallResolution]="devicesXs || devicesSm">
+  [shouldHideElementsInSmallResolution]="devicesXs || devicesSm"
+  [shouldHideAppName]="devicesXs">
 </app-nav>
   <mat-drawer-container class="app-container" autosize>
     <mat-drawer 

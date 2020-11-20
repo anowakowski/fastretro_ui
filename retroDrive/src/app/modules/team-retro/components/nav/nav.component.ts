@@ -55,6 +55,7 @@ export class NavComponent implements OnInit, OnDestroy {
   @Output() toggleSidenav = new EventEmitter<void>();
   @Input() shouldShowBackToDashboard = false;
   @Input() shouldHideElementsInSmallResolution = false;
+  @Input() shouldHideAppName = false;
 
   ngOnInit() {
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
