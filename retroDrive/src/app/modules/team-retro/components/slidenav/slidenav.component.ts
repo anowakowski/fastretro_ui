@@ -13,7 +13,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 
-const SMALL_WIDTH_BREAKPOINT = 720;
+const SMALL_WIDTH_BREAKPOINT = 970;
 const CURRENT_BTN_COLOR = 'warn';
 const BASIC_BTN_COLOR = 'primary';
 const DASHBOARD_SECTION = 'dashboard';
