@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   devicesXs: boolean;
   devicesSm: boolean;
   devicesMd: boolean;
+  devicesLg: boolean;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -90,6 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.devicesXs = result.mqAlias === 'xs' ? true : false;
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
       this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
     });
 
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
