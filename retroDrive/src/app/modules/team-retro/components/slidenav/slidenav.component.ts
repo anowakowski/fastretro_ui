@@ -84,7 +84,6 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
-      console.log(result.mqAlias);
       this.devicesXs = result.mqAlias === 'xs' ? true : false;
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
     });

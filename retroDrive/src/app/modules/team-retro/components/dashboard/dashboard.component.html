@@ -4,14 +4,20 @@
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
       <span style="margin-right:10px;">Your last retro boards </span>
       <mat-divider [vertical]="true"></mat-divider>
-      <span style="margin-left:10px;">
+      <span *ngIf="!shouldHideInMiddleResolution()" style="margin-left:10px;">
         You have <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">open</span> 
         and <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">finished</span> retro board 
         and <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span> retro</span>
       <div fxFlex></div>
+
+      <span *ngIf="shouldHideInMiddleResolution()">
+        <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">open</span> 
+        <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">finished</span>
+        <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span>
+      </span>
       
       <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
-        <mat-icon>assignment</mat-icon>&nbsp; All retro boards in {{currentWorkspace.name}} workspace
+        <mat-icon>assignment</mat-icon><span *ngIf="!shouldHideInMiddleResolution()">&nbsp; All retro boards in {{currentWorkspace.name}} workspace</span>
       </button>
     </mat-card>
 

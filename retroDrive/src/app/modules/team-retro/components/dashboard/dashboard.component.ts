@@ -27,6 +27,9 @@ import { find } from 'rxjs/operators';
 import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -51,11 +54,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private eventServices: EventsService,
     private currentUserInRetroBoardApiService: CurrentUserApiService,
-    private excelService: ExcelService) {
+    private excelService: ExcelService,
+    public mediaObserver: MediaObserver) {
       monkeyPatchChartJsTooltip();
       monkeyPatchChartJsLegend();
   }
-
 
   currentUser: User;
   userWorkspace: UserWorkspace;
@@ -64,6 +67,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   retroBoards: Array<RetroBoard> = new Array<RetroBoard>();
   wentWellActionCount: number;
   toImproveActionCount: number;
+
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -77,6 +85,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public firstTimeLoadElementForSpinner = true;
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      console.log(result.mqAlias);
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+    });
 
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
@@ -98,6 +112,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.retroBoardsDashboardSubscritpiton !== undefined) {
       this.retroBoardsDashboardSubscritpiton.unsubscribe();
     }
+
+    this.mediaSub.unsubscribe();
   }
 
   openInfoForNewUsersDialog() {
@@ -127,6 +143,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const filteredRetroBoards = this.retroBoards.filter(x => x.isFinished === isFinishedRetroBoard);
       return filteredRetroBoards.length;
     }
+  }
+
+  shouldHideInMiddleResolution() {
+    return this.devicesMd || this.devicesXs || this.devicesSm;
   }
 
   private prepreRetroBoardForCurrentWorkspace() {
