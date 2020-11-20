@@ -29,8 +29,16 @@
     flex-direction: column;
   }
   
-  mat-drawer {
+  /* mat-drawer {
     width: 400px;
+  } */
+
+  .mat-drawer-large-size {
+    width: 400px;
+  }
+
+  .mat-drawer-small-size {
+    width: 200px;
   }
 
   .mat-drawer-width-small {

@@ -71,6 +71,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   mediaSub: Subscription;
   devicesXs: boolean;
   devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
 
   constructor(
     public auth: AuthService,
@@ -86,6 +88,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
       this.devicesXs = result.mqAlias === 'xs' ? true : false;
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
     });
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;

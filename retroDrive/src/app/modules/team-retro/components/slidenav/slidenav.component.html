@@ -6,7 +6,9 @@
 </app-nav>
   <mat-drawer-container class="app-container" autosize>
     <mat-drawer 
-      #drawer class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
+      #drawer
+      class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
+      [ngClass]="{'mat-drawer-large-size': devicesMd || devicesLg, 'mat-drawer-small-size': devicesXs || devicesSm}"
       [opened]="!isScreenSmall() && !currentUser.isNewUser && !shouldCloseSlidenav"
       [mode]="isScreenSmall() ? 'over' : 'side'">
       <div class="sidenav-element-flex-container">
