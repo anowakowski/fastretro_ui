@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   shouldHideInMiddleResolution() {
-    return this.devicesMd || this.devicesXs || this.devicesSm;
+    return this.devicesMd ||  this.devicesSm || this.devicesXs;
   }
 
   private prepreRetroBoardForCurrentWorkspace() {
