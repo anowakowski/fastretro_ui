@@ -11,7 +11,7 @@
       [ngClass]="{'mat-drawer-large-size': devicesMd || devicesLg, 'mat-drawer-small-size': devicesXs || devicesSm}"
       [opened]="!isScreenSmall() && !currentUser.isNewUser && !shouldCloseSlidenav"
       [mode]="isScreenSmall() ? 'over' : 'side'">
-      <div class="sidenav-element-flex-container">
+      <div *ngIf="devicesMd || devicesLg" class="sidenav-element-flex-container">
         <div class="sidenav-element-flex-container">
           <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
             <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
@@ -27,6 +27,29 @@
           </button> 
           <button class="sidenav-elemnt" color="{{allNotificationsColor}}" [routerLink]="['/retro/all-your-notifications']" mat-raised-button *ngIf="shouldShowNotificationSection" (click)="setBtnColor(allNotificationsSection)">
             <mat-icon>notifications</mat-icon>&nbsp; All your notifications
+          </button>                  
+          <app-sidenav-usercard></app-sidenav-usercard>
+          <!-- <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
+            <i class="fa fa-sign-out"></i>&nbsp; SignOut
+          </button> -->
+        </div>
+      </div>
+      <div *ngIf="devicesSm || devicesXs" class="sidenav-element-flex-container">
+        <div class="sidenav-element-flex-container">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
+            <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
+          </button>
+          <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
+            <mat-icon>people_alt</mat-icon>&nbsp; Workspace & Teams
+          </button>
+          <button class="sidenav-elemnt" color="{{retroProcessColor}}" [routerLink]="['/retro/process']" mat-raised-button (click)="setBtnColor(retroProcessSection)">
+            <mat-icon>mood</mat-icon><mat-icon>mood_bad</mat-icon>&nbsp; add new RBs
+          </button>
+          <button class="sidenav-elemnt" color="{{allRetroBoardListColor}}" [routerLink]="['/retro/all-retroboard-list']" mat-raised-button (click)="setBtnColor(allRetroBoardListSection)">
+            <mat-icon>view_headline</mat-icon>&nbsp; All Retro Boards
+          </button> 
+          <button class="sidenav-elemnt" color="{{allNotificationsColor}}" [routerLink]="['/retro/all-your-notifications']" mat-raised-button *ngIf="shouldShowNotificationSection" (click)="setBtnColor(allNotificationsSection)">
+            <mat-icon>notifications</mat-icon>&nbsp; notifications
           </button>                  
           <app-sidenav-usercard></app-sidenav-usercard>
           <!-- <button class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="auth.signOut()">
