@@ -1,6 +1,6 @@
 <div class="sidnav-usercard-element-position">
   <div class="sidnav-userprofile sidenav-elemnt">
-    <mat-card class="sidenav-userprofile-card">
+    <mat-card *ngIf="devicesMd || devicesLg" class="sidenav-userprofile-card">
         <mat-card-header >
           <div 
             *ngIf="currentUser.chosenAvatarName && currentUser.chosenAvatarName !== 'socialMediaAvatar'"
@@ -24,6 +24,31 @@
           </mat-card-subtitle>
         </mat-card-header>
     </mat-card>       
+    <mat-card *ngIf="devicesSm || devicesXs" class="sidenav-userprofile-card-small">
+      <mat-card-header style="justify-content: center; margin-left: 36px;">
+        <div 
+          *ngIf="currentUser.chosenAvatarName && currentUser.chosenAvatarName !== 'socialMediaAvatar'"
+          mat-card-avatar 
+          class="sidnav-userprofile-header-image-{{currentUser.chosenAvatarName}}" >
+        </div>
+        <div 
+          *ngIf="currentUser.chosenAvatarName && currentUser.chosenAvatarName === 'socialMediaAvatar'"
+          mat-card-avatar 
+          [ngStyle]="{ 'background-image': 'url(' + currentUser.photoURL + ')' }" 
+          class="sidnav-userprofile-header-image" >
+        </div>   
+      </mat-card-header>
+
+      <mat-card-content>	
+        <div
+        [ngClass]="{'sidenav-card-header': currentUser.chosenAvatarName !== 'socialMediaAvatar',
+                    'sidenav-card-header-with-social-media-avatar': currentUser.chosenAvatarName === 'socialMediaAvatar'}">
+        <div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
+        <div><i class="fa fa-envelope-o"></i> <span style="margin-left: 5px;">{{currentUser.email}}</span></div>
+      </div>
+      </mat-card-content>
+
+  </mat-card>    
   </div>
   <button style="margin-top: 25px;" class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="authService.signOut()">
     <i class="fa fa-sign-out"></i>&nbsp; SignOut

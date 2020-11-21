@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 @Component({
   selector: 'app-sidenav-usercard',
   templateUrl: './sidenav-usercard.component.html',
@@ -19,13 +22,27 @@ export class SidenavUsercardComponent implements OnInit, OnDestroy {
   public currentUserWorkspaceName: string;
   setCurrentWorkspaceSubscriptions: any;
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+
   constructor(
     private localStorageService: LocalStorageService,
     public authService: AuthService,
-    private eventsService: EventsService) { }
+    private eventsService: EventsService,
+    public mediaObserver: MediaObserver) { }
 
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+    });
+
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     if (this.currentUser === undefined) {
@@ -43,6 +60,7 @@ export class SidenavUsercardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.setCurrentWorkspaceSubscriptions.unsubscribe();
+    this.mediaSub.unsubscribe();
   }
 
 
