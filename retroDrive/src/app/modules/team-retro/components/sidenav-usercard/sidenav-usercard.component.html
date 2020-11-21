@@ -1,5 +1,5 @@
 <div class="sidnav-usercard-element-position">
-  <div class="sidnav-userprofile sidenav-elemnt">
+  <div [ngClass]="{'sidnav-userprofile ': devicesMd || devicesLg, 'sidnav-userprofile-small': devicesSm || devicesXs}" class="sidenav-elemnt">
     <mat-card *ngIf="devicesMd || devicesLg" class="sidenav-userprofile-card">
         <mat-card-header >
           <div 
@@ -39,19 +39,29 @@
         </div>   
       </mat-card-header>
 
-      <mat-card-content>	
+      <mat-card-content style="justify-content: center; margin-left: 36px; margin-top: 10px;">	
         <div
-        [ngClass]="{'sidenav-card-header': currentUser.chosenAvatarName !== 'socialMediaAvatar',
-                    'sidenav-card-header-with-social-media-avatar': currentUser.chosenAvatarName === 'socialMediaAvatar'}">
-        <div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
-        <div><i class="fa fa-envelope-o"></i> <span style="margin-left: 5px;">{{currentUser.email}}</span></div>
-      </div>
+          [ngClass]="{'sidenav-card-header-small': currentUser.chosenAvatarName !== 'socialMediaAvatar',
+                    'sidenav-card-header-with-social-media-avatar': currentUser.chosenAvatarName === 'socialMediaAvatar'}"
+          class="sidenav-card-header-font">
+          <div div style="margin-left: -7px;"><i class="fa fa-user-circle-o"></i> <span style="margin-left: 5px;">{{currentUser.displayName}}</span></div>
+          <div><i class="fa fa-envelope-o"></i> <span style="margin-left: 5px;">{{currentUser.email}}</span></div>
+        </div>
+        <div class="sidenav-card-header-font">
+          <i class="fa fa-building"></i> <span>{{currentUserWorkspaceName}}</span>
+        </div>
       </mat-card-content>
 
   </mat-card>    
   </div>
-  <button style="margin-top: 25px;" class="sidenav-btn-signOut sidenav-elemnt" color="accent" mat-raised-button (click)="authService.signOut()">
-    <i class="fa fa-sign-out"></i>&nbsp; SignOut
+  <button 
+    style="margin-top: 25px;"
+    [ngClass]="{'sidenav-btn-signOut': devicesMd || devicesLg, 'sidenav-btn-signOut-small': devicesSm || devicesXs}"
+    class="sidenav-btn-signOut sidenav-elemnt"
+    color="accent"
+    mat-raised-button 
+    (click)="authService.signOut()">
+      <i class="fa fa-sign-out"></i>&nbsp; SignOut
   </button>  
 </div>
 
