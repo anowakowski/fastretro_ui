@@ -166,6 +166,14 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     return this.currentChosenSection === this.allRetroBoardListSection || this.currentChosenSection === this.allNotificationsSection;
   }
 
+  getBackgroundImageNameClass(chosenImageBackgroundName) {
+    if (this.devicesXs || this.devicesSm) {
+      return 'teams-retro-background-img-' + chosenImageBackgroundName + '-small';
+    } else if (this.devicesMd || this.devicesLg) {
+      return 'teams-retro-background-img-' + chosenImageBackgroundName;
+    }
+  }
+
   private getUserNotyficationFromApi() {
     this.currentUserInRetroBoardApiService.getUserNotification(this.currentUser.uid)
       .then(response => {
