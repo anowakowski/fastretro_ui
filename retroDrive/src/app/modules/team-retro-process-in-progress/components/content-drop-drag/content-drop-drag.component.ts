@@ -61,6 +61,9 @@ import { RetroBoardCardApiToSave } from 'src/app/models/retroBoardCardApiToSave'
 import { RetroBoardCardApiGet } from 'src/app/models/retroBoardCardApiGet';
 import { Spinner } from 'ngx-spinner/lib/ngx-spinner.enum';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
 @Component({
@@ -102,7 +105,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private bottomSheetRef: MatBottomSheet,
     private spinnerTickService: SpinnerTickService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) {}
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -138,6 +142,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   wentWellDropDownContainerId = 'went well';
   toImproveDropDownContainerId = 'to improve';
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   /*
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -150,6 +161,14 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   */
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      console.log(result.mqAlias);
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
     this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
 

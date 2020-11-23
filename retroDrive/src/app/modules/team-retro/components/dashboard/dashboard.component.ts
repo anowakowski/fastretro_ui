@@ -88,7 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
-      console.log(result.mqAlias);
       this.devicesXs = result.mqAlias === 'xs' ? true : false;
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
       this.devicesMd = result.mqAlias === 'md' ? true : false;

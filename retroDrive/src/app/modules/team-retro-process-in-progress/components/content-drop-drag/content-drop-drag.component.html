@@ -5,7 +5,7 @@
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p class="board-name" style="margin-left: 35px;">{{ board.name }}</p>
-      <mat-form-field style="width: 100px; margin-top: -6px; margin-left: 20px; margin-bottom: -20px;">
+      <mat-form-field *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100px; margin-top: -6px; margin-left: 20px; margin-bottom: -20px;">
         <mat-label>Sort by</mat-label>
         <mat-select (selectionChange)="onChangeSort($event.value)">
           <mat-option>none</mat-option>
@@ -14,7 +14,7 @@
         </mat-select>
       </mat-form-field>
       <button 
-      *ngIf="shouldShowPreviousActionBtn"
+      *ngIf="shouldShowPreviousActionBtn && (devicesMd || devicesLg || devicesXl)"
         mat-raised-button 
         color="accent"
         style="margin-left: 20px;"
@@ -24,15 +24,17 @@
         <mat-icon>receipt_long</mat-icon>
       </button>
       <button
-        *ngIf="isExistingSomeRetroBoardCardAction" 
+        *ngIf="isExistingSomeRetroBoardCardAction && (devicesMd || devicesLg || devicesXl)" 
         mat-raised-button color="primary"
         style="margin-left: 10px;" 
         matTooltip="Show actions in current retro board"
         matTooltipPosition="below" 
         (click)="openAllCardActionDialog()">
-          <mat-icon >description</mat-icon>        </button>
+          <mat-icon >description</mat-icon>        
+      </button>
       <div fxFlex></div>
       <mat-icon
+        *ngIf="devicesMd || devicesLg || devicesXl"
         style="font-size: 40px; margin-right: 30px;"
         matTooltip="votes (actual/max): {{actualCountOfUserVotes}}/{{actualMaxRetroBoardVotes}}"
         matTooltipPosition="left"
@@ -52,16 +54,22 @@
         (click)="onOpenShowAllCurrentUsersInRetro()">
           <mat-icon>people</mat-icon>
       </button>
-      <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; Finish Retro</button>
+      <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; 
+        <span *ngIf="devicesMd || devicesLg || devicesXl">Finish Retro</span>
+      </button>
       <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped" (click)="openRetroProcess()" style="margin-right: 18px;"><mat-icon >power_settings_new</mat-icon>&nbsp; Open Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()" *ngIf="!retroProcessIsStoped">
         <mat-icon>favorite</mat-icon>&nbsp;  
-        <span *ngIf="!shouldEnableVoteBtns">Enable Vote Buttons</span>
-        <span *ngIf="shouldEnableVoteBtns">Disable Vote Buttons</span>
+        <span *ngIf="!shouldEnableVoteBtns && (devicesMd || devicesLg || devicesXl)">Enable Vote Buttons</span>
+        <span *ngIf="shouldEnableVoteBtns && (devicesMd || devicesLg || devicesXl)">Disable Vote Buttons</span>
       </button>
 
-      <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>&nbsp; Set New Timer</button>
-      <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning && !retroProcessIsStoped" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>&nbsp; Stop Current Timer</button>
+      <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>
+        <span *ngIf="devicesMd || devicesLg || devicesXl">&nbsp; Set New Timer</span>
+      </button>
+      <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning && !retroProcessIsStoped" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>
+        <span *ngIf="devicesMd || devicesLg || devicesXl">&nbsp; Stop Current Timer</span>
+      </button>
 
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
 
