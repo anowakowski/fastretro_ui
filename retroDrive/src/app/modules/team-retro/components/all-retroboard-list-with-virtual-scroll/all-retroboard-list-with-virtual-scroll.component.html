@@ -1,5 +1,5 @@
 <div>
-    <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
+    <mat-card *ngIf="!devicesXs" style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
         <span style="margin-top: 10px;">All of your Retro Boards </span>
         <mat-form-field style="width: 100px; margin-top: -7px; margin-left: 20px; margin-bottom: -20px;">
           <mat-label>Sort by</mat-label>
@@ -25,6 +25,23 @@
             </mat-chip>
         </mat-chip-list>      
     </mat-card>
+
+    <mat-card *ngIf="devicesXs" style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985; height: 70px;">
+      <span style="margin-right: 10px; margin-top: 10px;">F: </span>
+      <div fxFlex></div>
+      <mat-chip-list color="primary" style="margin-top: 3.5px;">
+          <mat-chip 
+              (click)="showOnlyOpenedRetro()"
+              [ngClass]="{'chip-chosen-active': showOnlyOpenedIsFiltered === true,
+                          'chip-not-chosen': showOnlyOpenedIsFiltered === false}"> opened retro
+          </mat-chip>
+          <mat-chip 
+              (click)="showOnlyFinishedRetro()"
+              [ngClass]="{'chip-chosen-active': showOnlyFinishedIsFiltered === true,
+                      'chip-not-chosen': showOnlyFinishedIsFiltered === false}">finished retro
+          </mat-chip>
+      </mat-chip-list>      
+  </mat-card>
 
     <ng-container *ngIf="infinite | async as retroBoards">
       <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, retroBoards)">

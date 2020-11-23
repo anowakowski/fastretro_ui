@@ -29,6 +29,9 @@ import { UserTeams } from 'src/app/models/userTeams';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { RetroBoardApi } from 'src/app/models/retroBoardApi';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 const batchSize = 20;
 
 @Component({
@@ -56,6 +59,13 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   private readonly shouldShowOnlyOpenedFilterName = 'shouldShowOnlyOpened';
   currentUserTeams: UserTeamsToSave;
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   constructor(
     private firestoreRBServices: FirestoreRetroBoardService,
     private allRetroBoardListDataService: AllRetroBoardListDataSerivceService,
@@ -64,7 +74,8 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     private dataPassingService: DataPassingService,
     private router: Router,
     private eventsService: EventsService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) {
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) {
      }
 
   people: any[];
@@ -99,6 +110,13 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
   public pieChartPlugins = [];
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.dataIsLoading = true;
 
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
@@ -122,6 +140,8 @@ export class AllRetroBoardListWithVirtualScrollComponent implements OnInit, OnDe
     if (this.retroBoardSubscriptions !== undefined) {
       this.retroBoardSubscriptions.unsubscribe();
     }
+
+    this.mediaSub.unsubscribe();
   }
 
   getBatch(lastSeen: string) {
