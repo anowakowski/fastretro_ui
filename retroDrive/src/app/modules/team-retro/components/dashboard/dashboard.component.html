@@ -31,17 +31,28 @@
     <div *ngFor="let retroBoard of retroBoards">
       <mat-card class="example-card" style="opacity: 0.985;">
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title *ngIf="devicesMd || devicesLg || devicesXl">
             <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
             <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
             - #team <b>{{retroBoard.team.name}}</b> Board
           </mat-card-title>
-          <mat-card-subtitle>
+          <mat-card-title *ngIf="devicesXs || devicesSm" style="font-size: 15px;">
+            <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
+            <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
+            - #team <b>{{retroBoard.team.name}}</b> Board
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="devicesMd || devicesLg || devicesXl">
             <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
             <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
             <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
             <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
           </mat-card-subtitle>
+          <mat-card-subtitle *ngIf="devicesXs || devicesSm" style="font-size: 13px;">
+            <span style="font-size: 11px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+            <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
+            <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+            <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+          </mat-card-subtitle>          
         </mat-card-header>
 
         <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
@@ -53,7 +64,8 @@
         </mat-card-content>
         <mat-card-content *ngIf="!retroBoard.isFinished">
           <div>
-            <h3 style="margin-top: 15px;">Retro in progress...</h3>
+            <h3 *ngIf="devicesMd || devicesLg || devicesXl" style="margin-top: 15px;">Retro in progress...</h3>
+            <h3 *ngIf="devicesXs || devicesSm" style="margin-top: 15px; font-size: 13px;">Retro in progress...</h3>
             <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
           </div>
         </mat-card-content>
@@ -68,15 +80,19 @@
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
         <mat-card-actions style="margin-top: -14px;">
-          <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+          <button *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
             Board Details <mat-icon>vertical_split</mat-icon></button>
+          <button *ngIf="devicesXs || devicesSm" style="width: 100%; font-size: 12px;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+              Board Details <mat-icon>vertical_split</mat-icon></button>            
         </mat-card-actions>
       </mat-card>
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
         <mat-card-actions style="margin-top: -14px;">
-          <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+          <button *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
             <mat-icon>arrow_right_alt</mat-icon></button>
+          <button *ngIf="devicesXs || devicesSm" style="width: 100%; font-size: 12px;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+            <mat-icon>arrow_right_alt</mat-icon></button>            
         </mat-card-actions>
       </mat-card>
     </div>
