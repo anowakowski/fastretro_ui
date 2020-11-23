@@ -8,10 +8,10 @@
     <mat-drawer 
       #drawer
       class="sidenav-content-elements mat-elevation-z10 sidenav-container-background-image"
-      [ngClass]="{'mat-drawer-large-size': devicesMd || devicesLg, 'mat-drawer-small-size': devicesXs || devicesSm}"
+      [ngClass]="{'mat-drawer-large-size': devicesMd || devicesLg || devicesXl, 'mat-drawer-small-size': devicesXs || devicesSm}"
       [opened]="!isScreenSmall() && !currentUser.isNewUser && !shouldCloseSlidenav"
       [mode]="isScreenSmall() ? 'over' : 'side'">
-      <div *ngIf="devicesMd || devicesLg" class="sidenav-element-flex-container">
+      <div *ngIf="devicesMd || devicesLg || devicesXl" class="sidenav-element-flex-container">
         <div class="sidenav-element-flex-container">
           <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
             <mat-icon>dashboard</mat-icon>&nbsp; Dashboard

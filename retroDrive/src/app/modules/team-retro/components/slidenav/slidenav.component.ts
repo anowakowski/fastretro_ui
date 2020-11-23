@@ -73,6 +73,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   devicesSm: boolean;
   devicesMd: boolean;
   devicesLg: boolean;
+  devicesXl: boolean;
 
   constructor(
     public auth: AuthService,
@@ -90,6 +91,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
       this.devicesMd = result.mqAlias === 'md' ? true : false;
       this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
     });
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;
@@ -169,7 +171,7 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   getBackgroundImageNameClass(chosenImageBackgroundName) {
     if (this.devicesXs || this.devicesSm) {
       return 'teams-retro-background-img-' + chosenImageBackgroundName + '-small';
-    } else if (this.devicesMd || this.devicesLg) {
+    } else if (this.devicesMd || this.devicesLg || this.devicesXl) {
       return 'teams-retro-background-img-' + chosenImageBackgroundName;
     }
   }
