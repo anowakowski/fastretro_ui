@@ -1,6 +1,6 @@
 <div class="sidnav-usercard-element-position">
-  <div [ngClass]="{'sidnav-userprofile ': devicesMd || devicesLg, 'sidnav-userprofile-small': devicesSm || devicesXs}" class="sidenav-elemnt">
-    <mat-card *ngIf="devicesMd || devicesLg" class="sidenav-userprofile-card">
+  <div [ngClass]="{'sidnav-userprofile ': devicesMd || devicesLg || devicesXl, 'sidnav-userprofile-small': devicesSm || devicesXs}" class="sidenav-elemnt">
+    <mat-card *ngIf="devicesMd || devicesLg || devicesXl" class="sidenav-userprofile-card">
         <mat-card-header >
           <div 
             *ngIf="currentUser.chosenAvatarName && currentUser.chosenAvatarName !== 'socialMediaAvatar'"
@@ -56,7 +56,7 @@
   </div>
   <button 
     style="margin-top: 25px;"
-    [ngClass]="{'sidenav-btn-signOut': devicesMd || devicesLg, 'sidenav-btn-signOut-small': devicesSm || devicesXs}"
+    [ngClass]="{'sidenav-btn-signOut': devicesMd || devicesLg || devicesXl, 'sidenav-btn-signOut-small': devicesSm || devicesXs}"
     class="sidenav-btn-signOut sidenav-elemnt"
     color="accent"
     mat-raised-button 

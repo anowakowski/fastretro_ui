@@ -27,6 +27,7 @@ export class SidenavUsercardComponent implements OnInit, OnDestroy {
   devicesSm: boolean;
   devicesMd: boolean;
   devicesLg: boolean;
+  devicesXl: boolean;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -41,6 +42,7 @@ export class SidenavUsercardComponent implements OnInit, OnDestroy {
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
       this.devicesMd = result.mqAlias === 'md' ? true : false;
       this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
     });
 
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
