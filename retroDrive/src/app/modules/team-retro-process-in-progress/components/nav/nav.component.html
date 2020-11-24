@@ -3,7 +3,7 @@
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
     <span [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
     <button mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
-      <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
+      <mat-icon>dashboard</mat-icon> <span *ngIf="devicesLg || devicesXl">&nbsp; Back to Dashboard</span>
     </button>
     <button *ngIf="!currentUser.isNewUser && (devicesLg || devicesXl)" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
