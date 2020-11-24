@@ -1,9 +1,10 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in</mat-icon>
-    <span [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
+    <span *ngIf="devicesMd || devicesLg || devicesXl" [routerLink]="['/']" routerLinkActive="router-link-active" >fastretro.org</span> 
+    <span *ngIf="devicesMd || devicesLg || devicesXl" style="font-size: 9px;"><i>(Alpha version)</i></span>
     <button mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
-      <mat-icon>dashboard</mat-icon> <span *ngIf="devicesLg || devicesXl">&nbsp; Back to Dashboard</span>
+      <mat-icon>dashboard</mat-icon> <span *ngIf="devicesMd || devicesLg || devicesXl">&nbsp; Back to Dashboard</span>
     </button>
     <button *ngIf="!currentUser.isNewUser && (devicesLg || devicesXl)" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
@@ -85,11 +86,11 @@
     <button mat-icon-button style="margin-left: -5px;" (click)="onUserSettings()">
       <mat-icon>settings</mat-icon>
     </button>           
-    <span style="margin-left: 20px;">
+    <span *ngIf="devicesLg || devicesXl" style="margin-left: 20px;">
       <span *ngIf="!shouldChangeRetroDisplayText">Retro in progress...</span>
       <span *ngIf="shouldChangeRetroDisplayText">Retro is finished</span>
     </span>
-    <span style="margin-left: 12px;">
+    <span  style="margin-left: 12px;">
       <app-retro-progress-timer [shouldHideBigTimer]="true"></app-retro-progress-timer>
     </span>
   </mat-toolbar-row>
