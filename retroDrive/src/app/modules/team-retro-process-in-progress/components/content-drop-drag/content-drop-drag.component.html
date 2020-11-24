@@ -4,7 +4,8 @@
   <div *ngIf="!userIsNotInCurrentRetroBoardTeam">
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
-      <p class="board-name" style="margin-left: 35px;">{{ board.name }}</p>
+      <p *ngIf="!devicesXs" class="board-name" style="margin-left: 35px;">{{ board.name }}</p>
+      <p *ngIf="devicesXs" class="board-name" style="margin-left: 5px; font-size: 13px;">{{ board.name }}</p>
       <mat-form-field *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100px; margin-top: -6px; margin-left: 20px; margin-bottom: -20px;">
         <mat-label>Sort by</mat-label>
         <mat-select (selectionChange)="onChangeSort($event.value)">
