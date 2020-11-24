@@ -79,7 +79,7 @@
 
     <app-retro-progress-timer [shouldHideSmallTimer]="true" [shouldHideBigTimer]="true"></app-retro-progress-timer>
     <div class="board-wrapper">
-      <div class="board-columns" cdkDropListGroup>
+      <div [ngClass]="{'board-columns-small': devicesXs || devicesSm, 'board-columns': devicesMd || devicesLg || devicesXl}" cdkDropListGroup>
         <div class="board-column" *ngFor="let column of board.columns">
           <div class="column-title">
             <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
