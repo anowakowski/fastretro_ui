@@ -14,7 +14,7 @@
         </mat-select>
       </mat-form-field>
       <button 
-      *ngIf="shouldShowPreviousActionBtn && (devicesMd || devicesLg || devicesXl)"
+      *ngIf="shouldShowPreviousActionBtn && (devicesLg || devicesXl)"
         mat-raised-button 
         color="accent"
         style="margin-left: 20px;"
@@ -24,7 +24,7 @@
         <mat-icon>receipt_long</mat-icon>
       </button>
       <button
-        *ngIf="isExistingSomeRetroBoardCardAction && (devicesMd || devicesLg || devicesXl)" 
+        *ngIf="isExistingSomeRetroBoardCardAction && (devicesLg || devicesXl)" 
         mat-raised-button color="primary"
         style="margin-left: 10px;" 
         matTooltip="Show actions in current retro board"
@@ -34,7 +34,7 @@
       </button>
       <div fxFlex></div>
       <mat-icon
-        *ngIf="devicesMd || devicesLg || devicesXl"
+        *ngIf="devicesLg || devicesXl"
         style="font-size: 40px; margin-right: 30px;"
         matTooltip="votes (actual/max): {{actualCountOfUserVotes}}/{{actualMaxRetroBoardVotes}}"
         matTooltipPosition="left"
@@ -55,20 +55,20 @@
           <mat-icon>people</mat-icon>
       </button>
       <button mat-raised-button color="warn" (click)="stopRetroProcess()" *ngIf="!retroProcessIsStoped"><mat-icon>power_settings_new</mat-icon>&nbsp; 
-        <span *ngIf="devicesMd || devicesLg || devicesXl">Finish Retro</span>
+        <span *ngIf="devicesLg || devicesXl">Finish Retro</span>
       </button>
       <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped" (click)="openRetroProcess()" style="margin-right: 18px;"><mat-icon >power_settings_new</mat-icon>&nbsp; Open Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()" *ngIf="!retroProcessIsStoped">
         <mat-icon>favorite</mat-icon>&nbsp;  
-        <span *ngIf="!shouldEnableVoteBtns && (devicesMd || devicesLg || devicesXl)">Enable Vote Buttons</span>
-        <span *ngIf="shouldEnableVoteBtns && (devicesMd || devicesLg || devicesXl)">Disable Vote Buttons</span>
+        <span *ngIf="!shouldEnableVoteBtns && (devicesLg || devicesXl)">Enable Vote Buttons</span>
+        <span *ngIf="shouldEnableVoteBtns && (devicesLg || devicesXl)">Disable Vote Buttons</span>
       </button>
 
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>
-        <span *ngIf="devicesMd || devicesLg || devicesXl">&nbsp; Set New Timer</span>
+        <span *ngIf="devicesLg || devicesXl">&nbsp; Set New Timer</span>
       </button>
       <button mat-raised-button color="warn" style="margin-right: 10px;" *ngIf="timerIsRunning && !retroProcessIsStoped" (click)="stopTimer()"><mat-icon>query_builder</mat-icon>
-        <span *ngIf="devicesMd || devicesLg || devicesXl">&nbsp; Stop Current Timer</span>
+        <span *ngIf="devicesLg || devicesXl">&nbsp; Stop Current Timer</span>
       </button>
 
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
