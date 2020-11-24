@@ -9,9 +9,13 @@ import { FirestoreRetroBoardService } from 'src/app/modules/team-retro/services/
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotificationWorkspaceWithRequiredAccess } from 'src/app/models/userNotificationWorkspaceWithRequiredAccess';
+// tslint:disable-next-line:max-line-length
 import { UserNotificationDetailsDialogComponent } from '../user-notification-details-dialog copy/user-notification-details-dialog.component';
 import { UserSettingsDialogComponent } from '../user-settings-dialog/user-settings-dialog.component';
 import { UserNotification } from 'src/app/models/userNotification';
+
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-nav',
@@ -36,6 +40,13 @@ export class NavComponent implements OnInit, OnDestroy {
   public currentUserNotifications = new Array<UserNotificationWorkspaceWithRequiredAccess>();
   newUserNotification: UserNotification;
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   constructor(
     private eventsServices: EventsService,
     private localStorageService: LocalStorageService,
@@ -43,9 +54,19 @@ export class NavComponent implements OnInit, OnDestroy {
     private currentUserInRetroBoardApiService: CurrentUserApiService,
     private eventsService: EventsService,
     public dialog: MatDialog,
-    private router: Router) { }
+    private router: Router,
+    public mediaObserver: MediaObserver) { }
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      console.log(result.mqAlias);
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
+
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
     this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
     const currentWorkspace = this.userWorkspace.workspaces.find(uw => uw.isCurrent).workspace;
@@ -59,6 +80,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.stopRetroInProgressProcessSubscriptions.unsubscribe();
     this.startRetroInProgressProcessSubscriptions.unsubscribe();
     this.setCurrentWorkspaceSubscriptions.unsubscribe();
+    this.mediaSub.unsubscribe();
   }
 
   goToNotifyDetail(userNotification: any) {

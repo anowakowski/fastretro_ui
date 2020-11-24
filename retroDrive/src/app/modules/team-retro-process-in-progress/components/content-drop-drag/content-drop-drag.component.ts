@@ -199,6 +199,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.timerIsRunningForBottomNavbarBtnSunscriptions.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
+    this.mediaSub.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {

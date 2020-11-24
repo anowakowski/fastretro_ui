@@ -5,7 +5,7 @@
     <button mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
+    <button *ngIf="!currentUser.isNewUser && (devicesLg || devicesXl)" mat-stroked-button style="margin-left: 10px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
     <!--<button mat-raised-button color="warn" (click)="stopTimer()"><i class="fa fa-sign-out"></i>&nbsp; Stop retro timer</button>-->
     <span style="margin-right: 3px;">
