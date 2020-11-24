@@ -44,7 +44,7 @@
       <button
         mat-raised-button
         color="primary"
-        *ngIf="!retroProcessIsStoped"
+        *ngIf="!retroProcessIsStoped && !devicesXs"
         matTooltip="show all users in current retro"
         matTooltipPosition="below"
         mat-icon matBadge="{{currentUsersInRetroBoardCount}}"
@@ -73,7 +73,7 @@
         <span *ngIf="devicesLg || devicesXl">&nbsp; Stop Current Timer</span>
       </button>
 
-      <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
+      <button *ngIf="!devicesXs" mat-raised-button color="primary" style="margin-left: 10px; margin-right: 35px;" (click)="onOpenRetroBoardOptions()"><mat-icon>settings</mat-icon></button>
 
       <!-- <button mat-raised-button color="accent" style="margin-left: 10px;"><mat-icon>query_builder</mat-icon>&nbsp; Show Biger Timer</button> -->
       <!-- <button mat-raised-button color="primary" style="margin-left: 10px;"><mat-icon>settings</mat-icon>&nbsp; Retro Settings</button> -->
