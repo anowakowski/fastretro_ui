@@ -59,9 +59,11 @@
       </button>
       <button mat-raised-button color="primary" *ngIf="retroProcessIsStoped" (click)="openRetroProcess()" style="margin-right: 18px;"><mat-icon >power_settings_new</mat-icon>&nbsp; Open Retro</button>
       <button mat-raised-button color="primary" style="margin-left: 10px; margin-right: 10px;" (click)="enableVoteBtns()" *ngIf="!retroProcessIsStoped">
-        <mat-icon>favorite</mat-icon>&nbsp;  
-        <span *ngIf="!shouldEnableVoteBtns && (devicesLg || devicesXl)">Enable Vote Buttons</span>
-        <span *ngIf="shouldEnableVoteBtns && (devicesLg || devicesXl)">Disable Vote Buttons</span>
+        <mat-icon *ngIf="!shouldEnableVoteBtns">favorite</mat-icon>  
+        <mat-icon *ngIf="shouldEnableVoteBtns">favorite_border</mat-icon>
+        
+        <span *ngIf="!shouldEnableVoteBtns && (devicesLg || devicesXl)">&nbsp;Enable Vote Buttons</span>
+        <span *ngIf="shouldEnableVoteBtns && (devicesLg || devicesXl)">&nbsp;Disable Vote Buttons</span>
       </button>
 
       <button mat-raised-button color="accent" style="margin-right: 10px;" *ngIf="!timerIsRunning && !retroProcessIsStoped" (click)="openSetTimerDialog()"><mat-icon>query_builder</mat-icon>
