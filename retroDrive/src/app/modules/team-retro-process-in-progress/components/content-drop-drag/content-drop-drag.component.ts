@@ -595,9 +595,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       const usersVotesToReturn = new Array<CurrentUserVotes>();
       let positionForMargin = 10;
+      const positionMarginNext = this.devicesXs ? 22 : 17;
       filteredUsersVotes.forEach(usrVote => {
         usrVote.positionForMargin = positionForMargin;
-        positionForMargin = positionForMargin + 17;
+        positionForMargin = positionForMargin + positionMarginNext;
         usersVotesToReturn.push(usrVote);
       });
       return usersVotesToReturn;
