@@ -7,6 +7,6 @@
         Your action text it's to long.
       </mat-error>          
     </mat-form-field>
-    <button style="width: 100%; margin-top: 5px;" type="submit" mat-raised-button color="primary"> Add New Action To Card</button>
+    <button disabled="{{actionTextAreaFormControl.hasError('maxlength')}}" style="width: 100%; margin-top: 5px;" type="submit" mat-raised-button color="primary"> Add New Action To Card</button>
   </form>
 </mat-nav-list>
