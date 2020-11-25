@@ -5,7 +5,7 @@
     <mat-divider></mat-divider>
     <div *ngFor="let action of actions">
       <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
-        <mat-icon matListIcon>description</mat-icon>
+        <mat-icon *ngIf="!currentResolutionDevices.devicesXs" matListIcon>description</mat-icon>
         <span style="white-space: pre-wrap;" matLine>
           <span style="font-size: 14px;">{{action.text}}</span>
         </span>
@@ -79,7 +79,9 @@
  </mat-list>
 </div>
 <div mat-dialog-actions style="margin-top: 10px; margin-bottom: -15px;">
-  <button mat-raised-button color="warn" (click)="closeClick()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="closeClick()"><mat-icon>cancel</mat-icon> 
+    <span *ngIf="currentResolutionDevices.devicesMd || currentResolutionDevices.devicesXl || currentResolutionDevices.devicesLg">&nbsp;Cancel</span>
+  </button>
   <div fxFlex></div>
   <button  
       *ngIf="currentResolutionDevices.devicesMd || currentResolutionDevices.devicesXl || currentResolutionDevices.devicesLg"
