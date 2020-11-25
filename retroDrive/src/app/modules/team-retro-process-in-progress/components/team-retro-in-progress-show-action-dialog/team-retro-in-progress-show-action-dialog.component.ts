@@ -26,6 +26,8 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
   usersInAction: any[];
   isCreatedOneOfDyncamicActionForm: boolean;
 
+  currentResolutionDevices: any;
+
   constructor(
     public dialogRef: MatDialogRef<TeamRetroInProgressShowActionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -42,6 +44,7 @@ export class TeamRetroInProgressShowActionDialogComponent implements OnInit {
 
   ngOnInit() {
     this.dataRetroBoardCard = this.data.currentCard as RetroBoardCard;
+    this.currentResolutionDevices = this.data.currentResolutionDevices;
 
     this.currentUserInRetroBoardApiService.getUsersInTeam(this.data.workspaceId, this.data.teamId).then(response => {
       if (response !== undefined && response !== null) {

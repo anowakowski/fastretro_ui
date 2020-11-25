@@ -162,7 +162,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
-      console.log(result.mqAlias);
       this.devicesXs = result.mqAlias === 'xs' ? true : false;
       this.devicesSm = result.mqAlias === 'sm' ? true : false;
       this.devicesMd = result.mqAlias === 'md' ? true : false;
@@ -333,6 +332,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
       const team = teamSnapshot.data() as Team;
+      // tslint:disable-next-line:max-line-length
+      const currentResolutionDevices = this.getCurrentResolutionDevices();
       const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
         width: '1100px',
         data: {
@@ -343,14 +344,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.currentWorkspace.id,
           teamId,
           retroBoardName: this.retroBoardToProcess.retroName,
-          teamName: team.name}
+          teamName: team.name,
+          currentResolutionDevices}
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined) {}
       });
     });
+  }
 
+  private getCurrentResolutionDevices() {
+    // tslint:disable-next-line:max-line-length
+    return { devicesXs: this.devicesXs, devicesSm: this.devicesSm, devicesMd: this.devicesMd, devicesXl: this.devicesXl, devicesLg: this.devicesLg };
   }
 
   openAllCardActionDialog() {

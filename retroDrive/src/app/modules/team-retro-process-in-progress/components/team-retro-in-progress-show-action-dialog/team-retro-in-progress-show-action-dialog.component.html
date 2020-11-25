@@ -14,6 +14,7 @@
         </span>
         <div fxFlex></div>
         <button
+          *ngIf="!currentResolutionDevices.devicesXs"
           mat-icon-button
           color="primary"
           style="margin-top: -20px;"
@@ -23,7 +24,7 @@
         <button mat-icon-button color="warn" style="margin-top: -20px; margin-left: -7px;" (click)="deleteAction(action)">
           <mat-icon>delete</mat-icon>
         </button>             
-        <form [formGroup]="addUserToActionForm">
+        <form *ngIf="currentResolutionDevices.devicesMd || currentResolutionDevices.devicesXl || currentResolutionDevices.devicesLg" [formGroup]="addUserToActionForm">
           <mat-form-field style="margin-top: -20px;font-size: 12px;width: 150px;margin-left: 10px;">
             <mat-select (openedChange)="usersInTeamsChange($event, action)" placeholder="Add people to action" formControlName="{{action.actionNameForFormControl}}" multiple>
               <mat-option *ngFor="let usersInTeam of usersInTeams" [value]="usersInTeam">
@@ -33,6 +34,7 @@
           </mat-form-field>
         </form> 
         <mat-slide-toggle
+          *ngIf="currentResolutionDevices.devicesMd || currentResolutionDevices.devicesXl || currentResolutionDevices.devicesLg" [formGroup]="addUserToActionForm"
           color="primary"  
           style="margin-top: -20px; margin-left: 10px; margin-right: -10px; font-size: 13px;"
           [checked]="action.actionIsSolved"
