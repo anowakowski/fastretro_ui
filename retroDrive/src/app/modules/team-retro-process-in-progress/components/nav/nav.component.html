@@ -12,7 +12,7 @@
     <span style="margin-right: 3px;">
       <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName!=='socialMediaAvatar'" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
       <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName==='socialMediaAvatar'" [src]="currentUser.photoURL" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; margin-right: 5px; border-radius: 50%;" alt="logo">
-      <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
+      <span *ngIf="!currentUser.isNewUser && !devicesXs" style="font-size: 12px;">{{currentUser.displayName}}</span> 
     </span>
     <span
       style="cursor: pointer; margin-top: 8px;"
@@ -83,7 +83,7 @@
         </button>          
       </div>
     </mat-menu>
-    <button mat-icon-button style="margin-left: -5px;" (click)="onUserSettings()">
+    <button *ngIf="!devicesXs" mat-icon-button style="margin-left: -5px;" (click)="onUserSettings()">
       <mat-icon>settings</mat-icon>
     </button>           
     <span *ngIf="devicesLg || devicesXl" style="margin-left: 20px;">
