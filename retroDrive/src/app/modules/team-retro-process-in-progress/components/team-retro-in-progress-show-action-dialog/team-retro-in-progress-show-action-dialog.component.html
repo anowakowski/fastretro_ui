@@ -4,7 +4,10 @@
     <h3 matSubheader>Actions</h3>
     <mat-divider></mat-divider>
     <div *ngFor="let action of actions">
-      <mat-list-item *ngIf="!action.isEdit" style="margin-top: 15px;">
+      <mat-list-item 
+        *ngIf="!action.isEdit"         
+        [ngClass]="{'action-text-margin': currentResolutionDevices.devicesMd || currentResolutionDevices.devicesXl || currentResolutionDevices.devicesLg,
+                    'action-text-margin-small': currentResolutionDevices.devicesXs || currentResolutionDevices.devicesSm}">
         <mat-icon *ngIf="!currentResolutionDevices.devicesXs" matListIcon>description</mat-icon>
         <span style="white-space: pre-wrap;" matLine>
           <span style="font-size: 14px;">{{action.text}}</span>
@@ -41,8 +44,9 @@
           (change)="changeActionIsSolved($event, action)">
             Action is solved
         </mat-slide-toggle>        
-        <mat-divider></mat-divider>
+        <mat-divider *ngIf="!currentResolutionDevices.devicesXs"></mat-divider>
      </mat-list-item>
+     <mat-divider *ngIf="currentResolutionDevices.devicesXs" style="padding-bottom: 15px;"></mat-divider>
 
      <mat-list-item *ngIf="action.isEdit" style="margin-top: 15px;">
       <mat-icon matListIcon>description</mat-icon>
