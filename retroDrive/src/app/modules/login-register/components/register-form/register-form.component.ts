@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
