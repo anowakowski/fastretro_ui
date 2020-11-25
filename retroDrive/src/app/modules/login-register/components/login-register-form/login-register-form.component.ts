@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FirestoreLoginRegisterService } from '../../services/firestore-login-register.service';
@@ -9,16 +9,26 @@ import { ShowInfoSnackbarComponent } from '../show-info-snackbar/show-info-snack
 import { FbTokenService } from 'src/app/services/fb-token.service';
 import { LoginRegisterErrorHandlingService } from '../../services/login-register-error-handling.service';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 @Component({
   selector: 'app-login-register-form',
   templateUrl: './login-register-form.component.html',
   styleUrls: ['./login-register-form.component.css'],
 })
-export class LoginRegisterFormComponent implements OnInit {
+export class LoginRegisterFormComponent implements OnInit, OnDestroy {
   addNewEmailPassLoginForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   shouldShowNotExisitngUserError = false;
+
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
 
   constructor(
     public auth: AuthService,
@@ -27,11 +37,23 @@ export class LoginRegisterFormComponent implements OnInit {
     private fbTokenService: FbTokenService,
     private loginRegisterErrorHandlingService: LoginRegisterErrorHandlingService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public mediaObserver: MediaObserver
   ) {}
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.createNewEmailPassLoginForm();
+  }
+
+  ngOnDestroy(): void {
+    this.mediaSub.unsubscribe();
   }
 
   loginByGoogle() {
