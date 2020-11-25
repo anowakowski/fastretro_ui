@@ -9,7 +9,11 @@ import { EventsService } from 'src/app/services/events.service';
 import { CurrentUserApiService } from 'src/app/services/current-user-api.service';
 import { UserSettings } from 'src/app/models/UserSettings';
 
-const SMALL_WIDTH_BREAKPOINT = 720;
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
+
+const SMALL_WIDTH_BREAKPOINT = 970;
 const CURRENT_BTN_COLOR = 'warn';
 const BASIC_BTN_COLOR = 'primary';
 const DASHBOARD_SECTION = 'dashboard';
@@ -64,16 +68,31 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   shouldShowNotificationSection: boolean;
   userSettings: UserSettings;
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   constructor(
     public auth: AuthService,
     private localStorageService: LocalStorageService,
     public router: Router,
     private eventService: EventsService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) { }
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) { }
 
 
   @ViewChild('MatDrawer', {static: true}) drawer: MatDrawer;
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.currentChosenSection = DASHBOARD_SECTION;
     this.currentRouteSecction = this.router.url;
 
@@ -99,6 +118,8 @@ export class SlidenavComponent implements OnInit, OnDestroy {
     this.setRetroProcessSubscription.unsubscribe();
     this.goOutFromAllRetroBoardSubscription.unsubscribe();
     this.shouldRefreshUserSettingsSubscription.unsubscribe();
+
+    this.mediaSub.unsubscribe();
   }
 
   isScreenSmall(): boolean {
@@ -145,6 +166,14 @@ export class SlidenavComponent implements OnInit, OnDestroy {
 
   isSectionWithGreyedBackground() {
     return this.currentChosenSection === this.allRetroBoardListSection || this.currentChosenSection === this.allNotificationsSection;
+  }
+
+  getBackgroundImageNameClass(chosenImageBackgroundName) {
+    if (this.devicesXs || this.devicesSm) {
+      return 'teams-retro-background-img-' + chosenImageBackgroundName + '-small';
+    } else if (this.devicesMd || this.devicesLg || this.devicesXl) {
+      return 'teams-retro-background-img-' + chosenImageBackgroundName;
+    }
   }
 
   private getUserNotyficationFromApi() {

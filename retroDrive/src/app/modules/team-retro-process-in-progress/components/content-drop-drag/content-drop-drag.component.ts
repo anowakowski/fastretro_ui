@@ -61,6 +61,9 @@ import { RetroBoardCardApiToSave } from 'src/app/models/retroBoardCardApiToSave'
 import { RetroBoardCardApiGet } from 'src/app/models/retroBoardCardApiGet';
 import { Spinner } from 'ngx-spinner/lib/ngx-spinner.enum';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 const WENT_WELL = 'Went Well';
 const TO_IMPROVE = 'To Improve';
 @Component({
@@ -102,7 +105,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private bottomSheetRef: MatBottomSheet,
     private spinnerTickService: SpinnerTickService,
-    private currentUserInRetroBoardApiService: CurrentUserApiService) {}
+    private currentUserInRetroBoardApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) {}
 
   private wnetWellRetroBoardCol: Column;
   private toImproveRetroBoardCol: Column;
@@ -138,6 +142,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   wentWellDropDownContainerId = 'went well';
   toImproveDropDownContainerId = 'to improve';
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   /*
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -150,6 +161,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   */
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
     this.userWorkspace = this.localStorageService.getDecryptedItem(this.localStorageService.userWorkspaceKey);
 
@@ -180,6 +198,7 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.timerIsRunningForBottomNavbarBtnSunscriptions.unsubscribe();
     }
     this.timerIsFinsihedSubscriptions.unsubscribe();
+    this.mediaSub.unsubscribe();
   }
 
   createAddNewRetroBoardCardForm() {
@@ -313,6 +332,8 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.getCurrentRetroBoardTeamPromise().then(teamSnapshot => {
       const teamId = teamSnapshot.id as string;
       const team = teamSnapshot.data() as Team;
+      // tslint:disable-next-line:max-line-length
+      const currentResolutionDevices = this.getCurrentResolutionDevices();
       const dialogRef = this.dialog.open(TeamRetroInProgressShowActionDialogComponent, {
         width: '1100px',
         data: {
@@ -323,14 +344,19 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
           this.currentWorkspace.id,
           teamId,
           retroBoardName: this.retroBoardToProcess.retroName,
-          teamName: team.name}
+          teamName: team.name,
+          currentResolutionDevices}
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined) {}
       });
     });
+  }
 
+  private getCurrentResolutionDevices() {
+    // tslint:disable-next-line:max-line-length
+    return { devicesXs: this.devicesXs, devicesSm: this.devicesSm, devicesMd: this.devicesMd, devicesXl: this.devicesXl, devicesLg: this.devicesLg };
   }
 
   openAllCardActionDialog() {
@@ -569,9 +595,10 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
 
       const usersVotesToReturn = new Array<CurrentUserVotes>();
       let positionForMargin = 10;
+      const positionMarginNext = this.devicesXs ? 22 : 17;
       filteredUsersVotes.forEach(usrVote => {
         usrVote.positionForMargin = positionForMargin;
-        positionForMargin = positionForMargin + 17;
+        positionForMargin = positionForMargin + positionMarginNext;
         usersVotesToReturn.push(usrVote);
       });
       return usersVotesToReturn;

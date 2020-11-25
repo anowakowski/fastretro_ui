@@ -1,6 +1,6 @@
 <div style="margin-top: 10%;" class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-  <mat-card style="background-color: #ecececfa;" class="box">
+  <mat-card style="background-color: #ecececfa; margin: 10px;" class="box" [ngClass]="{'card-position-small': devicesXs}">
     <mat-card-header>
       <mat-card-title>Log in</mat-card-title>
     </mat-card-header>
@@ -34,13 +34,17 @@
 
     </form>
     <div class="or-seperator"><i>or</i></div>
-    <p class="text-center">Login with your social media account</p>
+    <p [ngClass]="{'text-size': !devicesXs, 'text-size-small': devicesXs}" class="text-center">Login with your social media account</p>
       <div>
         <button style="width: 100%;" mat-raised-button color="primary" (click)="loginByFacebook()"><i class="fa fa-facebook" style="margin-bottom: 3px;"></i>&nbsp; Log in with Facebook</button> <br/>
         <button style="width: 100%; margin-top: 10px;" mat-raised-button color="accent" (click)="loginByGoogle()"><i class="fa fa-google" style="margin-bottom: 3px;"></i>&nbsp; Log in with Google</button>
       </div>
 
-      <p class="text-center" style="font-size: 16px; margin-top: 20px; margin-bottom: -20px;">Dont have an account? <a [routerLink]="['/login-register/signup']" routerLinkActive="router-link-active" > Sign up</a></p>
+      <p
+        [ngClass]="{'text-size': !devicesXs, 'text-size-small': devicesXs}" 
+        class="text-center" 
+        style="margin-top: 20px; margin-bottom: -20px;">Dont have an account? <a [routerLink]="['/login-register/signup']" routerLinkActive="router-link-active" > Sign up</a>
+      </p>
 
   </mat-card>
 </div>

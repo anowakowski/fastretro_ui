@@ -2,33 +2,57 @@
   <div *ngIf="retroBoards.length > 0" class="animate__animated animate__slideInRight">
 
     <mat-card style="margin-bottom: 40px; margin-top: 20px; opacity: 0.985;">
-      <span style="margin-right:10px;">Your last retro boards </span>
+      <span *ngIf="devicesMd || devicesSm || devicesLg || devicesXl" style="margin-right:10px;">Your last retro boards </span>
+      <span *ngIf="devicesXs" style="margin-right:10px;">RBs </span>
       <mat-divider [vertical]="true"></mat-divider>
-      <span style="margin-left:10px;">
+      <span *ngIf="devicesMd || devicesLg || devicesXl" style="margin-left:10px;">
         You have <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">open</span> 
         and <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">finished</span> retro board 
         and <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span> retro</span>
       <div fxFlex></div>
+
+      <span style="margin-right: 10px;" *ngIf="devicesSm">
+        <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">open</span> 
+        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 16px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">finished</span>
+        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span>
+      </span>
+
+      <span style="margin-right: 20px;" *ngIf="devicesXs">
+        <span style="margin-right: 3.2px; color: #007bff; font-size: 14px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">o</span> 
+        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 14px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">f</span>
+        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 14px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">non-s</span>
+      </span>
       
       <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
-        <mat-icon>assignment</mat-icon>&nbsp; All retro boards in {{currentWorkspace.name}} workspace
+        <mat-icon>assignment</mat-icon><span *ngIf="!shouldHideInMiddleResolution()">&nbsp; All retro boards in {{currentWorkspace.name}} workspace</span>
       </button>
     </mat-card>
 
     <div *ngFor="let retroBoard of retroBoards">
       <mat-card class="example-card" style="opacity: 0.985;">
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title *ngIf="devicesMd || devicesLg || devicesXl">
             <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
             <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
             - #team <b>{{retroBoard.team.name}}</b> Board
           </mat-card-title>
-          <mat-card-subtitle>
+          <mat-card-title *ngIf="devicesXs || devicesSm" style="font-size: 15px;">
+            <span *ngIf="retroBoard.isFinished">Your current finished retro </span>
+            <span *ngIf="!retroBoard.isFinished">Your current opened retro</span>
+            - #team <b>{{retroBoard.team.name}}</b> Board
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="devicesMd || devicesLg || devicesXl">
             <span style="font-size: 17px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
             <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
             <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
             <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
           </mat-card-subtitle>
+          <mat-card-subtitle *ngIf="devicesXs || devicesSm" style="font-size: 13px;">
+            <span style="font-size: 11px;"><b>{{retroBoard.retroName}}</b> Board for Sprint <b>{{retroBoard.sprintNumber}}</b></span> <br />
+            <i>Retro Board Created at <span> <b>{{retroBoard.creationDate}}</b></span></i> <br />
+            <span *ngIf="retroBoard.isFinished"> Retro currently is finished</span>
+            <span *ngIf="!retroBoard.isFinished">Retro currently is Open</span>
+          </mat-card-subtitle>          
         </mat-card-header>
 
         <mat-card-content *ngIf="retroBoard.isFinished && checkIfChartDataExists(pieChartData)">
@@ -40,7 +64,8 @@
         </mat-card-content>
         <mat-card-content *ngIf="!retroBoard.isFinished">
           <div>
-            <h3 style="margin-top: 15px;">Retro in progress...</h3>
+            <h3 *ngIf="devicesMd || devicesLg || devicesXl" style="margin-top: 15px;">Retro in progress...</h3>
+            <h3 *ngIf="devicesXs || devicesSm" style="margin-top: 15px; font-size: 13px;">Retro in progress...</h3>
             <mat-progress-bar mode="buffer" style="margin-top: -12px; margin-bottom: 8px;"></mat-progress-bar>
           </div>
         </mat-card-content>
@@ -55,15 +80,19 @@
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="retroBoard.isFinished">
         <mat-card-actions style="margin-top: -14px;">
-          <button style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+          <button *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100%;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
             Board Details <mat-icon>vertical_split</mat-icon></button>
+          <button *ngIf="devicesXs || devicesSm" style="width: 100%; font-size: 12px;" mat-raised-button color="primary" (click)="onRetroDetails(retroBoard)">Show Retro
+              Board Details <mat-icon>vertical_split</mat-icon></button>            
         </mat-card-actions>
       </mat-card>
 
       <mat-card class="example-card" style="margin-top: 5px; margin-bottom: 30px;" *ngIf="!retroBoard.isFinished">
         <mat-card-actions style="margin-top: -14px;">
-          <button style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+          <button *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100%;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
             <mat-icon>arrow_right_alt</mat-icon></button>
+          <button *ngIf="devicesXs || devicesSm" style="width: 100%; font-size: 12px;" mat-raised-button color="accent" (click)="onRetroDetails(retroBoard)">Go to retro
+            <mat-icon>arrow_right_alt</mat-icon></button>            
         </mat-card-actions>
       </mat-card>
     </div>

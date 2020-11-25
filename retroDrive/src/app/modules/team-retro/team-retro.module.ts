@@ -46,6 +46,7 @@ import { UserSettingsDialogComponent } from './components/user-settings-dialog/u
 import { BasicScrollComponent } from './components/basic-scroll/basic-scroll.component';
 // tslint:disable-next-line:max-line-length
 import { AllRetroBoardListWithVirtualScrollComponent } from './components/all-retroboard-list-with-virtual-scroll/all-retroboard-list-with-virtual-scroll.component';
+// tslint:disable-next-line:max-line-length
 import { AllRetroBoardListDataSerivceService } from './components/all-retroboard-list-with-virtual-scroll/all-retro-board-list-data-serivce.service';
 
 @NgModule({

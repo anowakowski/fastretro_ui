@@ -6,17 +6,17 @@
     </button>
     <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">assignment_turned_in
     </mat-icon>
-    <span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span>
-    <button *ngIf="shouldShowBackToDashboard" mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
+    <span *ngIf="!shouldHideAppName"><span>fastretro.org</span> <span style="font-size: 9px;"><i>(Alpha version)</i></span></span>
+    <button *ngIf="shouldShowBackToDashboard && !shouldHideElementsInSmallResolution" mat-raised-button color="accent" style="margin-left: 15px;" (click)="backToDashboard()">
       <mat-icon>dashboard</mat-icon>&nbsp; Back to Dashboard
     </button>
-    <button *ngIf="!currentUser.isNewUser" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
+    <button *ngIf="!currentUser.isNewUser && !shouldHideElementsInSmallResolution" mat-stroked-button style="margin-left: 20px;"><mat-icon>ballot</mat-icon>&nbsp;current workspace {{currentUserWorkspaceName}}</button>    
     <span class="example-spacer"></span>
  
     <span style="margin-right: 3px;">
       <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName!=='socialMediaAvatar'" src="/assets/avatars/{{currentUser.chosenAvatarName}}.png" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; border-radius: 50%;" alt="logo">
       <img *ngIf="!currentUser.isNewUser && currentUser.chosenAvatarName==='socialMediaAvatar'" [src]="currentUser.photoURL" width="40" height="40" style="margin-left: 30px; margin-bottom: 13px; margin-bottom: 5px; margin-right: 5px; border-radius: 50%;" alt="logo">
-      <span *ngIf="!currentUser.isNewUser" style="font-size: 12px;">{{currentUser.displayName}}</span> 
+      <span *ngIf="!currentUser.isNewUser && !shouldHideElementsInSmallResolution" style="font-size: 12px;">{{currentUser.displayName}}</span> 
     </span>
     <span
       style="cursor: pointer; margin-top: 8px;"
@@ -87,9 +87,10 @@
         </button>         
       </div>
     </mat-menu>
-    <button mat-icon-button style="margin-left: -3px;" (click)="onUserSettings()">
+    <button *ngIf="!shouldHideElementsInSmallResolution" mat-icon-button style="margin-left: -3px;" (click)="onUserSettings()">
       <mat-icon>settings</mat-icon>
     </button>    
-    <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()"><i class="fa fa-sign-out"></i>&nbsp; SignOut</button>
+    <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()">
+      <i class="fa fa-sign-out"></i><span *ngIf="!shouldHideElementsInSmallResolution">&nbsp; SignOut</span></button>
   </mat-toolbar-row>
 </mat-toolbar>
