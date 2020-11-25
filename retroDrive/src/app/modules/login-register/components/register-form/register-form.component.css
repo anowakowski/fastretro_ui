@@ -11,6 +11,9 @@
 .login-wrapper .mat-card{padding:40px 70px 50px;}
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix{padding:0.8375em 0;}
 
+.card-position-small {
+    margin: 10px;
+}
 
 .or-seperator {
     margin-top: 20px;
@@ -30,6 +33,18 @@
 
 .text-center {
     text-align: center;
+}
+
+.text-size {
+    font-size: 16px;
+}
+
+.text-size-small {
+    font-size: 14px;
+}
+
+.header-text-size-small {
+    font-size: 25px !important;
 }
 
 a {

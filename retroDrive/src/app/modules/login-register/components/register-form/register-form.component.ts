@@ -11,17 +11,27 @@ import { CurrentUserApiService } from 'src/app/services/current-user-api.service
 import { UserSettings } from 'src/app/models/UserSettings';
 import { LoginRegisterErrorHandlingService } from '../../services/login-register-error-handling.service';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent implements OnInit, OnDestroy {
   addNewEmailPassRegisterForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
 
   shouldHideChoseLoginOptionForm = false;
+
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
 
   constructor(
     public auth: AuthService,
@@ -30,10 +40,22 @@ export class RegisterFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private fbTokenService: FbTokenService,
     private loginRegisterErrorHandlingService: LoginRegisterErrorHandlingService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    public mediaObserver: MediaObserver) { }
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.createNewEmailPassRegisterForm();
+  }
+
+  ngOnDestroy(): void {
+    this.mediaSub.unsubscribe();
   }
 
   continueWithMail() {

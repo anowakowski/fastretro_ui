@@ -1,12 +1,12 @@
 <div *ngIf="!shouldHideChoseLoginOptionForm" style="margin-top: 10%;" class="login-wrapper" fxLayout="row"
   fxLayoutAlign="center center">
 
-  <mat-card style="background-color: #ecececfa;" class="box">
+  <mat-card style="background-color: #ecececfa;" class="box" [ngClass]="{'card-position-small': devicesXs}">
     <p class="text-center" style="font-size: 16px; margin-bottom: 20px; margin-top: -10px;">Signup with 
       <a (click)="loginByFacebook()"> Facebook</a> or 
       <a (click)="loginByGoogle()"> Google</a></p>
     <mat-card-header>
-      <mat-card-title>Join to fastretro.org</mat-card-title>
+      <mat-card-title [ngClass]="{'header-text-size-small': devicesXs}">Join to fastretro.org</mat-card-title>
       <mat-card-subtitle style="margin-top: 10px;">
         Collaborate with your remote team and joint to fastretro.org
       </mat-card-subtitle>
@@ -21,8 +21,12 @@
       </div>
     </mat-card-content>
 
-    <p class="text-center" style="font-size: 16px; margin-top: 20px; margin-bottom: -20px;">Already have an account? <a
-        [routerLink]="['/login-register']" routerLinkActive="router-link-active"> Sign in</a></p>
+    <p 
+      [ngClass]="{'text-size': !devicesXs, 'text-size-small': devicesXs}" 
+      class="text-center" 
+      style="margin-top: 20px; margin-bottom: -20px;">Already have an account? <a
+        [routerLink]="['/login-register']" routerLinkActive="router-link-active"> Sign in</a>
+    </p>
   </mat-card>
 </div>
 
@@ -64,7 +68,10 @@
       <button mat-raised-button style="background-color: #6179ff; color: white;" class="btn-block" type="submit">
         <i class="fa fa-envelope-o" aria-hidden="true" style="margin-bottom: 3px;"></i>&nbsp; Sign in with mail
       </button>
-      <p class="text-center" style="font-size: 16px; margin-top: 20px; margin-bottom: -20px;">Already have an account?
+      <p 
+        [ngClass]="{'text-size': !devicesXs, 'text-size-small': devicesXs}" 
+        class="text-center"
+        style="margin-top: 20px; margin-bottom: -20px;">Already have an account?
         <a [routerLink]="['/login-register']" routerLinkActive="router-link-active"> Sign in</a></p>
     </form>
   </mat-card>
