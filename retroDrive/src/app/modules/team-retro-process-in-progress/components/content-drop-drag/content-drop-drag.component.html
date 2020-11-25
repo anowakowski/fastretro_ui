@@ -95,7 +95,9 @@
           <div class="column-title">
             <mat-icon>subject</mat-icon> &nbsp;{{ column.name }}
             <div fxFlex></div>
-            <button [disabled]="retroProcessIsStoped" mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>&nbsp;Add New Card</button>
+            <button [disabled]="retroProcessIsStoped" mat-raised-button color="accent" style="margin-left: 10px;" (click)="addNewCardToColumn(column.name)"><mat-icon>exposure_plus_1</mat-icon>
+              <span *ngIf="!devicesXs">&nbsp;Add New Card</span>
+            </button>
           </div>
           <div *ngIf="checkIfRetroBoardIsExists() && !dataIsLoading" class="retro-board-card-container"
           cdkDropList
