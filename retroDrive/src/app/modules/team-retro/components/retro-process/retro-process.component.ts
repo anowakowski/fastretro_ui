@@ -21,6 +21,9 @@ import { EventsService } from 'src/app/services/events.service';
 import { UsersInTeams } from 'src/app/models/usersInTeams';
 import { UserTeamsToSave } from 'src/app/models/userTeamsToSave';
 
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 @Component({
   selector: 'app-retro-process',
   templateUrl: './retro-process.component.html',
