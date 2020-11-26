@@ -6,7 +6,12 @@ import { DataResolverService } from './resolvers/data-resolver.service';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'retro', pathMatch: 'full' },
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  {
+    path: 'welcome',
+    loadChildren: () => import('./modules/landing-page/landing-page.module')
+      .then( m => m.LandingPageModule)
+  },
   {
     path: 'login-register',
     loadChildren: () => import('./modules/login-register/login-register.module')
