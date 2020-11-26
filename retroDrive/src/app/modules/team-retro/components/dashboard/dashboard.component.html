@@ -11,16 +11,10 @@
         and <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span> retro</span>
       <div fxFlex></div>
 
-      <span style="margin-right: 10px;" *ngIf="devicesSm">
+      <span style="margin-right: 10px;" *ngIf="devicesXs || devicesSm">
         <span style="margin-right: 3.2px; color: #007bff; font-size: 16px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">open</span> 
         <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 16px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">finished</span>
         <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 16px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 16px;">non-started</span>
-      </span>
-
-      <span style="margin-right: 20px;" *ngIf="devicesXs">
-        <span style="margin-right: 3.2px; color: #007bff; font-size: 14px;">{{openRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">o</span> 
-        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 14px;">{{finishedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">f</span>
-        <span style="margin-left: 10px; margin-right: 3.2px; color: #007bff; font-size: 14px;">{{nonStartedRetroBoards.length}}</span> <span style="font-weight: bold; color: #767676; font-size: 14px;">non-s</span>
       </span>
       
       <button mat-raised-button color="primary" style="margin-top: -8px; margin-right: -8px; margin-bottom: -8px;" (click)="goToAllRetroBoardsList()">
