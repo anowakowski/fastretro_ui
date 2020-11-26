@@ -5,15 +5,14 @@
   <div *ngIf="isRetroBoardIsReady" class="board">
     <div class="board-bar">
       <p *ngIf="!devicesXs" class="board-name" style="margin-left: 35px;">{{ board.name }}</p>
-
-      <mat-icon
+      <button 
         *ngIf="devicesXs"
-        style="font-size: 35px; margin-left: 10px;"
+        mat-icon-button
         matTooltip="retro name: {{ board.name }}"
-        matTooltipPosition="bottom"
+        matTooltipPosition="right"
         color="primary">
-        info
-      </mat-icon>      
+        <mat-icon>info</mat-icon>
+      </button>    
       <mat-form-field *ngIf="devicesMd || devicesLg || devicesXl" style="width: 100px; margin-top: -6px; margin-left: 20px; margin-bottom: -20px;">
         <mat-label>Sort by</mat-label>
         <mat-select (selectionChange)="onChangeSort($event.value)">

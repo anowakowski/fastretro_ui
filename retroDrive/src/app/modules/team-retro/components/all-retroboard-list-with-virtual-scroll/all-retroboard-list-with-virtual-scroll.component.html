@@ -46,7 +46,7 @@
     <ng-container *ngIf="infinite | async as retroBoards">
       <cdk-virtual-scroll-viewport itemSize="100" (scrolledIndexChange)="nextBatch($event, retroBoards)">
       <div class="animate__animated animate__slideInRight" *cdkVirtualFor="let retroBoard of retroBoards; let i = index; trackBy: trackByIdx">
-        <mat-card style="opacity: 0.985;" [ngClass]="{'mat-card-size-small': devicesXs}">
+        <mat-card style="opacity: 0.985;">
           <mat-card-header>
             <mat-card-title *ngIf="devicesMd || devicesLg || devicesXl">
               <span *ngIf="retroBoard.isFinished">Your current finished retro </span>

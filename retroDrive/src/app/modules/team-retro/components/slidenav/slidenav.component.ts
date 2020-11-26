@@ -169,11 +169,13 @@ export class SlidenavComponent implements OnInit, OnDestroy {
   }
 
   getBackgroundImageNameClass(chosenImageBackgroundName) {
-    if (this.devicesXs || this.devicesSm) {
-      return 'teams-retro-background-img-' + chosenImageBackgroundName + '-small';
-    } else if (this.devicesMd || this.devicesLg || this.devicesXl) {
-      return 'teams-retro-background-img-' + chosenImageBackgroundName;
-    }
+    // if (this.devicesXs || this.devicesSm) {
+    //   return 'teams-retro-background-img-' + chosenImageBackgroundName + '-small';
+    // } else if (this.devicesMd || this.devicesLg || this.devicesXl) {
+    //   return 'teams-retro-background-img-' + chosenImageBackgroundName;
+    // }
+
+    return 'teams-retro-background-img-' + chosenImageBackgroundName;
   }
 
   private getUserNotyficationFromApi() {
