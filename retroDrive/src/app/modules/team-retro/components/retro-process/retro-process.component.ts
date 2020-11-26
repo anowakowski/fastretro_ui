@@ -44,6 +44,13 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
   teamsSubscriptions: any;
   userTeams: Team[];
 
+  mediaSub: Subscription;
+  devicesXs: boolean;
+  devicesSm: boolean;
+  devicesMd: boolean;
+  devicesLg: boolean;
+  devicesXl: boolean;
+
   constructor(
     private bottomSheetRef: MatBottomSheet,
     private frbs: FirestoreRetroBoardService,
@@ -53,15 +60,25 @@ export class RetroProcessComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private authService: AuthService,
     private eventServices: EventsService,
-    private currentUserApiService: CurrentUserApiService) { }
+    private currentUserApiService: CurrentUserApiService,
+    public mediaObserver: MediaObserver) { }
 
   ngOnDestroy(): void {
     if (this.retroBoardSubscriptions !== undefined) {
       this.retroBoardSubscriptions.unsubscribe();
     }
+
+    this.mediaSub.unsubscribe();
   }
 
   ngOnInit() {
+    this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
+      this.devicesXs = result.mqAlias === 'xs' ? true : false;
+      this.devicesSm = result.mqAlias === 'sm' ? true : false;
+      this.devicesMd = result.mqAlias === 'md' ? true : false;
+      this.devicesLg = result.mqAlias === 'lg' ? true : false;
+      this.devicesXl = result.mqAlias === 'xl' ? true : false;
+    });
     this.currentUser = this.localStorageService.getDecryptedItem(this.localStorageService.currentUserKey);
 
     if (this.currentUser === undefined) {
