@@ -4,7 +4,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { LoginRegisterGuard } from './guards/login-register.guard';
 import { DataResolverService } from './resolvers/data-resolver.service';
 
-
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   {
