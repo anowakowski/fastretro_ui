@@ -70,7 +70,7 @@ export class LoginRegisterFormComponent implements OnInit, OnDestroy {
             }
           })
           .finally(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['retro/dashboard']);
           });
     }).catch(error => {
       const errorForm = error;
@@ -91,7 +91,7 @@ export class LoginRegisterFormComponent implements OnInit, OnDestroy {
             }
           })
           .finally(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['retro/dashboard']);
           });
     }).catch(error => {
       const errorForm = error;
@@ -123,7 +123,7 @@ export class LoginRegisterFormComponent implements OnInit, OnDestroy {
               if (this.auth.urlToRedirect) {
                 this.router.navigate([this.auth.urlToRedirect]);
               } else {
-                this.router.navigate(['/']);
+                this.router.navigate(['retro/dashboard']);
               }
             });
       }).catch(error => {
