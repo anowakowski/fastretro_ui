@@ -16,7 +16,7 @@ const routes: Routes = [
     path: '',
     component: TeamRetroComponent,
     children: [
-      {path: '', component: DashboardComponent},
+      {path: 'dashboard', component: DashboardComponent},
       {path: 'teams', component: TeamsComponent},
       {path: 'process', component: RetroProcessComponent},
       // {path: 'all-retroboard-list', component: AllRetroboardListComponent},
