@@ -229,7 +229,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   backToDashboard() {
     this.eventsService.emitSetReciveGoOutFromAllRetroBoardListEmiter();
-    this.router.navigate(['/']);
+    this.router.navigate(['/retro/dashboard']);
   }
 
   signOut() {
