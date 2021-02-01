@@ -78,7 +78,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
             }
           })
           .finally(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['retro/dashboard']);
           });
       })
       .catch(error => {
@@ -111,7 +111,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
             this.openInfoSnackBar(message, true);
           })
           .finally(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['retro/dashboard']);
           });
     }).catch(error => {
       const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
@@ -132,7 +132,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
             }
           })
           .finally(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['retro/dashboard']);
           });
     }).catch(error => {
       const message = this.loginRegisterErrorHandlingService.getErrorMessage(error.code);
