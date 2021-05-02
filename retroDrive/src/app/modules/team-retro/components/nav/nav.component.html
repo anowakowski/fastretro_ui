@@ -87,9 +87,9 @@
         </button>         
       </div>
     </mat-menu>
-    <button *ngIf="!shouldHideElementsInSmallResolution" mat-icon-button style="margin-left: -3px;" (click)="onUserSettings()">
+    <!-- <button *ngIf="!shouldHideElementsInSmallResolution" mat-icon-button style="margin-left: -3px;" (click)="onUserSettings()">
       <mat-icon>settings</mat-icon>
-    </button>    
+    </button>     -->
     <button mat-raised-button color="accent" style="margin-left: 20px;" (click)="signOut()">
       <i class="fa fa-sign-out"></i><span *ngIf="!shouldHideElementsInSmallResolution">&nbsp; SignOut</span></button>
   </mat-toolbar-row>
