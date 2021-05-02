@@ -8,10 +8,17 @@
   }
   */
 
+  .teams-retro-background-main-wihte-board {
+    background-color: #efefef;
+    background-size: cover;
+    margin-bottom: -65px;
+    background-repeat: no-repeat;
+  }
+
 .background-retro-process-backgroundImage1 {
     background-image: url('../../../assets/idea2.jpeg');
-    background-position: center;
-    background-size: cover;
+    /* background-position: center; */
+    background-size: inherit;
     background-repeat: no-repeat;
     min-height: 100vh;
     font-family: 'Roboto', sans-serif;
@@ -19,8 +26,8 @@
 
 .background-retro-process-backgroundImage2 {
   background-image: url('../../../assets/geometric1.jpg');
-  background-position: center;
-  background-size: cover;
+    /* background-position: center; */
+    background-size: inherit;
   background-repeat: no-repeat;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
@@ -28,8 +35,8 @@
 
 .background-retro-process-backgroundImage3 {
   background-image: url('../../../assets/clark-van-der-beken-IQeBZm8F-M4-unsplash.jpg');
-  background-position: center;
-  background-size: cover;
+    /* background-position: center; */
+    background-size: inherit;
   background-repeat: no-repeat;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
@@ -37,8 +44,8 @@
 
 .background-retro-process-backgroundImage4 {
   background: url("../../../assets/blackBackground.jpg"); 
-  background-position: center;
-  background-size: cover;
+    /* background-position: center; */
+    background-size: inherit;
   background-repeat: no-repeat;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
@@ -47,8 +54,8 @@
 
 .background-retro-process-backgroundImage5 {
   background-image: url('../../../assets/texture1.jpg');
-  background-position: center;
-  background-size: cover;
+    /* background-position: center; */
+    background-size: inherit;
   background-repeat: no-repeat;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;

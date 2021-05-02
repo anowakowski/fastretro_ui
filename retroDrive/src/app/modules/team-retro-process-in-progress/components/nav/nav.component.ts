@@ -142,7 +142,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   backToDashboard() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/retro/dashboard']);
   }
 
   goToViewAllNotifications() {

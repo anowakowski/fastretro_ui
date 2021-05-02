@@ -13,7 +13,7 @@
       [mode]="isScreenSmall() ? 'over' : 'side'">
       <div *ngIf="devicesMd || devicesLg || devicesXl" class="sidenav-element-flex-container">
         <div class="sidenav-element-flex-container">
-          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/retro/dashboard']" mat-raised-button (click)="setBtnColor(dashboardSection)">
             <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
           </button>
           <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
@@ -36,7 +36,7 @@
       </div>
       <div *ngIf="devicesSm || devicesXs" class="sidenav-element-flex-container">
         <div class="sidenav-element-flex-container">
-          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/']" mat-raised-button (click)="setBtnColor(dashboardSection)">
+          <button class="sidenav-elemnt" color="{{dashboardColor}}" [routerLink]="['/retro/dashboard']" mat-raised-button (click)="setBtnColor(dashboardSection)">
             <mat-icon>dashboard</mat-icon>&nbsp; Dashboard
           </button>
           <!-- <button class="sidenav-elemnt" color="{{teamsColor}}" [routerLink]="['/retro/teams']" mat-raised-button (click)="setBtnColor(teamsSection)">
@@ -58,7 +58,8 @@
         </div>
       </div>
     </mat-drawer> 
-    <div class="{{getBackgroundImageNameClass(userSettings?.chosenImageBackgroundName)}}" [ngClass]="{'teams-retro-background-img': currentUser.isNewUser}">
+    <!-- <div class="{{getBackgroundImageNameClass(userSettings?.chosenImageBackgroundName)}}" [ngClass]="{'teams-retro-background-img': currentUser.isNewUser}"> -->
+    <div class="teams-retro-background-main-wihte-board">
       <div class="app-sidenav-content">
         <div class="wrapper">
           <nav aria-label="breadcrumb">
