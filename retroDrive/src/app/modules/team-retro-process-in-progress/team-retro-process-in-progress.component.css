@@ -8,6 +8,13 @@
   }
   */
 
+  .teams-retro-background-main-wihte-board {
+    background-color: #efefef;
+    background-size: cover;
+    margin-bottom: -65px;
+    background-repeat: no-repeat;
+  }
+
 .background-retro-process-backgroundImage1 {
     background-image: url('../../../assets/idea2.jpeg');
     /* background-position: center; */
