@@ -888,7 +888,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.toImproveRetroBoardCol.retroBoardCards.splice(index, 1);
     }
 
-    this.addNewRetroBoardCardForm.reset();
+    if (this.shouldResetCard()) {
+      this.addNewRetroBoardCardForm.reset();
+    }
   }
 
   removeRetroBoardCard(currentCard: RetroBoardCard) {
@@ -1985,5 +1987,13 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
     this.timerIsRunningForBottomNavbarBtnSunscriptions = this.eventsService.getEmitTimmerIsRunningForBottomNavbarBtnEmiter()
       .subscribe(() => this.timerIsRunning = true);
+  }
+
+  private shouldResetCard(): boolean {
+    const sameElementIsInNewMode = this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isNewItem === true);
+    if (sameElementIsInNewMode !== undefined && sameElementIsInNewMode !== null && sameElementIsInNewMode) {
+      return false;
+    }
+    return true;
   }
 }
