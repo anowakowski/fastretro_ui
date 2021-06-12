@@ -12,7 +12,6 @@ import { UserSettings } from 'src/app/models/UserSettings';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-
 const SMALL_WIDTH_BREAKPOINT = 970;
 const CURRENT_BTN_COLOR = 'warn';
 const BASIC_BTN_COLOR = 'primary';
@@ -22,7 +21,6 @@ const RETRO_PROCES_SECCTION = 'retroProcess';
 // tslint:disable-next-line:variable-name
 const All_RETROBOARDS_LIST_SECTION = 'allRetroboardList';
 const ALL_NOTIFICATIONS_SECTION = 'all-your-notifications';
-
 
 @Component({
   selector: 'app-slidenav',
