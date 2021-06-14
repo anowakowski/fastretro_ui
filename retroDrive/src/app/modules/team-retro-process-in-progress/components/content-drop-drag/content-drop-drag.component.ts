@@ -1929,23 +1929,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       });
   }
 
-  // private setCardWithMergeRules(
-  //   findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard, currentCard: RetroBoardCard) {
-  //   if (!findedFromMergedCart.isMerged) {
-  //     findedFromMergedCart.mergedContent = new Array<MergedRetroBoardCard>();
-  //     findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(findedFromMergedCart));
-  //   }
-  //   if (findedCurrentRetroBoardCard.isMerged) {
-  //     findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
-  //   } else {
-  //     findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(currentCard));
-  //   }
-  // }
-
-  // private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
-  //   return { name: retroBoardCard.name, userId: retroBoardCard.userId };
-  // }
-
   private chcekIfAnyCardIsInEditMode(): boolean {
     const findedCardForWentWell = this.wnetWellRetroBoardCol.retroBoardCards.find(col => col.isEdit);
     const findedCardToImprove = this.toImproveRetroBoardCol.retroBoardCards.find(col => col.isEdit);
