@@ -1973,8 +1973,12 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
   }
 
   private shouldResetCard(): boolean {
-    const sameElementIsInNewMode = this.wnetWellRetroBoardCol.retroBoardCards.some(rbc => rbc.isNewItem === true);
-    if (sameElementIsInNewMode !== undefined && sameElementIsInNewMode !== null && sameElementIsInNewMode) {
+    const sameElementIsInNewModeWentWell = this.wnetWellRetroBoardCol.retroBoardCards
+            .some(rbc => rbc.isNewItem === true || rbc.isEdit === true);
+    const sameElementIsInNewModeToImprove = this.toImproveRetroBoardCol.retroBoardCards
+            .some(rbc => rbc.isNewItem === true || rbc.isEdit === true);
+    if ((sameElementIsInNewModeWentWell !== undefined && sameElementIsInNewModeWentWell !== null && sameElementIsInNewModeWentWell) ||
+        (sameElementIsInNewModeToImprove !== undefined && sameElementIsInNewModeToImprove !== null && sameElementIsInNewModeToImprove)) {
       return false;
     }
     return true;
