@@ -888,7 +888,9 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       this.toImproveRetroBoardCol.retroBoardCards.splice(index, 1);
     }
 
-    this.addNewRetroBoardCardForm.reset();
+    if (this.shouldResetCard()) {
+      this.addNewRetroBoardCardForm.reset();
+    }
   }
 
   removeRetroBoardCard(currentCard: RetroBoardCard) {
@@ -1927,23 +1929,6 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
       });
   }
 
-  // private setCardWithMergeRules(
-  //   findedFromMergedCart: RetroBoardCard, findedCurrentRetroBoardCard: RetroBoardCard, currentCard: RetroBoardCard) {
-  //   if (!findedFromMergedCart.isMerged) {
-  //     findedFromMergedCart.mergedContent = new Array<MergedRetroBoardCard>();
-  //     findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(findedFromMergedCart));
-  //   }
-  //   if (findedCurrentRetroBoardCard.isMerged) {
-  //     findedCurrentRetroBoardCard.mergedContent.forEach(mc => findedFromMergedCart.mergedContent.push(mc));
-  //   } else {
-  //     findedFromMergedCart.mergedContent.push(this.prepareMergedRetroBoardCard(currentCard));
-  //   }
-  // }
-
-  // private prepareMergedRetroBoardCard(retroBoardCard: RetroBoardCard): MergedRetroBoardCard {
-  //   return { name: retroBoardCard.name, userId: retroBoardCard.userId };
-  // }
-
   private chcekIfAnyCardIsInEditMode(): boolean {
     const findedCardForWentWell = this.wnetWellRetroBoardCol.retroBoardCards.find(col => col.isEdit);
     const findedCardToImprove = this.toImproveRetroBoardCol.retroBoardCards.find(col => col.isEdit);
@@ -1985,5 +1970,17 @@ export class ContentDropDragComponent implements OnInit, OnDestroy {
     this.timerIsFinsihedSubscriptions = this.eventsService.getTimerIsFinishedEmiter().subscribe(() => this.timerIsRunning = false);
     this.timerIsRunningForBottomNavbarBtnSunscriptions = this.eventsService.getEmitTimmerIsRunningForBottomNavbarBtnEmiter()
       .subscribe(() => this.timerIsRunning = true);
+  }
+
+  private shouldResetCard(): boolean {
+    const sameElementIsInNewModeWentWell = this.wnetWellRetroBoardCol.retroBoardCards
+            .some(rbc => rbc.isNewItem === true || rbc.isEdit === true);
+    const sameElementIsInNewModeToImprove = this.toImproveRetroBoardCol.retroBoardCards
+            .some(rbc => rbc.isNewItem === true || rbc.isEdit === true);
+    if ((sameElementIsInNewModeWentWell !== undefined && sameElementIsInNewModeWentWell !== null && sameElementIsInNewModeWentWell) ||
+        (sameElementIsInNewModeToImprove !== undefined && sameElementIsInNewModeToImprove !== null && sameElementIsInNewModeToImprove)) {
+      return false;
+    }
+    return true;
   }
 }
